@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Palmarès des créateurs TRMNL</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --paper:#dcdcd6; --sheet:#e9e9e4; --ink:#1d1d1b; --ink2:#55554f; --rule:#b4b4ad;
+  --grey:#8c8c86; --accent:#ff5a1f; --accent-ink:#b93a0c; --up:#1d1d1b;
+  --dot:rgba(29,29,27,.55);
+  --font:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#1e1e1c; --sheet:#282826; --ink:#e6e6e0; --ink2:#a8a8a0; --rule:#45453f;
+  --grey:#7a7a74; --accent:#ff6a33; --accent-ink:#ff8a5c; --dot:rgba(230,230,224,.5);
+}}
+:root[data-theme="dark"]{
+  --paper:#1e1e1c; --sheet:#282826; --ink:#e6e6e0; --ink2:#a8a8a0; --rule:#45453f;
+  --grey:#7a7a74; --accent:#ff6a33; --accent-ink:#ff8a5c; --dot:rgba(230,230,224,.5);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;
+  font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* En-tête */
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  max-width:1180px;margin:0 auto;padding:18px 16px 6px}
+.brand{font-stretch:125%;font-weight:800;font-size:1.15rem;letter-spacing:-.01em;margin:0}
+.brand small{display:block;font-stretch:100%;font-weight:400;font-size:.85rem;color:var(--ink2);letter-spacing:0}
+.updated{font-size:.85rem;color:var(--ink2);display:flex;gap:10px;align-items:center}
+.theme-btn{background:none;border:1px solid var(--rule);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:.8rem}
+
+nav.tabs{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:2px solid var(--ink);
+  padding-top:env(safe-area-inset-top,0px)}
+nav.tabs .in{max-width:1180px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none;padding:0 8px}
+nav.tabs .in::-webkit-scrollbar{display:none}
+nav.tabs a{flex:none;padding:12px 9px 10px;text-decoration:none;font-weight:600;font-stretch:88%;color:var(--ink2);
+  border-bottom:4px solid transparent;margin-bottom:-2px}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--ink)}
+
+main{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
+section[hidden]{display:none}
+h2{font-stretch:112%;font-weight:750;font-size:1.35rem;margin:36px 0 10px;letter-spacing:-.01em}
+h2:first-child{margin-top:4px}
+h3{font-weight:700;font-size:1rem;margin:0 0 8px}
+p.lead{color:var(--ink2);max-width:62ch;margin:0 0 14px}
+.muted{color:var(--ink2)}
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:16px}
+.grid{display:grid;gap:14px}
+@media(min-width:760px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+
+/* Profil : l'échelle du classement */
+.hero{display:grid;gap:22px;align-items:start}
+@media(min-width:860px){.hero{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
+.rankbig{font-stretch:125%;font-weight:900;font-size:clamp(4.6rem,19vw,9.5rem);line-height:.82;letter-spacing:-.045em;margin:0}
+.rankbig .of{display:block;font-stretch:90%;font-weight:500;font-size:1.05rem;letter-spacing:0;line-height:1.3;margin-top:14px;color:var(--ink2)}
+.who{margin:18px 0 0;font-size:1.25rem;font-weight:700}
+.who span{font-weight:400;color:var(--ink2);font-size:.95rem;margin-left:6px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:10px 0 0;padding:0;list-style:none}
+.facts li b{font-weight:750}
+.moves{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{border:1.5px solid var(--ink);border-radius:999px;padding:3px 10px;font-size:.88rem;font-weight:600}
+.chip.good{background:var(--ink);color:var(--paper)}
+.chip.none{border-style:dashed;color:var(--ink2);border-color:var(--grey);font-weight:400}
+.target{margin-top:16px;padding:12px 14px;border-left:4px solid var(--accent);background:var(--sheet);max-width:52ch}
+
+.ladder{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.ladder li{display:grid;grid-template-columns:3.4rem 1fr auto;gap:10px;align-items:baseline;padding:9px 6px;border-bottom:1px solid var(--rule)}
+.ladder li a{text-decoration:none}
+.ladder .rk{font-stretch:110%;font-weight:750}
+.ladder .pts{text-align:right;white-space:nowrap}
+.ladder .gap{display:block;font-size:.8rem;color:var(--ink2)}
+.ladder li.me{background:var(--ink);color:var(--paper);border-bottom-color:var(--ink);padding-left:10px}
+.ladder li.me .gap{color:var(--paper);opacity:.75}
+.ladder li.me .rk::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:.12em}
+
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+@media(min-width:620px){.tiles{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:980px){.tiles{grid-template-columns:repeat(5,1fr)}}
+.tile{padding:12px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--sheet)}
+.tile .lbl{font-size:.82rem;color:var(--ink2)}
+.tile .rv{font-stretch:115%;font-weight:800;font-size:1.6rem;line-height:1.1;margin-top:4px}
+.tile .rv small{font-stretch:100%;font-weight:400;font-size:.8rem;color:var(--ink2);margin-left:4px}
+.tile .val{font-size:.85rem;margin-top:2px}
+
+.bar{height:10px;background:var(--rule);border-radius:2px;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--ink)}
+.bar.goal i{background:radial-gradient(circle,var(--ink) 1.1px,transparent 1.3px) 0 0/4px 4px, var(--grey)}
+.bar.goal.done i{background:var(--ink)}
+
+/* Tableaux */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:0 0 12px}
+.tools label{display:flex;flex-direction:column;font-size:.8rem;color:var(--ink2);gap:3px}
+.tools input,.tools select{background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:7px 9px;min-width:0;color:var(--ink)}
+.tools input[type=search]{width:min(320px,70vw)}
+.scroll{overflow-x:auto;border-top:2px solid var(--ink);-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-stretch:88%;font-size:.93rem}
+th,td{padding:8px 8px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{padding-left:4px}
+th.l,td.l{text-align:left}
+td.name{white-space:normal;min-width:170px;max-width:340px}
+th{font-weight:600;font-size:.8rem;color:var(--ink2);vertical-align:bottom}
+th button{background:none;border:0;padding:0;cursor:pointer;font-weight:600;color:inherit;text-align:inherit}
+th[aria-sort] button{color:var(--ink)}
+th[aria-sort="descending"] button::after{content:" ▾"}
+th[aria-sort="ascending"] button::after{content:" ▴"}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--sheet)}
+tr.me td{background:var(--ink);color:var(--paper)}
+tr.me td a{color:var(--paper)}
+td .ico{width:22px;height:22px;vertical-align:middle;margin-right:8px;border-radius:3px;background:#fff;object-fit:contain}
+td .sub{display:block;font-size:.78rem;color:var(--ink2)}
+tr.me td .sub{color:var(--paper);opacity:.7}
+.pos{font-weight:700}
+.more{margin:14px 0 0;background:none;border:1.5px solid var(--ink);border-radius:3px;padding:8px 14px;cursor:pointer;font-weight:600}
+
+/* Listes de tendances */
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:grid;grid-template-columns:1.8rem minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule)}
+.rows li a{text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rows .n{color:var(--ink2);font-size:.85rem}
+.rows .v{font-weight:700;text-align:right}
+.rows .bar{grid-column:2 / 4;height:6px}
+.rows li.me a{font-weight:700}
+.rows li.me .bar i{background:var(--accent)}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:3px;overflow:hidden}
+.seg button{background:none;border:0;padding:6px 12px;cursor:pointer;font-weight:600;font-stretch:90%}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:disabled{color:var(--grey);cursor:not-allowed}
+
+.chart{position:relative;height:260px}
+.chart.tall{height:340px}
+.note{font-size:.88rem;color:var(--ink2);margin:8px 0 0}
+.notice{border:1.5px dashed var(--grey);padding:12px 14px;border-radius:3px;color:var(--ink2);margin:0 0 16px;max-width:70ch}
+.kpis{display:flex;flex-wrap:wrap;gap:4px 28px;margin:0 0 6px}
+.kpis div{font-size:.85rem;color:var(--ink2)}
+.kpis b{display:block;color:var(--ink);font-stretch:115%;font-weight:800;font-size:1.5rem}
+
+.finder{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.finder input{background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:8px 10px;width:min(360px,100%)}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:3px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn.ghost{background:none;color:var(--ink);border:1.5px solid var(--ink)}
+.hits{list-style:none;padding:0;margin:8px 0 0;max-width:520px}
+.hits li{padding:7px 0;border-bottom:1px solid var(--rule)}
+.hits button{background:none;border:0;cursor:pointer;text-align:left;padding:0;width:100%}
+.viewing{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 18px;font-size:.92rem}
+
+footer{max-width:1180px;margin:0 auto;padding:18px 16px 40px;color:var(--ink2);font-size:.82rem;border-top:1px solid var(--rule)}
+.loading{padding:60px 0;text-align:center;color:var(--ink2)}
+@media (prefers-reduced-motion:no-preference){
+  .rankbig{animation:ink .5s steps(4,end) both}
+  @keyframes ink{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1 class="brand">Palmarès des créateurs TRMNL<small>Classements des recettes publiques, recalculés chaque heure</small></h1>
+  <div class="updated"><span id="updated">Chargement…</span><button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐</button></div>
+</header>
+<nav class="tabs" aria-label="Sections"><div class="in">
+  <a href="#moi" data-tab="moi">Ma position</a>
+  <a href="#createurs" data-tab="createurs">Créateurs</a>
+  <a href="#recettes" data-tab="recettes">Recettes</a>
+  <a href="#tendances" data-tab="tendances">Tendances</a>
+  <a href="#analyses" data-tab="analyses">Analyses</a>
+</div></nav>
+
+<main>
+  <div class="loading" id="loading">Chargement des classements…</div>
+  <section id="tab-moi" hidden></section>
+  <section id="tab-createurs" hidden></section>
+  <section id="tab-recettes" hidden></section>
+  <section id="tab-tendances" hidden></section>
+  <section id="tab-analyses" hidden></section>
+</main>
+
+<footer>
+  Données issues de l'API publique des recettes TRMNL (trmnl.com/recipes.json). Points = installations + forks, comme le plugin
+  <a href="https://github.com/ExcuseMi/trmnl-trending-recipes-plugin">Trending Recipes</a> d'ExcuseMi dont ce site s'inspire.
+  Les créateurs n'ont pas de nom public dans l'API : ils sont identifiés par leur numéro.
+</footer>
+
+<script>
+/* ---------- Réglages ---------- */
+const DEFAULT_ME = '40325';        // votre identifiant de créateur TRMNL
+const DEFAULT_GOAL = 50;           // objectif d'installations par recette
+
+/* ---------- Outils ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const NF = new Intl.NumberFormat('fr-FR');
+const nf = n => n == null ? '—' : NF.format(Math.round(n));
+const nf1 = n => n == null ? '—' : new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 }).format(n);
+const sg = n => n == null ? '—' : (n > 0 ? '+' : n < 0 ? '−' : '') + NF.format(Math.abs(Math.round(n)));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const dfmt = iso => iso ? new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+const store = { get(k, d) { try { return localStorage.getItem(k) ?? d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+function ago(iso) {
+  const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
+  if (m < 1) return "à l'instant";
+  if (m < 60) return `il y a ${m} min`;
+  const h = Math.round(m / 60);
+  return h < 48 ? `il y a ${h} h` : `il y a ${Math.round(h / 24)} j`;
+}
+function rankMap(list, val, tie = () => 0) {
+  const arr = list.map(x => [x, val(x), tie(x)]).filter(e => e[1] != null && !Number.isNaN(e[1]));
+  arr.sort((a, b) => b[1] - a[1] || b[2] - a[2]);
+  const m = new Map(); let r = 0, prev = null;
+  arr.forEach(([x, v], k) => { if (v !== prev) { r = k + 1; prev = v; } m.set(x, r); });
+  return { map: m, size: arr.length };
+}
+
+/* ---------- État ---------- */
+let D = null, NAMES = {}, byU = new Map(), byR = new Map(), metricRanks = {};
+let me = new URLSearchParams(location.search).get('u') || store.get('trmnl-me', DEFAULT_ME);
+let goal = +store.get('trmnl-goal', DEFAULT_GOAL) || DEFAULT_GOAL;
+const hist = {};        // cache des historiques : hourly / daily
+const charts = {};
+const nameOf = u => (NAMES[u] && String(NAMES[u]).trim()) || `Créateur #${u}`;
+const idLabel = u => (NAMES[u] && String(NAMES[u]).trim()) ? `#${u}` : '';
+
+const METRICS = [
+  { k: 's', lbl: 'Points', val: c => c.s, show: c => `${nf(c.s)} pts` },
+  { k: 'i', lbl: 'Installations', val: c => c.i, show: c => nf(c.i) },
+  { k: 'f', lbl: 'Forks', val: c => c.f, show: c => nf(c.f) },
+  { k: 'n', lbl: 'Nombre de recettes', val: c => c.n, show: c => nf(c.n) },
+  { k: 'avg', lbl: 'Moyenne par recette', val: c => c.s / c.n, show: c => `${nf1(c.s / c.n)} pts` },
+  { k: 'best', lbl: 'Meilleure recette', val: c => byR.get(c.best)?.s ?? 0, show: c => `${nf(byR.get(c.best)?.s)} pts` },
+  { k: 'd24', lbl: 'Gain sur 24 h', val: c => c.d24, show: c => sg(c.d24) },
+  { k: 'd7', lbl: 'Gain sur 7 jours', val: c => c.d7, show: c => sg(c.d7) },
+  { k: 'd30', lbl: 'Gain sur 30 jours', val: c => c.d30, show: c => sg(c.d30) },
+  { k: 'rate', lbl: 'Taux de fork', val: c => c.i ? c.f / c.i : null, show: c => c.i ? `${nf1(100 * c.f / c.i)} %` : '—' },
+];
+
+/* ---------- Thème et graphiques ---------- */
+const themeKey = 'trmnl-theme';
+function applyTheme(t) { if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
+applyTheme(store.get(themeKey, ''));
+$('#themeBtn').onclick = () => {
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const cur = document.documentElement.dataset.theme || (dark ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  applyTheme(next); store.set(themeKey, next); route();
+};
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function dither(color, bg) {
+  const c = document.createElement('canvas'); c.width = c.height = 4;
+  const x = c.getContext('2d'); x.fillStyle = bg; x.fillRect(0, 0, 4, 4);
+  x.fillStyle = color; x.fillRect(0, 0, 2, 2); x.fillRect(2, 2, 2, 2);
+  return x.createPattern(c, 'repeat');
+}
+function chart(id, cfg) {
+  if (typeof Chart === 'undefined') return;
+  charts[id]?.destroy();
+  const el = document.getElementById(id); if (!el) return;
+  Chart.defaults.font.family = css('--font'); Chart.defaults.color = css('--ink2');
+  Chart.defaults.borderColor = css('--rule');
+  const o = cfg.options || {}, pl = o.plugins || {};
+  cfg.options = { responsive: true, maintainAspectRatio: false, animation: false, ...o,
+    plugins: { ...pl, legend: { display: false, ...(pl.legend || {}) },
+      tooltip: { backgroundColor: css('--ink'), titleColor: css('--paper'), bodyColor: css('--paper'), displayColors: false, ...(pl.tooltip || {}) } } };
+  charts[id] = new Chart(el, cfg);
+}
+
+/* ---------- Chargement ---------- */
+async function getJSON(url) {
+  const r = await fetch(url + (url.includes('?') ? '&' : '?') + 'h=' + Math.floor(Date.now() / 6e5), { cache: 'no-store' });
+  if (!r.ok) throw new Error(`${url} : ${r.status}`);
+  return r.json();
+}
+async function loadHist(kind) {
+  if (!hist[kind]) hist[kind] = getJSON(`data/${kind}.json`).then(h => {
+    const users = h.idx.map(([, u]) => u);
+    h.totals = h.snaps.map(s => {                // total de points par créateur, pour chaque instantané
+      const m = new Map();
+      for (let k = 0; k < users.length; k++) { const i = s.i[k]; if (i == null) continue; m.set(users[k], (m.get(users[k]) || 0) + i + (s.f[k] || 0)); }
+      return m;
+    });
+    h.global = h.snaps.map(s => ({ t: s.t, i: s.i.reduce((a, v) => a + (v || 0), 0), f: s.f.reduce((a, v) => a + (v || 0), 0), n: s.i.filter(v => v != null).length }));
+    return h;
+  }).catch(() => null);
+  return hist[kind];
+}
+function userSeries(h, u) {
+  return h.snaps.map((s, k) => {
+    const tot = h.totals[k], mine = tot.get(u);
+    if (mine == null) return { t: s.t, s: null, r: null };
+    let r = 1; for (const v of tot.values()) if (v > mine) r++;
+    return { t: s.t, s: mine, r, of: tot.size };
+  });
+}
+
+async function init() {
+  try {
+    [D, NAMES] = await Promise.all([getJSON('data/latest.json'), getJSON('names.json').catch(() => ({}))]);
+  } catch (e) {
+    $('#loading').innerHTML = `Les données ne sont pas encore disponibles.<br>Lancez le workflow « Mise à jour des stats TRMNL » dans l'onglet Actions du dépôt, puis rechargez cette page dans deux minutes.`;
+    return;
+  }
+  D.creators.forEach(c => byU.set(c.u, c));
+  D.recipes.forEach(r => byR.set(r.id, r));
+  D.creators.forEach(c => { c.recipes = []; });
+  D.recipes.forEach(r => byU.get(r.u)?.recipes.push(r));
+  for (const m of METRICS) metricRanks[m.k] = rankMap(D.creators, m.val, c => c.s);
+  $('#loading').remove();
+  const upd = () => { $('#updated').textContent = `Mis à jour ${ago(D.generated_at)}`; };
+  upd(); setInterval(upd, 60000);
+  window.addEventListener('hashchange', route);
+  route();
+}
+
+/* ---------- Routage ---------- */
+function route() {
+  if (!D) return;
+  const h = location.hash.slice(1) || 'moi';
+  const [tab, arg] = h.split('/');
+  const t = tab === 'createur' ? 'moi' : (['moi', 'createurs', 'recettes', 'tendances', 'analyses'].includes(tab) ? tab : 'moi');
+  document.querySelectorAll('nav.tabs a').forEach(a => a.toggleAttribute('aria-current', false));
+  const cur = document.querySelector(`nav.tabs a[data-tab="${t}"]`);
+  if (t === 'moi' && tab !== 'createur') cur.setAttribute('aria-current', 'page');
+  else if (t !== 'moi') cur.setAttribute('aria-current', 'page');
+  document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
+  ({ moi: () => renderProfile(tab === 'createur' ? arg : me), createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, analyses: renderAnalyses })[t]();
+}
+
+function historyNotice() {
+  const w = D.history.windows;
+  if (w.d24) return '';
+  const from = D.history.hourly_from ? Date.parse(D.history.hourly_from) : Date.now();
+  const when = new Date(from + 24 * 36e5 * 0.8).toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+  return `<p class="notice">L'historique se construit à chaque passage horaire. Les variations sur 24 h apparaîtront ${esc(when)}, celles sur 7 jours dans une semaine et celles sur 30 jours dans un mois.</p>`;
+}
+
+/* ---------- Ma position ---------- */
+function finderHTML(label = 'Trouver un créateur') {
+  return `<div class="sheet" style="margin-top:22px"><h3>${label}</h3>
+    <p class="muted" style="margin:0 0 10px;font-size:.9rem">Saisissez un numéro de créateur, ou le nom d'une de ses recettes.</p>
+    <div class="finder"><input id="findIn" type="search" placeholder="40325 ou « Patent drawings »" autocomplete="off"></div>
+    <ul class="hits" id="findHits"></ul></div>`;
+}
+function bindFinder(onPick) {
+  const inp = $('#findIn'), out = $('#findHits'); if (!inp) return;
+  inp.oninput = () => {
+    const q = inp.value.trim().toLowerCase(); out.innerHTML = '';
+    if (!q) return;
+    const hits = new Map();
+    if (/^\d+$/.test(q) && byU.has(q)) hits.set(q, 'Numéro exact');
+    for (const r of D.recipes) if (r.n.toLowerCase().includes(q) && !hits.has(r.u)) { hits.set(r.u, `auteur de « ${r.n} »`); if (hits.size >= 8) break; }
+    for (const [u, n] of Object.entries(NAMES)) if (String(n).toLowerCase().includes(q) && byU.has(u) && !hits.has(u)) hits.set(u, 'nom enregistré');
+    out.innerHTML = [...hits].map(([u, why]) => { const c = byU.get(u);
+      return `<li><button type="button" data-u="${u}"><b>${esc(nameOf(u))}</b> <span class="muted">${esc(why)}, rang ${c.r}, ${nf(c.s)} pts</span></button></li>`; }).join('')
+      || '<li class="muted">Aucun créateur ne correspond.</li>';
+  };
+  out.onclick = e => { const b = e.target.closest('button[data-u]'); if (b) onPick(b.dataset.u); };
+}
+
+function renderProfile(u) {
+  const el = $('#tab-moi');
+  const c = byU.get(String(u));
+  const isMe = String(u) === String(me);
+  if (!c) {
+    el.innerHTML = `<h2>Ma position</h2><p class="lead">Aucune recette publique n'est associée au créateur #${esc(u)}. Choisissez votre profil pour afficher votre classement.</p>${finderHTML('Choisir mon profil')}`;
+    bindFinder(v => { me = v; store.set('trmnl-me', v); location.hash = '#moi'; route(); });
+    return;
+  }
+  const N = D.creators.length;
+  const sorted = D.creators;               // déjà trié par rang
+  const pos = sorted.indexOf(c);
+  const above = sorted.slice(Math.max(0, pos - 3), pos), below = sorted.slice(pos + 1, pos + 4);
+  const pct = Math.max(1, Math.ceil(100 * c.r / N));
+  const mv = (lbl, prev) => {
+    if (prev == null) return `<span class="chip none">${lbl} : en attente d'historique</span>`;
+    const d = prev - c.r;
+    return `<span class="chip ${d > 0 ? 'good' : ''}">${lbl} : ${d > 0 ? `gagne ${d} place${d > 1 ? 's' : ''}` : d < 0 ? `perd ${-d} place${d < -1 ? 's' : ''}` : 'stable'}</span>`;
+  };
+  const nextUp = pos > 0 ? sorted.filter(x => x.s > c.s).pop() : null;
+  const target = !nextUp ? `<div class="target"><b>Vous êtes en tête du classement.</b> ${below[0] ? `${esc(nameOf(below[0].u))} suit à ${nf(c.s - below[0].s)} points.` : ''}</div>`
+    : `<div class="target">Encore <b>${nf(nextUp.s - c.s + 1)} point${nextUp.s - c.s + 1 > 1 ? 's' : ''}</b> pour passer devant ${esc(nameOf(nextUp.u))} et monter à la ${nextUp.r === 1 ? '1<sup>re</sup>' : nextUp.r + '<sup>e</sup>'} place.
+       ${c.d7 > 0 ? `À votre rythme des 7 derniers jours (${sg(c.d7)} pts), il faudrait environ ${Math.max(1, Math.ceil((nextUp.s - c.s + 1) / (c.d7 / 7)))} jour(s), si ce créateur ne progresse pas.` : ''}</div>`;
+  const row = (x, cls = '') => {
+    const gap = x === c ? (isMe ? 'vous' : 'profil affiché') : x.s > c.s ? `${nf(x.s - c.s)} pts devant` : `${nf(c.s - x.s)} pts derrière`;
+    return `<li class="${cls}"><span class="rk">${x.r}</span><a href="#createur/${x.u}">${esc(nameOf(x.u))}<span class="gap">${x.n} recette${x.n > 1 ? 's' : ''}, ${gap}</span></a><span class="pts">${nf(x.s)} pts</span></li>`;
+  };
+  const tiles = METRICS.map(m => {
+    const rk = metricRanks[m.k].map.get(c);
+    return `<div class="tile"><div class="lbl">${m.lbl}</div><div class="rv">${rk ? '#' + rk : '—'}<small>${rk ? 'sur ' + metricRanks[m.k].size : 'pas encore'}</small></div><div class="val">${m.show(c)}</div></div>`;
+  }).join('');
+  const recs = c.recipes.slice().sort((a, b) => b.s - a.s);
+  const reached = recs.filter(r => r.i >= goal).length;
+
+  el.innerHTML = `
+  ${isMe ? '' : `<div class="viewing"><span class="muted">Vous consultez le profil d'un autre créateur.</span>
+     <button class="btn ghost" type="button" id="backMe">Revenir à mon profil</button>
+     <button class="btn ghost" type="button" id="setMe">C'est moi</button></div>`}
+  ${historyNotice()}
+  <div class="hero">
+    <div>
+      <p class="rankbig">#${c.r}<span class="of">sur ${nf(N)} créateurs de recettes publiques, soit dans les ${pct} % premiers</span></p>
+      <p class="who">${esc(nameOf(c.u))}<span>${idLabel(c.u) || 'numéro de créateur'}</span></p>
+      <ul class="facts">
+        <li><b>${nf(c.s)}</b> points</li><li><b>${nf(c.i)}</b> installations</li>
+        <li><b>${nf(c.f)}</b> forks</li><li><b>${c.n}</b> recette${c.n > 1 ? 's' : ''}</li>
+        <li>depuis le <b>${dfmt(c.first)}</b></li>
+      </ul>
+      <div class="moves">${mv('24 h', c.r24)}${mv('7 jours', c.r7)}
+        <span class="chip ${c.d24 > 0 ? '' : 'none'}">${c.d24 == null ? 'Gain 24 h : bientôt' : `${sg(c.d24)} pts en 24 h`}</span></div>
+      ${target}
+    </div>
+    <div>
+      <h3>Vos voisins de classement</h3>
+      <ol class="ladder">${above.map(x => row(x)).join('')}${row(c, 'me')}${below.map(x => row(x)).join('')}</ol>
+    </div>
+  </div>
+
+  <h2>Tous vos classements</h2>
+  <p class="lead">Votre rang parmi les ${nf(N)} créateurs, métrique par métrique.</p>
+  <div class="tiles">${tiles}</div>
+
+  <h2>Évolution</h2>
+  <div class="tools">
+    <div class="seg" role="group" aria-label="Période">
+      <button type="button" data-range="hourly" aria-pressed="true">7 derniers jours</button>
+      <button type="button" data-range="daily" aria-pressed="false">Tout l'historique</button>
+    </div>
+    <label>Comparer avec un créateur (numéro)<input id="cmpIn" inputmode="numeric" placeholder="ex. ${sorted[Math.max(0, pos - 1)].u}" value="${esc(store.get('trmnl-cmp', ''))}" style="width:170px"></label>
+  </div>
+  <div class="grid g2">
+    <div class="sheet"><h3>Points cumulés</h3><div class="chart"><canvas id="chScore"></canvas></div></div>
+    <div class="sheet"><h3>Rang au classement</h3><div class="chart"><canvas id="chRank"></canvas></div></div>
+  </div>
+  <p class="note" id="histNote"></p>
+
+  <h2>Recettes</h2>
+  <div class="tools">
+    <label>Objectif d'installations par recette<input id="goalIn" type="number" min="1" value="${goal}" style="width:110px"></label>
+    <p class="muted" style="margin:0 0 6px">${reached} recette${reached > 1 ? 's' : ''} sur ${recs.length} à l'objectif.</p>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th class="l">Recette</th><th>Rang</th><th>Installs</th><th>Forks</th><th>+24 h</th><th>+7 j</th><th>+30 j</th><th class="l">Objectif</th><th>Part</th><th>Publiée</th></tr></thead>
+    <tbody>${recs.map(r => `<tr data-href="https://trmnl.com/recipes/${r.id}">
+      <td class="l name">${r.ic ? `<img class="ico" src="${esc(r.ic)}" alt="" loading="lazy">` : ''}<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a><span class="sub">${esc(r.c.join(', ') || 'sans catégorie')}</span></td>
+      <td>${r.r}<span class="sub">sur ${nf(D.recipes.length)}</span></td><td>${nf(r.i)}</td><td>${nf(r.f)}</td>
+      <td>${sg(r.d24)}</td><td>${sg(r.d7)}</td><td>${sg(r.d30)}</td>
+      <td class="l"><div class="bar goal ${r.i >= goal ? 'done' : ''}" title="${r.i} / ${goal}"><i style="width:${Math.min(100, 100 * r.i / goal)}%"></i></div><span class="sub">${r.i >= goal ? 'atteint' : `encore ${goal - r.i}`}</span></td>
+      <td>${c.s ? nf1(100 * r.s / c.s) : 0} %</td><td>${dfmt(r.p)}</td></tr>`).join('')}</tbody>
+  </table></div>
+  ${isMe ? finderHTML("Ce n'est pas vous ?") : ''}`;
+
+  $('#backMe')?.addEventListener('click', () => { location.hash = '#moi'; });
+  $('#setMe')?.addEventListener('click', () => { me = c.u; store.set('trmnl-me', c.u); location.hash = '#moi'; });
+  $('#goalIn').onchange = e => { goal = Math.max(1, +e.target.value || DEFAULT_GOAL); store.set('trmnl-goal', goal); renderProfile(c.u); };
+  el.querySelectorAll('tbody tr[data-href]').forEach(tr => tr.onclick = e => { if (!e.target.closest('a')) window.open(tr.dataset.href, '_blank', 'noopener'); });
+  bindFinder(v => { me = v; store.set('trmnl-me', v); location.hash = '#moi'; route(); });
+
+  let range = 'hourly';
+  const draw = async () => {
+    const h = await loadHist(range);
+    const note = $('#histNote'); if (!note) return;
+    if (!h || h.snaps.length < 2) { note.textContent = "Les courbes apparaîtront après quelques passages horaires."; }
+    else note.textContent = `${h.snaps.length} relevés, du ${dfmt(h.snaps[0].t)} au ${dfmt(h.snaps.at(-1).t)}.`;
+    if (!h) return;
+    const cmp = $('#cmpIn').value.trim();
+    const a = userSeries(h, c.u), b = cmp && byU.has(cmp) && cmp !== c.u ? userSeries(h, cmp) : null;
+    const labels = h.snaps.map(s => new Date(s.t).toLocaleString('fr-FR', range === 'hourly' ? { weekday: 'short', hour: '2-digit' } : { day: 'numeric', month: 'short' }));
+    const ink = css('--ink'), grey = css('--grey');
+    const ds = (ser, key, name, color, dash) => ({ label: name, data: ser.map(p => p[key]), borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 0, tension: .15, borderDash: dash, spanGaps: true, stepped: key === 'r' });
+    const sets = k => [ds(a, k, nameOf(c.u), ink), ...(b ? [ds(b, k, nameOf(cmp), grey, [5, 4])] : [])];
+    const legend = { display: !!b, labels: { boxWidth: 14, color: css('--ink') } };
+    chart('chScore', { type: 'line', data: { labels, datasets: sets('s') }, options: { plugins: { legend }, scales: { x: { ticks: { maxTicksLimit: 6, maxRotation: 0 } }, y: { ticks: { precision: 0 } } } } });
+    chart('chRank', { type: 'line', data: { labels, datasets: sets('r') }, options: { plugins: { legend }, scales: { x: { ticks: { maxTicksLimit: 6, maxRotation: 0 } }, y: { reverse: true, ticks: { precision: 0 } } } } });
+  };
+  el.querySelectorAll('[data-range]').forEach(bt => bt.onclick = () => {
+    range = bt.dataset.range; el.querySelectorAll('[data-range]').forEach(x => x.setAttribute('aria-pressed', x === bt)); draw();
+  });
+  $('#cmpIn').onchange = e => { store.set('trmnl-cmp', e.target.value.trim()); draw(); };
+  draw();
+}
+
+/* ---------- Tableaux triables ---------- */
+function sortableTable({ cols, rows, key, dir = 'desc', rowHTML, rowClass = () => '', onRow, pageSize = 0 }) {
+  const wrap = document.createElement('div');
+  let sortK = key, sortD = dir, shown = pageSize;
+  const draw = () => {
+    const col = cols.find(c => c.k === sortK);
+    const data = rows().slice().sort((a, b) => {
+      const va = col.v(a), vb = col.v(b);
+      if (va == null && vb == null) return 0; if (va == null) return 1; if (vb == null) return -1;
+      const r = typeof va === 'string' ? va.localeCompare(vb, 'fr') : va - vb;
+      return sortD === 'asc' ? r : -r;
+    });
+    const part = pageSize ? data.slice(0, shown) : data;
+    wrap.innerHTML = `<div class="scroll"><table><thead><tr>${cols.map(c => `<th class="${c.l ? 'l' : ''}" ${c.k === sortK ? `aria-sort="${sortD === 'asc' ? 'ascending' : 'descending'}"` : ''}><button type="button" data-k="${c.k}">${c.t}</button></th>`).join('')}</tr></thead>
+      <tbody>${part.map(r => `<tr class="${rowClass(r)}">${rowHTML(r)}</tr>`).join('') || `<tr><td class="l muted" colspan="${cols.length}">Aucun résultat pour ces filtres.</td></tr>`}</tbody></table></div>
+      ${pageSize && data.length > shown ? `<button class="more" type="button">Afficher ${Math.min(pageSize, data.length - shown)} de plus (${nf(data.length - shown)} restants)</button>` : ''}
+      <p class="note">${nf(data.length)} ligne${data.length > 1 ? 's' : ''}.</p>`;
+    wrap.querySelectorAll('th button').forEach(b => b.onclick = () => {
+      const k = b.dataset.k; const c = cols.find(x => x.k === k);
+      if (k === sortK) sortD = sortD === 'asc' ? 'desc' : 'asc'; else { sortK = k; sortD = c.asc ? 'asc' : 'desc'; }
+      draw();
+    });
+    wrap.querySelector('.more')?.addEventListener('click', () => { shown += pageSize; draw(); });
+    wrap.querySelectorAll('tbody tr').forEach((tr, n) => tr.onclick = e => { if (!e.target.closest('a') && part[n]) onRow?.(part[n]); });
+  };
+  wrap.redraw = () => { shown = pageSize; draw(); };
+  draw();
+  return wrap;
+}
+const deltaRank = c => c.r24 == null ? null : c.r24 - c.r;
+
+/* ---------- Créateurs ---------- */
+function renderCreators() {
+  const el = $('#tab-createurs');
+  if (el.dataset.ready) return;
+  el.dataset.ready = 1;
+  el.innerHTML = `<h2>Classement des créateurs</h2>
+    <p class="lead">Tous les créateurs de recettes publiques. Touchez un en-tête pour trier, une ligne pour ouvrir le profil détaillé.</p>
+    ${historyNotice()}
+    <div class="tools"><label>Rechercher<input type="search" id="cq" placeholder="Numéro, nom ou recette"></label>
+      <label>Recettes publiées<select id="cn"><option value="0">Toutes tailles</option><option value="2">2 ou plus</option><option value="5">5 ou plus</option><option value="10">10 ou plus</option></select></label></div>
+    <div id="ctab"></div>`;
+  const q = () => $('#cq').value.trim().toLowerCase(), minN = () => +$('#cn').value;
+  const tbl = sortableTable({
+    key: 's',
+    cols: [
+      { k: 'r', t: 'Rang', v: c => c.r, asc: true },
+      { k: 'u', t: 'Créateur', v: c => nameOf(c.u), l: 1, asc: true },
+      { k: 'n', t: 'Recettes', v: c => c.n },
+      { k: 'i', t: 'Installs', v: c => c.i },
+      { k: 'f', t: 'Forks', v: c => c.f },
+      { k: 's', t: 'Points', v: c => c.s },
+      { k: 'avg', t: 'Moy./recette', v: c => c.s / c.n },
+      { k: 'd24', t: '+24 h', v: c => c.d24 },
+      { k: 'd7', t: '+7 j', v: c => c.d7 },
+      { k: 'd30', t: '+30 j', v: c => c.d30 },
+      { k: 'dr', t: 'Places 24 h', v: deltaRank },
+    ],
+    rows: () => D.creators.filter(c => c.n >= minN() && (!q() || c.u.includes(q()) || nameOf(c.u).toLowerCase().includes(q()) || c.recipes.some(r => r.n.toLowerCase().includes(q())))),
+    rowClass: c => c.u === String(me) ? 'me' : '',
+    rowHTML: c => { const best = byR.get(c.best); const dr = deltaRank(c);
+      return `<td>${c.r}</td><td class="l name"><a href="#createur/${c.u}">${esc(nameOf(c.u))}</a><span class="sub">${best ? 'meilleure : ' + esc(best.n) : ''}</span></td>
+      <td>${c.n}</td><td>${nf(c.i)}</td><td>${nf(c.f)}</td><td class="pos">${nf(c.s)}</td><td>${nf1(c.s / c.n)}</td>
+      <td>${sg(c.d24)}</td><td>${sg(c.d7)}</td><td>${sg(c.d30)}</td><td>${dr == null ? '—' : dr > 0 ? '▲ ' + dr : dr < 0 ? '▼ ' + -dr : '='}</td>`; },
+    onRow: c => { location.hash = '#createur/' + c.u; },
+  });
+  $('#ctab').append(tbl);
+  $('#cq').oninput = () => tbl.redraw(); $('#cn').onchange = () => tbl.redraw();
+}
+
+/* ---------- Recettes ---------- */
+function renderRecipes() {
+  const el = $('#tab-recettes');
+  if (el.dataset.ready) return;
+  el.dataset.ready = 1;
+  const cats = new Map();
+  D.recipes.forEach(r => (r.c.length ? r.c : ['sans catégorie']).forEach(x => cats.set(x, (cats.get(x) || 0) + 1)));
+  el.innerHTML = `<h2>Classement des recettes</h2>
+    <p class="lead">${nf(D.recipes.length)} recettes publiques, classées par points. Touchez une ligne pour ouvrir la recette sur trmnl.com.</p>
+    <div class="tools">
+      <label>Rechercher<input type="search" id="rq" placeholder="Nom de recette"></label>
+      <label>Catégorie<select id="rc"><option value="">Toutes</option>${[...cats].sort((a, b) => b[1] - a[1]).map(([k, n]) => `<option value="${esc(k)}">${esc(k)} (${n})</option>`).join('')}</select></label>
+      <label>Publiées<select id="rp"><option value="0">Depuis toujours</option><option value="7">Ces 7 derniers jours</option><option value="30">Ces 30 derniers jours</option><option value="90">Ces 90 derniers jours</option><option value="365">Cette année</option></select></label>
+      <label>Afficher<select id="rm"><option value="">Tous les créateurs</option><option value="me">Mes recettes</option></select></label>
+    </div><div id="rtab"></div>`;
+  const tbl = sortableTable({
+    key: 's', pageSize: 100,
+    cols: [
+      { k: 'r', t: 'Rang', v: r => r.r, asc: true },
+      { k: 'n', t: 'Recette', v: r => r.n, l: 1, asc: true },
+      { k: 'u', t: 'Créateur', v: r => byU.get(r.u)?.r, l: 1, asc: true },
+      { k: 'i', t: 'Installs', v: r => r.i },
+      { k: 'f', t: 'Forks', v: r => r.f },
+      { k: 's', t: 'Points', v: r => r.s },
+      { k: 'd1', t: '+1 h', v: r => r.d1 },
+      { k: 'd24', t: '+24 h', v: r => r.d24 },
+      { k: 'd7', t: '+7 j', v: r => r.d7 },
+      { k: 'd30', t: '+30 j', v: r => r.d30 },
+      { k: 'p', t: 'Publiée', v: r => r.p ? Date.parse(r.p) : null },
+    ],
+    rows: () => {
+      const q = $('#rq').value.trim().toLowerCase(), cat = $('#rc').value, days = +$('#rp').value, mine = $('#rm').value === 'me';
+      const since = Date.now() - days * 864e5;
+      return D.recipes.filter(r => (!q || r.n.toLowerCase().includes(q)) && (!cat || (r.c.length ? r.c : ['sans catégorie']).includes(cat))
+        && (!days || (r.p && Date.parse(r.p) >= since)) && (!mine || r.u === String(me)));
+    },
+    rowClass: r => r.u === String(me) ? 'me' : '',
+    rowHTML: r => `<td>${r.r}</td><td class="l name">${r.ic ? `<img class="ico" src="${esc(r.ic)}" alt="" loading="lazy">` : ''}<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a><span class="sub">${esc(r.c.join(', ') || 'sans catégorie')}</span></td>
+      <td class="l"><a href="#createur/${r.u}">${esc(nameOf(r.u))}</a><span class="sub">rang ${byU.get(r.u)?.r}</span></td>
+      <td>${nf(r.i)}</td><td>${nf(r.f)}</td><td class="pos">${nf(r.s)}</td><td>${sg(r.d1)}</td><td>${sg(r.d24)}</td><td>${sg(r.d7)}</td><td>${sg(r.d30)}</td><td>${dfmt(r.p)}</td>`,
+    onRow: r => window.open(`https://trmnl.com/recipes/${r.id}`, '_blank', 'noopener'),
+  });
+  $('#rtab').append(tbl);
+  ['#rq', '#rc', '#rp', '#rm'].forEach(s => $(s).addEventListener(s === '#rq' ? 'input' : 'change', () => tbl.redraw()));
+}
+
+/* ---------- Tendances ---------- */
+let trendWin = null;
+function renderTrends() {
+  const el = $('#tab-tendances');
+  const W = [['d1', '1 heure'], ['d24', '24 heures'], ['d7', '7 jours'], ['d30', '30 jours']];
+  const avail = W.filter(([k]) => D.history.windows[k]);
+  if (!trendWin || !D.history.windows[trendWin]) trendWin = (avail.find(([k]) => k === 'd24') || avail.at(-1) || [null])[0];
+  const list = (items, val, label, href, isMe, sub) => {
+    const max = Math.max(1, ...items.map(val));
+    return `<ol class="rows">${items.map((x, n) => `<li class="${isMe(x) ? 'me' : ''}"><span class="n">${n + 1}</span>${href(x)}<span class="v">${label(x)}</span>
+      <div class="bar"><i style="width:${Math.max(2, 100 * val(x) / max)}%"></i></div>${sub ? `<span></span><span class="n" style="grid-column:2/4">${sub(x)}</span>` : ''}</li>`).join('') || '<li><span></span><span class="muted">Rien à afficher pour cette période.</span></li>'}</ol>`;
+  };
+  const week = Date.now() - 7 * 864e5;
+  const fresh = D.recipes.filter(r => r.p && Date.parse(r.p) >= week).sort((a, b) => b.s - a.s).slice(0, 15);
+  let body = '';
+  if (trendWin) {
+    const k = trendWin;
+    const rUp = D.recipes.filter(r => r[k] > 0).sort((a, b) => b[k] - a[k]).slice(0, 15);
+    const cUp = D.creators.filter(c => c[k] > 0).sort((a, b) => b[k] - a[k]).slice(0, 15);
+    const climb = D.creators.filter(c => deltaRank(c) > 0).sort((a, b) => deltaRank(b) - deltaRank(a)).slice(0, 15);
+    const myC = byU.get(String(me));
+    const myRank = myC && myC[k] != null ? 1 + D.creators.filter(c => (c[k] ?? -1) > myC[k]).length : null;
+    body = `${myC ? `<p class="target" style="margin:0 0 18px">Sur cette période, vous avez gagné <b>${sg(myC[k])} points</b>${myRank ? `, ce qui vous place <b>${myRank}<sup>e</sup></b> des créateurs qui progressent le plus` : ''}.</p>` : ''}
+    <div class="grid g2">
+      <div class="sheet"><h3>Recettes qui montent</h3>${list(rUp, r => r[k], r => sg(r[k]), r => `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>`, r => r.u === String(me), r => `${esc(nameOf(r.u))}, ${nf(r.s)} pts au total`)}</div>
+      <div class="sheet"><h3>Créateurs qui montent</h3>${list(cUp, c => c[k], c => sg(c[k]), c => `<a href="#createur/${c.u}">${esc(nameOf(c.u))}</a>`, c => c.u === String(me), c => `rang ${c.r}, ${c.n} recette${c.n > 1 ? 's' : ''}`)}</div>
+      <div class="sheet"><h3>Plus fortes remontées de rang en 24 h</h3>${D.history.windows.d24 ? list(climb, deltaRank, c => '▲ ' + deltaRank(c), c => `<a href="#createur/${c.u}">${esc(nameOf(c.u))}</a>`, c => c.u === String(me), c => `de la ${c.r24}<sup>e</sup> à la ${c.r}<sup>e</sup> place`) : '<p class="muted">Disponible après 24 heures d\'historique.</p>'}</div>
+      <div class="sheet"><h3>Nouvelles recettes de la semaine</h3>${list(fresh, r => r.s, r => nf(r.s) + ' pts', r => `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>`, r => r.u === String(me), r => `${esc(nameOf(r.u))}, publiée le ${dfmt(r.p)}`)}</div>
+    </div>`;
+  } else {
+    body = `<div class="sheet"><h3>Nouvelles recettes de la semaine</h3>${list(fresh, r => r.s, r => nf(r.s) + ' pts', r => `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>`, r => r.u === String(me), r => `${esc(nameOf(r.u))}, publiée le ${dfmt(r.p)}`)}</div>`;
+  }
+  el.innerHTML = `<h2>Tendances</h2><p class="lead">Ce qui gagne des installations et des forks en ce moment.</p>${historyNotice()}
+    <div class="tools"><div class="seg" role="group" aria-label="Période">${W.map(([k, l]) => `<button type="button" data-w="${k}" aria-pressed="${k === trendWin}" ${D.history.windows[k] ? '' : 'disabled'}>${l}</button>`).join('')}</div></div>${body}`;
+  el.querySelectorAll('[data-w]').forEach(b => b.onclick = () => { trendWin = b.dataset.w; renderTrends(); });
+}
+
+/* ---------- Analyses ---------- */
+async function renderAnalyses() {
+  const el = $('#tab-analyses');
+  const T = D.totals, C = D.creators, R = D.recipes;
+  const sortedS = C.map(c => c.s).sort((a, b) => b - a);
+  const share = n => 100 * sortedS.slice(0, n).reduce((a, b) => a + b, 0) / Math.max(1, T.installs + T.forks);
+  const half = (() => { let acc = 0, k = 0; const tot = T.installs + T.forks; while (acc < tot / 2 && k < sortedS.length) acc += sortedS[k++]; return k; })();
+  const myC = byU.get(String(me));
+  const r50 = R.filter(r => r.i >= goal).length;
+  const zero = R.filter(r => r.i === 0).length;
+  const med = arr => { const a = arr.slice().sort((x, y) => x - y); const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; };
+  el.innerHTML = `<h2>Vue d'ensemble</h2>
+    <div class="kpis">
+      <div><b>${nf(T.recipes)}</b>recettes publiques</div><div><b>${nf(T.creators)}</b>créateurs</div>
+      <div><b>${nf(T.installs)}</b>installations</div><div><b>${nf(T.forks)}</b>forks</div>
+      <div><b>${nf1(med(R.map(r => r.i)))}</b>installations médianes par recette</div>
+      <div><b>${nf(r50)}</b>recettes à ${goal} installations ou plus</div>
+    </div>
+    <p class="lead">${nf(zero)} recettes n'ont encore aucune installation. La moitié de tous les points est détenue par ${half} créateurs, soit ${nf1(100 * half / T.creators)} % d'entre eux.</p>
+
+    <h2>Concentration</h2>
+    <div class="grid g2">
+      <div class="sheet"><h3>Part des points détenue par les premiers</h3>
+        <ol class="rows">${[1, 5, 10, 25, 50, 100].map(n => `<li><span class="n">${n}</span><span>${n === 1 ? 'le premier créateur' : `les ${n} premiers`}</span><span class="v">${nf1(share(n))} %</span><div class="bar"><i style="width:${share(n)}%"></i></div></li>`).join('')}
+        ${myC ? `<li class="me"><span class="n">${myC.r}</span><span>vous</span><span class="v">${nf1(100 * myC.s / (T.installs + T.forks))} %</span><div class="bar"><i style="width:${Math.max(1, 100 * myC.s / (T.installs + T.forks))}%"></i></div></li>` : ''}</ol></div>
+      <div class="sheet"><h3>Courbe de concentration</h3><div class="chart"><canvas id="aLorenz"></canvas></div>
+        <p class="note">Part cumulée des points (verticale) selon la part des créateurs, du plus petit au plus gros. La diagonale serait une répartition parfaitement égale.</p></div>
+    </div>
+
+    <h2>Répartitions</h2>
+    <div class="grid g2">
+      <div class="sheet"><h3>Créateurs selon leur nombre de recettes</h3><div class="chart"><canvas id="aNrec"></canvas></div></div>
+      <div class="sheet"><h3>Recettes selon leurs installations</h3><div class="chart"><canvas id="aInst"></canvas></div></div>
+      <div class="sheet"><h3>Catégories les plus installées</h3><div class="chart tall"><canvas id="aCat"></canvas></div></div>
+      <div class="sheet"><h3>Recettes publiées par mois</h3><div class="chart tall"><canvas id="aMonth"></canvas></div></div>
+    </div>
+
+    <h2>Où se placent les créateurs</h2>
+    <div class="sheet"><h3>Nombre de recettes et points de chaque créateur</h3><div class="chart tall"><canvas id="aScatter"></canvas></div>
+      <p class="note">Échelles logarithmiques. Le point orange, c'est vous.</p></div>
+
+    <h2>Croissance de la communauté</h2>
+    <div class="sheet"><h3>Installations totales</h3><div class="chart"><canvas id="aGrowth"></canvas></div><p class="note" id="aGrowthNote"></p></div>`;
+
+  const ink = css('--ink'), grey = css('--grey'), paper = css('--sheet'), acc = css('--accent');
+  const pat = dither(ink, paper);
+  const noGrid = { grid: { display: false } };
+
+  // Courbe de Lorenz
+  const asc = sortedS.slice().reverse(); const tot = asc.reduce((a, b) => a + b, 0) || 1;
+  let acc2 = 0; const pts = [{ x: 0, y: 0 }]; asc.forEach((v, k) => { acc2 += v; pts.push({ x: 100 * (k + 1) / asc.length, y: 100 * acc2 / tot }); });
+  chart('aLorenz', { type: 'scatter', data: { datasets: [
+    { data: pts, showLine: true, borderColor: ink, backgroundColor: pat, fill: true, pointRadius: 0, borderWidth: 2 },
+    { data: [{ x: 0, y: 0 }, { x: 100, y: 100 }], showLine: true, borderColor: grey, borderDash: [4, 4], pointRadius: 0, borderWidth: 1 }] },
+    options: { plugins: { tooltip: { enabled: false } }, scales: { x: { min: 0, max: 100, ticks: { callback: v => v + ' %' } }, y: { min: 0, max: 100, ticks: { callback: v => v + ' %' } } } } });
+
+  // Nombre de recettes par créateur
+  const nb = [['1', 1, 1], ['2', 2, 2], ['3 à 5', 3, 5], ['6 à 10', 6, 10], ['11 à 20', 11, 20], ['21 et +', 21, 1e9]];
+  const myB = myC ? nb.findIndex(([, a, b]) => myC.n >= a && myC.n <= b) : -1;
+  chart('aNrec', { type: 'bar', data: { labels: nb.map(x => x[0]), datasets: [{ data: nb.map(([, a, b]) => C.filter(c => c.n >= a && c.n <= b).length), backgroundColor: nb.map((_, k) => k === myB ? acc : pat), borderColor: ink, borderWidth: 1 }] },
+    options: { scales: { x: noGrid, y: { ticks: { precision: 0 } } } } });
+
+  // Tranches d'installations
+  const ib = [['0', 0, 0], ['1 à 9', 1, 9], ['10 à 24', 10, 24], ['25 à 49', 25, 49], ['50 à 99', 50, 99], ['100 à 499', 100, 499], ['500 et +', 500, 1e9]];
+  chart('aInst', { type: 'bar', data: { labels: ib.map(x => x[0]), datasets: [
+    { label: 'Toutes', data: ib.map(([, a, b]) => R.filter(r => r.i >= a && r.i <= b).length), backgroundColor: pat, borderColor: ink, borderWidth: 1 },
+    ...(myC ? [{ label: 'Les vôtres', data: ib.map(([, a, b]) => myC.recipes.filter(r => r.i >= a && r.i <= b).length), backgroundColor: acc }] : [])] },
+    options: { plugins: { legend: { display: !!myC, labels: { boxWidth: 12, color: ink } } }, scales: { x: noGrid, y: { type: 'logarithmic', ticks: { callback: v => [1, 10, 100, 1000].includes(v) ? v : '' } } } } });
+
+  // Catégories
+  const cat = new Map();
+  R.forEach(r => (r.c.length ? r.c : ['sans catégorie']).forEach(k => { const o = cat.get(k) || { n: 0, i: 0 }; o.n++; o.i += r.i; cat.set(k, o); }));
+  const topCat = [...cat].sort((a, b) => b[1].i - a[1].i).slice(0, 12);
+  chart('aCat', { type: 'bar', data: { labels: topCat.map(([k, o]) => `${k} (${o.n})`), datasets: [{ data: topCat.map(([, o]) => o.i), backgroundColor: pat, borderColor: ink, borderWidth: 1 }] },
+    options: { indexAxis: 'y', scales: { y: noGrid, x: { ticks: { maxTicksLimit: 5 } } } } });
+
+  // Publications par mois
+  const months = new Map();
+  R.forEach(r => { if (!r.p) return; const k = r.p.slice(0, 7); months.set(k, (months.get(k) || 0) + 1); });
+  const mk = [...months.keys()].sort().slice(-24);
+  chart('aMonth', { type: 'bar', data: { labels: mk.map(k => new Date(k + '-01').toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' })), datasets: [{ data: mk.map(k => months.get(k)), backgroundColor: pat, borderColor: ink, borderWidth: 1 }] },
+    options: { scales: { x: { ...noGrid, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8 } }, y: { ticks: { precision: 0 } } } } });
+
+  // Nuage de points
+  const others = C.filter(c => c.u !== String(me)).map(c => ({ x: c.n, y: Math.max(1, c.s), u: c.u }));
+  chart('aScatter', { type: 'scatter', data: { datasets: [
+    { data: others, backgroundColor: grey, pointRadius: 3, pointHoverRadius: 5 },
+    ...(myC ? [{ data: [{ x: myC.n, y: Math.max(1, myC.s), u: myC.u }], backgroundColor: acc, borderColor: ink, borderWidth: 1.5, pointRadius: 8 }] : [])] },
+    options: { onClick: (e, els) => { const p = els[0] && charts.aScatter.data.datasets[els[0].datasetIndex].data[els[0].index]; if (p) location.hash = '#createur/' + p.u; },
+      plugins: { tooltip: { callbacks: { label: ctx => `${nameOf(ctx.raw.u)} : ${ctx.raw.x} recette(s), ${nf(ctx.raw.y)} pts` } } },
+      scales: { x: { type: 'logarithmic', title: { display: true, text: 'Recettes' }, ticks: { callback: v => [1, 2, 5, 10, 20, 50, 100].includes(v) ? v : '' } },
+                y: { type: 'logarithmic', title: { display: true, text: 'Points' }, ticks: { callback: v => [1, 10, 100, 1000, 10000].includes(v) ? NF.format(v) : '' } } } } });
+
+  // Croissance
+  const h = await loadHist('daily'); const hh = await loadHist('hourly');
+  const src = h && h.snaps.length >= 3 ? h : hh;
+  const note = $('#aGrowthNote'); if (!note) return;
+  if (!src || src.snaps.length < 2) { note.textContent = "La courbe apparaîtra après quelques relevés."; return; }
+  const daily = src === h;
+  note.textContent = `${src.global.length} relevés ${daily ? 'quotidiens' : 'horaires'}. Entre le premier et le dernier : ${sg(src.global.at(-1).i - src.global[0].i)} installations, ${sg(src.global.at(-1).n - src.global[0].n)} recettes.`;
+  chart('aGrowth', { type: 'line', data: { labels: src.global.map(g => new Date(g.t).toLocaleString('fr-FR', daily ? { day: 'numeric', month: 'short' } : { weekday: 'short', hour: '2-digit' })),
+    datasets: [{ data: src.global.map(g => g.i), borderColor: ink, backgroundColor: pat, fill: true, pointRadius: 0, borderWidth: 2, tension: .15 }] },
+    options: { scales: { x: { ticks: { maxTicksLimit: 6, maxRotation: 0 } }, y: { ticks: { callback: v => NF.format(v) } } } } });
+}
+
+init();
+</script>
+</body>
+</html>

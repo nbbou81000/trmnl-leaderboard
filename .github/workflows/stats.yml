@@ -1,0 +1,51 @@
+name: Mise à jour des stats TRMNL
+
+on:
+  schedule:
+    - cron: '7 * * * *'   # toutes les heures, à hh:07 UTC
+  workflow_dispatch:       # bouton « Run workflow » pour lancer à la main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trmnl-stats
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Récupérer l'historique déjà publié
+        run: |
+          mkdir -p public/data
+          if git fetch --depth=1 origin gh-pages 2>/dev/null; then
+            for f in hourly.json daily.json latest.json; do
+              git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
+            done
+          else
+            echo "Premier lancement : pas encore d'historique."
+          fi
+
+      - name: Collecter les recettes et calculer les classements
+        run: node scripts/fetch-stats.mjs public/data
+
+      - name: Publier sur la branche gh-pages
+        run: |
+          cp index.html public/
+          [ -f names.json ] && cp names.json public/ || echo '{}' > public/names.json
+          touch public/.nojekyll
+          cd public
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Stats du $(date -u '+%Y-%m-%d %H:%M') UTC"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages

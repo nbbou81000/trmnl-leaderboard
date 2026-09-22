@@ -1,0 +1,39 @@
+name: Claim a creator profile
+description: Show your name on the TRMNL Creator Leaderboard instead of your creator number.
+title: "Claim profile #"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for stopping by! Fill in the fields below and your name will appear on the leaderboard once the request has been reviewed.
+        This is completely optional: profiles without a claim simply keep showing their number.
+  - type: input
+    id: creator_id
+    attributes:
+      label: Creator number
+      description: Already filled in if you came from the site's "Claim this profile" button.
+      placeholder: "12345"
+    validations:
+      required: true
+  - type: input
+    id: display_name
+    attributes:
+      label: Name to display
+      description: Your Discord name or any nickname you like (40 characters max).
+      placeholder: "martin2097"
+    validations:
+      required: true
+  - type: input
+    id: recipe
+    attributes:
+      label: One of your recipes
+      description: The name of one of your public recipes, to help confirm the profile is yours.
+    validations:
+      required: true
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I'm the creator behind this profile and I'm happy for this name to be shown publicly on the site.
+          required: true

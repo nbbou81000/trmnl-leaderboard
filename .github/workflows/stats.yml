@@ -4,6 +4,11 @@ on:
   # Déclenché chaque heure par cron-job.org (via l'API GitHub),
   # ou à la main avec le bouton « Run workflow ».
   workflow_dispatch:
+    inputs:
+      collect:
+        description: 'Relever les recettes sur TRMNL (décocher pour republier seulement le site, par exemple après un changement de nom)'
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -35,7 +40,14 @@ jobs:
           fi
 
       - name: Collecter les recettes et calculer les classements
-        run: node scripts/fetch-stats.mjs public/data
+        env:
+          COLLECT: ${{ inputs.collect }}
+        run: |
+          if [ "$COLLECT" = "false" ] && [ -f public/data/latest.json ]; then
+            echo "Republication seule : aucun appel à l'API TRMNL, données précédentes conservées."
+          else
+            node scripts/fetch-stats.mjs public/data
+          fi
 
       - name: Publier sur la branche gh-pages
         run: |

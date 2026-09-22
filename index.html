@@ -6,6 +6,11 @@
 <title>TRMNL Creator Leaderboard / Palmarès des créateurs TRMNL</title>
 <meta name="description" content="Classement horaire de tous les créateurs de recettes publiques TRMNL : rangs, installations, forks, tendances et statistiques détaillées.">
 <meta name="theme-color" content="#f8654b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TRMNL Rank">
+<meta name="mobile-web-app-capable" content="yes">
 <!-- Aperçu des liens (Discord, réseaux sociaux…). __SITE_URL__ est remplacé automatiquement par le workflow. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TRMNL Creator Leaderboard">
@@ -1153,6 +1158,11 @@ async function renderAnalyses() {
 }
 
 init();
+
+// Installation en application (écran d'accueil) et mode hors-ligne
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
 </script>
 </body>
 </html>

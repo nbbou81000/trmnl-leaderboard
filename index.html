@@ -214,7 +214,17 @@ td .sub{display:block;font-size:.78rem;color:var(--ink2)}
 .boardhead{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:0 0 12px}
 .boardhead select{background:var(--sheet);border:2px solid var(--ink);border-radius:8px;padding:8px 10px;font-weight:650;max-width:100%}
 
-footer{max-width:1180px;margin:0 auto;padding:18px 16px 40px;color:var(--ink2);font-size:.82rem;border-top:1px solid var(--rule)}
+footer{max-width:1180px;margin:0 auto;padding:22px 16px 44px;color:var(--ink2);font-size:.82rem;border-top:1px solid var(--rule)}
+footer p{margin:0 0 12px;max-width:80ch}
+.flinks{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0 0 14px;padding:0;font-size:.86rem}
+.flinks a{color:var(--ink);text-decoration:none;border-bottom:1.5px solid transparent;padding-bottom:1px}
+.flinks a:hover,.flinks a:focus-visible{border-bottom-color:var(--accent)}
+.flinks a::after{content:" ↗";color:var(--accent);font-size:.8em}
+.fbot{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;padding-top:12px;border-top:1px solid var(--rule);font-size:.78rem;color:var(--grey)}
+.fbot a{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule2)}
+.fbot a:hover{color:var(--ink2)}
+.fbot .kofi{margin-left:auto;color:var(--accent-ink);border-bottom-color:var(--accent2)}
+.fbot .kofi:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
 .loading{padding:60px 0;text-align:center;color:var(--ink2)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:.9rem;z-index:50}
 @media (prefers-reduced-motion:no-preference){
@@ -250,6 +260,7 @@ footer{max-width:1180px;margin:0 auto;padding:18px 16px 40px;color:var(--ink2);f
 /* ================= Réglages / Settings ================= */
 const GOATCOUNTER = 'trmnl-leaderboard';     // votre code GoatCounter, ex. 'trmnl-palmares' pour https://trmnl-palmares.goatcounter.com
 const REPO = '__REPO__';      // dépôt GitHub (rempli automatiquement par le workflow), pour le bouton « Claim this profile »
+const KOFI = 'nicolasbouteiller';     // votre identifiant Ko-fi (ko-fi.com/…) ; laisser vide pour retirer le lien
 const DEFAULT_GOAL = 50;    // objectif d'installations par recette / installs goal per recipe
 
 /* ================= Langue / Language ================= */
@@ -366,6 +377,7 @@ $('#langBtn').onclick = () => {
   if (location.hash === target) route(); else location.hash = target;
   track(EN() ? 'langue-en' : 'langue-fr', true);
 };
+const canClaim = () => /^[\w.-]+\/[\w.-]+$/.test(REPO);
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const PAL = () => ['--accent', '--sage', '--indigo', '--mustard', '--sky', '--plum', '--clay', '--accent2'].map(css);
 const alpha = (hex, a) => { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.replace(/./g, '$&$&') : h, 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; };
@@ -404,9 +416,20 @@ function paintChrome() {
   $('#tabs').setAttribute('aria-label', L('Sections', 'Sections'));
   const T = TAB_LABELS();
   $('#tabsIn').innerHTML = Object.keys(T).map(k => `<a href="${hr(k)}" data-tab="${k}">${T[k]}</a>`).join('');
-  $('#footer').innerHTML = L(
-    `Site non officiel, sans lien avec TRMNL. Données issues de l'API publique des recettes (trmnl.com/recipes.json). Points = installations + forks, comme dans le plugin <a href="https://github.com/ExcuseMi/trmnl-trending-recipes-plugin">Trending Recipes</a> d'ExcuseMi, dont ce site s'inspire. L'API ne publie pas le nom des créateurs : ils apparaissent sous leur numéro. Le profil et le nom que vous choisissez restent enregistrés sur votre appareil uniquement.`,
-    `Unofficial site, not affiliated with TRMNL. Data from the public recipes API (trmnl.com/recipes.json). Points = installs + forks, as in ExcuseMi's <a href="https://github.com/ExcuseMi/trmnl-trending-recipes-plugin">Trending Recipes</a> plugin, which inspired this site. The API does not publish creator names, so creators appear by number. The profile and name you choose are stored on your device only.`);
+  const LINKS = [
+    ['https://trmnl.com', 'TRMNL', L('le site officiel', 'the official site')],
+    ['https://github.com/nbbou81000/trmnl-recipes', L('Mes recettes TRMNL', 'My TRMNL recipes'), ''],
+    ['https://nbbou81000.github.io/cellia/', 'CelliA', L('actualité tech', 'tech news')],
+    ['https://nbbou81000.github.io/cellia-lab/', 'CelliA Lab', L('veille IA', 'AI watch')],
+    ['https://github.com/ExcuseMi/trmnl-trending-recipes-plugin', 'Trending Recipes', L('le plugin qui a inspiré ce site', 'the plugin that inspired this site')],
+  ];
+  $('#footer').innerHTML = `
+    <p>${L(
+      `Site non officiel, sans lien avec TRMNL, dont l'API publique des recettes, ouverte à tous, rend ce palmarès possible : merci à eux. Points = installations + forks. Les créateurs apparaissent sous leur numéro tant qu'ils n'ont pas revendiqué leur profil, et le nom que vous choisissez reste sur votre appareil.`,
+      `Unofficial site, not affiliated with TRMNL, whose public recipes API, open to everyone, makes this leaderboard possible: thank you. Points = installs + forks. Creators appear by number until they claim their profile, and the name you pick stays on your device.`)}</p>
+    <ul class="flinks">${LINKS.map(([href, label, note]) => `<li><a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>${note ? ` <span class="muted">${esc(note)}</span>` : ''}</li>`).join('')}</ul>
+    <div class="fbot"><span>Nicolas Bouteiller</span><span>${L('Code sous licence MIT', 'Code under MIT licence')}</span><a href="${REPO_URL()}" target="_blank" rel="noopener">${L('code source', 'source code')}</a>
+      ${KOFI ? `<a class="kofi" href="https://ko-fi.com/${encodeURIComponent(KOFI)}" target="_blank" rel="noopener">☕ ${L('Offrir un café', 'Buy me a coffee')}</a>` : ''}</div>`;
   if (D) $('#updated').textContent = L(`Mis à jour ${ago(D.generated_at)}`, `Updated ${ago(D.generated_at)}`);
 }
 
@@ -458,6 +481,7 @@ async function init() {
   paintChrome();
   setInterval(() => { $('#updated').textContent = L(`Mis à jour ${ago(D.generated_at)}`, `Updated ${ago(D.generated_at)}`); }, 60000);
   window.addEventListener('hashchange', () => { route(); track(currentPath()); });
+  document.addEventListener('click', e => { const a = e.target.closest('footer a'); if (a) track('lien-pied-de-page', true); });
   route();
 }
 
@@ -575,8 +599,8 @@ function badgesOf(c) {
   return b;
 }
 
+const REPO_URL = () => canClaim() ? `https://github.com/${REPO}` : 'https://github.com/nbbou81000';
 const publicName = u => NAMES[u] && String(NAMES[u]).trim();
-const canClaim = () => /^[\w.-]+\/[\w.-]+$/.test(REPO);
 function claimHTML(u) {
   if (publicName(u)) return `<span class="badge" title="${esc(L('Nom public validé', 'Verified public name'))}">✔ ${L('Profil revendiqué', 'Claimed profile')}</span>`;
   if (!canClaim()) return '';

@@ -249,6 +249,7 @@ footer{max-width:1180px;margin:0 auto;padding:18px 16px 40px;color:var(--ink2);f
 <script>
 /* ================= Réglages / Settings ================= */
 const GOATCOUNTER = 'trmnl-leaderboard';     // votre code GoatCounter, ex. 'trmnl-palmares' pour https://trmnl-palmares.goatcounter.com
+const REPO = '__REPO__';      // dépôt GitHub (rempli automatiquement par le workflow), pour le bouton « Claim this profile »
 const DEFAULT_GOAL = 50;    // objectif d'installations par recette / installs goal per recipe
 
 /* ================= Langue / Language ================= */
@@ -574,6 +575,15 @@ function badgesOf(c) {
   return b;
 }
 
+const publicName = u => NAMES[u] && String(NAMES[u]).trim();
+const canClaim = () => /^[\w.-]+\/[\w.-]+$/.test(REPO);
+function claimHTML(u) {
+  if (publicName(u)) return `<span class="badge" title="${esc(L('Nom public validé', 'Verified public name'))}">✔ ${L('Profil revendiqué', 'Claimed profile')}</span>`;
+  if (!canClaim()) return '';
+  const url = `https://github.com/${REPO}/issues/new?template=claim-profile.yml&title=${encodeURIComponent('Claim profile #' + u)}&creator_id=${encodeURIComponent(u)}`;
+  return `<a class="btn ghost small" id="claim" href="${url}" target="_blank" rel="noopener" title="${esc(L('Afficher un nom public à la place du numéro. Nécessite un compte GitHub, chaque demande est vérifiée à la main.', 'Show a public name instead of the number. Needs a GitHub account; every request is reviewed by hand.'))}">${L('Revendiquer ce profil', 'Claim this profile')}</a>`;
+}
+
 function renderProfile(u) {
   const el = $('#tab-moi');
   if (!u) {
@@ -632,6 +642,7 @@ function renderProfile(u) {
       <button class="btn ghost small" type="button" id="changeMe">${L('Changer de profil', 'Switch profile')}</button>`
     : `<span class="muted">${L("Profil d'un autre créateur.", "Another creator's profile.")}</span>${me ? `<a class="btn ghost small" href="${hr('moi')}">${L('Revenir à mon profil', 'Back to my profile')}</a>` : ''}<button class="btn small" type="button" id="setMe">${L("C'est moi", "That's me")}</button>`}
     <button class="btn ghost small" type="button" id="share">${L('Copier le lien du profil', 'Copy profile link')}</button>
+    ${claimHTML(c.u)}
   </div>
   ${historyNotice()}
   <div class="hero">
@@ -694,6 +705,7 @@ function renderProfile(u) {
   $('#setMe')?.addEventListener('click', () => chooseMe(c.u));
   $('#changeMe')?.addEventListener('click', () => { me = ''; store.del('trmnl-me'); resetViews(); go(hr('moi')); });
   $('#myName')?.addEventListener('change', e => { myName = e.target.value.trim(); myName ? store.set('trmnl-myname', myName) : store.del('trmnl-myname'); refresh(); });
+  $('#claim')?.addEventListener('click', () => track('revendication-ouverte', true));
   $('#share').onclick = async () => {
     const url = `${location.origin}${location.pathname}${EN() ? '?lang=en' : ''}${hr('createur', c.u)}`;
     try { await navigator.clipboard.writeText(url); toast(L('Lien copié', 'Link copied')); } catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }

@@ -1,17 +1,25 @@
 name: Noms des créateurs
 
 on:
-  # Validation d'une demande : commentez /approve (ou /approve Autre nom) ou /reject sur l'issue
+  # Une demande : commentez /approve, /approve Autre nom, ou /reject raison sur l'issue
   issue_comment:
     types: [created]
-  # Ajout, modification ou retrait à la main (demande reçue en message privé)
+  # À la main : un nom précis, ou toutes les demandes ouvertes d'un coup
   workflow_dispatch:
     inputs:
+      mode:
+        description: 'Que faire ?'
+        type: choice
+        options:
+          - Valider toutes les demandes ouvertes
+          - Ajouter, modifier ou retirer un nom
+        default: Valider toutes les demandes ouvertes
       creator_id:
-        description: 'Numéro du créateur'
-        required: true
+        description: 'Numéro du créateur (pour un nom précis)'
+        required: false
+        default: ''
       display_name:
-        description: 'Nom à afficher (laisser vide pour retirer le nom)'
+        description: 'Nom à afficher (vide = retirer le nom)'
         required: false
         default: ''
 
@@ -19,10 +27,6 @@ permissions:
   contents: write
   issues: write
   actions: write
-
-concurrency:
-  group: trmnl-names
-  cancel-in-progress: false
 
 jobs:
   update:
@@ -39,41 +43,53 @@ jobs:
         with:
           node-version: 20
 
+      # Plusieurs validations peuvent tourner en même temps : chacune repart de la dernière
+      # version de names.json et réessaie si une autre l'a devancée, pour ne perdre aucun nom.
       - name: Mettre à jour names.json
         id: upd
         env:
           EVENT: ${{ github.event_name }}
+          MODE: ${{ inputs.mode }}
           IN_ID: ${{ inputs.creator_id }}
           IN_NAME: ${{ inputs.display_name }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
           COMMENT: ${{ github.event.comment.body }}
-        run: node scripts/update-names.mjs
-
-      - name: Enregistrer le fichier
-        if: steps.upd.outputs.changed == 'yes'
-        env:
-          CID: ${{ steps.upd.outputs.id }}
-          ACT: ${{ steps.upd.outputs.action }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.event.repository.default_branch }}
         run: |
+          SCRIPT=update-names.mjs
+          if [ "$EVENT" = "workflow_dispatch" ] && [ "$MODE" = "Valider toutes les demandes ouvertes" ]; then SCRIPT=approve-all.mjs; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add names.json
-          git commit -m "Nom du créateur #$CID ($ACT)"
-          git push
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            git fetch -q origin "$BRANCH"
+            git reset -q --hard "origin/$BRANCH"
+            node "scripts/$SCRIPT"
+            if git diff --quiet -- names.json; then echo "changed=no" >> "$GITHUB_OUTPUT"; exit 0; fi
+            git add names.json
+            git commit -q -m "Noms des créateurs mis à jour"
+            if git push -q origin "HEAD:$BRANCH"; then echo "changed=yes" >> "$GITHUB_OUTPUT"; exit 0; fi
+            echo "Une autre validation est passée juste avant, nouvel essai ($attempt)…"
+            sleep $(( RANDOM % 15 + 5 ))
+          done
+          echo "Impossible d'enregistrer names.json après 10 essais." && exit 1
 
-      - name: Répondre sur l'issue
-        if: github.event_name == 'issue_comment' && steps.upd.outputs.message != ''
+      - name: Répondre sur les demandes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NUM: ${{ github.event.issue.number }}
-          MSG: ${{ steps.upd.outputs.message }}
-          CLOSE: ${{ steps.upd.outputs.close }}
-        run: |
-          gh issue comment "$NUM" --repo "$GITHUB_REPOSITORY" --body "$MSG"
-          if [ -n "$CLOSE" ]; then gh issue close "$NUM" --repo "$GITHUB_REPOSITORY" --reason "${CLOSE/_/ }"; fi
+        run: node scripts/reply-issues.mjs
 
+      # Une seule republication pour une rafale de validations : on attend un peu,
+      # et seule la dernière validation encore en cours relance le site.
       - name: Republier le site
         if: steps.upd.outputs.changed == 'yes'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run stats.yml --repo "$GITHUB_REPOSITORY" --ref "${{ github.event.repository.default_branch }}" -f collect=false
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          sleep 45
+          OTHERS=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow names.yml --limit 50 --json databaseId,status \
+            --jq "[.[] | select(.databaseId != ${{ github.run_id }}) | select(.status == \"queued\" or .status == \"in_progress\" or .status == \"waiting\" or .status == \"pending\")] | length")
+          if [ "$OTHERS" != "0" ]; then echo "D'autres validations sont en cours, la dernière republiera le site."; exit 0; fi
+          gh workflow run stats.yml --repo "$GITHUB_REPOSITORY" --ref "$BRANCH" -f collect=false

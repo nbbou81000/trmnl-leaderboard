@@ -52,7 +52,9 @@ jobs:
       - name: Publier sur la branche gh-pages
         run: |
           cp index.html public/
-          [ -f og.png ] && cp og.png public/
+          for f in og.png manifest.webmanifest sw.js icon-192.png icon-512.png icon-maskable-512.png apple-touch-icon.png; do
+            [ -f "$f" ] && cp "$f" public/
+          done
           OWNER="${GITHUB_REPOSITORY%%/*}"; REPO="${GITHUB_REPOSITORY#*/}"
           if [ "$REPO" = "$OWNER.github.io" ]; then SITE="https://$REPO/"; else SITE="https://$OWNER.github.io/$REPO/"; fi
           sed -i "s#__SITE_URL__#$SITE#g; s#__REPO__#$GITHUB_REPOSITORY#g" public/index.html

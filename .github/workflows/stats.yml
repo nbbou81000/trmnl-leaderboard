@@ -43,7 +43,7 @@ jobs:
           [ -f og.png ] && cp og.png public/
           OWNER="${GITHUB_REPOSITORY%%/*}"; REPO="${GITHUB_REPOSITORY#*/}"
           if [ "$REPO" = "$OWNER.github.io" ]; then SITE="https://$REPO/"; else SITE="https://$OWNER.github.io/$REPO/"; fi
-          sed -i "s#__SITE_URL__#$SITE#g" public/index.html
+          sed -i "s#__SITE_URL__#$SITE#g; s#__REPO__#$GITHUB_REPOSITORY#g" public/index.html
           [ -f names.json ] && cp names.json public/ || echo '{}' > public/names.json
           touch public/.nojekyll
           cd public

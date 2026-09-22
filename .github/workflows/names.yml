@@ -1,0 +1,79 @@
+name: Noms des créateurs
+
+on:
+  # Validation d'une demande : commentez /approve (ou /approve Autre nom) ou /reject sur l'issue
+  issue_comment:
+    types: [created]
+  # Ajout, modification ou retrait à la main (demande reçue en message privé)
+  workflow_dispatch:
+    inputs:
+      creator_id:
+        description: 'Numéro du créateur'
+        required: true
+      display_name:
+        description: 'Nom à afficher (laisser vide pour retirer le nom)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: trmnl-names
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (!github.event.issue.pull_request &&
+       github.event.comment.user.login == github.repository_owner &&
+       (startsWith(github.event.comment.body, '/approve') || startsWith(github.event.comment.body, '/reject')))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Mettre à jour names.json
+        id: upd
+        env:
+          EVENT: ${{ github.event_name }}
+          IN_ID: ${{ inputs.creator_id }}
+          IN_NAME: ${{ inputs.display_name }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          COMMENT: ${{ github.event.comment.body }}
+        run: node scripts/update-names.mjs
+
+      - name: Enregistrer le fichier
+        if: steps.upd.outputs.changed == 'yes'
+        env:
+          CID: ${{ steps.upd.outputs.id }}
+          ACT: ${{ steps.upd.outputs.action }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add names.json
+          git commit -m "Nom du créateur #$CID ($ACT)"
+          git push
+
+      - name: Répondre sur l'issue
+        if: github.event_name == 'issue_comment' && steps.upd.outputs.message != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUM: ${{ github.event.issue.number }}
+          MSG: ${{ steps.upd.outputs.message }}
+          CLOSE: ${{ steps.upd.outputs.close }}
+        run: |
+          gh issue comment "$NUM" --repo "$GITHUB_REPOSITORY" --body "$MSG"
+          if [ -n "$CLOSE" ]; then gh issue close "$NUM" --repo "$GITHUB_REPOSITORY" --reason "${CLOSE/_/ }"; fi
+
+      - name: Republier le site
+        if: steps.upd.outputs.changed == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run stats.yml --repo "$GITHUB_REPOSITORY" --ref "${{ github.event.repository.default_branch }}"

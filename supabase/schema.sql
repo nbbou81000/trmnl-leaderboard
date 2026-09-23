@@ -14,6 +14,11 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now()
 );
 
+-- Liaison compte Discord ↔ numéro de créateur : demandée par l'utilisateur, validée par un administrateur
+alter table public.profiles add column if not exists creator_id text check (creator_id ~ '^[0-9]{1,10}$');
+alter table public.profiles add column if not exists creator_status text not null default 'none' check (creator_status in ('none', 'pending', 'verified'));
+create unique index if not exists one_verified_link_per_creator on public.profiles (creator_id) where creator_status = 'verified';
+
 create or replace function public.is_admin() returns boolean
 language sql stable security definer set search_path = public as $$
   select coalesce((select is_admin from public.profiles where id = auth.uid()), false)
@@ -104,14 +109,16 @@ begin
   if public.is_banned() then raise exception 'Your account is blocked.'; end if;
   if tg_op = 'INSERT' then
     new.owner := auth.uid(); new.hidden := false; new.created_at := now(); new.updated_at := now();
+    new.creator_id := (select creator_id from public.profiles where id = new.owner and creator_status = 'verified');
     if not public.is_admin() and (select count(*) from public.projects where owner = auth.uid() and shipped_recipe is null) >= 5 then
       raise exception 'You can share up to 5 projects in progress at a time.';
     end if;
   else
     new.owner := old.owner; new.created_at := old.created_at;
+    new.creator_id := (select creator_id from public.profiles where id = old.owner and creator_status = 'verified');
     if not public.is_admin() then new.hidden := old.hidden; end if;
-    if (new.name, new.description, new.status, new.category, new.creator_id, new.link, new.eta, new.image, new.shipped_recipe)
-       is distinct from (old.name, old.description, old.status, old.category, old.creator_id, old.link, old.eta, old.image, old.shipped_recipe)
+    if (new.name, new.description, new.status, new.category, new.link, new.eta, new.image, new.shipped_recipe)
+       is distinct from (old.name, old.description, old.status, old.category, old.link, old.eta, old.image, old.shipped_recipe)
     then new.updated_at := now(); else new.updated_at := old.updated_at; end if;
   end if;
   return new;
@@ -186,6 +193,40 @@ begin
   update public.profiles set banned = value where id = target and not is_admin;
 end $$;
 
+-- Un utilisateur demande à lier son compte à un numéro de créateur (ou retire sa demande avec null)
+create or replace function public.request_creator_link(cid text) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() is null then raise exception 'Not signed in.'; end if;
+  if public.is_banned() then raise exception 'Your account is blocked.'; end if;
+  cid := nullif(regexp_replace(coalesce(cid, ''), '[^0-9]', '', 'g'), '');
+  if cid is not null and exists (select 1 from public.profiles where creator_id = cid and creator_status = 'verified' and id <> auth.uid()) then
+    raise exception 'This creator number is already linked to another account.';
+  end if;
+  update public.profiles set creator_id = cid, creator_status = case when cid is null then 'none' else 'pending' end where id = auth.uid();
+  update public.projects set creator_id = null where owner = auth.uid();
+end $$;
+
+-- Un administrateur valide ou refuse une demande de liaison
+create or replace function public.review_creator_link(target uuid, approve boolean) returns void
+language plpgsql security definer set search_path = public as $$
+declare cid text;
+begin
+  if not public.is_admin() then raise exception 'Admins only.'; end if;
+  select creator_id into cid from public.profiles where id = target;
+  if approve then
+    if cid is null then raise exception 'No creator number requested.'; end if;
+    if exists (select 1 from public.profiles where creator_id = cid and creator_status = 'verified' and id <> target) then
+      raise exception 'This creator number is already linked to another account.';
+    end if;
+    update public.profiles set creator_status = 'verified' where id = target;
+    update public.projects set creator_id = cid where owner = target;
+  else
+    update public.profiles set creator_id = null, creator_status = 'none' where id = target;
+    update public.projects set creator_id = null where owner = target;
+  end if;
+end $$;
+
 -- Chacun peut supprimer son compte et tous ses contenus (les images sont effacées par le site juste avant)
 create or replace function public.delete_my_account() returns void
 language plpgsql security definer set search_path = public, auth as $$
@@ -236,6 +277,8 @@ create policy "admins clear reports"       on public.reports for delete to authe
 
 grant execute on function public.set_banned(uuid, boolean) to authenticated;
 grant execute on function public.delete_my_account() to authenticated;
+grant execute on function public.request_creator_link(text) to authenticated;
+grant execute on function public.review_creator_link(uuid, boolean) to authenticated;
 
 -- ---------- Stockage des captures (dossier par utilisateur, 2 Mo maximum, images uniquement)
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
@@ -250,3 +293,7 @@ create policy "users upload in own folder" on storage.objects for insert to auth
   with check (bucket_id = 'wip' and (storage.foldername(name))[1] = auth.uid()::text and not public.is_banned());
 create policy "users delete own images"    on storage.objects for delete to authenticated
   using (bucket_id = 'wip' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_admin()));
+
+-- ---------- Mise à niveau : un projet ne garde un numéro de créateur que si la liaison de son auteur est validée
+update public.projects p set creator_id = (select pr.creator_id from public.profiles pr where pr.id = p.owner and pr.creator_status = 'verified')
+  where p.creator_id is distinct from (select pr.creator_id from public.profiles pr where pr.id = p.owner and pr.creator_status = 'verified');

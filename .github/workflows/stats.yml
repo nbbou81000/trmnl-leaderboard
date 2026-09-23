@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p public/data
           if git fetch --depth=1 origin gh-pages 2>/dev/null; then
-            for f in hourly.json daily.json latest.json; do
+            for f in hourly.json daily.json latest.json trmnl.json; do
               git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
             done
           else
@@ -47,6 +47,7 @@ jobs:
             echo "Republication seule : aucun appel à l'API TRMNL, données précédentes conservées."
           else
             node scripts/fetch-stats.mjs public/data
+            node scripts/fetch-trmnl.mjs public/data
           fi
 
       - name: Publier sur la branche gh-pages

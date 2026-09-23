@@ -467,6 +467,7 @@ function paintChrome() {
     ['https://nbbou81000.github.io/cellia/', 'CelliA', L('actualité tech', 'tech news')],
     ['https://nbbou81000.github.io/cellia-lab/', 'CelliA Lab', L('veille IA', 'AI watch')],
     ['https://github.com/ExcuseMi/trmnl-trending-recipes-plugin', 'Trending Recipes', L('le plugin qui a inspiré ce site', 'the plugin that inspired this site')],
+    ['https://trmnl-plugins.gohk.xyz/', 'TRMNL Plugin Store', L('l\'explorateur de recettes de Hossain Khan', "Hossain Khan's recipe browser")],
   ];
   $('#footer').innerHTML = `
     <p>${L(
@@ -584,6 +585,7 @@ function bindFinder(id, onPick) {
 const recipeLink = r => `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>`;
 const creatorLink = c => `<a href="${hr('createur', c.u)}">${esc(nameOf(c.u))}</a>`;
 const openRecipe = r => window.open(`https://trmnl.com/recipes/${r.id}`, '_blank', 'noopener');
+const shareURL = r => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}r/${r.id}.html`;
 function miniList(items, val, label, link, sub, isMine = x => isMe(x.u)) {
   const max = Math.max(1e-9, ...items.map(val));
   return `<ol class="rows">${items.map((x, n) => `<li class="${isMine(x) ? 'me' : ''}"><span class="n">${x.__rank ?? n + 1}</span>${link(x)}<span class="v">${label(x)}</span>
@@ -886,9 +888,11 @@ async function shareCard(r) {
   wrap.className = 'modal';
   wrap.innerHTML = `<div class="box"><canvas id="cardCv" width="${W}" height="${H}"></canvas>
     <div class="row"><button class="btn ghost" type="button" id="cardClose">${L('Fermer', 'Close')}</button>
-      <button class="btn" type="button" id="cardDl">${L('Télécharger', 'Download')}</button>
+      <button class="btn ghost" type="button" id="cardDl">${L("Télécharger l'image", 'Download image')}</button>
+      <button class="btn" type="button" id="cardLink">${L('Copier le lien', 'Copy link')}</button>
       <button class="btn" type="button" id="cardShare" hidden>${L('Partager', 'Share')}</button></div>
-    <p class="note">${L('Image 1200 × 630, prête pour Discord, Reddit ou LinkedIn.', '1200 × 630 image, ready for Discord, Reddit or LinkedIn.')}</p></div>`;
+    <p class="note">${L(`L'image fait 1200 × 630. Le lien, lui, affiche automatiquement un aperçu quand on le colle sur Discord, Reddit, Slack ou X : <code>${esc(shareURL(r))}</code>`,
+      `The image is 1200 × 630. The link unfurls into a preview on its own when pasted on Discord, Reddit, Slack or X: <code>${esc(shareURL(r))}</code>`)}</p></div>`;
   document.body.append(wrap);
   wrap.addEventListener('click', e => { if (e.target === wrap) wrap.remove(); });
   $('#cardClose', wrap).onclick = () => wrap.remove();
@@ -937,13 +941,16 @@ async function shareCard(r) {
     const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000); track('vignette-telechargee', true);
   }, 'image/png');
-  cv.toBlob(b => {
-    const file = new File([b], name, { type: 'image/png' });
-    if (navigator.canShare?.({ files: [file] })) {
-      const bt = $('#cardShare', wrap); bt.hidden = false;
-      bt.onclick = () => navigator.share({ files: [file], title: r.n }).then(() => track('vignette-partagee', true)).catch(() => {});
-    }
-  }, 'image/png');
+  const url = shareURL(r);
+  $('#cardLink', wrap).onclick = async () => {
+    try { await navigator.clipboard.writeText(url); toast(L('Lien copié', 'Link copied')); }
+    catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }
+    track('lien-recette-copie', true);
+  };
+  if (navigator.share) {
+    const bt = $('#cardShare', wrap); bt.hidden = false;
+    bt.onclick = () => navigator.share({ title: r.n, text: r.d || '', url }).then(() => track('recette-partagee', true)).catch(() => {});
+  }
 }
 
 /* ================= Actu TRMNL ================= */

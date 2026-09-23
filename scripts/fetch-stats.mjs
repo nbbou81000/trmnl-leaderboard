@@ -99,11 +99,15 @@ for (const r of all) {
   seen.add(id);
   const bio = r.author_bio && typeof r.author_bio === 'object' ? r.author_bio : {};
   const i = Number(r.stats?.installs) || 0, f = Number(r.stats?.forks) || 0;
+  const clip = (t, n) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1) + '…' : t; };
   recipes.push({
     id, n: r.name || 'Sans titre', u: String(r.user_id ?? r.author_id ?? '0'),
     i, f, s: i + f, p: r.published_at || null,
     c: (bio.category || '').split(',').map(x => x.trim()).filter(Boolean),
     ic: r.icon_url || '',
+    sc: r.screenshot_url || '',                 // aperçu 800x480 de la recette
+    d: clip(r.description, 180),                // description courte
+    ab: { gh: bio.github_url || '', w: bio.learn_more_url || '' },   // liens de l'auteur
   });
 }
 

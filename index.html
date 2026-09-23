@@ -167,6 +167,44 @@ p.lead{color:var(--ink2);max-width:64ch;margin:0 0 14px}
 .bar i{display:block;height:100%;background:var(--accent);border-radius:5px}
 .bar.done i{background:var(--sage)}
 
+/* Galerie */
+.cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card .shot{position:relative;aspect-ratio:5/3;background:#fff;border-bottom:1px solid var(--rule)}
+.card .shot img{width:100%;height:100%;object-fit:contain;display:block}
+.card .shot .rk{position:absolute;top:8px;left:8px;background:var(--ink);color:var(--paper);border-radius:6px;padding:2px 7px;font-size:.75rem;font-weight:700}
+.card .shot .fresh{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--on-accent);border-radius:6px;padding:2px 7px;font-size:.75rem;font-weight:700}
+.card .body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:5px;flex:1}
+.card h4{margin:0;font-size:1rem;font-weight:700;line-height:1.25}
+.card h4 a{text-decoration:none}
+.card .desc{font-size:.85rem;color:var(--ink2);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .meta{font-size:.8rem;color:var(--ink2);display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:auto;padding-top:6px}
+.card .meta b{color:var(--ink)}
+.card .acts{display:flex;gap:6px;margin-top:8px}
+.card .acts .btn{flex:1;text-align:center;font-size:.83rem;padding:6px 8px}
+.card.mine{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.tagline{font-size:.8rem;color:var(--ink2)}
+
+/* Vignette partageable */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:60}
+.modal .box{background:var(--paper);border-radius:14px;padding:16px;max-width:min(720px,96vw);max-height:92vh;overflow:auto}
+.modal canvas{width:100%;height:auto;border:1px solid var(--rule);border-radius:8px;background:#fff}
+.modal .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:flex-end}
+
+/* Actu TRMNL */
+.stat{display:flex;align-items:center;gap:10px;font-weight:700}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--sage);flex:none}
+.dot.warn{background:var(--mustard)}.dot.bad{background:var(--clay)}
+.comps{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));font-size:.88rem}
+.comps li{display:flex;justify-content:space-between;gap:8px;padding:6px 9px;background:var(--paper);border:1px solid var(--rule);border-radius:7px}
+.news{list-style:none;margin:0;padding:0}
+.news li{padding:10px 0;border-bottom:1px solid var(--rule)}
+.news li:last-child{border-bottom:0}
+.news a{font-weight:650;text-decoration:none}
+.news a:hover{text-decoration:underline}
+.news .when{font-size:.78rem;color:var(--ink2)}
+.news p{margin:4px 0 0;font-size:.86rem;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
 /* Tableaux */
 .tools{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:0 0 12px}
 .tools label{display:flex;flex-direction:column;font-size:.8rem;color:var(--ink2);gap:3px}
@@ -252,11 +290,13 @@ footer p{margin:0 0 12px;max-width:80ch}
   <div class="loading" id="loading">…</div>
   <section id="tab-accueil" hidden></section>
   <section id="tab-moi" hidden></section>
+  <section id="tab-galerie" hidden></section>
   <section id="tab-classements" hidden></section>
   <section id="tab-createurs" hidden></section>
   <section id="tab-recettes" hidden></section>
   <section id="tab-tendances" hidden></section>
   <section id="tab-analyses" hidden></section>
+  <section id="tab-trmnl" hidden></section>
 </main>
 
 <footer id="footer"></footer>
@@ -283,10 +323,10 @@ function setLocale() {
 setLocale();
 
 // Onglets : identifiants internes (français) et adresses selon la langue
-const SLUGS = { accueil: 'home', moi: 'me', classements: 'rankings', createurs: 'creators', recettes: 'recipes', tendances: 'trends', analyses: 'insights', createur: 'creator' };
+const SLUGS = { accueil: 'home', moi: 'me', galerie: 'gallery', classements: 'rankings', createurs: 'creators', recettes: 'recipes', tendances: 'trends', analyses: 'insights', trmnl: 'trmnl', createur: 'creator' };
 const FROM_SLUG = Object.fromEntries(Object.entries(SLUGS).map(([fr, en]) => [en, fr]));
 const hr = (k, arg) => '#' + (EN() ? SLUGS[k] : k) + (arg != null ? '/' + arg : '');
-const TAB_LABELS = () => ({ accueil: L('Accueil', 'Home'), moi: L('Mon profil', 'My profile'), classements: L('Classements', 'Rankings'), createurs: L('Créateurs', 'Creators'), recettes: L('Recettes', 'Recipes'), tendances: L('Tendances', 'Trends'), analyses: L('Analyses', 'Insights') });
+const TAB_LABELS = () => ({ accueil: L('Accueil', 'Home'), moi: L('Mon profil', 'My profile'), galerie: L('Galerie', 'Gallery'), classements: L('Classements', 'Rankings'), createurs: L('Créateurs', 'Creators'), recettes: L('Recettes', 'Recipes'), tendances: L('Tendances', 'Trends'), analyses: L('Analyses', 'Insights'), trmnl: L('Actu TRMNL', 'TRMNL news') });
 
 /* ================= Outils / Helpers ================= */
 const $ = (s, el = document) => el.querySelector(s);
@@ -491,7 +531,7 @@ async function init() {
 }
 
 /* ================= Routage ================= */
-const TABS = ['accueil', 'moi', 'classements', 'createurs', 'recettes', 'tendances', 'analyses'];
+const TABS = ['accueil', 'moi', 'galerie', 'classements', 'createurs', 'recettes', 'tendances', 'analyses', 'trmnl'];
 function route() {
   if (!D) return;
   const [raw, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');
@@ -503,7 +543,7 @@ function route() {
     if (a.dataset.tab === 'moi') a.classList.toggle('mine', !!me);
   });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, analyses: renderAnalyses })[t]();
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, analyses: renderAnalyses, trmnl: renderTrmnl })[t]();
   window.scrollTo({ top: 0 });
 }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -721,13 +761,14 @@ function renderProfile(u) {
     <p class="muted" style="margin:0 0 6px">${L(`${reached} recette${reached > 1 ? 's' : ''} sur ${recs.length} à l'objectif.`, `${reached} of ${recs.length} recipe${recs.length > 1 ? 's' : ''} at goal.`)}</p>
   </div>
   <div class="scroll"><table>
-    <thead><tr><th class="l">${L('Recette', 'Recipe')}</th><th>${L('Rang', 'Rank')}</th><th>Installs</th><th>Forks</th><th>${L('Inst./jour', 'Inst./day')}</th><th>+24 h</th><th>${L('+7 j', '+7 d')}</th><th>${L('+30 j', '+30 d')}</th><th class="l">${L('Objectif', 'Goal')}</th><th>${L('Part', 'Share')}</th><th>${L('Publiée', 'Published')}</th></tr></thead>
+    <thead><tr><th class="l">${L('Recette', 'Recipe')}</th><th>${L('Rang', 'Rank')}</th><th>Installs</th><th>Forks</th><th>${L('Inst./jour', 'Inst./day')}</th><th>+24 h</th><th>${L('+7 j', '+7 d')}</th><th>${L('+30 j', '+30 d')}</th><th class="l">${L('Objectif', 'Goal')}</th><th>${L('Part', 'Share')}</th><th>${L('Publiée', 'Published')}</th><th></th></tr></thead>
     <tbody>${recs.map((r, i) => `<tr data-ri="${i}">
       <td class="l name">${r.ic ? `<img class="ico" src="${esc(r.ic)}" alt="" loading="lazy">` : ''}${recipeLink(r)}<span class="sub">${esc(catsTxt(r))}</span></td>
       <td>${r.r}<span class="sub">${L('sur', 'of')} ${nf(D.recipes.length)}</span></td><td>${nf(r.i)}</td><td>${nf(r.f)}</td><td>${nf1(r.ipd)}</td>
       <td>${sgc(r.d24)}</td><td>${sgc(r.d7)}</td><td>${sgc(r.d30)}</td>
       <td class="l"><div class="bar ${r.i >= goal ? 'done' : ''}" title="${r.i} / ${goal}"><i style="width:${Math.min(100, 100 * r.i / goal)}%"></i></div><span class="sub">${r.i >= goal ? L('atteint', 'reached') : L(`encore ${goal - r.i}`, `${goal - r.i} to go`)}</span></td>
-      <td>${c.s ? nf1(100 * r.s / c.s) : 0} %</td><td>${dfmt(r.p)}</td></tr>`).join('')}</tbody>
+      <td>${c.s ? nf1(100 * r.s / c.s) : 0} %</td><td>${dfmt(r.p)}</td>
+      <td><button class="btn ghost small" type="button" data-share="${r.id}">${L('Vignette', 'Card')}</button></td></tr>`).join('')}</tbody>
   </table></div>`;
 
   const refresh = () => { resetViews(); renderProfile(c.u); };
@@ -742,6 +783,7 @@ function renderProfile(u) {
   };
   $('#goalIn').onchange = e => { goal = Math.max(1, +e.target.value || DEFAULT_GOAL); store.set('trmnl-goal', goal); refresh(); };
   el.querySelectorAll('tbody tr[data-ri]').forEach(tr => tr.onclick = e => { if (!e.target.closest('a')) openRecipe(recs[+tr.dataset.ri]); });
+  el.querySelectorAll('[data-share]').forEach(b => b.onclick = e => { e.stopPropagation(); shareCard(byR.get(b.dataset.share)); });
   el.querySelectorAll('tbody tr[data-ci]').forEach(tr => tr.onclick = () => { pending.recettes = { cat: catRows[+tr.dataset.ci][0], u: c.u }; go(hr('recettes')); });
 
   const P = PAL();
@@ -775,6 +817,187 @@ function renderProfile(u) {
   $('#cmpIn').onchange = draw;
   $('#cmpNext')?.addEventListener('click', () => { $('#cmpIn').value = nextUp.u; draw(); });
   draw();
+}
+
+/* ================= Galerie des recettes ================= */
+const FRESH = [['1', 1, () => L('24 heures', '24 hours')], ['7', 7, () => L('7 jours', '7 days')], ['30', 30, () => L('30 jours', '30 days')], ['0', 0, () => L('Toutes', 'All')]];
+let galFresh = '7', galSort = 'p', galShown = 24, galQ = '', galCat = '';
+function renderGallery() {
+  const el = $('#tab-galerie');
+  const cats = new Map();
+  D.recipes.forEach(r => catsOf(r).forEach(k => cats.set(k, (cats.get(k) || 0) + 1)));
+  const catKeys = [...cats].sort((a, b) => b[1] - a[1]);
+  const days = +galFresh;
+  const since = Date.now() - days * DAY;
+  let list = D.recipes.filter(r => (!days || (r.p && Date.parse(r.p) >= since))
+    && (!galQ || r.n.toLowerCase().includes(galQ) || (r.d || '').toLowerCase().includes(galQ))
+    && (!galCat || catsOf(r).includes(galCat)));
+  const sorters = { p: (a, b) => (Date.parse(b.p) || 0) - (Date.parse(a.p) || 0), i: (a, b) => b.i - a.i, d7: (a, b) => (b.d7 ?? -1) - (a.d7 ?? -1) };
+  list = list.slice().sort(sorters[galSort] || sorters.p);
+  const shown = list.slice(0, galShown);
+  const fresh24 = D.recipes.filter(r => r.p && Date.now() - Date.parse(r.p) < DAY).length;
+  const fresh7 = D.recipes.filter(r => r.p && Date.now() - Date.parse(r.p) < 7 * DAY).length;
+  el.innerHTML = `<h2>${L('Galerie des recettes', 'Recipe gallery')}</h2>
+    <p class="lead">${L(`Toutes les recettes publiques avec leur aperçu réel. ${fresh24} publiée${fresh24 > 1 ? 's' : ''} ces dernières 24 h, ${fresh7} cette semaine.`,
+      `Every public recipe with its real preview. ${fresh24} published in the last 24 h, ${fresh7} this week.`)}</p>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="${L('Nouveautés', 'Recently published')}">${FRESH.map(([k, , lb]) => `<button type="button" data-fresh="${k}" aria-pressed="${k === galFresh}">${lb()}</button>`).join('')}</div>
+      <label>${L('Rechercher', 'Search')}<input type="search" id="gq" value="${esc(galQ)}" placeholder="${L('Nom ou description', 'Name or description')}"></label>
+      <label>${L('Catégorie', 'Category')}<select id="gc"><option value="">${L('Toutes', 'All')}</option>${catKeys.map(([k, n]) => `<option value="${esc(k)}" ${k === galCat ? 'selected' : ''}>${esc(catLabel(k))} (${n})</option>`).join('')}</select></label>
+      <label>${L('Trier par', 'Sort by')}<select id="gs">
+        <option value="p" ${galSort === 'p' ? 'selected' : ''}>${L('Date de publication', 'Publication date')}</option>
+        <option value="i" ${galSort === 'i' ? 'selected' : ''}>${L('Installations', 'Installs')}</option>
+        <option value="d7" ${galSort === 'd7' ? 'selected' : ''}>${L('Hausse sur 7 jours', '7-day gain')}</option></select></label>
+    </div>
+    <div class="cards">${shown.map(cardHTML).join('') || `<p class="muted">${L('Aucune recette pour ces filtres.', 'No recipe for these filters.')}</p>`}</div>
+    ${list.length > shown.length ? `<p><button class="btn ghost more" type="button" id="gmore">${L(`Afficher plus (${nf(list.length - shown.length)} restantes)`, `Show more (${nf(list.length - shown.length)} left)`)}</button></p>` : ''}
+    <p class="note">${L(`${nf(list.length)} recette(s) affichée(s). Les aperçus et descriptions appartiennent à leurs créateurs.`, `${nf(list.length)} recipe(s) shown. Previews and descriptions belong to their creators.`)}</p>`;
+  el.querySelectorAll('[data-fresh]').forEach(b => b.onclick = () => { galFresh = b.dataset.fresh; galShown = 24; renderGallery(); });
+  $('#gq').oninput = e => { galQ = e.target.value.trim().toLowerCase(); galShown = 24; clearTimeout(window.__gt); window.__gt = setTimeout(renderGallery, 250); };
+  $('#gc').onchange = e => { galCat = e.target.value; galShown = 24; renderGallery(); };
+  $('#gs').onchange = e => { galSort = e.target.value; galShown = 24; renderGallery(); };
+  $('#gmore')?.addEventListener('click', () => { galShown += 24; renderGallery(); });
+  el.querySelectorAll('[data-share]').forEach(b => b.onclick = () => shareCard(byR.get(b.dataset.share)));
+}
+function cardHTML(r) {
+  const age = r.p ? (Date.now() - Date.parse(r.p)) / DAY : 999;
+  const badge = age < 1 ? L('nouveau', 'new') : age < 7 ? L('cette semaine', 'this week') : '';
+  return `<article class="card ${isMe(r.u) ? 'mine' : ''}">
+    <div class="shot">${r.sc ? `<img src="${esc(r.sc)}" alt="${esc(L('Aperçu de', 'Preview of'))} ${esc(r.n)}" loading="lazy" decoding="async" crossorigin="anonymous">` : ''}
+      <span class="rk">#${r.r}</span>${badge ? `<span class="fresh">${badge}</span>` : ''}</div>
+    <div class="body">
+      <h4><a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a></h4>
+      ${r.d ? `<p class="desc">${esc(r.d)}</p>` : ''}
+      <p class="tagline"><a href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a>${r.c.length ? ' · ' + esc(r.c.join(', ')) : ''}</p>
+      <p class="meta"><span><b>${nf(r.i)}</b> ${L('installs', 'installs')}</span><span><b>${nf(r.f)}</b> forks</span>${r.d7 > 0 ? `<span><b>${sg(r.d7)}</b> ${L('/ 7 j', '/ 7 d')}</span>` : ''}<span>${dfmt(r.p)}</span></p>
+      <div class="acts">
+        <a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>
+        <button class="btn ghost" type="button" data-share="${r.id}">${L('Partager', 'Share')}</button>
+      </div>
+    </div></article>`;
+}
+
+/* ================= Vignette partageable ================= */
+async function shareCard(r) {
+  if (!r) return;
+  track('vignette-ouverte', true);
+  const W = 1200, H = 630;
+  const wrap = document.createElement('div');
+  wrap.className = 'modal';
+  wrap.innerHTML = `<div class="box"><canvas id="cardCv" width="${W}" height="${H}"></canvas>
+    <div class="row"><button class="btn ghost" type="button" id="cardClose">${L('Fermer', 'Close')}</button>
+      <button class="btn" type="button" id="cardDl">${L('Télécharger', 'Download')}</button>
+      <button class="btn" type="button" id="cardShare" hidden>${L('Partager', 'Share')}</button></div>
+    <p class="note">${L('Image 1200 × 630, prête pour Discord, Reddit ou LinkedIn.', '1200 × 630 image, ready for Discord, Reddit or LinkedIn.')}</p></div>`;
+  document.body.append(wrap);
+  wrap.addEventListener('click', e => { if (e.target === wrap) wrap.remove(); });
+  $('#cardClose', wrap).onclick = () => wrap.remove();
+  const cv = $('#cardCv', wrap), x = cv.getContext('2d');
+  const F = (w, size, wd = 100) => `${w} ${size}px Archivo, system-ui, sans-serif`;
+  const PAPER = '#f2f0ed', INK = '#1d1d1b', INK2 = '#5d5c58', ACC = '#f8654b';
+  x.fillStyle = PAPER; x.fillRect(0, 0, W, H);
+  x.fillStyle = ACC; x.fillRect(0, 0, W, 10);
+  // aperçu de la recette
+  const img = new Image(); img.crossOrigin = 'anonymous';
+  const drawn = await new Promise(res => { img.onload = () => res(true); img.onerror = () => res(false); img.src = r.sc ? r.sc + (r.sc.includes('?') ? '&' : '?') + 'x=card' : ''; });
+  const bx = 660, by = 120, bw = 500, bh = 300;
+  x.fillStyle = '#fff'; x.fillRect(bx, by, bw, bh);
+  if (drawn) x.drawImage(img, bx, by, bw, bh);
+  x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(bx, by, bw, bh);
+  // textes
+  const wrapText = (t, max, size, weight, color, y0, lh, limit = 3) => {
+    x.font = F(weight, size); x.fillStyle = color;
+    const words = String(t).split(' '); let line = '', y = y0, n = 0;
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (x.measureText(test).width > max && line) {
+        x.fillText(line, 60, y); y += lh; line = w; if (++n >= limit - 1) break;
+      } else line = test;
+    }
+    if (line) { let t2 = line; while (x.measureText(t2).width > max) t2 = t2.slice(0, -2) + '…'; x.fillText(t2, 60, y); y += lh; }
+    return y;
+  };
+  x.font = F(700, 24); x.fillStyle = ACC; x.fillText('TRMNL RECIPE', 60, 96);
+  let y = wrapText(r.n, 540, 60, 800, INK, 168, 66, 2);
+  y = wrapText(r.d || '', 540, 26, 400, INK2, y + 16, 34, 3);
+  const c = byU.get(r.u);
+  x.font = F(600, 26); x.fillStyle = INK;
+  x.fillText(`${L('par', 'by')} ${nameOf(r.u)}`, 60, Math.min(y + 34, 468));
+  x.font = F(700, 30); x.fillStyle = INK;
+  x.fillText(`${nf(r.i)} ${L('installations', 'installs')}   ·   ${nf(r.f)} forks   ·   #${r.r} ${L('au classement', 'overall')}`, 60, 520);
+  // pied
+  x.strokeStyle = '#dcdbd9'; x.lineWidth = 2; x.beginPath(); x.moveTo(60, 556); x.lineTo(W - 60, 556); x.stroke();
+  x.font = F(400, 22); x.fillStyle = INK2;
+  x.fillText(location.host + location.pathname.replace(/\/$/, ''), 60, 590);
+  x.textAlign = 'right'; x.fillStyle = ACC; x.font = F(700, 22);
+  x.fillText(c ? `${nameOf(r.u)} · #${c.r} / ${nf(D.creators.length)}` : '', W - 60, 590);
+  x.textAlign = 'left';
+  const name = `trmnl-${r.n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.png`;
+  $('#cardDl', wrap).onclick = () => cv.toBlob(b => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000); track('vignette-telechargee', true);
+  }, 'image/png');
+  cv.toBlob(b => {
+    const file = new File([b], name, { type: 'image/png' });
+    if (navigator.canShare?.({ files: [file] })) {
+      const bt = $('#cardShare', wrap); bt.hidden = false;
+      bt.onclick = () => navigator.share({ files: [file], title: r.n }).then(() => track('vignette-partagee', true)).catch(() => {});
+    }
+  }, 'image/png');
+}
+
+/* ================= Actu TRMNL ================= */
+let trmnlData = null;
+async function renderTrmnl() {
+  const el = $('#tab-trmnl');
+  const T = D.totals;
+  if (!trmnlData) trmnlData = await getJSON('data/trmnl.json').catch(() => ({}));
+  const d = trmnlData || {};
+  el.innerHTML = `<h2>${L('Actualité TRMNL', 'TRMNL news')}</h2>
+    <p class="lead">${L("L'état des services, les dernières annonces et les chiffres de la communauté, rassemblés depuis les sources publiques de TRMNL.", 'Service status, latest announcements and community figures, gathered from TRMNL public sources.')}</p>
+    <div class="grid g2">
+      <div class="sheet" id="statusCard"><h3>${L('État des services', 'Service status')}</h3><p class="muted">${L('Chargement…', 'Loading…')}</p></div>
+      <div class="sheet"><h3>${L('La communauté en chiffres', 'The community in numbers')}</h3>
+        <div class="kpis" style="margin:0">
+          <div><b>${nf(T.recipes)}</b>${L('recettes publiques', 'public recipes')}</div>
+          <div><b>${nf(T.creators)}</b>${L('créateurs', 'creators')}</div>
+          <div><b>${nf(T.installs)}</b>${L('installations', 'installs')}</div>
+          <div><b>${nf(T.forks)}</b>forks</div>
+          ${d.firmware?.version ? `<div><b>${esc(d.firmware.version)}</b>${L('dernier firmware', 'latest firmware')}</div>` : ''}
+        </div>
+        <p class="note">${L('Chiffres calculés à partir des recettes publiques ; TRMNL ne publie pas le nombre d\'appareils en service.', 'Figures computed from public recipes; TRMNL does not publish the number of devices in use.')}</p></div>
+      <div class="sheet"><h3>${L('Dernières annonces', 'Latest announcements')}</h3>
+        <ul class="news">${(d.announcements || []).slice(0, 8).map(newsHTML).join('') || `<p class="muted">${L('Indisponible pour le moment.', 'Unavailable right now.')}</p>`}</ul></div>
+      <div class="sheet"><h3>${L('Sur le blog de TRMNL', 'From the TRMNL blog')}</h3>
+        <ul class="news">${(d.posts || []).slice(0, 6).map(newsHTML).join('') || `<p class="muted">${L('Indisponible pour le moment.', 'Unavailable right now.')}</p>`}</ul></div>
+    </div>
+    <p class="note">${L('Sources : page de statut publique de TRMNL, flux d\'annonces et blog officiels.', 'Sources: TRMNL public status page, official announcements feed and blog.')}</p>`;
+  drawStatus(d.status);
+  // statut en direct si possible, sinon celui du dernier relevé
+  try {
+    const live = await (await fetch('https://trmnl.statuspage.io/api/v2/summary.json', { cache: 'no-store' })).json();
+    drawStatus({
+      indicator: live.status?.indicator, description: live.status?.description, updated: live.page?.updated_at,
+      components: (live.components || []).filter(c => !c.group).map(c => ({ n: c.name, s: c.status })),
+      incidents: (live.incidents || []).map(i => ({ n: i.name, s: i.status, u: i.shortlink, d: i.updated_at })),
+      maintenances: (live.scheduled_maintenances || []).map(i => ({ n: i.name, s: i.status, u: i.shortlink, d: i.scheduled_for })),
+    }, true);
+  } catch {}
+}
+const newsHTML = n => `<li><a href="${esc(n.u)}" target="_blank" rel="noopener">${esc(n.t)}</a>
+  <span class="when">${n.d ? dfmt(n.d) : ''}</span>${n.s ? `<p>${esc(n.s)}</p>` : ''}</li>`;
+function drawStatus(st, live = false) {
+  const box = $('#statusCard'); if (!box) return;
+  if (!st) { box.innerHTML = `<h3>${L('État des services', 'Service status')}</h3><p class="muted">${L('Statut indisponible.', 'Status unavailable.')}</p>`; return; }
+  const cls = st.indicator === 'none' ? '' : (st.indicator === 'critical' || st.indicator === 'major') ? 'bad' : 'warn';
+  const bad = c => c.s !== 'operational';
+  box.innerHTML = `<h3>${L('État des services', 'Service status')}</h3>
+    <p class="stat"><span class="dot ${cls}"></span>${esc(st.description || '')}</p>
+    ${(st.incidents || []).length ? `<ul class="news">${st.incidents.map(i => `<li><a href="${esc(i.u)}" target="_blank" rel="noopener">${esc(i.n)}</a><span class="when">${esc(i.s)} · ${dfmt(i.d)}</span></li>`).join('')}</ul>` : ''}
+    ${(st.maintenances || []).length ? `<ul class="news">${st.maintenances.map(i => `<li><a href="${esc(i.u)}" target="_blank" rel="noopener">${esc(i.n)}</a><span class="when">${L('maintenance prévue', 'scheduled maintenance')} · ${dfmt(i.d)}</span></li>`).join('')}</ul>` : ''}
+    <ul class="comps">${(st.components || []).map(c => `<li><span>${esc(c.n)}</span><span class="${bad(c) ? 'down' : 'muted'}">${esc(c.s.replace(/_/g, ' '))}</span></li>`).join('')}</ul>
+    <p class="note">${live ? L('En direct depuis la page de statut de TRMNL.', 'Live from the TRMNL status page.') : L('Dernier relevé enregistré.', 'Last recorded snapshot.')}
+      <a href="https://status.usetrmnl.com" target="_blank" rel="noopener">status.usetrmnl.com</a></p>`;
 }
 
 /* ================= Classements thématiques ================= */

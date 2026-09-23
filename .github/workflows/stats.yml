@@ -50,7 +50,19 @@ jobs:
             node scripts/fetch-trmnl.mjs public/data
           fi
 
+      # Un projet Supabase gratuit se met en pause après 7 jours sans activité : on le réveille à chaque passage
+      - name: Garder Supabase éveillé
+        if: vars.SUPABASE_URL != ''
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+        run: |
+          curl -s -o /dev/null -w "Supabase répond : %{http_code}\n" "$SUPABASE_URL/rest/v1/projects?select=id&limit=1" -H "apikey: $SUPABASE_ANON_KEY" || true
+
       - name: Publier sur la branche gh-pages
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
         run: |
           cp index.html public/
           [ -f names.json ] && cp names.json public/ || echo '{}' > public/names.json
@@ -59,7 +71,7 @@ jobs:
           done
           OWNER="${GITHUB_REPOSITORY%%/*}"; REPO="${GITHUB_REPOSITORY#*/}"
           if [ "$REPO" = "$OWNER.github.io" ]; then SITE="https://$REPO/"; else SITE="https://$OWNER.github.io/$REPO/"; fi
-          sed -i "s#__SITE_URL__#$SITE#g; s#__REPO__#$GITHUB_REPOSITORY#g" public/index.html
+          sed -i "s#__SITE_URL__#$SITE#g; s#__REPO__#$GITHUB_REPOSITORY#g; s#__SUPABASE_URL__#${SUPABASE_URL}#g; s#__SUPABASE_KEY__#${SUPABASE_ANON_KEY}#g" public/index.html
           SITE_URL="$SITE" node scripts/build-pages.mjs public
           touch public/.nojekyll
           cd public

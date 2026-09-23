@@ -933,7 +933,7 @@ const WSTAT = {
   testing: { e: '🧪', c: '--plum', l: () => L('En test', 'Testing') },
   submitted: { e: '📤', c: '--sage', l: () => L('Soumise à TRMNL', 'Submitted') },
 };
-let wipFilter = '', wipList = null, wipMe = null, wipProfile = null, wipErr = '';
+let wipFilter = '', wipList = null, wipMe = null, wipProfile = null, wipErr = '', wipPending = 0;
 // Messages de la base traduits pour l'interface
 const ERRS = [
   [/12 hours/i, 'Une avancée toutes les 12 heures par projet, pour garder la page claire.', 'One update every 12 hours per project, to keep the page tidy.'],
@@ -943,6 +943,7 @@ const ERRS = [
   [/up to 5 projects/i, "Vous pouvez partager jusqu'à 5 projets en cours à la fois.", 'You can share up to 5 projects in progress at a time.'],
   [/30 updates/i, "Ce projet a déjà 30 avancées. Supprimez-en une ancienne d'abord.", 'This project already has 30 updates. Delete an old one first.'],
   [/only the author/i, "Seul l'auteur du projet peut publier des avancées.", 'Only the author of a project can post updates.'],
+  [/already linked/i, 'Ce numéro de créateur est déjà lié à un autre compte.', 'This creator number is already linked to another account.'],
   [/too many reports/i, "Trop de signalements aujourd'hui.", 'Too many reports today.'],
   [/check constraint|violates.*check/i, 'Un des champs est trop long ou invalide.', 'One of the fields is too long or invalid.'],
   [/row-level security|permission denied/i, 'Action non autorisée. Essayez de vous reconnecter.', 'Not allowed. Try signing in again.'],
@@ -999,12 +1000,18 @@ const realApi = {
   async clearReport(id) { const c = await client(); ok(await c.from('reports').delete().eq('id', id)); },
   async ban(uid, value) { const c = await client(); ok(await c.rpc('set_banned', { target: uid, value })); },
   async upload(file) {
-    const c = await client(); const blob = await shrink(file);
+    const c = await client();
+    const [big, small] = await Promise.all([shrink(file, 1000, 0.82), shrink(file, 420, 0.75)]);
     const path = `${wipMe.id}/${Date.now().toString(36)}.webp`;
-    ok(await c.storage.from('wip').upload(path, blob, { contentType: 'image/webp', upsert: false }));
+    const opt = { contentType: 'image/webp', upsert: false, cacheControl: '31536000' };   // une capture ne change jamais : cache d'un an
+    ok(await c.storage.from('wip').upload(path, big, opt));
+    await c.storage.from('wip').upload(thumbOf(path), small, opt);
     return path;
   },
-  async removeImages(paths) { const c = await client(); const list = paths.filter(x => x && !/^https?:/.test(x)); if (list.length) await c.storage.from('wip').remove(list); },
+  async removeImages(paths) { const c = await client(); const list = paths.filter(x => x && !/^(https?:|data:|blob:)/.test(x)).flatMap(x => [x, thumbOf(x)]); if (list.length) await c.storage.from('wip').remove(list); },
+  async requestLink(cid) { const c = await client(); ok(await c.rpc('request_creator_link', { cid })); },
+  async pendingLinks() { const c = await client(); return ok(await c.from('profiles').select('id,name,avatar,creator_id').eq('creator_status', 'pending')); },
+  async reviewLink(target, approve) { const c = await client(); ok(await c.rpc('review_creator_link', { target, approve })); },
   async deleteAccount() {
     const c = await client();
     const files = ok(await c.storage.from('wip').list(wipMe.id, { limit: 1000 }));
@@ -1015,14 +1022,15 @@ const realApi = {
 const api = () => window.__WIP_MOCK || realApi;
 
 // Réduit la capture avant envoi : 1000 px de large au maximum, format WebP
-function shrink(file) {
+const thumbOf = path => String(path).replace(/\.webp$/, '-t.webp');
+function shrink(file, max = 1000, q = 0.82) {
   return new Promise((res, rej) => {
     if (!/^image\//.test(file.type)) return rej(new Error(L('Choisissez une image.', 'Please choose an image.')));
     const img = new Image(); img.onload = () => {
-      const w = Math.min(1000, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
+      const w = Math.min(max, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
       const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
       const x = cv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h);
-      cv.toBlob(b => b ? res(b) : rej(new Error('image')), 'image/webp', 0.82); URL.revokeObjectURL(img.src);
+      cv.toBlob(b => b ? res(b) : rej(new Error('image')), 'image/webp', q); URL.revokeObjectURL(img.src);
     };
     img.onerror = () => rej(new Error(L('Image illisible.', 'Unreadable image.'))); img.src = URL.createObjectURL(file);
   });
@@ -1048,8 +1056,8 @@ const STOP = new Set(['trmnl', 'the', 'and', 'for', 'les', 'des', 'une', 'plugin
 const toks = t => new Set(String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^a-z0-9]+/).filter(w => w.length >= 3 && !STOP.has(w)));
 function sameName(a, b) { const A = toks(a), B = toks(b); if (!A.size || !B.size) return false; let n = 0; A.forEach(w => { if (B.has(w)) n++; }); return n / Math.min(A.size, B.size) >= 0.6; }
 function shippedOf(p) {
-  if (p.shipped_recipe) { const r = byR.get(String(p.shipped_recipe)); return { r, d: r?.p || p.updated_at }; }
-  if (!p.creator_id) return null;
+  if (!p.creator_id) return null;   // numéro vérifié uniquement
+  if (p.shipped_recipe) { const r = byR.get(String(p.shipped_recipe)); if (r && r.u === p.creator_id) return { r, d: r.p || p.updated_at }; }
   const from = Date.parse(p.created_at) - 2 * DAY;
   const r = D.recipes.find(r => r.p && Date.parse(r.p) >= from && r.u === p.creator_id && sameName(r.n, p.name));
   return r ? { r, d: r.p } : null;
@@ -1060,12 +1068,18 @@ const isOwner = p => wipMe && p.owner === wipMe.id;
 const isAdmin = () => !!wipProfile?.is_admin;
 const avatarHTML = pr => pr?.avatar ? `<img class="av" src="${esc(pr.avatar)}" alt="" width="22" height="22" loading="lazy">` : '<span class="av ph2">👤</span>';
 
+// Nom affiché : le nom revendiqué s'il existe, sinon le nom Discord ; lien vers le profil de créateur si on le connaît
+const wipWho = p => {
+  const label = p.creator_id && hasName(p.creator_id) ? nameOf(p.creator_id) : (p.profiles?.name || (p.creator_id ? nameOf(p.creator_id) : ''));
+  return p.creator_id && byU.has(p.creator_id) ? `<a href="${hr('createur', p.creator_id)}">${esc(label)}</a>` : esc(label);
+};
 function wipCard(p, ship) {
   const st = WSTAT[p.status] || WSTAT.building, r = ship?.r;
-  const img = imgURL(p.last_image || p.image) || r?.sc || '';
-  const shot = img ? `<img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy">` : `<div class="ph">${st.e}</div>`;
+  const own = p.last_image || p.image;
+  const full = imgURL(own) || r?.sc || '', thumb = own && !/^(https?:|data:|blob:)/.test(own) ? imgURL(thumbOf(own)) : full;
+  const shot = full ? `<img src="${esc(thumb)}" data-full="${esc(full)}" onerror="if(this.dataset.full&&this.src!==this.dataset.full)this.src=this.dataset.full" alt="${esc(p.name)}" loading="lazy">` : `<div class="ph">${st.e}</div>`;
   const badge = ship ? `<span class="fresh">🎉 ${L('Disponible', 'Now available')}</span>` : `<span class="fresh" style="background:var(${st.c})">${st.e} ${st.l()}</span>`;
-  const who = p.creator_id && byU.has(p.creator_id) ? `<a href="${hr('createur', p.creator_id)}">${esc(nameOf(p.creator_id))}</a>` : esc(p.profiles?.name || '');
+  const who = wipWho(p);
   const days = ship ? Math.max(1, Math.round((Date.parse(ship.d) - Date.parse(p.created_at)) / DAY)) : 0;
   return `<article class="card wip ${ship ? 'shipped' : ''} ${isOwner(p) ? 'mine' : ''}" data-wip="${p.id}" tabindex="0">
     <div class="shot">${shot}${badge}${p.hidden ? `<span class="rk">${L('masqué', 'hidden')}</span>` : ''}</div>
@@ -1086,7 +1100,7 @@ async function renderWip() {
   if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L('Cette section ouvre très bientôt.', 'This section opens very soon.')}</p>`; return; }
   if (!wipList) {
     el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
-    try { const s = await api().session(); wipMe = s.user; wipProfile = s.profile; store.set('trmnl-wip-session', wipMe ? '1' : ''); wipList = await api().list(); wipErr = ''; }
+    try { await wipLoadSession(); wipList = await api().list(); wipErr = ''; }
     catch (e) { wipErr = trErr(e.message); wipList = []; }
   }
   const items = wipList.map(p => ({ p, ship: shippedOf(p) }));
@@ -1098,8 +1112,9 @@ async function renderWip() {
   const count = k => active.filter(x => x.p.status === k).length;
   const account = wipMe
     ? `<div class="tools-row"><span class="who2">${avatarHTML(wipProfile)} <b>${esc(wipProfile?.name || '')}</b>${isAdmin() ? ` <span class="badge">admin</span>` : ''}</span>
+        ${linkChip()}
         ${wipProfile?.banned ? `<span class="down">${L('Compte bloqué', 'Account blocked')}</span>` : `<button class="btn" type="button" id="wipNew">+ ${L('Partager mon projet', "Share what you're building")}</button>`}
-        ${isAdmin() ? `<button class="btn ghost small" type="button" id="wipReports">${L('Signalements', 'Reports')}</button>` : ''}
+        ${isAdmin() ? `<button class="btn ghost small" type="button" id="wipReports">${L('Signalements', 'Reports')}</button><button class="btn ghost small" type="button" id="wipLinks">${L('Liaisons à valider', 'Links to review')}${wipPending ? ` (${wipPending})` : ''}</button>` : ''}
         <button class="btn ghost small" type="button" id="wipOut">${L('Se déconnecter', 'Sign out')}</button></div>`
     : `<div class="tools-row"><button class="btn" type="button" id="wipIn"><span aria-hidden="true">🎮</span> ${L('Se connecter avec Discord', 'Sign in with Discord')}</button>
         <span class="muted" style="font-size:.86rem">${L('pour partager un projet ou commenter. La lecture est libre.', 'to share a project or comment. Reading is open to everyone.')}</span></div>`;
@@ -1121,12 +1136,62 @@ async function renderWip() {
   $('#wipOut')?.addEventListener('click', async () => { await api().signOut(); wipMe = wipProfile = null; store.set('trmnl-wip-session', ''); renderWip(); });
   $('#wipNew')?.addEventListener('click', () => wipForm());
   $('#wipReports')?.addEventListener('click', wipReportsView);
+  $('#wipLinks')?.addEventListener('click', wipLinksView);
+  $('#wipLink')?.addEventListener('click', wipLinkForm);
+  $('#wipUnlink')?.addEventListener('click', async () => { try { await api().requestLink(null); await wipReload(); } catch (x) { toast(trErr(x.message)); } });
   $('#wipPrivacy')?.addEventListener('click', e => { e.preventDefault(); wipPrivacy(); });
   $('#wipDelete')?.addEventListener('click', async e => {
     e.preventDefault();
     if (!confirm(L('Supprimer définitivement votre compte, vos projets, vos avancées, vos commentaires et vos images ?', 'Permanently delete your account, projects, updates, comments and images?'))) return;
     try { await api().deleteAccount(); wipMe = wipProfile = null; store.set('trmnl-wip-session', ''); await wipRefresh(); toast(L('Compte supprimé.', 'Account deleted.')); } catch (err) { toast(trErr(err.message)); }
   });
+}
+async function wipLoadSession() {
+  const s = await api().session(); wipMe = s.user; wipProfile = s.profile;
+  store.set('trmnl-wip-session', wipMe ? '1' : '');
+  // un créateur vérifié retrouve automatiquement son profil dans « Mon profil »
+  if (wipProfile?.creator_status === 'verified' && !me) { me = wipProfile.creator_id; store.set('trmnl-me', me); }
+  wipPending = isAdmin() ? (await api().pendingLinks().catch(() => [])).length : 0;
+}
+async function wipReload() { await wipLoadSession(); await wipRefresh(); }
+function linkChip() {
+  const pr = wipProfile; if (!pr) return '';
+  if (pr.creator_status === 'verified') return `<span class="badge" title="${esc(L('Numéro de créateur vérifié', 'Verified creator number'))}">✔ ${esc(hasName(pr.creator_id) ? nameOf(pr.creator_id) : L('Créateur', 'Creator') + ' #' + pr.creator_id)}</span>`;
+  if (pr.creator_status === 'pending') return `<span class="muted" style="font-size:.86rem">⏳ ${L(`Numéro #${esc(pr.creator_id)} en attente de validation`, `Creator #${esc(pr.creator_id)} awaiting review`)}</span><button class="linkbtn" type="button" id="wipUnlink">${L('annuler', 'cancel')}</button>`;
+  return `<button class="btn ghost small" type="button" id="wipLink">${L('Lier mon numéro de créateur', 'Link my creator number')}</button>`;
+}
+function wipLinkForm() {
+  const m = modal(`<h3>${L('Lier mon numéro de créateur', 'Link my creator number')}</h3>
+    <p>${L("Une fois validé, vos projets afficheront votre nom de créateur, renverront vers votre profil, et leur publication officielle sera repérée automatiquement.", 'Once approved, your projects show your creator name, link to your profile, and their official release is spotted automatically.')}</p>
+    <p class="muted" style="font-size:.9rem">${L("Chaque demande est vérifiée à la main, pour que personne ne puisse se faire passer pour un autre créateur. Votre numéro figure dans l'adresse de vos recettes publiques sur trmnl.com, après user_id=.", 'Every request is checked by hand, so nobody can pose as another creator. Your number appears in the address of your public recipes on trmnl.com, after user_id=.')}</p>
+    <form class="wform"><label>${L('Numéro de créateur', 'Creator number')}<input name="cid" inputmode="numeric" required placeholder="12345"></label><p class="hint" id="lkHint"></p><p class="err" hidden></p>
+    <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${L('Envoyer la demande', 'Send request')}</button></div></form>`, 'wipd');
+  const f = m.$('form'), err = m.$('.err');
+  f.cid.oninput = () => { const c = f.cid.value.replace(/\D/g, ''), cr = byU.get(c);
+    m.$('#lkHint').textContent = cr ? L(`${nameOf(c)} : ${plural(cr.n, 'recette')}, par exemple « ${cr.recipes[0]?.n || ''} »`, `${nameOf(c)}: ${plural(cr.n, 'recipe', 'recipe')}, e.g. "${cr.recipes[0]?.n || ''}"`) : (c ? L('Aucun créateur public avec ce numéro.', 'No public creator with this number.') : ''); };
+  f.onsubmit = async e => {
+    e.preventDefault(); err.hidden = true; const c = f.cid.value.replace(/\D/g, '');
+    if (!byU.has(c)) { err.textContent = L('Aucun créateur public avec ce numéro.', 'No public creator with this number.'); err.hidden = false; return; }
+    try { await api().requestLink(c); m.close(); track('liaison-demandee', true); toast(L('Demande envoyée', 'Request sent')); await wipReload(); }
+    catch (x) { err.textContent = trErr(x.message); err.hidden = false; }
+  };
+}
+async function wipLinksView() {
+  const m = modal(`<h3>${L('Liaisons à valider', 'Links to review')}</h3>
+    <p class="muted" style="font-size:.9rem">${L("Comparez le nom Discord avec le créateur demandé (nom revendiqué, recettes). En cas de doute, demandez confirmation sur Discord avant de valider.", 'Compare the Discord name with the requested creator (claimed name, recipes). If in doubt, ask on Discord before approving.')}</p>
+    <div class="lk"><p class="muted">${L('Chargement…', 'Loading…')}</p></div><div class="row"><button class="btn ghost" data-close>${L('Fermer', 'Close')}</button></div>`, 'wipd');
+  const draw = async () => {
+    const list = await api().pendingLinks(); wipPending = list.length;
+    m.$('.lk').innerHTML = list.length ? `<ul class="coms">${list.map(u => { const cr = byU.get(u.creator_id);
+      return `<li><div class="ch">${avatarHTML(u)} <b>${esc(u.name)}</b> → <a href="${hr('createur', u.creator_id)}" target="_blank">${esc(nameOf(u.creator_id))}</a></div>
+        <p class="muted" style="font-size:.86rem">${cr ? `${plural(cr.n, 'recette', 'recipe')} : ${esc(cr.recipes.slice(0, 3).map(r => r.n).join(', '))}` : L('Aucun créateur public avec ce numéro.', 'No public creator with this number.')}</p>
+        <div class="cacts"><button class="btn small" data-ok="${u.id}">${L('Valider', 'Approve')}</button><button class="btn ghost small" data-no="${u.id}">${L('Refuser', 'Reject')}</button></div></li>`; }).join('')}</ul>`
+      : `<p class="muted">${L('Aucune demande en attente.', 'No pending request.')}</p>`;
+    m.wrap.querySelectorAll('[data-ok],[data-no]').forEach(b => b.onclick = async () => {
+      try { await api().reviewLink(b.dataset.ok || b.dataset.no, !!b.dataset.ok); await draw(); wipRefresh(); } catch (x) { toast(trErr(x.message)); }
+    });
+  };
+  draw().catch(e => { m.$('.lk').innerHTML = `<p class="err">${esc(trErr(e.message))}</p>`; });
 }
 async function wipRefresh() { try { wipList = await api().list(); wipErr = ''; } catch (e) { wipErr = trErr(e.message); } renderWip(); }
 
@@ -1154,10 +1219,12 @@ function wipForm(p = null) {
       <div class="two"><label>${L('État', 'Status')}<select name="status">${Object.entries(WSTAT).map(([k, v]) => `<option value="${k}" ${(p?.status || 'building') === k ? 'selected' : ''}>${v.e} ${v.l()}</option>`).join('')}</select></label>
         <label>${L('Catégorie', 'Category')}<select name="category">${WCATS.map(c => `<option ${(p?.category || 'other') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></label></div>
       <label>${L('Capture', 'Screenshot')}<input name="image" type="file" accept="image/*"><img class="prev" alt="" ${p?.image ? `src="${esc(imgURL(p.image))}"` : 'hidden'}></label>
-      <div class="two"><label>${L('Votre numéro de créateur (facultatif)', 'Your creator number (optional)')}<input name="creator_id" inputmode="numeric" value="${esc(p?.creator_id || (me || ''))}"></label>
-        <label>${L('Sortie prévue (facultatif)', 'Expected release (optional)')}<input name="eta" maxlength="40" value="${esc(p?.eta || '')}"></label></div>
+      <label>${L('Sortie prévue (facultatif)', 'Expected release (optional)')}<input name="eta" maxlength="40" value="${esc(p?.eta || '')}"></label>
+      <p class="muted" style="font-size:.84rem;margin:0">${wipProfile?.creator_status === 'verified'
+        ? L(`✔ Ce projet sera relié à votre profil de créateur (${esc(nameOf(wipProfile.creator_id))}).`, `✔ This project will be linked to your creator profile (${esc(nameOf(wipProfile.creator_id))}).`)
+        : L('Il sera affiché sous votre nom Discord. Liez votre numéro de créateur pour le relier à votre profil et faire repérer sa publication automatiquement.', 'It will show under your Discord name. Link your creator number to connect it to your profile and have its release spotted automatically.')}</p>
       <label>${L('Lien pour suivre le projet (facultatif)', 'Link to follow the project (optional)')}<input name="link" type="url" placeholder="https://" value="${esc(p?.link || '')}"></label>
-      ${edit ? `<label>${L('Déjà publiée ? Numéro de la recette', 'Already published? Recipe number')}<input name="shipped_recipe" inputmode="numeric" value="${esc(p?.shipped_recipe || '')}" placeholder="123456"></label>`
+      ${edit ? (wipProfile?.creator_status === 'verified' ? `<label>${L('Déjà publiée ? Numéro de la recette', 'Already published? Recipe number')}<input name="shipped_recipe" inputmode="numeric" value="${esc(p?.shipped_recipe || '')}" placeholder="123456"></label>` : '')
         : `<label class="chk"><input type="checkbox" name="consent" required> ${L("C'est mon propre projet, et j'accepte qu'il soit affiché publiquement.", "This is my own project and I'm happy for it to be shown publicly.")}</label>`}
       <p class="err" hidden></p>
       <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${edit ? L('Enregistrer', 'Save') : L('Publier', 'Publish')}</button></div>
@@ -1169,9 +1236,12 @@ function wipForm(p = null) {
     e.preventDefault(); err.hidden = true;
     const val = n => (f[n]?.value || '').trim();
     const fields = { name: val('name'), description: val('description'), status: val('status'), category: val('category'),
-      creator_id: val('creator_id').replace(/\D/g, '') || null, eta: val('eta') || null, link: val('link') || null };
-    if (edit) fields.shipped_recipe = (val('shipped_recipe').match(/\d{3,}/) || [])[0] || null;
+      eta: val('eta') || null, link: val('link') || null };
     const fail = msg => { err.textContent = msg; err.hidden = false; };
+    if (edit && f.shipped_recipe) {
+      fields.shipped_recipe = (val('shipped_recipe').match(/\d{3,}/) || [])[0] || null;
+      if (fields.shipped_recipe && byR.get(fields.shipped_recipe)?.u !== wipProfile.creator_id) return fail(L("Ce numéro ne correspond à aucune de vos recettes publiées.", "This number doesn't match any of your published recipes."));
+    }
     if (fields.name.length < 2) return fail(L('Donnez un nom à votre projet.', 'Please name your project.'));
     if (fields.link && !/^https?:\/\//i.test(fields.link)) return fail(L('Le lien doit commencer par https://', 'The link must start with https://'));
     if (!edit && !f.consent.checked) return fail(L('Merci de cocher la case de consentement.', 'Please tick the consent box.'));
@@ -1190,7 +1260,7 @@ function wipForm(p = null) {
 async function wipDetail(p) {
   if (!p) return;
   const ship = shippedOf(p), st = WSTAT[p.status] || WSTAT.building, r = ship?.r;
-  const who = p.creator_id && byU.has(p.creator_id) ? `<a href="${hr('createur', p.creator_id)}">${esc(nameOf(p.creator_id))}</a>` : esc(p.profiles?.name || '');
+  const who = wipWho(p);
   const m = modal(`<div class="wipbody"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`, 'wipd');
   track('projet-ouvert', true);
   const draw = async () => {

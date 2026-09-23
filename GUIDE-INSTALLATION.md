@@ -104,8 +104,31 @@ Tout se fait **directement sur le site**, une fois connecté en administrateur.
 | Sous un commentaire | **supprimer** | Supprime le commentaire. |
 | Sous un commentaire | **bloquer** | Bloque l'auteur du commentaire. |
 | En haut de la section | **Signalements** | Liste de ce que les visiteurs ont signalé. **ouvrir** mène au projet, **classer** retire le signalement. |
+| En haut de la section | **Liaisons à valider** | Demandes de liaison entre un compte Discord et un numéro de créateur. **Valider** ou **Refuser** (voir ci-dessous). |
 
 Pour débloquer quelqu'un : Supabase › **Table Editor › profiles**, décochez la case `banned` sur sa ligne.
+
+## Valider les liaisons aux numéros de créateur
+
+Pour que personne ne puisse se faire passer pour un autre créateur, le numéro de créateur d'un compte n'est jamais pris sur parole :
+
+1. La personne clique sur **Lier mon numéro de créateur** et saisit son numéro.
+2. Sa demande apparaît dans **Liaisons à valider**, avec son nom Discord, le créateur demandé et quelques-unes de ses recettes.
+3. Vous comparez : le nom Discord correspond-il au nom revendiqué ou aux recettes ? En cas de doute, demandez-lui confirmation sur Discord.
+4. **Valider** : ses projets affichent son nom de créateur, renvoient vers son profil, et leur publication officielle est repérée automatiquement. **Refuser** : la demande est effacée.
+
+Garanties apportées par la base elle-même, et pas seulement par le site :
+
+- un numéro ne peut être lié qu'à **un seul** compte ;
+- personne ne peut valider sa propre demande ;
+- tant qu'une liaison n'est pas validée, ses projets s'affichent sous le nom Discord, sans lien vers un profil de créateur ;
+- une publication ne peut être déclarée qu'avec une recette appartenant au créateur vérifié.
+
+Pour retirer une liaison déjà validée : Supabase › **Table Editor › profiles**, videz `creator_id` et remettez `creator_status` à `none` sur la ligne concernée.
+
+## Mettre à jour la base après une nouvelle version
+
+Quand le fichier `supabase/schema.sql` change, recollez-le en entier dans **SQL Editor › New query** et cliquez sur **Run**, puis confirmez l'avertissement. Il ne supprime aucune donnée : il ajoute ce qui manque et remet les règles à jour.
 
 ## Les règles automatiques
 
@@ -116,7 +139,7 @@ Pour débloquer quelqu'un : Supabase › **Table Editor › profiles**, décoche
 | Avancées | une toutes les 12 heures par projet, 280 caractères, 30 au maximum |
 | Commentaires | 500 caractères, un toutes les 20 secondes, 30 par jour et par personne |
 | Signalements | 20 par jour et par personne |
-| Captures | 2 Mo maximum, réduites à 1000 px de large avant l'envoi |
+| Captures | 2 Mo maximum, réduites à 1000 px de large avant l'envoi, avec une miniature de 420 px pour les cartes, gardées un an en cache par les navigateurs |
 | « Tout juste publiées » | 14 jours après la publication de la recette |
 | « En pause » | après 60 jours sans mise à jour |
 
@@ -125,5 +148,5 @@ En tant qu'administrateur, vous n'êtes pas soumis aux limites de fréquence.
 ## Ce que peuvent faire les autres
 
 - **Tout le monde**, sans compte : lire les projets, les avancées et les commentaires.
-- **Une personne connectée avec Discord** : publier ses projets, les modifier, publier des avancées avec captures, commenter n'importe quel projet, signaler un contenu, supprimer ses propres commentaires, et supprimer son compte avec tous ses contenus (lien en bas de la section).
+- **Une personne connectée avec Discord** : demander à lier son numéro de créateur, publier ses projets, les modifier, publier des avancées avec captures, commenter n'importe quel projet, signaler un contenu, supprimer ses propres commentaires, et supprimer son compte avec tous ses contenus (lien en bas de la section).
 - **Seul l'auteur d'un projet** peut le modifier, y publier des avancées ou le supprimer.

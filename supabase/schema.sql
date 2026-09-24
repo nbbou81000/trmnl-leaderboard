@@ -36,7 +36,8 @@ begin
   insert into public.profiles (id, name, avatar)
   values (
     new.id,
-    left(coalesce(meta->'custom_claims'->>'global_name', meta->>'full_name', meta->>'name', meta->>'user_name', 'Anonymous'), 40),
+    left(coalesce(nullif(btrim(meta->'custom_claims'->>'global_name'), ''), nullif(btrim(meta->>'full_name'), ''), nullif(btrim(meta->>'name'), ''),
+                  nullif(btrim(meta->>'user_name'), ''), nullif(btrim(meta->>'preferred_username'), ''), 'Anonymous'), 40),
     meta->>'avatar_url'
   )
   on conflict (id) do update set name = excluded.name, avatar = excluded.avatar;
@@ -52,29 +53,56 @@ create table if not exists public.projects (
   id             bigint generated always as identity primary key,
   owner          uuid not null default auth.uid() references public.profiles(id) on delete cascade,
   name           text not null check (char_length(name) between 2 and 60),
-  description    text not null default '' check (char_length(description) <= 120),
+  description    text not null default '' check (char_length(description) <= 300),
   status         text not null default 'building' check (status in ('idea', 'building', 'testing', 'submitted')),
   category       text not null default 'other' check (char_length(category) <= 30),
   creator_id     text check (creator_id ~ '^[0-9]{1,10}$'),
   link           text check (link ~* '^https?://' and char_length(link) <= 300),
   eta            text check (char_length(eta) <= 40),
-  image          text check (char_length(image) <= 300),
+  images         text[] not null default '{}',
   shipped_recipe text check (shipped_recipe ~ '^[0-9]{1,10}$'),
   hidden         boolean not null default false,
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
 
+-- ---------- Mise à niveau : ancienne colonne "image" (une seule capture) → "images" (plusieurs, jusqu'à IMG_MAX)
+do $$
+begin
+  if exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'projects' and column_name = 'image') then
+    alter table public.projects add column if not exists images text[] not null default '{}';
+    update public.projects set images = array[image] where image is not null and coalesce(array_length(images, 1), 0) = 0;
+    alter table public.projects drop column image;
+  end if;
+end $$;
+
 -- ---------- Journal de bord (réservé à l'auteur du projet)
 create table if not exists public.updates (
   id         bigint generated always as identity primary key,
   project_id bigint not null references public.projects(id) on delete cascade,
   owner      uuid not null default auth.uid() references public.profiles(id) on delete cascade,
-  body       text not null default '' check (char_length(body) <= 280),
-  image      text check (char_length(image) <= 300),
+  body       text not null default '' check (char_length(body) <= 600),
+  images     text[] not null default '{}',
   created_at timestamptz not null default now(),
-  check (body <> '' or image is not null)
+  check (body <> '' or coalesce(array_length(images, 1), 0) > 0)
 );
+
+do $$
+begin
+  if exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'updates' and column_name = 'image') then
+    alter table public.updates add column if not exists images text[] not null default '{}';
+    update public.updates set images = array[image] where image is not null and coalesce(array_length(images, 1), 0) = 0;
+    alter table public.updates drop column image;
+    alter table public.updates drop constraint if exists updates_check;
+    alter table public.updates add constraint updates_content_check check (body <> '' or coalesce(array_length(images, 1), 0) > 0);
+  end if;
+end $$;
+
+-- Relève les anciennes limites de caractères (description, avancées) posées par une version précédente
+alter table public.projects drop constraint if exists projects_description_check;
+alter table public.projects add constraint projects_description_check check (char_length(description) <= 300);
+alter table public.updates drop constraint if exists updates_body_check;
+alter table public.updates add constraint updates_body_check check (char_length(body) <= 600);
 
 -- ---------- Commentaires (tout visiteur connecté)
 create table if not exists public.comments (
@@ -117,10 +145,12 @@ begin
     new.owner := old.owner; new.created_at := old.created_at;
     new.creator_id := (select creator_id from public.profiles where id = old.owner and creator_status = 'verified');
     if not public.is_admin() then new.hidden := old.hidden; end if;
-    if (new.name, new.description, new.status, new.category, new.link, new.eta, new.image, new.shipped_recipe)
-       is distinct from (old.name, old.description, old.status, old.category, old.link, old.eta, old.image, old.shipped_recipe)
+    if (new.name, new.description, new.status, new.category, new.link, new.eta, new.images, new.shipped_recipe)
+       is distinct from (old.name, old.description, old.status, old.category, old.link, old.eta, old.images, old.shipped_recipe)
     then new.updated_at := now(); else new.updated_at := old.updated_at; end if;
   end if;
+  if array_length(new.images, 1) > 4 then raise exception 'Up to 4 screenshots per project.'; end if;
+  if exists (select 1 from unnest(new.images) x where char_length(x) > 300) then raise exception 'Invalid screenshot.'; end if;
   return new;
 end $$;
 drop trigger if exists guard_projects on public.projects;
@@ -134,14 +164,11 @@ begin
   if not exists (select 1 from public.projects where id = new.project_id and owner = auth.uid()) then
     raise exception 'Only the author of a project can post updates to it.';
   end if;
-  if not public.is_admin() then
-    if exists (select 1 from public.updates where project_id = new.project_id and created_at > now() - interval '12 hours') then
-      raise exception 'One update every 12 hours per project, to keep the page tidy.';
-    end if;
-    if (select count(*) from public.updates where project_id = new.project_id) >= 30 then
-      raise exception 'This project already has 30 updates. Delete an old one first.';
-    end if;
+  if not public.is_admin() and (select count(*) from public.updates where project_id = new.project_id) >= 60 then
+    raise exception 'This project already has 60 updates. Delete an old one first.';
   end if;
+  if array_length(new.images, 1) > 4 then raise exception 'Up to 4 screenshots per update.'; end if;
+  if exists (select 1 from unnest(new.images) x where char_length(x) > 300) then raise exception 'Invalid screenshot.'; end if;
   update public.projects set updated_at = now() where id = new.project_id;
   return new;
 end $$;
@@ -297,3 +324,7 @@ create policy "users delete own images"    on storage.objects for delete to auth
 -- ---------- Mise à niveau : un projet ne garde un numéro de créateur que si la liaison de son auteur est validée
 update public.projects p set creator_id = (select pr.creator_id from public.profiles pr where pr.id = p.owner and pr.creator_status = 'verified')
   where p.creator_id is distinct from (select pr.creator_id from public.profiles pr where pr.id = p.owner and pr.creator_status = 'verified');
+
+-- ---------- Mise à niveau : recalcule les noms restés vides (champ Discord vide à la première connexion)
+update public.profiles pr set name = left(coalesce(nullif(btrim(u.raw_user_meta_data->'custom_claims'->>'global_name'), ''), nullif(btrim(u.raw_user_meta_data->>'full_name'), ''),
+    nullif(btrim(u.raw_user_meta_data->>'name'), ''), nullif(btrim(u.raw_user_meta_data->>'user_name'), ''), nullif(btrim(u.raw_user_meta_data->>'preferred_usernam

@@ -186,6 +186,26 @@ p.lead{color:var(--ink2);max-width:64ch;margin:0 0 14px}
 .tagline{font-size:.8rem;color:var(--ink2)}
 
 .card .ph{display:grid;place-items:center;height:100%;font-size:2.6rem;background:var(--paper)}
+.card .shot .gal, .card .shot .gal .gtrack{height:100%}
+.gal{position:relative}
+.gal.multi .gtrack{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.gal.multi .gtrack img{flex:0 0 100%;scroll-snap-align:center;display:block;object-fit:contain;background:#fff}
+.gdots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:5px;pointer-events:none}
+.gdots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.gdots span.on{background:#fff}
+.gnav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);color:#fff;border:0;width:28px;height:28px;border-radius:50%;font-size:1.15rem;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+.gnav:hover{background:rgba(0,0,0,.65)}
+.gnav.prev{left:6px}
+.gnav.next{right:6px}
+.wipd .hero-img .gal.multi,.wipd .hero-img .gal.multi .gtrack,.wipd .hero-img .gal.multi .gtrack img{height:340px}
+.tl .gal{margin-top:8px;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:#fff}
+.tl .gal img{max-width:100%;display:block}
+.tl .gal.multi,.tl .gal.multi .gtrack,.tl .gal.multi .gtrack img{height:220px}
+.wform-imgs{display:grid;gap:6px}
+.ithumbs{display:flex;flex-wrap:wrap;gap:8px}
+.pth{position:relative;width:64px;height:64px;border-radius:8px;overflow:hidden;border:1px solid var(--rule2);background:#fff}
+.pth img{width:100%;height:100%;object-fit:cover;display:block}
+.pth button{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;border:0;border-radius:50%;width:18px;height:18px;font-size:.65rem;line-height:1;cursor:pointer;padding:0}
 .card.wip .desc{-webkit-line-clamp:3}
 .card.wip{cursor:pointer}
 .card.wip:hover{border-color:var(--accent2)}
@@ -198,7 +218,6 @@ p.lead{color:var(--ink2);max-width:64ch;margin:0 0 14px}
 .tl li::before{content:"";position:absolute;left:-25px;top:5px;width:11px;height:11px;border-radius:50%;background:var(--accent);border:2px solid var(--paper)}
 .tl time{font-size:.8rem;color:var(--ink2);font-weight:600}
 .tl p{margin:3px 0 0}
-.tl img{margin-top:8px;max-width:100%;border:1px solid var(--rule);border-radius:8px;background:#fff}
 .card.shipped{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 
@@ -925,7 +944,7 @@ function cardHTML(r) {
 const SUPABASE_URL = '__SUPABASE_URL__';   // rempli automatiquement par le workflow (variable SUPABASE_URL du dépôt)
 const SUPABASE_KEY = '__SUPABASE_KEY__';   // clé publique « anon » (variable SUPABASE_ANON_KEY du dépôt)
 const wipReady = () => /^https:\/\/[\w-]+\.supabase\.co\/?$/.test(SUPABASE_URL) && SUPABASE_KEY.length > 30;
-const WIP_SHIPPED_DAYS = 14, WIP_HOLD_DAYS = 60, DESC_MAX = 120, UPD_MAX = 280, COM_MAX = 500;
+const WIP_SHIPPED_DAYS = 14, WIP_HOLD_DAYS = 60, DESC_MAX = 300, UPD_MAX = 600, COM_MAX = 500, IMG_MAX = 4;
 const WCATS = ['analytics', 'art', 'calendar', 'comics', 'custom', 'discovery', 'ecommerce', 'education', 'entertainment', 'environment', 'finance', 'games', 'humor', 'images', 'kpi', 'life', 'music', 'news', 'personal', 'productivity', 'programming', 'sports', 'travel', 'other'];
 const WSTAT = {
   idea: { e: '💡', c: '--mustard', l: () => L('Idée', 'Idea') },
@@ -936,7 +955,6 @@ const WSTAT = {
 let wipFilter = '', wipList = null, wipMe = null, wipProfile = null, wipErr = '', wipPending = 0;
 // Messages de la base traduits pour l'interface
 const ERRS = [
-  [/12 hours/i, 'Une avancée toutes les 12 heures par projet, pour garder la page claire.', 'One update every 12 hours per project, to keep the page tidy.'],
   [/wait a few seconds/i, 'Patientez quelques secondes avant de commenter à nouveau.', 'Please wait a few seconds before commenting again.'],
   [/daily comment limit/i, 'Limite quotidienne de commentaires atteinte. À demain !', 'Daily comment limit reached. See you tomorrow!'],
   [/blocked/i, 'Votre compte est bloqué.', 'Your account is blocked.'],
@@ -976,8 +994,8 @@ const realApi = {
   async list() {
     const c = await client();
     const projects = ok(await c.from('projects').select('*, profiles(name,avatar), updates(count), comments(count)').order('updated_at', { ascending: false }));
-    const imgs = ok(await c.from('updates').select('project_id,image,created_at').not('image', 'is', null).order('created_at', { ascending: false }).limit(300));
-    return projects.map(p => ({ ...p, n_updates: p.updates?.[0]?.count || 0, n_comments: p.comments?.[0]?.count || 0, last_image: imgs.find(i => i.project_id === p.id)?.image || null }));
+    const imgs = ok(await c.from('updates').select('project_id,images,created_at').order('created_at', { ascending: false }).limit(300));
+    return projects.map(p => ({ ...p, n_updates: p.updates?.[0]?.count || 0, n_comments: p.comments?.[0]?.count || 0, last_images: imgs.find(i => i.project_id === p.id && i.images?.length)?.images || [] }));
   },
   async detail(id) {
     const c = await client();
@@ -988,10 +1006,10 @@ const realApi = {
     return { updates, comments };
   },
   async saveProject(fields, id) { const c = await client(); return ok(id ? await c.from('projects').update(fields).eq('id', id).select().single() : await c.from('projects').insert(fields).select().single()); },
-  async deleteProject(p) { const c = await client(); const ups = ok(await c.from('updates').select('image').eq('project_id', p.id)); await this.removeImages([p.image, ...ups.map(u => u.image)]); ok(await c.from('projects').delete().eq('id', p.id)); },
+  async deleteProject(p) { const c = await client(); const ups = ok(await c.from('updates').select('images').eq('project_id', p.id)); await this.removeImages([...(p.images || []), ...ups.flatMap(u => u.images || [])]); ok(await c.from('projects').delete().eq('id', p.id)); },
   async setHidden(id, hidden) { const c = await client(); ok(await c.from('projects').update({ hidden }).eq('id', id)); },
-  async addUpdate(project_id, body, image) { const c = await client(); ok(await c.from('updates').insert({ project_id, body, image })); },
-  async deleteUpdate(u) { const c = await client(); await this.removeImages([u.image]); ok(await c.from('updates').delete().eq('id', u.id)); },
+  async addUpdate(project_id, body, images) { const c = await client(); ok(await c.from('updates').insert({ project_id, body, images })); },
+  async deleteUpdate(u) { const c = await client(); await this.removeImages(u.images || []); ok(await c.from('updates').delete().eq('id', u.id)); },
   async addComment(project_id, body) { const c = await client(); ok(await c.from('comments').insert({ project_id, body })); },
   async deleteComment(id) { const c = await client(); ok(await c.from('comments').delete().eq('id', id)); },
   async hideComment(id, hidden) { const c = await client(); ok(await c.from('comments').update({ hidden }).eq('id', id)); },
@@ -1023,6 +1041,51 @@ const api = () => window.__WIP_MOCK || realApi;
 
 // Réduit la capture avant envoi : 1000 px de large au maximum, format WebP
 const thumbOf = path => String(path).replace(/\.webp$/, '-t.webp');
+const isExternalImg = x => /^(https?:|data:|blob:)/.test(x);
+
+// Une ou plusieurs captures : vignette simple, ou carrousel glissable façon Reddit au-delà de une
+function galleryHTML(paths, alt, cardMode = false) {
+  const src1 = x => cardMode && !isExternalImg(x) ? imgURL(thumbOf(x)) : imgURL(x);
+  const full1 = x => cardMode && !isExternalImg(x) ? imgURL(x) : '';
+  const imgTag = (x, extraAlt) => { const full = full1(x);
+    return `<img src="${esc(src1(x))}" ${full ? `data-full="${esc(full)}" onerror="if(this.dataset.full&&this.src!==this.dataset.full)this.src=this.dataset.full"` : ''} alt="${esc(alt)}${extraAlt || ''}" loading="lazy">`; };
+  if (paths.length <= 1) return paths.length ? `<div class="gal">${imgTag(paths[0])}</div>` : '';
+  return `<div class="gal multi"><div class="gtrack">${paths.map((x, i) => imgTag(x, ` ${i + 1}/${paths.length}`)).join('')}</div>
+    <div class="gdots">${paths.map((_, i) => `<span class="${i === 0 ? 'on' : ''}"></span>`).join('')}</div>
+    <button type="button" class="gnav prev" aria-label="${esc(L('Précédente', 'Previous'))}">‹</button>
+    <button type="button" class="gnav next" aria-label="${esc(L('Suivante', 'Next'))}">›</button></div>`;
+}
+function wireGalleries(root) {
+  root.querySelectorAll('.gal.multi').forEach(g => {
+    if (g.dataset.wired) return; g.dataset.wired = '1';
+    const track = g.querySelector('.gtrack'), dots = [...g.querySelectorAll('.gdots span')];
+    const upd = () => { const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth)); dots.forEach((d, k) => d.classList.toggle('on', k === i)); };
+    track.addEventListener('scroll', () => { clearTimeout(track._t); track._t = setTimeout(upd, 80); }, { passive: true });
+    g.querySelector('.prev')?.addEventListener('click', e => { e.stopPropagation(); track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' }); });
+    g.querySelector('.next')?.addEventListener('click', e => { e.stopPropagation(); track.scrollBy({ left: track.clientWidth, behavior: 'smooth' }); });
+  });
+}
+
+// Sélecteur de captures : jusqu'à IMG_MAX images, avec miniatures et retrait individuel
+function setupPicker(root, existing = []) {
+  const kept = existing.slice(), added = [];
+  const thumbs = root.querySelector('.ithumbs'), input = root.querySelector('.picker-input'), addBtn = root.querySelector('.add-img'), count = root.querySelector('.picker-count');
+  const total = () => kept.length + added.length;
+  const render = () => {
+    thumbs.innerHTML = kept.map((path, i) => `<span class="pth"><img src="${esc(imgURL(thumbOf(path)) || imgURL(path))}" alt=""><button type="button" data-k="kept" data-i="${i}">✕</button></span>`).join('')
+      + added.map((file, i) => `<span class="pth"><img src="${URL.createObjectURL(file)}" alt=""><button type="button" data-k="added" data-i="${i}">✕</button></span>`).join('');
+    count.textContent = `${total()} / ${IMG_MAX}`;
+    addBtn.disabled = total() >= IMG_MAX;
+    thumbs.querySelectorAll('button').forEach(b => b.onclick = () => { (b.dataset.k === 'kept' ? kept : added).splice(+b.dataset.i, 1); render(); });
+  };
+  addBtn.onclick = () => input.click();
+  input.onchange = () => {
+    for (const file of input.files) { if (total() >= IMG_MAX) break; if (/^image\//.test(file.type)) added.push(file); }
+    input.value = ''; render();
+  };
+  render();
+  return { kept: () => kept, added: () => added };
+}
 function shrink(file, max = 1000, q = 0.82) {
   return new Promise((res, rej) => {
     if (!/^image\//.test(file.type)) return rej(new Error(L('Choisissez une image.', 'Please choose an image.')));
@@ -1075,9 +1138,8 @@ const wipWho = p => {
 };
 function wipCard(p, ship) {
   const st = WSTAT[p.status] || WSTAT.building, r = ship?.r;
-  const own = p.last_image || p.image;
-  const full = imgURL(own) || r?.sc || '', thumb = own && !/^(https?:|data:|blob:)/.test(own) ? imgURL(thumbOf(own)) : full;
-  const shot = full ? `<img src="${esc(thumb)}" data-full="${esc(full)}" onerror="if(this.dataset.full&&this.src!==this.dataset.full)this.src=this.dataset.full" alt="${esc(p.name)}" loading="lazy">` : `<div class="ph">${st.e}</div>`;
+  const paths = (p.last_images && p.last_images.length) ? p.last_images : (p.images && p.images.length) ? p.images : (r?.sc ? [r.sc] : []);
+  const shot = paths.length ? galleryHTML(paths, p.name, true) : `<div class="ph">${st.e}</div>`;
   const badge = ship ? `<span class="fresh">🎉 ${L('Disponible', 'Now available')}</span>` : `<span class="fresh" style="background:var(${st.c})">${st.e} ${st.l()}</span>`;
   const who = wipWho(p);
   const days = ship ? Math.max(1, Math.round((Date.parse(ship.d) - Date.parse(p.created_at)) / DAY)) : 0;
@@ -1127,9 +1189,10 @@ async function renderWip() {
       : `<p class="notice">${L("Aucun projet partagé pour l'instant. Soyez le premier !", 'No project shared yet. Be the first!')}</p>`}
     ${hold.length ? `<details class="onhold"><summary>${L(`En pause (${hold.length}) : sans nouvelles depuis ${WIP_HOLD_DAYS} jours`, `On hold (${hold.length}): no news for ${WIP_HOLD_DAYS} days`)}</summary><div class="cards">${hold.map(x => wipCard(x.p)).join('')}</div></details>` : ''}
     <p class="note" style="margin-top:26px"><a href="#" id="wipPrivacy">${L('Données et confidentialité', 'Data and privacy')}</a>${wipMe ? ` · <a href="#" id="wipDelete">${L('Supprimer mon compte et mes contenus', 'Delete my account and content')}</a>` : ''}</p>`;
+  wireGalleries(el);
   el.querySelectorAll('[data-wf]').forEach(b => b.onclick = () => { wipFilter = b.dataset.wf; renderWip(); });
   el.querySelectorAll('[data-wip]').forEach(c => {
-    const openIt = e => { if (e.target.closest('a')) return; wipDetail(wipList.find(p => p.id === +c.dataset.wip)); };
+    const openIt = e => { if (e.target.closest('a,.gnav')) return; wipDetail(wipList.find(p => p.id === +c.dataset.wip)); };
     c.onclick = openIt; c.onkeydown = e => { if (e.key === 'Enter') openIt(e); };
   });
   $('#wipIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', hr('elaboration')); track('connexion-discord', true); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
@@ -1215,10 +1278,12 @@ function wipForm(p = null) {
     <form class="wform" novalidate>
       <label>${L('Nom du projet', 'Project name')}<input name="name" maxlength="60" required value="${esc(p?.name || '')}"></label>
       <label>${L('Description courte', 'Short description')} <small class="muted" id="dc"></small><textarea name="description" rows="3" maxlength="${DESC_MAX}">${esc(p?.description || '')}</textarea>
-        <small class="muted">${L(`${DESC_MAX} caractères maximum, environ trois lignes sur la carte. Les détails iront dans les avancées.`, `${DESC_MAX} characters max, about three lines on the card. Details go in your updates.`)}</small></label>
+        <small class="muted">${L(`${DESC_MAX} caractères maximum. Le résumé de la carte s'arrête à trois lignes ; le texte complet reste visible sur la fiche du projet.`, `${DESC_MAX} characters max. The card preview stops at three lines; the full text stays visible on the project's page.`)}</small></label>
       <div class="two"><label>${L('État', 'Status')}<select name="status">${Object.entries(WSTAT).map(([k, v]) => `<option value="${k}" ${(p?.status || 'building') === k ? 'selected' : ''}>${v.e} ${v.l()}</option>`).join('')}</select></label>
         <label>${L('Catégorie', 'Category')}<select name="category">${WCATS.map(c => `<option ${(p?.category || 'other') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></label></div>
-      <label>${L('Capture', 'Screenshot')}<input name="image" type="file" accept="image/*"><img class="prev" alt="" ${p?.image ? `src="${esc(imgURL(p.image))}"` : 'hidden'}></label>
+      <div class="wform-imgs"><label>${L('Captures', 'Screenshots')}</label><div class="ithumbs"></div>
+        <div class="row"><button type="button" class="btn ghost small add-img">+ ${L('Ajouter une capture', 'Add a screenshot')}</button><small class="muted picker-count"></small></div>
+        <input type="file" accept="image/*" multiple hidden class="picker-input"></div>
       <label>${L('Sortie prévue (facultatif)', 'Expected release (optional)')}<input name="eta" maxlength="40" value="${esc(p?.eta || '')}"></label>
       <p class="muted" style="font-size:.84rem;margin:0">${wipProfile?.creator_status === 'verified'
         ? L(`✔ Ce projet sera relié à votre profil de créateur (${esc(nameOf(wipProfile.creator_id))}).`, `✔ This project will be linked to your creator profile (${esc(nameOf(wipProfile.creator_id))}).`)
@@ -1231,7 +1296,7 @@ function wipForm(p = null) {
     </form>`, 'wipd');
   const f = m.$('form'), err = m.$('.err');
   counter(f.description, m.$('#dc'), DESC_MAX);
-  f.image.onchange = () => { const file = f.image.files[0]; if (file) { const pv = m.$('.prev'); pv.src = URL.createObjectURL(file); pv.hidden = false; } };
+  const picker = setupPicker(f, p?.images || []);
   f.onsubmit = async e => {
     e.preventDefault(); err.hidden = true;
     const val = n => (f[n]?.value || '').trim();
@@ -1247,7 +1312,11 @@ function wipForm(p = null) {
     if (!edit && !f.consent.checked) return fail(L('Merci de cocher la case de consentement.', 'Please tick the consent box.'));
     const btn = f.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = '…';
     try {
-      if (f.image.files[0]) { const old = p?.image; fields.image = await api().upload(f.image.files[0]); if (old) api().removeImages([old]).catch(() => {}); }
+      const keptPaths = picker.kept(), addedFiles = picker.added();
+      const uploaded = await Promise.all(addedFiles.map(file => api().upload(file)));
+      fields.images = [...keptPaths, ...uploaded];
+      const removed = (p?.images || []).filter(x => !keptPaths.includes(x));
+      if (removed.length) api().removeImages(removed).catch(() => {});
       await api().saveProject(fields, p?.id);
       m.close(); track(edit ? 'projet-modifie' : 'projet-publie', true);
       toast(edit ? L('Projet enregistré', 'Project saved') : L('Projet publié !', 'Project published!'));
@@ -1267,7 +1336,7 @@ async function wipDetail(p) {
     let d; try { d = await api().detail(p.id); } catch (e) { m.$('.wipbody').innerHTML = `<p class="err">${esc(trErr(e.message))}</p>`; return; }
     const own = isOwner(p), adm = isAdmin();
     m.$('.wipbody').innerHTML = `
-      ${p.image ? `<div class="hero-img"><img src="${esc(imgURL(p.image))}" alt="${esc(p.name)}"></div>` : ''}
+      ${p.images?.length ? `<div class="hero-img">${galleryHTML(p.images, p.name)}</div>` : ''}
       <p style="margin:0 0 6px">${ship ? `<span class="badge">🎉 ${L('Disponible', 'Now available')}</span>` : `<span class="badge" style="background:var(${st.c});color:#fff">${st.e} ${st.l()}</span>`}${p.hidden ? ` <span class="badge">${L('masqué', 'hidden')}</span>` : ''}</p>
       <h3>${esc(p.name)}</h3>
       <p class="muted" style="margin:0 0 10px">${avatarHTML(p.profiles)} ${who} · ${p.category ? esc(p.category) + ' · ' : ''}${L('partagé le', 'shared on')} ${fdate(p.created_at)}${p.eta && !ship ? ` · ${L('prévue', 'expected')} ${esc(p.eta)}` : ''}</p>
@@ -1280,10 +1349,11 @@ async function wipDetail(p) {
 
       <h4 style="margin:20px 0 0">${L('Avancées', 'Progress updates')}${d.updates.length ? ` (${d.updates.length})` : ''}</h4>
       ${own ? `<form class="wform upd-form"><textarea name="body" rows="2" maxlength="${UPD_MAX}" placeholder="${L('Où en êtes-vous ?', "Where are you at?")}"></textarea>
-        <div class="row" style="justify-content:space-between"><input name="image" type="file" accept="image/*"><small class="muted" id="uc"></small></div>
-        <p class="err" hidden></p><div class="row"><button class="btn small" type="submit">${L('Publier cette avancée', 'Post update')}</button></div>
-        <small class="muted">${L('Une avancée toutes les 12 heures.', 'One update every 12 hours.')}</small></form>` : ''}
-      ${d.updates.length ? `<ol class="tl">${d.updates.map(u => `<li><time>${fdate(u.created_at)}</time>${u.body ? `<p>${esc(u.body)}</p>` : ''}${u.image ? `<img src="${esc(imgURL(u.image))}" alt="" loading="lazy">` : ''}
+        <div class="ithumbs"></div>
+        <div class="row" style="justify-content:space-between"><button type="button" class="btn ghost small add-img">+ ${L('Capture', 'Screenshot')} <span class="picker-count"></span></button><small class="muted" id="uc"></small></div>
+        <input type="file" accept="image/*" multiple hidden class="picker-input">
+        <p class="err" hidden></p><div class="row"><button class="btn small" type="submit">${L('Publier cette avancée', 'Post update')}</button></div></form>` : ''}
+      ${d.updates.length ? `<ol class="tl">${d.updates.map(u => `<li><time>${fdate(u.created_at)}</time>${u.body ? `<p>${esc(u.body)}</p>` : ''}${u.images?.length ? galleryHTML(u.images, p.name) : ''}
         ${own || adm ? `<button class="linkbtn" data-act="delupd" data-id="${u.id}">${L('supprimer', 'delete')}</button>` : ''}</li>`).join('')}</ol>`
         : `<p class="muted" style="font-size:.9rem">${L("Pas encore d'avancée publiée.", 'No update yet.')}</p>`}
 
@@ -1297,13 +1367,14 @@ async function wipDetail(p) {
           <p class="err" hidden></p><div class="row" style="justify-content:space-between"><small class="muted" id="cc"></small><button class="btn small" type="submit">${L('Envoyer', 'Send')}</button></div></form>`)
         : `<p><button class="btn ghost small" data-act="signin">🎮 ${L('Se connecter avec Discord pour commenter', 'Sign in with Discord to comment')}</button></p>`}
       <div class="row"><button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`;
+    wireGalleries(m.wrap);
     m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close);
     const uf = m.$('.upd-form'), cf = m.$('.com-form');
-    if (uf) { counter(uf.body, m.$('#uc'), UPD_MAX); uf.onsubmit = async e => {
+    if (uf) { counter(uf.body, m.$('#uc'), UPD_MAX); const upicker = setupPicker(uf, []); uf.onsubmit = async e => {
       e.preventDefault(); const er = uf.querySelector('.err'); er.hidden = true; const b = uf.querySelector('[type=submit]'); b.disabled = true;
-      try { const body = uf.body.value.trim(); if (!body && !uf.image.files[0]) throw new Error(L('Écrivez quelques mots ou ajoutez une capture.', 'Write a few words or add a screenshot.'));
-        const image = uf.image.files[0] ? await api().upload(uf.image.files[0]) : null;
-        await api().addUpdate(p.id, body, image); track('avancee-publiee', true); p.updated_at = new Date().toISOString(); await draw(); wipRefresh();
+      try { const body = uf.body.value.trim(); const files = upicker.added(); if (!body && !files.length) throw new Error(L('Écrivez quelques mots ou ajoutez une capture.', 'Write a few words or add a screenshot.'));
+        const images = await Promise.all(files.map(file => api().upload(file)));
+        await api().addUpdate(p.id, body, images); track('avancee-publiee', true); p.updated_at = new Date().toISOString(); await draw(); wipRefresh();
       } catch (x) { er.textContent = trErr(x.message); er.hidden = false; b.disabled = false; } }; }
     if (cf) { counter(cf.body, m.$('#cc'), COM_MAX); cf.onsubmit = async e => {
       e.preventDefault(); const er = cf.querySelector('.err'); er.hidden = true; const b = cf.querySelector('[type=submit]'); b.disabled = true;

@@ -327,6 +327,13 @@ footer p{margin:0 0 12px;max-width:80ch}
 .fbot a:hover{color:var(--ink2)}
 .fbot .kofi{margin-left:auto;color:var(--accent-ink);border-bottom-color:var(--accent2)}
 .fbot .kofi:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
+.fthanks{font-size:.78rem;color:var(--grey);margin:6px 0 0;text-align:right}
+.modal .box.disc{width:min(520px,96vw);text-align:center}
+.modal .box.disc img{max-width:100%;max-height:160px;border-radius:10px;margin:0 0 12px;display:block;margin-left:auto;margin-right:auto}
+.modal .box.disc .discbody{text-align:left;font-size:.92rem;line-height:1.5}
+.modal .box.disc .discstats{text-align:left;font-size:.86rem;color:var(--ink2);margin:10px 0 0;font-weight:600}
+.modal .box.disc .discreminder{margin-top:14px;padding-top:12px;border-top:1px dashed var(--rule);font-size:.85rem;color:var(--ink2)}
+.modal .box.disc .row{justify-content:center}
 .loading{padding:60px 0;text-align:center;color:var(--ink2)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:.9rem;z-index:50}
 @media (prefers-reduced-motion:no-preference){
@@ -367,6 +374,26 @@ const GOATCOUNTER = 'trmnl-leaderboard';     // votre code GoatCounter, ex. 'trm
 const REPO = '__REPO__';      // dépôt GitHub (rempli automatiquement par le workflow), pour le bouton « Claim this profile »
 const KOFI = 'nicolasbouteiller';     // votre identifiant Ko-fi (ko-fi.com/…) ; laisser vide pour retirer le lien
 const DEFAULT_GOAL = 50;    // objectif d'installations par recette / installs goal per recipe
+
+/* Le bandeau d'accueil (disclaimer) ne se configure plus ici : vous le gérez
+   directement sur le site, connecté en administrateur, via le bouton
+   « Bandeau d'accueil » dans l'onglet « En élaboration ». Rien à modifier
+   dans ce fichier pour changer son texte, son image ou l'activer/désactiver. */
+
+/* Petit remerciement affiché juste sous le lien Ko-fi dans le pied de page.
+   Laissez fr et en vides ("") pour ne rien afficher. À retirer/mettre à jour
+   quand vous voulez. */
+const THANKS_DONOR = {
+  fr: '',
+  en: '',
+};
+
+/* Remerciement discret ajouté parmi les liens du pied de page (pas de lien
+   externe obligatoire : laissez url vide pour un simple texte, sans clic). */
+const THANKS_DATA = {
+  label: '',   // ex. 'Merci à @pseudo pour les données historiques'
+  url: '',     // ex. lien vers son profil Discord/GitHub, ou '' pour aucun lien
+};
 
 /* ================= Langue / Language ================= */
 const store = { get(k, d) { try { return localStorage.getItem(k) ?? d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} }, del(k) { try { localStorage.removeItem(k); } catch {} } };
@@ -529,13 +556,18 @@ function paintChrome() {
     ['https://github.com/ExcuseMi/trmnl-trending-recipes-plugin', 'Trending Recipes', L('le plugin qui a inspiré ce site', 'the plugin that inspired this site')],
     ['https://trmnl-plugins.gohk.xyz/', 'TRMNL Plugin Store', L('l\'explorateur de recettes de Hossain Khan', "Hossain Khan's recipe browser")],
   ];
+  if (THANKS_DATA.label) {
+    LINKS.push(THANKS_DATA.url ? [THANKS_DATA.url, THANKS_DATA.label, ''] : [null, THANKS_DATA.label, '']);
+  }
+  const donorThanks = L(THANKS_DONOR.fr, THANKS_DONOR.en);
   $('#footer').innerHTML = `
     <p>${L(
       `Site non officiel, sans lien avec TRMNL, dont l'API publique des recettes, ouverte à tous, rend ce palmarès possible : merci à eux. Points = installations + forks. Les créateurs apparaissent sous leur numéro tant qu'ils n'ont pas revendiqué leur profil, et le nom que vous choisissez reste sur votre appareil.`,
       `Unofficial site, not affiliated with TRMNL, whose public recipes API, open to everyone, makes this leaderboard possible: thank you. Points = installs + forks. Creators appear by number until they claim their profile, and the name you pick stays on your device.`)}</p>
-    <ul class="flinks">${LINKS.map(([href, label, note]) => `<li><a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>${note ? ` <span class="muted">${esc(note)}</span>` : ''}</li>`).join('')}</ul>
+    <ul class="flinks">${LINKS.map(([href, label, note]) => `<li>${href ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>` : `<span class="muted">${esc(label)}</span>`}${note ? ` <span class="muted">${esc(note)}</span>` : ''}</li>`).join('')}</ul>
     <div class="fbot"><span>Nicolas Bouteiller</span><span>${L('Code sous licence MIT', 'Code under MIT licence')}</span><a href="${REPO_URL()}" target="_blank" rel="noopener">${L('code source', 'source code')}</a>
-      ${KOFI ? `<a class="kofi" href="https://ko-fi.com/${encodeURIComponent(KOFI)}" target="_blank" rel="noopener">☕ ${L('Offrir un café', 'Buy me a coffee')}</a>` : ''}</div>`;
+      ${KOFI ? `<a class="kofi" href="https://ko-fi.com/${encodeURIComponent(KOFI)}" target="_blank" rel="noopener">☕ ${L('Offrir un café', 'Buy me a coffee')}</a>` : ''}</div>
+    ${donorThanks ? `<p class="fthanks">${donorThanks}</p>` : ''}`;
   if (D) $('#updated').textContent = L(`Mis à jour ${ago(D.generated_at)}`, `Updated ${ago(D.generated_at)}`);
 }
 
@@ -585,6 +617,7 @@ async function init() {
   per.forEach((m, k) => catRanks.set(k, rankMap([...m.entries()], e => e[1])));
   $('#loading').remove();
   paintChrome();
+  showDisclaimer();   // après le chargement des données : les stats automatiques du bandeau en ont besoin
   setInterval(() => { $('#updated').textContent = L(`Mis à jour ${ago(D.generated_at)}`, `Updated ${ago(D.generated_at)}`); }, 60000);
   window.addEventListener('hashchange', () => { route(); track(currentPath()); });
   wipBoot();
@@ -1017,6 +1050,8 @@ const realApi = {
   async reports() { const c = await client(); return ok(await c.from('reports').select('*').order('created_at', { ascending: false })); },
   async clearReport(id) { const c = await client(); ok(await c.from('reports').delete().eq('id', id)); },
   async ban(uid, value) { const c = await client(); ok(await c.rpc('set_banned', { target: uid, value })); },
+  async siteSettings() { const c = await client(); return ok(await c.from('site_settings').select('*').eq('id', 1).maybeSingle()); },
+  async setDisclaimer(fields) { const c = await client(); ok(await c.rpc('set_disclaimer', { p_enabled: fields.enabled, p_img: fields.img, p_text_fr: fields.text_fr, p_text_en: fields.text_en, p_show_stats: fields.show_stats, p_frequency: fields.frequency, p_expires_at: fields.expires_at })); },
   async upload(file) {
     const c = await client();
     const [big, small] = await Promise.all([shrink(file, 1000, 0.82), shrink(file, 420, 0.75)]);
@@ -1176,7 +1211,7 @@ async function renderWip() {
     ? `<div class="tools-row"><span class="who2">${avatarHTML(wipProfile)} <b>${esc(wipProfile?.name || '')}</b>${isAdmin() ? ` <span class="badge">admin</span>` : ''}</span>
         ${linkChip()}
         ${wipProfile?.banned ? `<span class="down">${L('Compte bloqué', 'Account blocked')}</span>` : `<button class="btn" type="button" id="wipNew">+ ${L('Partager mon projet', "Share what you're building")}</button>`}
-        ${isAdmin() ? `<button class="btn ghost small" type="button" id="wipReports">${L('Signalements', 'Reports')}</button><button class="btn ghost small" type="button" id="wipLinks">${L('Liaisons à valider', 'Links to review')}${wipPending ? ` (${wipPending})` : ''}</button>` : ''}
+        ${isAdmin() ? `<button class="btn ghost small" type="button" id="wipReports">${L('Signalements', 'Reports')}</button><button class="btn ghost small" type="button" id="wipLinks">${L('Liaisons à valider', 'Links to review')}${wipPending ? ` (${wipPending})` : ''}</button><button class="btn ghost small" type="button" id="wipDisclaimer">${L("Bandeau d'accueil", 'Home banner')}</button>` : ''}
         <button class="btn ghost small" type="button" id="wipOut">${L('Se déconnecter', 'Sign out')}</button></div>`
     : `<div class="tools-row"><button class="btn" type="button" id="wipIn"><span aria-hidden="true">🎮</span> ${L('Se connecter avec Discord', 'Sign in with Discord')}</button>
         <span class="muted" style="font-size:.86rem">${L('pour partager un projet ou commenter. La lecture est libre.', 'to share a project or comment. Reading is open to everyone.')}</span></div>`;
@@ -1200,6 +1235,7 @@ async function renderWip() {
   $('#wipNew')?.addEventListener('click', () => wipForm());
   $('#wipReports')?.addEventListener('click', wipReportsView);
   $('#wipLinks')?.addEventListener('click', wipLinksView);
+  $('#wipDisclaimer')?.addEventListener('click', wipDisclaimerForm);
   $('#wipLink')?.addEventListener('click', wipLinkForm);
   $('#wipUnlink')?.addEventListener('click', async () => { try { await api().requestLink(null); await wipReload(); } catch (x) { toast(trErr(x.message)); } });
   $('#wipPrivacy')?.addEventListener('click', e => { e.preventDefault(); wipPrivacy(); });
@@ -1258,6 +1294,85 @@ async function wipLinksView() {
 }
 async function wipRefresh() { try { wipList = await api().list(); wipErr = ''; } catch (e) { wipErr = trErr(e.message); } renderWip(); }
 
+// ---------- Bandeau d'accueil (disclaimer) — réglages gérés par l'admin depuis le site (Supabase)
+function disclaimerStats() {
+  if (!D) return null;
+  const now = Date.now();
+  const newRecipes = D.recipes.filter(r => r.p && now - Date.parse(r.p) < DAY).length;
+  const newAuthors = D.creators.filter(c => c.first && now - Date.parse(c.first) < DAY).length;
+  return { newRecipes, newAuthors };
+}
+async function showDisclaimer() {
+  if (!wipReady() && !window.__WIP_MOCK) return;
+  let s;
+  try { s = await api().siteSettings(); } catch { return; }
+  if (!s || !s.enabled) return;
+  if (s.expires_at && Date.parse(s.expires_at) < Date.now()) return;   // durée d'affichage écoulée
+  const body = L(s.text_fr, s.text_en);
+  const stats = s.show_stats ? disclaimerStats() : null;
+  if (!body && !s.img && !stats) return;
+  const freq = ['day', 'week', 'always'].includes(s.frequency) ? s.frequency : 'day';
+  if (freq !== 'always') {
+    const period = freq === 'week' ? 'w' + Math.floor(Date.now() / (7 * DAY)) : 'd' + new Date().toISOString().slice(0, 10);
+    const key = 'trmnl-disclaimer-seen';
+    const sig = `${s.version}|${period}`;
+    if (store.get(key) === sig) return;   // déjà vu sur cette période (même version) : on ne réaffiche pas
+    store.set(key, sig);
+  }
+  const reminder = L(
+    `💡 Vous pouvez <a href="${hr('moi')}">revendiquer votre profil de créateur et lier votre compte Discord</a> pour apparaître sous votre propre nom.`,
+    `💡 You can <a href="${hr('moi')}">claim your creator profile and link your Discord account</a> to appear under your own name.`);
+  const statsHTML = stats ? `<p class="discstats">${[
+    L(`🆕 ${nf(stats.newRecipes)} nouvelle${stats.newRecipes > 1 ? 's' : ''} recette${stats.newRecipes > 1 ? 's' : ''} (24 h)`, `🆕 ${nf(stats.newRecipes)} new recipe${stats.newRecipes > 1 ? 's' : ''} (24h)`),
+    L(`👤 ${nf(stats.newAuthors)} nouvel${stats.newAuthors > 1 ? 's' : ''} auteur${stats.newAuthors > 1 ? 's' : ''} (24 h)`, `👤 ${nf(stats.newAuthors)} new author${stats.newAuthors > 1 ? 's' : ''} (24h)`),
+  ].join(' · ')}</p>` : '';
+  modal(`${s.img ? `<img src="${esc(s.img)}" alt="">` : ''}
+    ${body ? `<div class="discbody">${body}</div>` : ''}
+    ${statsHTML}
+    <div class="discreminder">${reminder}</div>
+    <div class="row"><button class="btn" type="button" data-close>${L('Compris', 'Got it')}</button></div>`, 'disc');
+}
+// ---------- Édition du bandeau, réservée à l'administrateur (bouton dans l'onglet « En élaboration »)
+const toLocalInput = iso => { if (!iso) return ''; const d = new Date(iso); if (isNaN(d)) return ''; const pad = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+async function wipDisclaimerForm() {
+  const m = modal(`<h3>${L("Bandeau d'accueil", 'Home banner')}</h3><p class="muted">${L('Chargement…', 'Loading…')}</p>`, 'wipd');
+  let s = {};
+  try { s = (await api().siteSettings()) || {}; } catch (e) { m.wrap.querySelector('.box').innerHTML = `<h3>${L("Bandeau d'accueil", 'Home banner')}</h3><p class="err">${esc(trErr(e.message))}</p><div class="row"><button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`; m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close); return; }
+  m.wrap.querySelector('.box').innerHTML = `<h3>${L("Bandeau d'accueil", 'Home banner')}</h3>
+    <form class="wform" novalidate>
+      <label class="chk"><input type="checkbox" name="enabled" ${s?.enabled ? 'checked' : ''}> ${L('Afficher le bandeau aux visiteurs', 'Show the banner to visitors')}</label>
+      <label>${L('Image (URL, facultatif)', 'Image (URL, optional)')}<input name="img" type="url" placeholder="https://" value="${esc(s?.img || '')}"></label>
+      <label>${L('Texte — Français', 'Text — French')}<textarea name="text_fr" rows="4">${esc(s?.text_fr || '')}</textarea></label>
+      <label>${L('Texte — Anglais', 'Text — English')}<textarea name="text_en" rows="4">${esc(s?.text_en || '')}</textarea></label>
+      <label class="chk"><input type="checkbox" name="show_stats" ${s?.show_stats ? 'checked' : ''}> ${L('Afficher automatiquement les statistiques des dernières 24 h (nouvelles recettes, nouveaux auteurs)', 'Automatically show the last 24h stats (new recipes, new authors)')}</label>
+      <div class="two">
+        <label>${L('Réapparition', 'Reappearance')}<select name="frequency">
+          <option value="day" ${(!s?.frequency || s.frequency === 'day') ? 'selected' : ''}>${L('Une fois par jour et par visiteur', 'Once a day per visitor')}</option>
+          <option value="week" ${s?.frequency === 'week' ? 'selected' : ''}>${L('Une fois par semaine et par visiteur', 'Once a week per visitor')}</option>
+          <option value="always" ${s?.frequency === 'always' ? 'selected' : ''}>${L('À chaque visite', 'Every visit')}</option>
+        </select></label>
+        <label>${L('Désactivation automatique (facultatif)', 'Auto-disable (optional)')}<input name="expires_at" type="datetime-local" value="${esc(toLocalInput(s?.expires_at))}"></label>
+      </div>
+      <p class="muted" style="font-size:.84rem;margin:0">${L(
+        "Le rappel « revendiquez votre profil / liez votre Discord » s'affiche automatiquement en dessous : inutile de le répéter ici. Chaque enregistrement fait réapparaître le bandeau pour tout le monde, même déjà vu. Laissez la désactivation automatique vide pour que le bandeau reste actif tant que vous ne le désactivez pas vous-même.",
+        "The « claim your profile / link your Discord » reminder is added automatically below: no need to repeat it here. Every save makes the banner reappear for everyone, even if already seen. Leave auto-disable empty to keep the banner active until you turn it off yourself.")}</p>
+      <p class="err" hidden></p>
+      <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${L('Enregistrer', 'Save')}</button></div>
+    </form>`;
+  const f = m.$('form'), err = m.$('.err');
+  m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close);
+  f.onsubmit = async e => {
+    e.preventDefault(); err.hidden = true;
+    const fields = { enabled: f.enabled.checked, img: f.img.value.trim(), text_fr: f.text_fr.value.trim(), text_en: f.text_en.value.trim(),
+      show_stats: f.show_stats.checked, frequency: f.frequency.value, expires_at: f.expires_at.value ? new Date(f.expires_at.value).toISOString() : null };
+    const btn = f.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = '…';
+    try {
+      await api().setDisclaimer(fields);
+      m.close(); track('bandeau-modifie', true);
+      toast(L('Bandeau enregistré.', 'Banner saved.'));
+    } catch (x) { err.textContent = trErr(x.message); err.hidden = false; btn.disabled = false; btn.textContent = L('Enregistrer', 'Save'); }
+  };
+}
 function modal(html, cls = '') {
   const wrap = document.createElement('div'); wrap.className = 'modal';
   wrap.innerHTML = `<div class="box ${cls}" role="dialog" aria-modal="true">${html}</div>`;

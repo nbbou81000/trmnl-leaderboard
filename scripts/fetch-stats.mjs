@@ -114,6 +114,30 @@ for (const r of all) {
 // --- Historique
 const hourly = await readJSON(path.join(OUT, 'hourly.json'), { v: 1, idx: [], snaps: [] });
 const daily = await readJSON(path.join(OUT, 'daily.json'), { v: 1, idx: [], snaps: [] });
+
+// Historique ancien fourni par ExcuseMi (seed/excuseme-daily.json) : on n'ajoute que les jours
+// antérieurs au premier relevé déjà présent. Tes propres relevés restent toujours prioritaires,
+// et une fois les jours ajoutés, les passages suivants ne font plus rien (opération sans effet répété).
+async function mergeSeed(hist, file) {
+  const seed = await readJSON(file, null);
+  if (!seed?.snaps?.length) return 0;
+  const have = new Set(hist.snaps.map(s => s.t.slice(0, 10)));
+  const first = hist.snaps.length ? hist.snaps.map(s => s.t).sort()[0].slice(0, 10) : '9999';
+  const todo = seed.snaps.filter(s => s.t.slice(0, 10) < first && !have.has(s.t.slice(0, 10)));
+  if (!todo.length) return 0;
+  const pos = new Map(hist.idx.map(([id], k) => [id, k]));
+  for (const [id, u] of seed.idx) if (!pos.has(id)) { pos.set(id, hist.idx.length); hist.idx.push([id, u]); }
+  const n = hist.idx.length;
+  const conv = todo.map(s => {
+    const i = new Array(n).fill(null), f = new Array(n).fill(null);
+    seed.idx.forEach(([id], k) => { if (s.i[k] != null) { const p = pos.get(id); i[p] = s.i[k]; f[p] = s.f[k]; } });
+    return { t: s.t, i, f };
+  });
+  hist.snaps = [...conv, ...hist.snaps].sort((a, b) => a.t.localeCompare(b.t));
+  return conv.length;
+}
+const seeded = await mergeSeed(daily, 'seed/excuseme-daily.json');
+if (seeded) console.log(`Historique d'ExcuseMi : ${seeded} jours ajoutés avant tes propres relevés.`);
 addSnapshot(hourly, now, recipes, (a, b) => a.slice(0, 13) === b.slice(0, 13));
 addSnapshot(daily, now, recipes, (a, b) => a.slice(0, 10) === b.slice(0, 10));
 hourly.snaps = hourly.snaps.filter(s => nowMs - Date.parse(s.t) <= HOURLY_KEEP_H * H);

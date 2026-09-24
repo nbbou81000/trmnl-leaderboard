@@ -745,6 +745,10 @@ const publicName = u => NAMES[u] && String(NAMES[u]).trim();
 function claimHTML(u) {
   if (publicName(u)) return `<span class="badge" title="${esc(L('Nom public validé', 'Verified public name'))}">✔ ${L('Profil revendiqué', 'Claimed profile')}</span>`;
   if (!canClaim()) return '';
+  // On ne propose la revendication que pour son propre profil : celui choisi dans « Mon profil »,
+  // ou celui déjà vérifié via la liaison Discord. Sans profil choisi, on la propose partout.
+  const mine = wipProfile?.creator_status === 'verified' ? wipProfile.creator_id : me;
+  if (mine && String(u) !== String(mine)) return '';
   const url = `https://github.com/${REPO}/issues/new?template=claim-profile.yml&title=${encodeURIComponent('Claim profile #' + u)}&creator_id=${encodeURIComponent(u)}`;
   return `<a class="btn ghost small" id="claim" href="${url}" target="_blank" rel="noopener" title="${esc(L('Afficher un nom public à la place du numéro. Nécessite un compte GitHub, chaque demande est vérifiée à la main.', 'Show a public name instead of the number. Needs a GitHub account; every request is reviewed by hand.'))}">${L('Revendiquer ce profil', 'Claim this profile')}</a>`;
 }

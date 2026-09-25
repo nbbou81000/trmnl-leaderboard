@@ -349,10 +349,12 @@ footer p{margin:0 0 12px;max-width:80ch}
 @media (prefers-reduced-motion:no-preference){
   .rankbig,.welcome h2{animation:ink .5s steps(4,end) both}
   @keyframes ink{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
-}
+}.spark{display:block;overflow:visible}
+.spark polyline{fill:none;stroke:var(--accent);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;filter:url(#sparkglow)}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="sparkglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
 <header class="top">
   <a class="brand" href="#" id="brandLink"><span class="mark" aria-hidden="true"><span><i style="height:6px"></i><i style="height:11px"></i><i style="height:8px"></i></span></span>
     <span><b id="brandTitle">Palmarès des créateurs TRMNL</b><small id="brandSub"></small></span></a>
@@ -456,6 +458,40 @@ function rankMap(list, val, tie = () => 0) {
 function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.append(t); setTimeout(() => t.remove(), 2200); }
 const monthLbl = (k, long) => new Date(k + '-01T12:00:00').toLocaleDateString(LOC, long ? { month: 'long', year: 'numeric' } : { month: 'short', year: '2-digit' });
 
+/* ================= Progression (sparkline sur 30 jours) ================= */
+function sparkSVG(rawValues) {
+  let i = 0; while (i < rawValues.length && rawValues[i] == null) i++;   // ignore les jours avant la première apparition (recette pas encore publiée)
+  const vals = rawValues.slice(i);
+  for (let k = 1; k < vals.length; k++) if (vals[k] == null) vals[k] = vals[k - 1];   // comble un trou isolé avec la dernière valeur connue
+  if (vals.length < 2) return '';
+  const min = Math.min(...vals), max = Math.max(...vals), n = vals.length;
+  const pts = vals.map((v, k) => {
+    const x = Math.round(k * 80 / (n - 1));
+    const y = max === min ? 11 : Math.round(20 - ((v - min) / (max - min)) * 18);
+    return `${x},${y}`;
+  }).join(' ');
+  return `<svg width="70" height="20" viewBox="0 0 80 22" class="spark" aria-hidden="true" focusable="false"><polyline points="${pts}"></polyline></svg>`;
+}
+// Construit, une fois les données chargées, la progression sur 30 jours (installs + forks) de chaque recette et de chaque créateur.
+function buildSparklines() {
+  recipeSpark.clear(); creatorSpark.clear();
+  if (!DAILY?.snaps?.length) return;
+  const snaps = DAILY.snaps.slice(-30);
+  const pos = new Map(DAILY.idx.map(([id], k) => [id, k]));
+  const creatorDaily = new Map();   // u -> tableau de 30 sommes (installs + forks du jour, sur toutes ses recettes)
+  D.recipes.forEach(r => {
+    const k = pos.get(r.id);
+    const series = k == null ? [] : snaps.map(s => s.i[k] == null ? null : s.i[k] + (s.f[k] || 0));
+    recipeSpark.set(r.id, sparkSVG(series));
+    if (k != null) {
+      let acc = creatorDaily.get(r.u);
+      if (!acc) creatorDaily.set(r.u, acc = new Array(snaps.length).fill(0));
+      snaps.forEach((s, d) => { acc[d] += s.i[k] == null ? 0 : s.i[k] + (s.f[k] || 0); });
+    }
+  });
+  creatorDaily.forEach((series, u) => creatorSpark.set(u, sparkSVG(series)));
+}
+
 /* ================= Statistiques de visite (GoatCounter) ================= */
 function track(path, event = false) {
   if (!GOATCOUNTER || !window.goatcounter?.count) return;
@@ -473,6 +509,7 @@ if (GOATCOUNTER) {
 
 /* ================= État / State ================= */
 let D = null, NAMES = {}, byU = new Map(), byR = new Map(), metricRanks = {}, catRanks = new Map();
+let DAILY = null, recipeSpark = new Map(), creatorSpark = new Map();
 let me = store.get('trmnl-me', '');
 let myName = store.get('trmnl-myname', '');
 let goal = +store.get('trmnl-goal', DEFAULT_GOAL) || DEFAULT_GOAL;
@@ -613,7 +650,7 @@ async function init() {
   paintChrome();
   $('#loading').textContent = L('Chargement des classements…', 'Loading rankings…');
   try {
-    [D, NAMES] = await Promise.all([getJSON('data/latest.json'), getJSON('names.json').catch(() => ({}))]);
+    [D, NAMES, DAILY] = await Promise.all([getJSON('data/latest.json'), getJSON('names.json').catch(() => ({})), getJSON('data/daily.json').catch(() => null)]);
   } catch (e) {
     $('#loading').innerHTML = L(`Les données ne sont pas encore disponibles.<br>Lancez le workflow « Mise à jour des stats TRMNL » dans l'onglet Actions du dépôt, puis rechargez la page dans deux minutes.`,
       `Data is not available yet.<br>Run the "Mise à jour des stats TRMNL" workflow from the repository's Actions tab, then reload this page in two minutes.`);
@@ -625,6 +662,7 @@ async function init() {
   const per = new Map();
   D.recipes.forEach(r => catsOf(r).forEach(k => { if (!per.has(k)) per.set(k, new Map()); const m = per.get(k); m.set(r.u, (m.get(r.u) || 0) + r.s); }));
   per.forEach((m, k) => catRanks.set(k, rankMap([...m.entries()], e => e[1])));
+  buildSparklines();
   $('#loading').remove();
   paintChrome();
   showDisclaimer();   // après le chargement des données : les stats automatiques du bandeau en ont besoin
@@ -871,14 +909,15 @@ function renderProfile(u) {
     <p class="muted" style="margin:0 0 6px">${L(`${reached} recette${reached > 1 ? 's' : ''} sur ${recs.length} à l'objectif.`, `${reached} of ${recs.length} recipe${recs.length > 1 ? 's' : ''} at goal.`)}</p>
   </div>
   <div class="scroll"><table>
-    <thead><tr><th class="l">${L('Recette', 'Recipe')}</th><th>${L('Rang', 'Rank')}</th><th>Installs</th><th>Forks</th><th>${L('Inst./jour', 'Inst./day')}</th><th>+24 h</th><th>${L('+7 j', '+7 d')}</th><th>${L('+30 j', '+30 d')}</th><th class="l">${L('Objectif', 'Goal')}</th><th>${L('Part', 'Share')}</th><th>${L('Publiée', 'Published')}</th><th></th></tr></thead>
+    <thead><tr><th class="l">${L('Recette', 'Recipe')}</th><th>${L('Rang', 'Rank')}</th><th>Installs</th><th>Forks</th><th>${L('Inst./jour', 'Inst./day')}</th><th>+24 h</th><th>${L('+7 j', '+7 d')}</th><th>${L('+30 j', '+30 d')}</th><th class="l">${L('Objectif', 'Goal')}</th><th>${L('Part', 'Share')}</th><th>${L('Publiée', 'Published')}</th><th></th><th class="l">${L('Progression', 'Trend')}</th></tr></thead>
     <tbody>${recs.map((r, i) => `<tr data-ri="${i}">
       <td class="l name">${r.ic ? `<img class="ico" src="${esc(r.ic)}" alt="" loading="lazy">` : ''}${recipeLink(r)}<span class="sub">${esc(catsTxt(r))}</span></td>
       <td>${r.r}<span class="sub">${L('sur', 'of')} ${nf(D.recipes.length)}</span></td><td>${nf(r.i)}</td><td>${nf(r.f)}</td><td>${nf1(r.ipd)}</td>
       <td>${sgc(r.d24)}</td><td>${sgc(r.d7)}</td><td>${sgc(r.d30)}</td>
       <td class="l"><div class="bar ${r.i >= goal ? 'done' : ''}" title="${r.i} / ${goal}"><i style="width:${Math.min(100, 100 * r.i / goal)}%"></i></div><span class="sub">${r.i >= goal ? L('atteint', 'reached') : L(`encore ${goal - r.i}`, `${goal - r.i} to go`)}</span></td>
       <td>${c.s ? nf1(100 * r.s / c.s) : 0} %</td><td>${dfmt(r.p)}</td>
-      <td><button class="btn ghost small" type="button" data-share="${r.id}">${L('Vignette', 'Card')}</button></td></tr>`).join('')}</tbody>
+      <td><button class="btn ghost small" type="button" data-share="${r.id}">${L('Vignette', 'Card')}</button></td>
+      <td class="l">${recipeSpark.get(r.id) || ''}</td></tr>`).join('')}</tbody>
   </table></div>`;
 
   const refresh = () => { resetViews(); renderProfile(c.u); };
@@ -1896,6 +1935,7 @@ function renderCreators() {
       { k: 'rate', t: L('Taux fork', 'Fork rate'), v: c => c.i ? c.f / c.i : null },
       { k: 'd24', t: '+24 h', v: c => c.d24 }, { k: 'd7', t: L('+7 j', '+7 d'), v: c => c.d7 }, { k: 'd30', t: L('+30 j', '+30 d'), v: c => c.d30 },
       { k: 'dr', t: L('Places 24 h', 'Spots 24 h'), v: deltaRank }, { k: 'first', t: L('Depuis', 'Since'), v: c => c.first ? Date.parse(c.first) : null, asc: true },
+      { k: 'spark', t: L('Progression', 'Trend'), v: c => c.d30, l: 1 },
     ],
     rows: () => D.creators.filter(c => c.n >= minN() && (creatorFilter.nmin == null || (c.n >= creatorFilter.nmin && c.n <= creatorFilter.nmax))
       && (!q() || c.u.includes(q()) || nameOf(c.u).toLowerCase().includes(q()) || c.recipes.some(r => r.n.toLowerCase().includes(q())))),
@@ -1903,7 +1943,8 @@ function renderCreators() {
     rowHTML: c => { const best = byR.get(c.best), dr = deltaRank(c);
       return `<td>${c.r}</td><td class="l name">${creatorLink(c)}<span class="sub">${best ? L('meilleure : ', 'best: ') + esc(best.n) : ''}</span></td>
       <td>${c.n}</td><td>${nf(c.i)}</td><td>${nf(c.f)}</td><td class="pos">${nf(c.s)}</td><td>${nf1(c.s / c.n)}</td><td>${c.i ? nf1(100 * c.f / c.i) + ' %' : '—'}</td>
-      <td>${sgc(c.d24)}</td><td>${sgc(c.d7)}</td><td>${sgc(c.d30)}</td><td>${dr == null ? '—' : dr > 0 ? `<span class="up">▲ ${dr}</span>` : dr < 0 ? `<span class="down">▼ ${-dr}</span>` : '='}</td><td>${dfmt(c.first)}</td>`; },
+      <td>${sgc(c.d24)}</td><td>${sgc(c.d7)}</td><td>${sgc(c.d30)}</td><td>${dr == null ? '—' : dr > 0 ? `<span class="up">▲ ${dr}</span>` : dr < 0 ? `<span class="down">▼ ${-dr}</span>` : '='}</td><td>${dfmt(c.first)}</td>
+      <td class="l">${creatorSpark.get(c.u) || ''}</td>`; },
     onRow: c => go(hr('createur', c.u)),
   });
   $('#ctab').append(tbl); drawFil();
@@ -1946,6 +1987,7 @@ function renderRecipes() {
       { k: 'ipd', t: L('Inst./jour', 'Inst./day'), v: r => r.ipd },
       { k: 'd1', t: '+1 h', v: r => r.d1 }, { k: 'd24', t: '+24 h', v: r => r.d24 }, { k: 'd7', t: L('+7 j', '+7 d'), v: r => r.d7 }, { k: 'd30', t: L('+30 j', '+30 d'), v: r => r.d30 },
       { k: 'p', t: L('Publiée', 'Published'), v: r => r.p ? Date.parse(r.p) : null },
+      { k: 'spark', t: L('Progression', 'Trend'), v: r => r.d30, l: 1 },
     ],
     rows: () => {
       const q = $('#rq').value.trim().toLowerCase(), ci = $('#rc').value, cat = ci === '' ? null : catKeys[+ci][0], days = +$('#rp').value, mine = $('#rm')?.value === 'me';
@@ -1957,7 +1999,8 @@ function renderRecipes() {
     rowClass: r => isMe(r.u) ? 'me' : '',
     rowHTML: r => `<td>${r.r}</td><td class="l name">${r.ic ? `<img class="ico" src="${esc(r.ic)}" alt="" loading="lazy">` : ''}${recipeLink(r)}<span class="sub">${esc(catsTxt(r))}</span></td>
       <td class="l"><a href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a><span class="sub">${L(`${ord(byU.get(r.u)?.r)} au général`, `${ord(byU.get(r.u)?.r)} overall`)}</span></td>
-      <td>${nf(r.i)}</td><td>${nf(r.f)}</td><td class="pos">${nf(r.s)}</td><td>${nf1(r.ipd)}</td><td>${sgc(r.d1)}</td><td>${sgc(r.d24)}</td><td>${sgc(r.d7)}</td><td>${sgc(r.d30)}</td><td>${dfmt(r.p)}</td>`,
+      <td>${nf(r.i)}</td><td>${nf(r.f)}</td><td class="pos">${nf(r.s)}</td><td>${nf1(r.ipd)}</td><td>${sgc(r.d1)}</td><td>${sgc(r.d24)}</td><td>${sgc(r.d7)}</td><td>${sgc(r.d30)}</td><td>${dfmt(r.p)}</td>
+      <td class="l">${recipeSpark.get(r.id) || ''}</td>`,
     onRow: openRecipe,
   });
   $('#rtab').append(tbl); drawFil();

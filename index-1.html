@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TRMNL Creator Leaderboard / Palmarès des créateurs TRMNL</title>
+<meta name="description" content="Classement horaire de tous les créateurs de recettes publiques TRMNL : rangs, installations, forks, tendances et statistiques détaillées.">
+<meta name="theme-color" content="#f8654b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TRMNL Rank">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- Aperçu des liens (Discord, réseaux sociaux…). __SITE_URL__ est remplacé automatiquement par le workflow. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard">
+<meta property="og:title" content="TRMNL Creator Leaderboard">
+<meta property="og:description" content="Where do you rank among TRMNL recipe creators? Ranks, trends and stats for every creator, refreshed around the clock.">
+<meta property="og:url" content="__SITE_URL__">
+<meta property="og:image" content="__SITE_URL__og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TRMNL Creator Leaderboard: where do you rank among TRMNL recipe creators?">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TRMNL Creator Leaderboard">
+<meta name="twitter:description" content="Where do you rank among TRMNL recipe creators? Ranks, trends and stats for every creator.">
+<meta name="twitter:image" content="__SITE_URL__og.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='4' y='10' width='56' height='44' rx='8' fill='%23f8654b'/><rect x='11' y='17' width='42' height='30' rx='3' fill='%23fbfaf8'/><rect x='16' y='34' width='6' height='9' fill='%231d1d1b'/><rect x='26' y='26' width='6' height='17' fill='%231d1d1b'/><rect x='36' y='30' width='6' height='13' fill='%231d1d1b'/></svg>">
+<link rel="alternate" hreflang="en" href="?lang=en">
+<link rel="alternate" hreflang="fr" href="?lang=fr">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --paper:#f2f0ed; --sheet:#fbfaf8; --ink:#1d1d1b; --ink2:#5d5c58; --rule:#dcdbd9; --rule2:#c9c7c3;
+  --grey:#a3a19c; --accent:#f8654b; --accent2:#ff9280; --accent-soft:#ffe4d7; --accent-ink:#c7432b; --on-accent:#fff;
+  --sage:#4b876f; --indigo:#5463b8; --mustard:#d6a228; --sky:#3f86b5; --plum:#9a4f86; --clay:#874b4b;
+  --font:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#1a1a1a; --sheet:#242423; --ink:#ecebe8; --ink2:#a9a8a3; --rule:#363634; --rule2:#474744;
+  --grey:#76756f; --accent:#ff7c66; --accent2:#ff9280; --accent-soft:#3a2622; --accent-ink:#ff9d8a; --on-accent:#1a1a1a;
+  --sage:#699b87; --indigo:#7f8ce0; --mustard:#e4b545; --sky:#63a6d4; --plum:#c27bb0; --clay:#b07a7a;
+}}
+:root[data-theme="dark"]{
+  --paper:#1a1a1a; --sheet:#242423; --ink:#ecebe8; --ink2:#a9a8a3; --rule:#363634; --rule2:#474744;
+  --grey:#76756f; --accent:#ff7c66; --accent2:#ff9280; --accent-soft:#3a2622; --accent-ink:#ff9d8a; --on-accent:#1a1a1a;
+  --sage:#699b87; --indigo:#7f8ce0; --mustard:#e4b545; --sky:#63a6d4; --plum:#c27bb0; --clay:#b07a7a;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;
+  font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;border-top:4px solid var(--accent)}
+a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:2px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;max-width:1180px;margin:0 auto;padding:16px 16px 8px}
+.brand{display:flex;align-items:center;gap:12px;margin:0;text-decoration:none}
+.mark{flex:none;width:40px;height:32px;border-radius:7px;background:var(--accent);display:grid;place-items:center}
+.mark span{width:30px;height:21px;border-radius:2px;background:var(--sheet);display:flex;align-items:flex-end;justify-content:center;gap:3px;padding-bottom:3px}
+.mark i{display:block;width:4px;background:var(--ink)}
+.brand b{display:block;font-stretch:125%;font-weight:800;font-size:1.12rem;letter-spacing:-.01em;line-height:1.1}
+.brand small{display:block;font-weight:400;font-size:.84rem;color:var(--ink2)}
+.updated{font-size:.84rem;color:var(--ink2);display:flex;gap:10px;align-items:center}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:6px;box-shadow:0 0 0 3px var(--accent-soft)}
+.theme-btn{background:var(--sheet);border:1px solid var(--rule2);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:.85rem}
+
+nav.tabs{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--rule2);padding-top:env(safe-area-inset-top,0px)}
+nav.tabs .in{max-width:1180px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none;padding:0 8px}
+nav.tabs .in::-webkit-scrollbar{display:none}
+nav.tabs a{flex:none;padding:12px 10px 9px;text-decoration:none;font-weight:600;font-stretch:88%;color:var(--ink2);border-bottom:3px solid transparent;margin-bottom:-1px}
+nav.tabs a:hover{color:var(--ink)}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs a.mine::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:5px;vertical-align:.2em}
+
+main{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
+section[hidden]{display:none}
+h2{font-stretch:112%;font-weight:750;font-size:1.35rem;margin:38px 0 10px;letter-spacing:-.01em}
+h2:first-child{margin-top:4px}
+h3{font-weight:700;font-size:1rem;margin:0 0 10px}
+p.lead{color:var(--ink2);max-width:64ch;margin:0 0 14px}
+.muted{color:var(--ink2)}
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:16px}
+.grid{display:grid;gap:14px}
+@media(min-width:760px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+
+/* Accueil */
+.welcome{display:grid;gap:26px;align-items:end;margin:6px 0 8px}
+@media(min-width:900px){.welcome{grid-template-columns:1.2fr 1fr}}
+.welcome h2{font-stretch:125%;font-weight:850;font-size:clamp(2rem,6.4vw,3.4rem);line-height:1.02;letter-spacing:-.03em;margin:0 0 14px;max-width:16ch}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:end}
+.podium a{text-decoration:none;display:flex;flex-direction:column;justify-content:flex-end;border-radius:10px 10px 0 0;padding:10px;background:var(--sheet);border:1px solid var(--rule);border-bottom:0;min-height:120px}
+.podium a:nth-child(1){order:2;min-height:170px;background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.podium a:nth-child(2){order:1;min-height:140px}
+.podium a:nth-child(3){order:3}
+.podium .pl{font-stretch:125%;font-weight:900;font-size:2.2rem;line-height:1}
+.podium .pn{font-weight:650;font-size:.92rem;margin-top:6px;overflow-wrap:anywhere}
+.podium .pp{font-size:.8rem;opacity:.8}
+.base{height:6px;background:var(--ink);border-radius:0 0 4px 4px}
+.kpis{display:flex;flex-wrap:wrap;gap:6px 30px;margin:26px 0 6px}
+.kpis div{font-size:.85rem;color:var(--ink2)}
+.kpis b{display:block;color:var(--ink);font-stretch:115%;font-weight:800;font-size:1.55rem}
+.mycard{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:var(--accent-soft);border:1px solid var(--accent2);border-radius:10px;padding:14px 16px;margin:0 0 18px}
+.mycard b.big{font-stretch:125%;font-weight:900;font-size:1.8rem;color:var(--accent-ink)}
+
+/* Recherche de profil */
+.finder{position:relative;max-width:520px}
+.finder input{width:100%;background:var(--sheet);border:2px solid var(--ink);border-radius:10px;padding:12px 14px;font-size:1.02rem}
+.finder input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 4px var(--accent-soft)}
+.hits{list-style:none;padding:0;margin:8px 0 0;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.hits:empty{display:none}
+.hits li+li{border-top:1px solid var(--rule)}
+.hits button{background:none;border:0;cursor:pointer;text-align:left;padding:10px 12px;width:100%}
+.hits button:hover,.hits button:focus-visible{background:var(--accent-soft)}
+.hits .muted{font-size:.86rem}
+.help{font-size:.86rem;color:var(--ink2);margin:8px 0 0;max-width:60ch}
+
+/* Profil */
+.hero{display:grid;gap:22px;align-items:start}
+@media(min-width:860px){.hero{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
+.rankbig{font-stretch:125%;font-weight:900;font-size:clamp(4.6rem,19vw,9.5rem);line-height:.82;letter-spacing:-.045em;margin:0}
+.rankbig em{font-style:normal;color:var(--accent)}
+.rankbig .of{display:block;font-stretch:90%;font-weight:500;font-size:1.05rem;letter-spacing:0;line-height:1.3;margin-top:14px;color:var(--ink2)}
+.who{margin:18px 0 0;font-size:1.25rem;font-weight:700}
+.who span{font-weight:400;color:var(--ink2);font-size:.95rem;margin-left:6px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:10px 0 0;padding:0;list-style:none}
+.facts b{font-weight:750}
+.moves{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{border:1.5px solid var(--ink);border-radius:999px;padding:3px 11px;font-size:.86rem;font-weight:600;background:var(--sheet)}
+.chip.good{background:var(--sage);border-color:var(--sage);color:#fff}
+.chip.bad{border-color:var(--clay);color:var(--clay)}
+.chip.none{border-style:dashed;color:var(--ink2);border-color:var(--grey);font-weight:400}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent-ink);border-radius:6px;padding:4px 9px;font-size:.84rem;font-weight:650}
+.target{margin-top:16px;padding:12px 14px;border-left:4px solid var(--accent);background:var(--sheet);border-radius:0 8px 8px 0;max-width:54ch}
+.ladder{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.ladder li{display:grid;grid-template-columns:3.4rem 1fr auto;gap:10px;align-items:baseline;padding:9px 6px;border-bottom:1px solid var(--rule)}
+.ladder li a{text-decoration:none}
+.ladder .rk{font-stretch:110%;font-weight:750}
+.ladder .pts{text-align:right;white-space:nowrap}
+.ladder .gap{display:block;font-size:.8rem;color:var(--ink2)}
+.ladder li.me{background:var(--accent);color:var(--on-accent);border-radius:6px;border-bottom-color:transparent;padding-left:10px}
+.ladder li.me .gap{color:inherit;opacity:.85}
+.tools-row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;align-items:center}
+.btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:650;text-decoration:none;display:inline-block}
+.btn.ghost{background:var(--sheet);color:var(--ink);border:1.5px solid var(--rule2)}
+.btn.ghost:hover{border-color:var(--accent)}
+.btn.small{padding:5px 10px;font-size:.86rem}
+
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:620px){.tiles{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:980px){.tiles{grid-template-columns:repeat(5,1fr)}}
+.tile{padding:12px;border:1px solid var(--rule);border-radius:10px;background:var(--sheet);border-top:4px solid var(--c,var(--accent))}
+.tile .lbl{font-size:.82rem;color:var(--ink2)}
+.tile .rv{font-stretch:115%;font-weight:800;font-size:1.6rem;line-height:1.1;margin-top:4px}
+.tile .rv small{font-stretch:100%;font-weight:400;font-size:.8rem;color:var(--ink2);margin-left:4px}
+.tile .val{font-size:.85rem;margin-top:2px}
+.tile .pc{height:5px;border-radius:3px;background:var(--rule);margin-top:8px;overflow:hidden}
+.tile .pc i{display:block;height:100%;background:var(--c,var(--accent))}
+
+.bar{height:10px;background:var(--rule);border-radius:5px;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:5px}
+.bar.done i{background:var(--sage)}
+
+/* Galerie */
+.cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card .shot{position:relative;aspect-ratio:5/3;background:#fff;border-bottom:1px solid var(--rule)}
+.card .shot img{width:100%;height:100%;object-fit:contain;display:block}
+.card .shot .rk{position:absolute;top:8px;left:8px;background:var(--ink);color:var(--paper);border-radius:6px;padding:2px 7px;font-size:.75rem;font-weight:700}
+.card .shot .fresh{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--on-accent);border-radius:6px;padding:2px 7px;font-size:.75rem;font-weight:700}
+.card .body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:5px;flex:1}
+.card h4{margin:0;font-size:1rem;font-weight:700;line-height:1.25}
+.card h4 a{text-decoration:none}
+.card .desc{font-size:.85rem;color:var(--ink2);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .meta{font-size:.8rem;color:var(--ink2);display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:auto;padding-top:6px}
+.card .meta b{color:var(--ink)}
+.card .acts{display:flex;gap:6px;margin-top:8px}
+.card .acts .btn{flex:1;text-align:center;font-size:.83rem;padding:6px 8px}
+.card.mine{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.tagline{font-size:.8rem;color:var(--ink2)}
+
+.card .ph{display:grid;place-items:center;height:100%;font-size:2.6rem;background:var(--paper)}
+.card .shot .gal, .card .shot .gal .gtrack{height:100%}
+.gal{position:relative}
+.gal.multi .gtrack{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.gal.multi .gtrack img{flex:0 0 100%;scroll-snap-align:center;display:block;object-fit:contain;background:#fff}
+.gdots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:5px;pointer-events:none}
+.gdots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.gdots span.on{background:#fff}
+.gnav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);color:#fff;border:0;width:28px;height:28px;border-radius:50%;font-size:1.15rem;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+.gnav:hover{background:rgba(0,0,0,.65)}
+.gnav.prev{left:6px}
+.gnav.next{right:6px}
+.wipd .hero-img .gal.multi,.wipd .hero-img .gal.multi .gtrack,.wipd .hero-img .gal.multi .gtrack img{height:340px}
+.tl .gal{margin-top:8px;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:#fff}
+.tl .gal img{max-width:100%;display:block}
+.tl .gal.multi,.tl .gal.multi .gtrack,.tl .gal.multi .gtrack img{height:220px}
+.wform-imgs{display:grid;gap:6px}
+.ithumbs{display:flex;flex-wrap:wrap;gap:8px}
+.pth{position:relative;width:64px;height:64px;border-radius:8px;overflow:hidden;border:1px solid var(--rule2);background:#fff}
+.pth img{width:100%;height:100%;object-fit:cover;display:block}
+.pth button{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;border:0;border-radius:50%;width:18px;height:18px;font-size:.65rem;line-height:1;cursor:pointer;padding:0}
+.card.wip .desc{-webkit-line-clamp:3}
+.card.wip{cursor:pointer}
+.card.wip:hover{border-color:var(--accent2)}
+.card .upd{font-size:.8rem;color:var(--accent-ink);font-weight:600}
+.wipd h3{font-stretch:115%;font-size:1.4rem;margin:0 0 6px}
+.wipd .hero-img{background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:0 0 14px}
+.wipd .hero-img img{width:100%;display:block}
+.tl{list-style:none;margin:10px 0 0;padding:0 0 0 18px;border-left:2px solid var(--rule)}
+.tl li{position:relative;padding:0 0 18px}
+.tl li::before{content:"";position:absolute;left:-25px;top:5px;width:11px;height:11px;border-radius:50%;background:var(--accent);border:2px solid var(--paper)}
+.tl time{font-size:.8rem;color:var(--ink2);font-weight:600}
+.tl p{margin:3px 0 0}
+.card.shipped{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
+
+.who2{display:inline-flex;align-items:center;gap:7px}
+.av{width:22px;height:22px;border-radius:50%;vertical-align:middle;object-fit:cover}
+.av.ph2{display:inline-grid;place-items:center;background:var(--rule);font-size:.75rem}
+.wform{display:grid;gap:10px}
+.wform label{display:grid;gap:4px;font-size:.86rem;font-weight:600}
+.wform label.chk{display:flex;align-items:flex-start;gap:8px;font-weight:400}
+.wform input:not([type=checkbox]):not([type=file]),.wform textarea,.wform select{font:inherit;font-weight:400;color:var(--ink);background:var(--sheet);border:1px solid var(--rule2);border-radius:8px;padding:8px 10px;width:100%}
+.wform textarea{resize:vertical}
+.wform .two{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+@media(max-width:520px){.wform .two{grid-template-columns:1fr}}
+.wform .prev{max-width:100%;max-height:180px;border:1px solid var(--rule);border-radius:8px;margin-top:6px;background:#fff}
+.err{color:var(--clay);font-weight:600;margin:0}
+.coms{list-style:none;margin:0 0 12px;padding:0}
+.coms li{padding:10px 0;border-bottom:1px solid var(--rule)}
+.coms li.hid{opacity:.55}
+.coms .ch{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.86rem}
+.coms time,.tl time{font-size:.8rem;color:var(--ink2)}
+.coms p{margin:5px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.cacts{display:flex;gap:12px;margin-top:4px}
+.linkbtn{background:none;border:0;padding:0;color:var(--ink2);font-size:.8rem;cursor:pointer;text-decoration:underline}
+.linkbtn:hover{color:var(--accent-ink)}
+.upd-form{margin:8px 0 6px;padding:12px;background:var(--sheet);border:1px solid var(--rule);border-radius:10px}
+.modal .box.wipd{width:min(640px,96vw)}
+/* Vignette partageable */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:60}
+.modal .box{background:var(--paper);border-radius:14px;padding:16px;max-width:min(720px,96vw);max-height:92vh;overflow:auto}
+.modal canvas{width:100%;height:auto;border:1px solid var(--rule);border-radius:8px;background:#fff}
+.modal .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:flex-end}
+
+/* Actu TRMNL */
+.stat{display:flex;align-items:center;gap:10px;font-weight:700}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--sage);flex:none}
+.dot.warn{background:var(--mustard)}.dot.bad{background:var(--clay)}
+.comps{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));font-size:.88rem}
+.comps li{display:flex;justify-content:space-between;gap:8px;padding:6px 9px;background:var(--paper);border:1px solid var(--rule);border-radius:7px}
+.news{list-style:none;margin:0;padding:0}
+.news li{padding:10px 0;border-bottom:1px solid var(--rule)}
+.news li:last-child{border-bottom:0}
+.news a{font-weight:650;text-decoration:none}
+.news a:hover{text-decoration:underline}
+.news .when{font-size:.78rem;color:var(--ink2)}
+.news p{margin:4px 0 0;font-size:.86rem;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Tableaux */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:0 0 12px}
+.tools label{display:flex;flex-direction:column;font-size:.8rem;color:var(--ink2);gap:3px}
+.tools input,.tools select{background:var(--sheet);border:1px solid var(--rule2);border-radius:8px;padding:7px 9px;min-width:0;color:var(--ink)}
+.tools input[type=search]{width:min(300px,70vw)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.filters button{background:var(--accent-soft);color:var(--accent-ink);border:0;border-radius:999px;padding:4px 11px;cursor:pointer;font-weight:600;font-size:.85rem}
+.scroll{overflow-x:auto;border-top:2px solid var(--ink);-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-stretch:88%;font-size:.93rem}
+th,td{padding:8px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{padding-left:4px}
+th.l,td.l{text-align:left}
+td.name{white-space:normal;min-width:170px;max-width:340px}
+th{font-weight:600;font-size:.8rem;color:var(--ink2);vertical-align:bottom}
+th button{background:none;border:0;padding:0;cursor:pointer;font-weight:600;color:inherit;text-align:inherit}
+th[aria-sort] button{color:var(--accent-ink)}
+th[aria-sort="descending"] button::after{content:" ▾"}
+th[aria-sort="ascending"] button::after{content:" ▴"}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--sheet)}
+tr.me td{background:var(--accent-soft)!important}
+tr.me td:first-child{box-shadow:inset 4px 0 var(--accent)}
+td .ico{width:22px;height:22px;vertical-align:middle;margin-right:8px;border-radius:4px;background:#fff;object-fit:contain}
+td .sub{display:block;font-size:.78rem;color:var(--ink2)}
+.pos{font-weight:700}
+.up{color:var(--sage);font-weight:650}.down{color:var(--clay)}
+.more{margin:14px 0 0}
+
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:grid;grid-template-columns:2.2rem minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--rule)}
+.rows li a{text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rows li a:hover{text-decoration:underline}
+.rows .n{color:var(--ink2);font-size:.85rem}
+.rows .v{font-weight:700;text-align:right}
+.rows .bar{grid-column:2 / 4;height:6px}
+.rows .s{grid-column:2 / 4;font-size:.8rem;color:var(--ink2)}
+.rows li.me{background:var(--accent-soft);border-radius:6px}
+.rows li.me a{font-weight:750}
+.rows li.me .bar i{background:var(--accent-ink)}
+.rows li.gapline{display:block;text-align:center;color:var(--ink2);font-size:.85rem;padding:4px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1.5px solid var(--rule2);border-radius:8px;overflow:hidden;background:var(--sheet)}
+.seg button{background:none;border:0;padding:6px 12px;cursor:pointer;font-weight:600;font-stretch:90%}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.seg button:disabled{color:var(--grey);cursor:not-allowed}
+.chart{position:relative;height:260px}
+.chart.tall{height:340px}
+.note{font-size:.86rem;color:var(--ink2);margin:8px 0 0}
+.hint{font-size:.8rem;color:var(--accent-ink);margin:6px 0 0}
+.notice{border:1.5px dashed var(--grey);padding:12px 14px;border-radius:8px;color:var(--ink2);margin:0 0 16px;max-width:72ch}
+.boardhead{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:0 0 12px}
+.boardhead select{background:var(--sheet);border:2px solid var(--ink);border-radius:8px;padding:8px 10px;font-weight:650;max-width:100%}
+
+footer{max-width:1180px;margin:0 auto;padding:22px 16px 44px;color:var(--ink2);font-size:.82rem;border-top:1px solid var(--rule)}
+footer p{margin:0 0 12px;max-width:80ch}
+.flinks{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0 0 14px;padding:0;font-size:.86rem}
+.flinks a{color:var(--ink);text-decoration:none;border-bottom:1.5px solid transparent;padding-bottom:1px}
+.flinks a:hover,.flinks a:focus-visible{border-bottom-color:var(--accent)}
+.flinks a::after{content:" ↗";color:var(--accent);font-size:.8em}
+.fbot{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;padding-top:12px;border-top:1px solid var(--rule);font-size:.78rem;color:var(--grey)}
+.fbot a{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule2)}
+.fbot a:hover{color:var(--ink2)}
+.fbot .kofi{margin-left:auto;color:var(--accent-ink);border-bottom-color:var(--accent2)}
+.fbot .kofi:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
+.fthanks{font-size:.78rem;color:var(--grey);margin:6px 0 0;text-align:right}
+.modal .box.disc{width:min(520px,96vw);text-align:center}
+.modal .box.disc img{max-width:100%;max-height:160px;border-radius:10px;margin:0 0 12px;display:block;margin-left:auto;margin-right:auto}
+.modal .box.disc .discbody{text-align:left;font-size:.92rem;line-height:1.5}
+.modal .box.disc .discstats{text-align:left;font-size:.86rem;color:var(--ink2);margin:10px 0 0;font-weight:600}
+.imgpick{display:flex;gap:8px;align-items:center}
+.imgpick input[type=text]{flex:1;min-width:0}
+.discimgprev{margin-top:6px}
+.discimgprev img{max-height:70px;max-width:100%;border-radius:8px;display:block}
+.colorpick{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.colorpick input[type=color]{width:40px;height:32px;padding:0;border:1px solid var(--rule2);border-radius:6px;background:none;cursor:pointer}
+.chk.inline{display:inline-flex;align-items:center;gap:6px;font-weight:400;font-size:.86rem;color:var(--ink2)}
+.swatches{display:flex;gap:6px}
+.swatch{width:24px;height:24px;border-radius:50%;border:1px solid var(--rule2);cursor:pointer;padding:0}
+.swatch:hover{outline:2px solid var(--accent);outline-offset:1px}
+.modal .box.disc .discreminder{margin-top:14px;padding-top:12px;border-top:1px dashed var(--rule);font-size:.85rem;color:var(--ink2)}
+.modal .box.disc .row{justify-content:center}
+.loading{padding:60px 0;text-align:center;color:var(--ink2)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:.9rem;z-index:50}
+@media (prefers-reduced-motion:no-preference){
+  .rankbig,.welcome h2{animation:ink .5s steps(4,end) both}
+  @keyframes ink{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
+}.spark{display:block;overflow:visible}
+.spark polyline{fill:none;stroke:var(--accent);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;filter:url(#sparkglow)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="sparkglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
+<header class="top">
+  <a class="brand" href="#" id="brandLink"><span class="mark" aria-hidden="true"><span><i style="height:6px"></i><i style="height:11px"></i><i style="height:8px"></i></span></span>
+    <span><b id="brandTitle">Palmarès des créateurs TRMNL</b><small id="brandSub"></small></span></a>
+  <div class="updated"><span><span class="live"></span><span id="updated">…</span></span>
+    <button class="theme-btn" id="langBtn" type="button"></button>
+    <button class="theme-btn" id="themeBtn" type="button">◐</button></div>
+</header>
+<nav class="tabs" id="tabs"><div class="in" id="tabsIn"></div></nav>
+
+<main>
+  <div class="loading" id="loading">…</div>
+  <section id="tab-accueil" hidden></section>
+  <section id="tab-moi" hidden></section>
+  <section id="tab-galerie" hidden></section>
+  <section id="tab-elaboration" hidden></section>
+  <section id="tab-classements" hidden></section>
+  <section id="tab-createurs" hidden></section>
+  <section id="tab-recettes" hidden></section>
+  <section id="tab-tendances" hidden></section>
+  <section id="tab-analyses" hidden></section>
+  <section id="tab-trmnl" hidden></section>
+</main>
+
+<footer id="footer"></footer>
+
+<script>
+/* ================= Réglages / Settings ================= */
+const GOATCOUNTER = 'trmnl-leaderboard';     // votre code GoatCounter, ex. 'trmnl-palmares' pour https://trmnl-palmares.goatcounter.com
+const REPO = '__REPO__';      // dépôt GitHub (rempli automatiquement par le workflow), pour le bouton « Claim this profile »
+const KOFI = 'nicolasbouteiller';     // votre identifiant Ko-fi (ko-fi.com/…) ; laisser vide pour retirer le lien
+const DEFAULT_GOAL = 50;    // objectif d'installations par recette / installs goal per recipe
+
+/* Le bandeau d'accueil (disclaimer) ne se configure plus ici : vous le gérez
+   directement sur le site, connecté en administrateur, via le bouton
+   « Bandeau d'accueil » dans l'onglet « En élaboration ». Rien à modifier
+   dans ce fichier pour changer son texte, son image ou l'activer/désactiver. */
+
+/* Petit remerciement affiché juste sous le lien Ko-fi dans le pied de page.
+   Laissez fr et en vides ("") pour ne rien afficher. À retirer/mettre à jour
+   quand vous voulez. */
+const THANKS_DONOR = {
+  fr: '',
+  en: '',
+};
+
+/* Remerciement discret ajouté parmi les liens du pied de page (pas de lien
+   externe obligatoire : laissez url vide pour un simple texte, sans clic). */
+const THANKS_DATA = {
+  label: '',   // ex. 'Merci à @pseudo pour les données historiques'
+  url: '',     // ex. lien vers son profil Discord/GitHub, ou '' pour aucun lien
+};
+
+/* ================= Langue / Language ================= */
+const store = { get(k, d) { try { return localStorage.getItem(k) ?? d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} }, del(k) { try { localStorage.removeItem(k); } catch {} } };
+const qsLang = new URLSearchParams(location.search).get('lang');
+let lang = ['fr', 'en'].includes(qsLang) ? qsLang : store.get('trmnl-lang', (navigator.language || 'en').toLowerCase().startsWith('fr') ? 'fr' : 'en');
+const EN = () => lang === 'en';
+const L = (fr, en) => EN() ? en : fr;
+let LOC = 'fr-FR', NF, NF1;
+function setLocale() {
+  LOC = EN() ? 'en-US' : 'fr-FR';
+  NF = new Intl.NumberFormat(LOC); NF1 = new Intl.NumberFormat(LOC, { maximumFractionDigits: 1 });
+  document.documentElement.lang = lang;
+}
+setLocale();
+
+// Onglets : identifiants internes (français) et adresses selon la langue
+const SLUGS = { accueil: 'home', moi: 'me', galerie: 'gallery', elaboration: 'in-the-making', classements: 'rankings', createurs: 'creators', recettes: 'recipes', tendances: 'trends', analyses: 'insights', trmnl: 'trmnl', createur: 'creator' };
+const FROM_SLUG = Object.fromEntries(Object.entries(SLUGS).map(([fr, en]) => [en, fr]));
+const hr = (k, arg) => '#' + (EN() ? SLUGS[k] : k) + (arg != null ? '/' + arg : '');
+const TAB_LABELS = () => ({ accueil: L('Accueil', 'Home'), moi: L('Mon profil', 'My profile'), galerie: L('Galerie', 'Gallery'), elaboration: L('En élaboration', 'In the making'), classements: L('Classements', 'Rankings'), createurs: L('Créateurs', 'Creators'), recettes: L('Recettes', 'Recipes'), tendances: L('Tendances', 'Trends'), analyses: L('Analyses', 'Insights'), trmnl: L('Actu TRMNL', 'TRMNL news') });
+
+/* ================= Outils / Helpers ================= */
+const $ = (s, el = document) => el.querySelector(s);
+const nf = n => n == null || Number.isNaN(n) ? '—' : NF.format(Math.round(n));
+const nf1 = n => n == null || Number.isNaN(n) ? '—' : NF1.format(n);
+const sg = n => n == null ? '—' : (n > 0 ? '+' : n < 0 ? '−' : '') + NF.format(Math.abs(Math.round(n)));
+const sgc = n => n == null ? '—' : `<span class="${n > 0 ? 'up' : n < 0 ? 'down' : ''}">${sg(n)}</span>`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const dfmt = iso => iso ? new Date(iso).toLocaleDateString(LOC, { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+const ordTxt = n => { if (n == null) return '—'; if (!EN()) return n === 1 ? '1re' : `${n}e`; const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
+const ord = n => { const t = ordTxt(n); const m = t.match(/^(\d+)(\D+)$/); return m ? `${m[1]}<sup>${m[2]}</sup>` : t; };
+const CO = () => L(' : ', ': ');
+const plural = (n, fr, en) => { const w = EN() ? (en ?? fr) : fr; return `${nf(n)} ${w}${Math.abs(n) > 1 ? 's' : ''}`; };
+const DAY = 864e5;
+const ageDays = iso => iso ? Math.max(1, (Date.now() - Date.parse(iso)) / DAY) : null;
+function ago(iso) {
+  const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
+  if (m < 1) return L("à l'instant", 'just now');
+  if (m < 60) return L(`il y a ${m} min`, `${m} min ago`);
+  const h = Math.round(m / 60);
+  return h < 48 ? L(`il y a ${h} h`, `${h} h ago`) : L(`il y a ${Math.round(h / 24)} j`, `${Math.round(h / 24)} days ago`);
+}
+function rankMap(list, val, tie = () => 0) {
+  const arr = list.map(x => [x, val(x), tie(x)]).filter(e => e[1] != null && !Number.isNaN(e[1]));
+  arr.sort((a, b) => b[1] - a[1] || b[2] - a[2]);
+  const m = new Map(); let r = 0, prev = null;
+  arr.forEach(([x, v], k) => { if (v !== prev) { r = k + 1; prev = v; } m.set(x, r); });
+  return { map: m, size: arr.length, list: arr.map(e => e[0]) };
+}
+function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.append(t); setTimeout(() => t.remove(), 2200); }
+const monthLbl = (k, long) => new Date(k + '-01T12:00:00').toLocaleDateString(LOC, long ? { month: 'long', year: 'numeric' } : { month: 'short', year: '2-digit' });
+
+/* ================= Progression (sparkline sur 30 jours) ================= */
+function sparkSVG(rawValues) {
+  let i = 0; while (i < rawValues.length && rawValues[i] == null) i++;   // ignore les jours avant la première apparition (recette pas encore publiée)
+  const vals = rawValues.slice(i);
+  for (let k = 1; k < vals.length; k++) if (vals[k] == null) vals[k] = vals[k - 1];   // comble un trou isolé avec la dernière valeur connue
+  if (vals.length < 2) return '';
+  const min = Math.min(...vals), max = Math.max(...vals), n = vals.length;
+  const pts = vals.map((v, k) => {
+    const x = Math.round(k * 80 / (n - 1));
+    const y = max === min ? 11 : Math.round(20 - ((v - min) / (max - min)) * 18);
+    return `${x},${y}`;
+  }).join(' ');
+  return `<svg width="70" height="20" viewBox="0 0 80 22" class="spark" aria-hidden="true" focusable="false"><polyline points="${pts}"></polyline></svg>`;
+}
+// Construit, une fois les données chargées, la progression sur 30 jours (installs + forks) de chaque recette et de chaque créateur.
+function buildSparklines() {
+  recipeSpark.clear(); creatorSpark.clear();
+  if (!DAILY?.snaps?.length) return;
+  const snaps = DAILY.snaps.slice(-30);
+  const pos = new Map(DAILY.idx.map(([id], k) => [id, k]));
+  const creatorDaily = new Map();   // u -> tableau de 30 sommes (installs + forks du jour, sur toutes ses recettes)
+  D.recipes.forEach(r => {
+    const k = pos.get(r.id);
+    const series = k == null ? [] : snaps.map(s => s.i[k] == null ? null : s.i[k] + (s.f[k] || 0));
+    recipeSpark.set(r.id, sparkSVG(series));
+    if (k != null) {
+      let acc = creatorDaily.get(r.u);
+      if (!acc) creatorDaily.set(r.u, acc = new Array(snaps.length).fill(0));
+      snaps.forEach((s, d) => { acc[d] += s.i[k] == null ? 0 : s.i[k] + (s.f[k] || 0); });
+    }
+  });
+  creatorDaily.forEach((series, u) => creatorSpark.set(u, sparkSVG(series)));
+}
+
+/* ================= Statistiques de visite (GoatCounter) ================= */
+function track(path, event = false) {
+  if (!GOATCOUNTER || !window.goatcounter?.count) return;
+  window.goatcounter.count({ path, title: event ? path : document.title, event });
+}
+const currentPath = () => { const [tab] = (location.hash.slice(1) || '').split('?')[0].split('/'); const t = FROM_SLUG[tab] || tab || 'accueil'; return location.pathname + (EN() ? 'en/' : '') + '#' + t; };
+if (GOATCOUNTER) {
+  window.goatcounter = { no_onload: true };
+  const s = document.createElement('script');
+  s.async = true; s.src = 'https://gc.zgo.at/count.js';
+  s.dataset.goatcounter = `https://${GOATCOUNTER}.goatcounter.com/count`;
+  s.onload = () => track(currentPath());
+  document.head.append(s);
+}
+
+/* ================= État / State ================= */
+let D = null, NAMES = {}, byU = new Map(), byR = new Map(), metricRanks = {}, catRanks = new Map();
+let DAILY = null, recipeSpark = new Map(), creatorSpark = new Map();
+let me = store.get('trmnl-me', '');
+let myName = store.get('trmnl-myname', '');
+let goal = +store.get('trmnl-goal', DEFAULT_GOAL) || DEFAULT_GOAL;
+const hist = {}, charts = {};
+const pending = { recettes: null, createurs: null };
+const NONE = '\u0000none';
+const isMe = u => !!me && String(u) === String(me);
+const nameOf = u => (isMe(u) && myName) ? myName : ((NAMES[u] && String(NAMES[u]).trim()) || L(`Créateur #${u}`, `Creator #${u}`));
+const hasName = u => (isMe(u) && myName) || (NAMES[u] && String(NAMES[u]).trim());
+const catsOf = r => r.c.length ? r.c : [NONE];
+const catLabel = k => k === NONE ? L('sans catégorie', 'uncategorized') : k;
+const catsTxt = r => r.c.length ? r.c.join(', ') : catLabel(NONE);
+
+const METRICS = [
+  { k: 's', lbl: () => L('Points', 'Points'), c: '--accent', val: c => c.s, show: c => `${nf(c.s)} pts` },
+  { k: 'i', lbl: () => L('Installations', 'Installs'), c: '--accent', val: c => c.i, show: c => nf(c.i) },
+  { k: 'f', lbl: () => 'Forks', c: '--sage', val: c => c.f, show: c => nf(c.f) },
+  { k: 'n', lbl: () => L('Recettes publiées', 'Published recipes'), c: '--indigo', val: c => c.n, show: c => nf(c.n) },
+  { k: 'avg', lbl: () => L('Moyenne par recette', 'Average per recipe'), c: '--indigo', val: c => c.s / c.n, show: c => `${nf1(c.s / c.n)} pts` },
+  { k: 'best', lbl: () => L('Meilleure recette', 'Best recipe'), c: '--mustard', val: c => byR.get(c.best)?.s ?? 0, show: c => `${nf(byR.get(c.best)?.s)} pts` },
+  { k: 'd24', lbl: () => L('Gain sur 24 h', '24 h gain'), c: '--sky', val: c => c.d24, show: c => sg(c.d24) },
+  { k: 'd7', lbl: () => L('Gain sur 7 jours', '7-day gain'), c: '--sky', val: c => c.d7, show: c => sg(c.d7) },
+  { k: 'd30', lbl: () => L('Gain sur 30 jours', '30-day gain'), c: '--sky', val: c => c.d30, show: c => sg(c.d30) },
+  { k: 'rate', lbl: () => L('Taux de fork', 'Fork rate'), c: '--plum', val: c => c.i ? c.f / c.i : null, show: c => c.i ? `${nf1(100 * c.f / c.i)} %` : '—' },
+];
+
+/* ================= Thème et graphiques ================= */
+const themeKey = 'trmnl-theme';
+function applyTheme(t) { if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
+applyTheme(store.get(themeKey, ''));
+const resetViews = () => document.querySelectorAll('main > section').forEach(s => { delete s.dataset.ready; });
+$('#themeBtn').onclick = () => {
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const cur = document.documentElement.dataset.theme || (dark ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  applyTheme(next); store.set(themeKey, next); resetViews(); route();
+};
+$('#langBtn').onclick = () => {
+  lang = EN() ? 'fr' : 'en'; store.set('trmnl-lang', lang); setLocale(); resetViews(); paintChrome();
+  const [tab, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');
+  const k = FROM_SLUG[tab] || tab;
+  const target = SLUGS[k] ? hr(k, arg || undefined) : hr('accueil');
+  if (location.search.includes('lang=')) history.replaceState(null, '', location.pathname + target);
+  if (location.hash === target) route(); else location.hash = target;
+  track(EN() ? 'langue-en' : 'langue-fr', true);
+};
+const canClaim = () => /^[\w.-]+\/[\w.-]+$/.test(REPO);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const PAL = () => ['--accent', '--sage', '--indigo', '--mustard', '--sky', '--plum', '--clay', '--accent2'].map(css);
+const alpha = (hex, a) => { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.replace(/./g, '$&$&') : h, 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; };
+function fade(ctx, color) {
+  const { chartArea: a, ctx: c } = ctx.chart; if (!a) return alpha(color, .15);
+  const g = c.createLinearGradient(0, a.top, 0, a.bottom); g.addColorStop(0, alpha(color, .35)); g.addColorStop(1, alpha(color, .02)); return g;
+}
+function chart(id, cfg, onPick) {
+  if (typeof Chart === 'undefined') return;
+  charts[id]?.destroy();
+  const el = document.getElementById(id); if (!el) return;
+  Chart.defaults.font.family = css('--font'); Chart.defaults.color = css('--ink2'); Chart.defaults.borderColor = css('--rule');
+  Chart.defaults.locale = LOC;
+  const o = cfg.options || {}, pl = o.plugins || {};
+  cfg.options = { responsive: true, maintainAspectRatio: false, animation: { duration: 350 }, locale: LOC, ...o,
+    plugins: { ...pl, legend: { display: false, ...(pl.legend || {}), labels: { color: css('--ink'), usePointStyle: true, boxWidth: 8, ...((pl.legend || {}).labels || {}) } },
+      tooltip: { backgroundColor: css('--ink'), titleColor: css('--paper'), bodyColor: css('--paper'), padding: 10, cornerRadius: 8, ...(pl.tooltip || {}) } } };
+  if (onPick) {
+    cfg.options.onClick = (e, els, ch) => { if (els.length) onPick(els[0], ch); };
+    cfg.options.onHover = (e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; };
+  }
+  charts[id] = new Chart(el, cfg);
+}
+
+/* ================= Habillage (en-tête, onglets, pied de page) ================= */
+function paintChrome() {
+  document.title = L('Palmarès des créateurs TRMNL', 'TRMNL Creator Leaderboard');
+  document.querySelector('meta[name="description"]')?.setAttribute('content', L('Classement de tous les créateurs de recettes publiques TRMNL : rangs, installations, forks, tendances et statistiques détaillées.', 'Leaderboard of every public TRMNL recipe creator: ranks, installs, forks, trends and detailed statistics.'));
+  $('#brandTitle').textContent = document.title;
+  $('#brandSub').textContent = L('Recettes publiques, classements recalculés en continu', 'Public recipes, rankings refreshed around the clock');
+  $('#brandLink').href = hr('accueil');
+  $('#langBtn').textContent = EN() ? 'FR' : 'EN';
+  $('#langBtn').setAttribute('aria-label', L('Switch to English', 'Passer en français'));
+  $('#langBtn').title = L('English version', 'Version française');
+  $('#themeBtn').setAttribute('aria-label', L('Changer de thème', 'Toggle theme'));
+  $('#tabs').setAttribute('aria-label', L('Sections', 'Sections'));
+  const T = TAB_LABELS();
+  $('#tabsIn').innerHTML = Object.keys(T).map(k => `<a href="${hr(k)}" data-tab="${k}">${T[k]}</a>`).join('');
+  const LINKS = [
+    ['https://trmnl.com', 'TRMNL', L('le site officiel', 'the official site')],
+    ['https://github.com/nbbou81000/trmnl-recipes', L('Mes recettes TRMNL', 'My TRMNL recipes'), ''],
+    ['https://nbbou81000.github.io/cellia/', 'CelliA', L('actualité tech', 'tech news')],
+    ['https://nbbou81000.github.io/cellia-lab/', 'CelliA Lab', L('veille IA', 'AI watch')],
+    ['https://github.com/ExcuseMi/trmnl-trending-recipes-plugin', 'Trending Recipes', L('le plugin qui a inspiré ce site', 'the plugin that inspired this site')],
+    ['https://trmnl-plugins.gohk.xyz/', 'TRMNL Plugin Store', L('l\'explorateur de recettes de Hossain Khan', "Hossain Khan's recipe browser")],
+  ];
+  if (THANKS_DATA.label) {
+    LINKS.push(THANKS_DATA.url ? [THANKS_DATA.url, THANKS_DATA.label, ''] : [null, THANKS_DATA.label, '']);
+  }
+  const donorThanks = L(THANKS_DONOR.fr, THANKS_DONOR.en);
+  $('#footer').innerHTML = `
+    <p>${L(
+      `Site non officiel, sans lien avec TRMNL, dont l'API publique des recettes, ouverte à tous, rend ce palmarès possible : merci à eux. Points = installations + forks. Les créateurs apparaissent sous leur numéro tant qu'ils n'ont pas revendiqué leur profil, et le nom que vous choisissez reste sur votre appareil.`,
+      `Unofficial site, not affiliated with TRMNL, whose public recipes API, open to everyone, makes this leaderboard possible: thank you. Points = installs + forks. Creators appear by number until they claim their profile, and the name you pick stays on your device.`)}</p>
+    <ul class="flinks">${LINKS.map(([href, label, note]) => `<li>${href ? `<a href="${href}" target="_blank" rel="noopener">${esc(label)}</a>` : `<span class="muted">${esc(label)}</span>`}${note ? ` <span class="muted">${esc(note)}</span>` : ''}</li>`).join('')}</ul>
+    <div class="fbot"><span>Nicolas Bouteiller</span><span>${L('Code sous licence MIT', 'Code under MIT licence')}</span><a href="${REPO_URL()}" target="_blank" rel="noopener">${L('code source', 'source code')}</a>
+      ${KOFI ? `<a class="kofi" href="https://ko-fi.com/${encodeURIComponent(KOFI)}" target="_blank" rel="noopener">☕ ${L('Offrir un café', 'Buy me a coffee')}</a>` : ''}</div>
+    ${donorThanks ? `<p class="fthanks">${donorThanks}</p>` : ''}`;
+  if (D) $('#updated').textContent = L(`Mis à jour ${ago(D.generated_at)}`, `Updated ${ago(D.generated_at)}`);
+}
+
+/* ================= Chargement ================= */
+async function getJSON(url) {
+  const r = await fetch(url + (url.includes('?') ? '&' : '?') + 'h=' + Math.floor(Date.now() / 3e5), { cache: 'no-store' });
+  if (!r.ok) throw new Error(`${url} : ${r.status}`);
+  return r.json();
+}
+async function loadHist(kind) {
+  if (!hist[kind]) hist[kind] = getJSON(`data/${kind}.json`).then(h => {
+    const users = h.idx.map(([, u]) => u);
+    h.totals = h.snaps.map(s => {
+      const m = new Map();
+      for (let k = 0; k < users.length; k++) { const i = s.i[k]; if (i == null) continue; m.set(users[k], (m.get(users[k]) || 0) + i + (s.f[k] || 0)); }
+      return m;
+    });
+    h.global = h.snaps.map((s, k) => ({ t: s.t, i: s.i.reduce((a, v) => a + (v || 0), 0), f: s.f.reduce((a, v) => a + (v || 0), 0), n: s.i.filter(v => v != null).length, c: h.totals[k].size }));
+    return h;
+  }).catch(() => null);
+  return hist[kind];
+}
+function userSeries(h, u) {
+  return h.snaps.map((s, k) => {
+    const tot = h.totals[k], mine = tot.get(u);
+    if (mine == null) return { t: s.t, s: null, r: null };
+    let r = 1; for (const v of tot.values()) if (v > mine) r++;
+    return { t: s.t, s: mine, r };
+  });
+}
+
+async function init() {
+  paintChrome();
+  $('#loading').textContent = L('Chargement des classements…', 'Loading rankings…');
+  try {
+    [D, NAMES, DAILY] = await Promise.all([getJSON('data/latest.json'), getJSON('names.json').catch(() => ({})), getJSON('data/daily.json').catch(() => null)]);
+  } catch (e) {
+    $('#loading').innerHTML = L(`Les données ne sont pas encore disponibles.<br>Lancez le workflow « Mise à jour des stats TRMNL » dans l'onglet Actions du dépôt, puis rechargez la page dans deux minutes.`,
+      `Data is not available yet.<br>Run the "Mise à jour des stats TRMNL" workflow from the repository's Actions tab, then reload this page in two minutes.`);
+    return;
+  }
+  D.creators.forEach(c => { byU.set(c.u, c); c.recipes = []; });
+  D.recipes.forEach(r => { byR.set(r.id, r); byU.get(r.u)?.recipes.push(r); r.ipd = r.p ? r.i / ageDays(r.p) : null; });
+  for (const m of METRICS) metricRanks[m.k] = rankMap(D.creators, m.val, c => c.s);
+  const per = new Map();
+  D.recipes.forEach(r => catsOf(r).forEach(k => { if (!per.has(k)) per.set(k, new Map()); const m = per.get(k); m.set(r.u, (m.get(r.u) || 0) + r.s); }));
+  per.forEach((m, k) => catRanks.set(k, rankMap([...m.entries()], e => e[1])));
+  buildSparklines();
+  $('#loading').remove();
+  paintChrome();
+  showDisclaimer();   // après le chargement des données : les stats automatiques du bandeau en ont besoin
+  setInterval(() => { $('#updated').textContent = L(`Mis à jour ${ago(D.generated_at)}`, `Updated ${ago(D.generated_at)}`); }, 60000);
+  window.addEventListener('hashchange', () => { route(); track(currentPath()); });
+  wipBoot();
+  document.addEventListener('click', e => { const a = e.target.closest('footer a'); if (a) track('lien-pied-de-page', true); });
+  route();
+}
+
+/* ================= Routage ================= */
+const TABS = ['accueil', 'moi', 'galerie', 'elaboration', 'classements', 'createurs', 'recettes', 'tendances', 'analyses', 'trmnl'];
+function route() {
+  if (!D) return;
+  const [raw, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');
+  const tab = FROM_SLUG[raw] || raw || 'accueil';
+  const t = tab === 'createur' ? 'moi' : (TABS.includes(tab) ? tab : 'accueil');
+  document.querySelectorAll('nav.tabs a').forEach(a => {
+    const on = a.dataset.tab === t && !(tab === 'createur' && !isMe(arg));
+    a.toggleAttribute('aria-current', false); if (on) a.setAttribute('aria-current', 'page');
+    if (a.dataset.tab === 'moi') a.classList.toggle('mine', !!me);
+  });
+  document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, analyses: renderAnalyses, trmnl: renderTrmnl })[t]();
+  window.scrollTo({ top: 0 });
+}
+function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
+function chooseMe(u) { me = String(u); store.set('trmnl-me', me); resetViews(); track('profil-choisi', true); go(hr('moi')); }
+
+function historyNotice() {
+  if (D.history.windows.d24) return '';
+  const from = D.history.hourly_from ? Date.parse(D.history.hourly_from) : Date.now();
+  const when = new Date(from + 24 * 36e5 * 0.8).toLocaleString(LOC, { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+  return `<p class="notice">${L(`L'historique se construit à chaque relevé. Les variations sur 24 h apparaîtront ${esc(when)}, celles sur 7 jours dans une semaine et celles sur 30 jours dans un mois.`,
+    `History builds up with every snapshot. 24-hour changes will appear on ${esc(when)}, 7-day changes in a week and 30-day changes in a month.`)}</p>`;
+}
+
+/* ================= Recherche de profil ================= */
+function finderHTML(id) {
+  return `<div class="finder"><input id="${id}" type="search" placeholder="${esc(L("Numéro ou nom d'une de vos recettes", 'Your number or one of your recipe names'))}" autocomplete="off" aria-label="${esc(L('Rechercher un créateur', 'Find a creator'))}">
+    <ul class="hits" id="${id}-hits"></ul></div>
+    <p class="help">${L(`Votre numéro figure dans l'adresse de vos recettes publiques sur trmnl.com (le nombre après <code>user_id=</code>). Le plus simple : tapez le nom d'une de vos recettes.`,
+      `Your number appears in the address of your public recipes on trmnl.com (the number after <code>user_id=</code>). Easiest: type the name of one of your recipes.`)}</p>`;
+}
+function bindFinder(id, onPick) {
+  const inp = document.getElementById(id), out = document.getElementById(id + '-hits'); if (!inp) return;
+  inp.oninput = () => {
+    const q = inp.value.trim().toLowerCase(); out.innerHTML = '';
+    if (q.length < 2 && !/^\d+$/.test(q)) return;
+    const hits = new Map();
+    if (/^\d+$/.test(q) && byU.has(q)) hits.set(q, L('numéro exact', 'exact number'));
+    for (const r of D.recipes) if (r.n.toLowerCase().includes(q) && !hits.has(r.u)) { hits.set(r.u, L(`auteur de « ${r.n} »`, `author of "${r.n}"`)); if (hits.size >= 8) break; }
+    for (const [u, n] of Object.entries(NAMES)) if (n && String(n).toLowerCase().includes(q) && byU.has(u) && !hits.has(u)) hits.set(u, L('nom public', 'public name'));
+    out.innerHTML = [...hits].map(([u, why]) => { const c = byU.get(u);
+      return `<li><button type="button" data-u="${u}"><b>${esc(nameOf(u))}</b><br><span class="muted">${esc(why)}, ${L(`${ord(c.r)} place`, `ranked ${ord(c.r)}`)}, ${nf(c.s)} pts</span></button></li>`; }).join('')
+      || `<li><span class="muted" style="display:block;padding:10px 12px">${L('Aucun créateur ne correspond.', 'No matching creator.')}</span></li>`;
+  };
+  out.onclick = e => { const b = e.target.closest('button[data-u]'); if (b) onPick(b.dataset.u); };
+}
+
+/* ================= Accueil ================= */
+const recipeLink = r => `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>`;
+const creatorLink = c => `<a href="${hr('createur', c.u)}">${esc(nameOf(c.u))}</a>`;
+const openRecipe = r => window.open(`https://trmnl.com/recipes/${r.id}`, '_blank', 'noopener');
+const shareURL = r => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}r/${r.id}.html`;
+function miniList(items, val, label, link, sub, isMine = x => isMe(x.u)) {
+  const max = Math.max(1e-9, ...items.map(val));
+  return `<ol class="rows">${items.map((x, n) => `<li class="${isMine(x) ? 'me' : ''}"><span class="n">${x.__rank ?? n + 1}</span>${link(x)}<span class="v">${label(x)}</span>
+    <div class="bar"><i style="width:${Math.max(2, 100 * val(x) / max)}%"></i></div>${sub ? `<span class="s">${esc(sub(x))}</span>` : ''}</li>`).join('')
+    || `<li><span></span><span class="muted">${L('Rien à afficher pour le moment.', 'Nothing to show yet.')}</span></li>`}</ol>`;
+}
+function renderHome() {
+  const el = $('#tab-accueil');
+  const T = D.totals, top = D.creators.slice(0, 3);
+  const myC = me && byU.get(me);
+  const week = Date.now() - 7 * DAY;
+  const fresh = D.recipes.filter(r => r.p && Date.parse(r.p) >= week).length;
+  const newCreators = D.creators.filter(c => c.first && Date.parse(c.first) >= Date.now() - 30 * DAY).length;
+  el.innerHTML = `
+  ${myC ? `<div class="mycard"><div>${L('Votre place', 'Your rank')}${CO()}<b class="big">#${myC.r}</b> <span class="muted">${L(`sur ${nf(T.creators)}`, `of ${nf(T.creators)}`)}, ${nf(myC.s)} pts${myC.d24 != null ? `, ${sg(myC.d24)} ${L('en 24 h', 'in 24 h')}` : ''}</span></div><a class="btn" href="${hr('moi')}">${L('Voir mon profil', 'See my profile')}</a></div>` : ''}
+  <div class="welcome">
+    <div>
+      <h2>${L(`Où vous situez-vous parmi les ${nf(T.creators)} créateurs TRMNL ?`, `Where do you rank among ${nf(T.creators)} TRMNL creators?`)}</h2>
+      <p class="lead">${L('Chaque recette publique est relevée plusieurs fois par jour : rangs, installations, forks et progression de tous les créateurs.', 'Every public recipe is checked several times a day: ranks, installs, forks and momentum for every creator.')}</p>
+      ${myC ? '' : finderHTML('homeFind')}
+    </div>
+    <div>
+      <h3>${L('Le podium', 'The podium')}</h3>
+      <div class="podium">${top.map(c => `<a href="${hr('createur', c.u)}"><span class="pl">${c.r}</span><span class="pn">${esc(nameOf(c.u))}</span><span class="pp">${nf(c.s)} pts, ${plural(c.n, 'recette', 'recipe')}</span></a>`).join('')}</div>
+      <div class="base"></div>
+    </div>
+  </div>
+  <div class="kpis">
+    <div><b>${nf(T.recipes)}</b>${L('recettes publiques', 'public recipes')}</div><div><b>${nf(T.creators)}</b>${L('créateurs', 'creators')}</div>
+    <div><b>${nf(T.installs)}</b>${L('installations', 'installs')}</div><div><b>${nf(T.forks)}</b>forks</div>
+    <div><b>${nf(fresh)}</b>${L('recettes cette semaine', 'recipes this week')}</div><div><b>${nf(newCreators)}</b>${L('nouveaux créateurs en 30 jours', 'new creators in 30 days')}</div>
+  </div>
+  ${historyNotice()}
+  <div class="grid g3" style="margin-top:22px">
+    <div class="sheet"><h3>${L('Recettes les plus installées', 'Most installed recipes')}</h3>${miniList(D.recipes.slice().sort((a, b) => b.i - a.i).slice(0, 5), r => r.i, r => nf(r.i), recipeLink, r => nameOf(r.u))}</div>
+    <div class="sheet"><h3>${D.history.windows.d24 ? L('Plus fortes hausses sur 24 h', 'Biggest 24 h gains') : L('Recettes les plus rapides', 'Fastest-growing recipes')}</h3>${D.history.windows.d24
+      ? miniList(D.recipes.filter(r => r.d24 > 0).sort((a, b) => b.d24 - a.d24).slice(0, 5), r => r.d24, r => sg(r.d24), recipeLink, r => nameOf(r.u))
+      : miniList(D.recipes.filter(r => ageDays(r.p) >= 7).sort((a, b) => b.ipd - a.ipd).slice(0, 5), r => r.ipd, r => nf1(r.ipd) + L('/j', '/day'), recipeLink, () => L('installations par jour depuis la publication', 'installs per day since publication'))}</div>
+    <div class="sheet"><h3>${L('Nouvelles recettes de la semaine', "This week's new recipes")}</h3>${miniList(D.recipes.filter(r => r.p && Date.parse(r.p) >= week).sort((a, b) => b.s - a.s).slice(0, 5), r => r.s, r => nf(r.s) + ' pts', recipeLink, r => `${nameOf(r.u)}, ${dfmt(r.p)}`)}</div>
+  </div>
+  <p style="margin-top:18px"><a class="btn ghost" href="${hr('classements')}">${L('Voir tous les classements', 'See all rankings')}</a></p>`;
+  bindFinder('homeFind', chooseMe);
+}
+
+/* ================= Profil ================= */
+function badgesOf(c) {
+  const b = [], N = D.creators.length, best = byR.get(c.best);
+  if (c.r === 1) b.push(L('🥇 Numéro 1', '🥇 Number 1')); else if (c.r <= 3) b.push('🏆 Podium'); else if (c.r <= 10) b.push('⭐ Top 10'); else if (c.r <= 50) b.push('Top 50'); else if (c.r <= 100) b.push('Top 100');
+  if (c.r > 100 && c.r / N <= .25) b.push(L('Quart supérieur', 'Top quarter'));
+  if (best?.i >= 1000) b.push(L('Une recette à 1 000 installations', 'A 1,000-install recipe')); else if (best?.i >= 100) b.push(L('Une recette à 100 installations', 'A 100-install recipe'));
+  const reached = c.recipes.filter(r => r.i >= goal).length;
+  if (reached) b.push(L(`${reached} recette${reached > 1 ? 's' : ''} à ${goal} installations`, `${reached} recipe${reached > 1 ? 's' : ''} at ${goal} installs`));
+  if (c.n >= 20) b.push(L('Très prolifique', 'Very prolific')); else if (c.n >= 10) b.push(L('Prolifique', 'Prolific'));
+  if (c.first && Date.now() - Date.parse(c.first) < 90 * DAY) b.push(L('Révélation', 'Rising star'));
+  if (c.first && Date.now() - Date.parse(c.first) > 365 * DAY) b.push(L('Pionnier', 'Pioneer'));
+  if (c.i >= 50 && c.f / c.i >= .1) b.push(L('Souvent forké', 'Often forked'));
+  const r7 = metricRanks.d7.map.get(c); if (r7 && c.d7 > 0 && r7 / metricRanks.d7.size <= .1) b.push(L('🔥 En forme cette semaine', '🔥 On fire this week'));
+  return b;
+}
+
+const REPO_URL = () => canClaim() ? `https://github.com/${REPO}` : 'https://github.com/nbbou81000';
+const publicName = u => NAMES[u] && String(NAMES[u]).trim();
+function claimHTML(u) {
+  if (publicName(u)) return `<span class="badge" title="${esc(L('Nom public validé', 'Verified public name'))}">✔ ${L('Profil revendiqué', 'Claimed profile')}</span>`;
+  if (!canClaim()) return '';
+  // On ne propose la revendication que pour son propre profil : celui choisi dans « Mon profil »,
+  // ou celui déjà vérifié via la liaison Discord. Sans profil choisi, on la propose partout.
+  const mine = wipProfile?.creator_status === 'verified' ? wipProfile.creator_id : me;
+  if (mine && String(u) !== String(mine)) return '';
+  const url = `https://github.com/${REPO}/issues/new?template=claim-profile.yml&title=${encodeURIComponent('Claim profile #' + u)}&creator_id=${encodeURIComponent(u)}`;
+  return `<a class="btn ghost small" id="claim" href="${url}" target="_blank" rel="noopener" title="${esc(L('Afficher un nom public à la place du numéro. Nécessite un compte GitHub, chaque demande est vérifiée à la main.', 'Show a public name instead of the number. Needs a GitHub account; every request is reviewed by hand.'))}">${L('Revendiquer ce profil', 'Claim this profile')}</a>`;
+}
+
+function renderProfile(u) {
+  const el = $('#tab-moi');
+  if (!u) {
+    el.innerHTML = `<h2>${L('Mon profil', 'My profile')}</h2>
+      <p class="lead">${L("Retrouvez votre place, vos classements et l'évolution de vos recettes. Votre choix est mémorisé sur cet appareil uniquement, rien n'est envoyé ailleurs.", 'Find your rank, your standings and how your recipes are doing. Your choice is remembered on this device only; nothing is sent anywhere.')}</p>
+      ${finderHTML('meFind')}`;
+    bindFinder('meFind', chooseMe); $('#meFind')?.focus();
+    return;
+  }
+  const c = byU.get(String(u));
+  const mine = isMe(u);
+  if (!c) {
+    el.innerHTML = `<h2>${L('Mon profil', 'My profile')}</h2><p class="lead">${L(`Aucune recette publique n'est associée au créateur #${esc(u)} pour le moment. Choisissez un autre profil.`, `No public recipe is linked to creator #${esc(u)} right now. Pick another profile.`)}</p>${finderHTML('meFind')}
+      ${mine ? `<p><button class="btn ghost" type="button" id="forget">${L('Oublier ce profil', 'Forget this profile')}</button></p>` : ''}`;
+    bindFinder('meFind', chooseMe);
+    $('#forget')?.addEventListener('click', () => { me = ''; store.del('trmnl-me'); go(hr('moi')); });
+    return;
+  }
+  const N = D.creators.length, sorted = D.creators, pos = sorted.indexOf(c);
+  const above = sorted.slice(Math.max(0, pos - 3), pos), below = sorted.slice(pos + 1, pos + 4);
+  const pct = Math.max(1, Math.ceil(100 * c.r / N));
+  const mv = (lbl, prev) => {
+    if (prev == null) return `<span class="chip none">${lbl}${CO()}${L('historique en cours', 'building history')}</span>`;
+    const d = prev - c.r;
+    const txt = d > 0 ? `▲ ${plural(d, 'place', 'spot')}` : d < 0 ? `▼ ${plural(-d, 'place', 'spot')}` : L('stable', 'steady');
+    return `<span class="chip ${d > 0 ? 'good' : d < 0 ? 'bad' : ''}">${lbl}${CO()}${txt}</span>`;
+  };
+  const nextUp = sorted.filter(x => x.s > c.s).pop();
+  const need = nextUp ? nextUp.s - c.s + 1 : 0;
+  const pts = n => plural(n, 'point');
+  const target = !nextUp
+    ? `<div class="target"><b>${L('En tête du classement.', 'Top of the leaderboard.')}</b> ${below[0] ? L(`${esc(nameOf(below[0].u))} suit à ${pts(c.s - below[0].s)}.`, `${esc(nameOf(below[0].u))} trails by ${pts(c.s - below[0].s)}.`) : ''}</div>`
+    : `<div class="target">${L(`Encore <b>${pts(need)}</b> pour passer devant ${esc(nameOf(nextUp.u))} et monter à la ${ord(nextUp.r)} place.`, `<b>${pts(need)}</b> more to pass ${esc(nameOf(nextUp.u))} and move up to ${ord(nextUp.r)} place.`)}
+       ${c.d7 > 0 ? L(`Au rythme des 7 derniers jours (${sg(c.d7)} pts), environ ${Math.max(1, Math.ceil(need / (c.d7 / 7)))} jour(s), si ce créateur ne progresse pas.`, `At the last 7 days' pace (${sg(c.d7)} pts), about ${Math.max(1, Math.ceil(need / (c.d7 / 7)))} day(s), if that creator stands still.`) : ''}
+       ${c.r > 10 ? `<br><span class="muted">${L('Pour entrer dans le top 10', 'To reach the top 10')}${CO()}${pts(sorted[9].s - c.s + 1)}. Top 100${CO()}${c.r > 100 ? pts(sorted[99].s - c.s + 1) : L('déjà atteint', 'already there')}.</span>` : ''}</div>`;
+  const row = (x, cls = '') => {
+    const gap = x === c ? (mine ? L('vous', 'you') : L('profil affiché', 'this profile')) : x.s > c.s ? L(`${nf(x.s - c.s)} pts devant`, `${nf(x.s - c.s)} pts ahead`) : L(`${nf(c.s - x.s)} pts derrière`, `${nf(c.s - x.s)} pts behind`);
+    return `<li class="${cls}"><span class="rk">${x.r}</span><a href="${hr('createur', x.u)}">${esc(nameOf(x.u))}<span class="gap">${plural(x.n, 'recette', 'recipe')}, ${gap}</span></a><span class="pts">${nf(x.s)} pts</span></li>`;
+  };
+  const tiles = METRICS.map(m => {
+    const R = metricRanks[m.k], rk = R.map.get(c);
+    const top = rk ? Math.max(1, Math.ceil(100 * rk / R.size)) : null;
+    return `<div class="tile" style="--c:var(${m.c})"><div class="lbl">${m.lbl()}</div><div class="rv">${rk ? '#' + rk : '—'}<small>${rk ? L('sur ', 'of ') + R.size : L('bientôt', 'soon')}</small></div>
+      <div class="val">${m.show(c)}${top ? `, top ${top} %` : ''}</div><div class="pc"><i style="width:${top ? 101 - top : 0}%"></i></div></div>`;
+  }).join('');
+  const recs = c.recipes.slice().sort((a, b) => b.s - a.s);
+  const reached = recs.filter(r => r.i >= goal).length;
+  const myCats = new Map(); recs.forEach(r => catsOf(r).forEach(k => { const o = myCats.get(k) || { n: 0, s: 0 }; o.n++; o.s += r.s; myCats.set(k, o); }));
+  const catRows = [...myCats].sort((a, b) => b[1].s - a[1].s);
+  const months = c.first ? Math.max(1, (Date.now() - Date.parse(c.first)) / (30.44 * DAY)) : 1;
+  const bdg = badgesOf(c);
+
+  el.innerHTML = `
+  <div class="tools-row">
+    ${mine ? `<label class="muted" style="font-size:.85rem">${L('Nom affiché (sur cet appareil)', 'Display name (this device only)')}&nbsp;<input id="myName" value="${esc(myName)}" placeholder="${L('Votre pseudo', 'Your nickname')}" maxlength="40" style="background:var(--sheet);border:1px solid var(--rule2);border-radius:8px;padding:5px 8px;width:150px"></label>
+      <button class="btn ghost small" type="button" id="changeMe">${L('Changer de profil', 'Switch profile')}</button>`
+    : `<span class="muted">${L("Profil d'un autre créateur.", "Another creator's profile.")}</span>${me ? `<a class="btn ghost small" href="${hr('moi')}">${L('Revenir à mon profil', 'Back to my profile')}</a>` : ''}<button class="btn small" type="button" id="setMe">${L("C'est moi", "That's me")}</button>`}
+    <button class="btn ghost small" type="button" id="share">${L('Copier le lien du profil', 'Copy profile link')}</button>
+    ${claimHTML(c.u)}
+  </div>
+  ${historyNotice()}
+  <div class="hero">
+    <div>
+      <p class="rankbig"><em>#</em>${c.r}<span class="of">${L(`sur ${nf(N)} créateurs de recettes publiques, dans les ${pct} % premiers`, `out of ${nf(N)} public recipe creators, in the top ${pct} %`)}</span></p>
+      <p class="who">${esc(nameOf(c.u))}<span>${hasName(c.u) ? '#' + c.u : L('numéro de créateur', 'creator number')}</span></p>
+      <ul class="facts">
+        <li><b>${nf(c.s)}</b> points</li><li><b>${nf(c.i)}</b> ${L('installations', 'installs')}</li><li><b>${nf(c.f)}</b> forks</li>
+        <li><b>${c.n}</b> ${L('recette', 'recipe')}${c.n > 1 ? 's' : ''}</li><li>${L('depuis le', 'since')} <b>${dfmt(c.first)}</b></li>
+        <li><b>${nf1(c.n / months)}</b> ${L('recette(s) par mois', 'recipe(s) per month')}</li><li>${L('dernière le', 'latest on')} <b>${dfmt(c.last)}</b></li>
+      </ul>
+      <div class="moves">${mv('24 h', c.r24)}${mv(L('7 jours', '7 days'), c.r7)}${c.d24 != null ? `<span class="chip">${sg(c.d24)} pts ${L('en 24 h', 'in 24 h')}</span>` : ''}</div>
+      ${bdg.length ? `<div class="badges">${bdg.map(x => `<span class="badge">${esc(x)}</span>`).join('')}</div>` : ''}
+      ${target}
+    </div>
+    <div>
+      <h3>${L('Voisins de classement', 'Leaderboard neighbours')}</h3>
+      <ol class="ladder">${above.map(x => row(x)).join('')}${row(c, 'me')}${below.map(x => row(x)).join('')}</ol>
+    </div>
+  </div>
+
+  <h2>${L('Tous les classements', 'Every ranking')}</h2>
+  <p class="lead">${mine ? L('Votre rang', 'Your rank') : L('Rang de ce créateur', "This creator's rank")} ${L('parmi les créateurs, métrique par métrique. La barre indique la part des créateurs devancés.', 'among all creators, metric by metric. The bar shows the share of creators outranked.')}</p>
+  <div class="tiles">${tiles}</div>
+
+  <h2>${L('Évolution', 'Over time')}</h2>
+  <div class="tools">
+    <div class="seg" role="group"><button type="button" data-range="hourly" aria-pressed="true">${L('7 derniers jours', 'Last 7 days')}</button><button type="button" data-range="daily" aria-pressed="false">${L("Tout l'historique", 'All history')}</button></div>
+    <label>${L('Comparer avec (numéro de créateur)', 'Compare with (creator number)')}<input id="cmpIn" inputmode="numeric" placeholder="${L('ex.', 'e.g.')} ${nextUp ? nextUp.u : (below[0]?.u || '')}" style="width:170px"></label>
+    ${nextUp ? `<button class="btn ghost small" type="button" id="cmpNext">${L('Comparer avec le suivant au-dessus', 'Compare with the next one up')}</button>` : ''}
+  </div>
+  <div class="grid g2">
+    <div class="sheet"><h3>${L('Points cumulés', 'Total points')}</h3><div class="chart"><canvas id="chScore"></canvas></div></div>
+    <div class="sheet"><h3>${L('Rang au classement', 'Leaderboard rank')}</h3><div class="chart"><canvas id="chRank"></canvas></div></div>
+  </div>
+  <p class="note" id="histNote"></p>
+
+  <h2>${L('Recettes', 'Recipes')}</h2>
+  <div class="grid g2">
+    <div class="sheet"><h3>${L('Installations et forks par recette', 'Installs and forks per recipe')}</h3><div class="chart" style="height:${Math.max(200, 34 * recs.length + 60)}px"><canvas id="chRecs"></canvas></div><p class="hint">${L('Touchez une barre pour ouvrir la recette.', 'Tap a bar to open the recipe.')}</p></div>
+    <div class="sheet"><h3>${L('Catégories', 'Categories')}</h3><div class="chart"><canvas id="chCats"></canvas></div><p class="hint">${L('Touchez une part pour voir les recettes de la catégorie.', 'Tap a slice to see recipes in that category.')}</p>
+      <div class="scroll" style="margin-top:12px"><table><thead><tr><th class="l">${L('Catégorie', 'Category')}</th><th>${L('Recettes', 'Recipes')}</th><th>Points</th><th>${L('Rang dans la catégorie', 'Rank in category')}</th></tr></thead>
+      <tbody>${catRows.map(([k, o], i) => { const R = catRanks.get(k); const e = R?.list.find(x => x[0] === c.u); return `<tr data-ci="${i}"><td class="l">${esc(catLabel(k))}</td><td>${o.n}</td><td>${nf(o.s)}</td><td>${e ? `${R.map.get(e)} ${L('sur', 'of')} ${R.size}` : '—'}</td></tr>`; }).join('')}</tbody></table></div></div>
+  </div>
+  <div class="tools" style="margin-top:18px">
+    <label>${L("Objectif d'installations par recette", 'Installs goal per recipe')}<input id="goalIn" type="number" min="1" value="${goal}" style="width:110px"></label>
+    <p class="muted" style="margin:0 0 6px">${L(`${reached} recette${reached > 1 ? 's' : ''} sur ${recs.length} à l'objectif.`, `${reached} of ${recs.length} recipe${recs.length > 1 ? 's' : ''} at goal.`)}</p>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th class="l">${L('Recette', 'Recipe')}</th><th>${L('Rang', 'Rank')}</th><th>Installs</th><th>Forks</th><th>${L('Inst./jour', 'Inst./day')}</th><th>+24 h</th><th>${L('+7 j', '+7 d')}</th><th>${L('+30 j', '+30 d')}</th><th class="l">${L('Objectif', 'Goal')}</th><th>${L('Part', 'Share')}</th><th>${L('Publiée', 'Published')}</th><th></th><th class="l">${L('Progression', 'Trend')}</th></tr></thead>
+    <tbody>${recs.map((r, i) => `<tr data-ri="${i}">
+      <td class="l name">${r.ic ? `<img class="ico" src="${esc(r.ic)}" alt="" loading="lazy">` : ''}${recipeLink(r)}<span class="sub">${esc(catsTxt(r))}</span></td>
+      <td>${r.r}<span class="sub">${L('sur', 'of')} ${nf(D.recipes.length)}</span></td><td>${nf(r.i)}</td><td>${nf(r.f)}</td><td>${nf1(r.ipd)}</td>
+      <td>${sgc(r.d24)}</td><td>${sgc(r.d7)}</td><td>${sgc(r.d30)}</td>
+      <td class="l"><div class="bar ${r.i >= goal ? 'done' : ''}" title="${r.i} / ${goal}"><i style="width:${Math.min(100, 100 * r.i / goal)}%"></i></div><span class="sub">${r.i >= goal ? L('atteint', 'reached') : L(`encore ${goal - r.i}`, `${goal - r.i} to go`)}</span></td>
+      <td>${c.s ? nf1(100 * r.s / c.s) : 0} %</td><td>${dfmt(r.p)}</td>
+      <td><button class="btn ghost small" type="button" data-share="${r.id}">${L('Vignette', 'Card')}</button></td>
+      <td class="l">${recipeSpark.get(r.id) || ''}</td></tr>`).join('')}</tbody>
+  </table></div>`;
+
+  const refresh = () => { resetViews(); renderProfile(c.u); };
+  $('#setMe')?.addEventListener('click', () => chooseMe(c.u));
+  $('#changeMe')?.addEventListener('click', () => { me = ''; store.del('trmnl-me'); resetViews(); go(hr('moi')); });
+  $('#myName')?.addEventListener('change', e => { myName = e.target.value.trim(); myName ? store.set('trmnl-myname', myName) : store.del('trmnl-myname'); refresh(); });
+  $('#claim')?.addEventListener('click', () => track('revendication-ouverte', true));
+  $('#share').onclick = async () => {
+    const url = `${location.origin}${location.pathname}${EN() ? '?lang=en' : ''}${hr('createur', c.u)}`;
+    try { await navigator.clipboard.writeText(url); toast(L('Lien copié', 'Link copied')); } catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }
+    track('lien-profil-copie', true);
+  };
+  $('#goalIn').onchange = e => { goal = Math.max(1, +e.target.value || DEFAULT_GOAL); store.set('trmnl-goal', goal); refresh(); };
+  el.querySelectorAll('tbody tr[data-ri]').forEach(tr => tr.onclick = e => { if (!e.target.closest('a')) openRecipe(recs[+tr.dataset.ri]); });
+  el.querySelectorAll('[data-share]').forEach(b => b.onclick = e => { e.stopPropagation(); shareCard(byR.get(b.dataset.share)); });
+  el.querySelectorAll('tbody tr[data-ci]').forEach(tr => tr.onclick = () => { pending.recettes = { cat: catRows[+tr.dataset.ci][0], u: c.u }; go(hr('recettes')); });
+
+  const P = PAL();
+  chart('chRecs', { type: 'bar', data: { labels: recs.map(r => r.n.length > 26 ? r.n.slice(0, 25) + '…' : r.n), datasets: [
+    { label: L('Installations', 'Installs'), data: recs.map(r => r.i), backgroundColor: P[0], borderRadius: 4 },
+    { label: 'Forks', data: recs.map(r => r.f), backgroundColor: P[1], borderRadius: 4 }] },
+    options: { indexAxis: 'y', plugins: { legend: { display: true, position: 'bottom' } }, scales: { x: { stacked: true, ticks: { precision: 0 } }, y: { stacked: true, grid: { display: false } } } } },
+    e0 => openRecipe(recs[e0.index]));
+  chart('chCats', { type: 'doughnut', data: { labels: catRows.map(e => catLabel(e[0])), datasets: [{ data: catRows.map(e => e[1].s), backgroundColor: catRows.map((_, k) => P[k % P.length]), borderColor: css('--sheet'), borderWidth: 2 }] },
+    options: { cutout: '58%', plugins: { legend: { display: true, position: 'right' }, tooltip: { callbacks: { label: x => `${x.label}${CO()}${nf(x.raw)} pts` } } } } },
+    e0 => { pending.recettes = { cat: catRows[e0.index][0], u: c.u }; go(hr('recettes')); });
+
+  let range = 'hourly';
+  const draw = async () => {
+    const h = await loadHist(range);
+    const note = $('#histNote'); if (!note) return;
+    note.textContent = !h || h.snaps.length < 2 ? L('Les courbes apparaîtront après quelques relevés.', 'Charts will appear after a few snapshots.')
+      : L(`${h.snaps.length} relevés, du ${dfmt(h.snaps[0].t)} au ${dfmt(h.snaps.at(-1).t)}. Touchez la légende pour masquer une courbe.`, `${h.snaps.length} snapshots, from ${dfmt(h.snaps[0].t)} to ${dfmt(h.snaps.at(-1).t)}. Tap the legend to hide a line.`);
+    if (!h) return;
+    const cmp = $('#cmpIn').value.trim();
+    const a = userSeries(h, c.u), b = cmp && byU.has(cmp) && cmp !== c.u ? userSeries(h, cmp) : null;
+    const labels = h.snaps.map(s => new Date(s.t).toLocaleString(LOC, range === 'hourly' ? { weekday: 'short', day: 'numeric', hour: '2-digit' } : { day: 'numeric', month: 'short' }));
+    const P = PAL();
+    const ds = (ser, key, name, color, fill) => ({ label: name, data: ser.map(p => p[key]), borderColor: color, backgroundColor: fill ? ctx => fade(ctx, color) : color, fill, borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 5, tension: .25, spanGaps: true, stepped: key === 'r' ? 'middle' : false });
+    const sets = k => [ds(a, k, nameOf(c.u), P[0], k === 's'), ...(b ? [ds(b, k, nameOf(cmp), P[2], false)] : [])];
+    const common = { interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: !!b, position: 'bottom' } } };
+    chart('chScore', { type: 'line', data: { labels, datasets: sets('s') }, options: { ...common, scales: { x: { ticks: { maxTicksLimit: 6, maxRotation: 0 } }, y: { ticks: { precision: 0 } } } } });
+    chart('chRank', { type: 'line', data: { labels, datasets: sets('r') }, options: { ...common, scales: { x: { ticks: { maxTicksLimit: 6, maxRotation: 0 } }, y: { reverse: true, ticks: { precision: 0 } } } } });
+  };
+  el.querySelectorAll('[data-range]').forEach(bt => bt.onclick = () => { range = bt.dataset.range; el.querySelectorAll('[data-range]').forEach(x => x.setAttribute('aria-pressed', x === bt)); draw(); });
+  $('#cmpIn').onchange = draw;
+  $('#cmpNext')?.addEventListener('click', () => { $('#cmpIn').value = nextUp.u; draw(); });
+  draw();
+}
+
+/* ================= Galerie des recettes ================= */
+const FRESH = [['1', 1, () => L('24 heures', '24 hours')], ['7', 7, () => L('7 jours', '7 days')], ['30', 30, () => L('30 jours', '30 days')], ['0', 0, () => L('Toutes', 'All')]];
+let galFresh = '7', galSort = 'p', galShown = 24, galQ = '', galCat = '';
+function renderGallery() {
+  const el = $('#tab-galerie');
+  const cats = new Map();
+  D.recipes.forEach(r => catsOf(r).forEach(k => cats.set(k, (cats.get(k) || 0) + 1)));
+  const catKeys = [...cats].sort((a, b) => b[1] - a[1]);
+  const days = +galFresh;
+  const since = Date.now() - days * DAY;
+  let list = D.recipes.filter(r => (!days || (r.p && Date.parse(r.p) >= since))
+    && (!galQ || r.n.toLowerCase().includes(galQ) || (r.d || '').toLowerCase().includes(galQ))
+    && (!galCat || catsOf(r).includes(galCat)));
+  const sorters = { p: (a, b) => (Date.parse(b.p) || 0) - (Date.parse(a.p) || 0), i: (a, b) => b.i - a.i, d7: (a, b) => (b.d7 ?? -1) - (a.d7 ?? -1) };
+  list = list.slice().sort(sorters[galSort] || sorters.p);
+  const shown = list.slice(0, galShown);
+  const fresh24 = D.recipes.filter(r => r.p && Date.now() - Date.parse(r.p) < DAY).length;
+  const fresh7 = D.recipes.filter(r => r.p && Date.now() - Date.parse(r.p) < 7 * DAY).length;
+  el.innerHTML = `<h2>${L('Galerie des recettes', 'Recipe gallery')}</h2>
+    <p class="lead">${L(`Toutes les recettes publiques avec leur aperçu réel. ${fresh24} publiée${fresh24 > 1 ? 's' : ''} ces dernières 24 h, ${fresh7} cette semaine.`,
+      `Every public recipe with its real preview. ${fresh24} published in the last 24 h, ${fresh7} this week.`)}</p>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="${L('Nouveautés', 'Recently published')}">${FRESH.map(([k, , lb]) => `<button type="button" data-fresh="${k}" aria-pressed="${k === galFresh}">${lb()}</button>`).join('')}</div>
+      <label>${L('Rechercher', 'Search')}<input type="search" id="gq" value="${esc(galQ)}" placeholder="${L('Nom ou description', 'Name or description')}"></label>
+      <label>${L('Catégorie', 'Category')}<select id="gc"><option value="">${L('Toutes', 'All')}</option>${catKeys.map(([k, n]) => `<option value="${esc(k)}" ${k === galCat ? 'selected' : ''}>${esc(catLabel(k))} (${n})</option>`).join('')}</select></label>
+      <label>${L('Trier par', 'Sort by')}<select id="gs">
+        <option value="p" ${galSort === 'p' ? 'selected' : ''}>${L('Date de publication', 'Publication date')}</option>
+        <option value="i" ${galSort === 'i' ? 'selected' : ''}>${L('Installations', 'Installs')}</option>
+        <option value="d7" ${galSort === 'd7' ? 'selected' : ''}>${L('Hausse sur 7 jours', '7-day gain')}</option></select></label>
+    </div>
+    <div class="cards">${shown.map(cardHTML).join('') || `<p class="muted">${L('Aucune recette pour ces filtres.', 'No recipe for these filters.')}</p>`}</div>
+    ${list.length > shown.length ? `<p><button class="btn ghost more" type="button" id="gmore">${L(`Afficher plus (${nf(list.length - shown.length)} restantes)`, `Show more (${nf(list.length - shown.length)} left)`)}</button></p>` : ''}
+    <p class="note">${L(`${nf(list.length)} recette(s) affichée(s). Les aperçus et descriptions appartiennent à leurs créateurs.`, `${nf(list.length)} recipe(s) shown. Previews and descriptions belong to their creators.`)}</p>`;
+  el.querySelectorAll('[data-fresh]').forEach(b => b.onclick = () => { galFresh = b.dataset.fresh; galShown = 24; renderGallery(); });
+  $('#gq').oninput = e => { galQ = e.target.value.trim().toLowerCase(); galShown = 24; clearTimeout(window.__gt); window.__gt = setTimeout(renderGallery, 250); };
+  $('#gc').onchange = e => { galCat = e.target.value; galShown = 24; renderGallery(); };
+  $('#gs').onchange = e => { galSort = e.target.value; galShown = 24; renderGallery(); };
+  $('#gmore')?.addEventListener('click', () => { galShown += 24; renderGallery(); });
+  el.querySelectorAll('[data-share]').forEach(b => b.onclick = () => shareCard(byR.get(b.dataset.share)));
+}
+function cardHTML(r) {
+  const age = r.p ? (Date.now() - Date.parse(r.p)) / DAY : 999;
+  const badge = age < 1 ? L('nouveau', 'new') : age < 7 ? L('cette semaine', 'this week') : '';
+  return `<article class="card ${isMe(r.u) ? 'mine' : ''}">
+    <div class="shot">${r.sc ? `<img src="${esc(r.sc)}" alt="${esc(L('Aperçu de', 'Preview of'))} ${esc(r.n)}" loading="lazy" decoding="async" crossorigin="anonymous">` : ''}
+      <span class="rk">#${r.r}</span>${badge ? `<span class="fresh">${badge}</span>` : ''}</div>
+    <div class="body">
+      <h4><a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a></h4>
+      ${r.d ? `<p class="desc">${esc(r.d)}</p>` : ''}
+      <p class="tagline"><a href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a>${r.c.length ? ' · ' + esc(r.c.join(', ')) : ''}</p>
+      <p class="meta"><span><b>${nf(r.i)}</b> ${L('installs', 'installs')}</span><span><b>${nf(r.f)}</b> forks</span>${r.d7 > 0 ? `<span><b>${sg(r.d7)}</b> ${L('/ 7 j', '/ 7 d')}</span>` : ''}<span>${dfmt(r.p)}</span></p>
+      <div class="acts">
+        <a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>
+        <button class="btn ghost" type="button" data-share="${r.id}">${L('Partager', 'Share')}</button>
+      </div>
+    </div></article>`;
+}
+
+/* ================= Recettes en cours d'élaboration (Supabase + Discord) ================= */
+const SUPABASE_URL = '__SUPABASE_URL__';   // rempli automatiquement par le workflow (variable SUPABASE_URL du dépôt)
+const SUPABASE_KEY = '__SUPABASE_KEY__';   // clé publique « anon » (variable SUPABASE_ANON_KEY du dépôt)
+const wipReady = () => /^https:\/\/[\w-]+\.supabase\.co\/?$/.test(SUPABASE_URL) && SUPABASE_KEY.length > 30;
+const WIP_SHIPPED_DAYS = 14, WIP_HOLD_DAYS = 60, DESC_MAX = 300, UPD_MAX = 600, COM_MAX = 500, IMG_MAX = 4;
+const WCATS = ['analytics', 'art', 'calendar', 'comics', 'custom', 'discovery', 'ecommerce', 'education', 'entertainment', 'environment', 'finance', 'games', 'humor', 'images', 'kpi', 'life', 'music', 'news', 'personal', 'productivity', 'programming', 'sports', 'travel', 'other'];
+const WSTAT = {
+  idea: { e: '💡', c: '--mustard', l: () => L('Idée', 'Idea') },
+  building: { e: '🔨', c: '--sky', l: () => L('En construction', 'Building') },
+  testing: { e: '🧪', c: '--plum', l: () => L('En test', 'Testing') },
+  submitted: { e: '📤', c: '--sage', l: () => L('Soumise à TRMNL', 'Submitted') },
+};
+let wipFilter = '', wipList = null, wipMe = null, wipProfile = null, wipErr = '', wipPending = 0;
+// Messages de la base traduits pour l'interface
+const ERRS = [
+  [/wait a few seconds/i, 'Patientez quelques secondes avant de commenter à nouveau.', 'Please wait a few seconds before commenting again.'],
+  [/daily comment limit/i, 'Limite quotidienne de commentaires atteinte. À demain !', 'Daily comment limit reached. See you tomorrow!'],
+  [/blocked/i, 'Votre compte est bloqué.', 'Your account is blocked.'],
+  [/up to 5 projects/i, "Vous pouvez partager jusqu'à 5 projets en cours à la fois.", 'You can share up to 5 projects in progress at a time.'],
+  [/30 updates/i, "Ce projet a déjà 30 avancées. Supprimez-en une ancienne d'abord.", 'This project already has 30 updates. Delete an old one first.'],
+  [/only the author/i, "Seul l'auteur du projet peut publier des avancées.", 'Only the author of a project can post updates.'],
+  [/already linked/i, 'Ce numéro de créateur est déjà lié à un autre compte.', 'This creator number is already linked to another account.'],
+  [/too many reports/i, "Trop de signalements aujourd'hui.", 'Too many reports today.'],
+  [/check constraint|violates.*check/i, 'Un des champs est trop long ou invalide.', 'One of the fields is too long or invalid.'],
+  [/row-level security|permission denied/i, 'Action non autorisée. Essayez de vous reconnecter.', 'Not allowed. Try signing in again.'],
+  [/jwt|expired/i, 'Session expirée, reconnectez-vous.', 'Session expired, please sign in again.'],
+  [/exceeded the maximum|payload too large|too large/i, 'Image trop lourde (2 Mo maximum).', 'Image too large (2 MB max).'],
+  [/failed to fetch|network/i, 'Connexion impossible. Vérifiez votre réseau.', 'Connection failed. Check your network.'],
+];
+const trErr = m => { const e = ERRS.find(([re]) => re.test(String(m))); return e ? L(e[1], e[2]) : String(m); };
+const imgURL = path => !path ? '' : /^(https?:|data:|blob:)/.test(path) ? path : `${SUPABASE_URL.replace(/\/$/, '')}/storage/v1/object/public/wip/${path}`;
+
+// ---------- Accès aux données : une couche fine, remplaçable pour les tests
+let sb = null;
+function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.append(s); }); }
+async function client() {
+  if (sb) return sb;
+  await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js');
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { flowType: 'pkce', detectSessionInUrl: true, persistSession: true } });
+  return sb;
+}
+const ok = r => { if (r.error) throw new Error(r.error.message); return r.data; };
+const realApi = {
+  async session() {
+    const c = await client(); const { data } = await c.auth.getSession();
+    const user = data.session?.user || null; let profile = null;
+    if (user) profile = ok(await c.from('profiles').select('*').eq('id', user.id).maybeSingle());
+    return { user, profile };
+  },
+  async signIn() { const c = await client(); ok(await c.auth.signInWithOAuth({ provider: 'discord', options: { redirectTo: location.origin + location.pathname } })); },
+  async signOut() { const c = await client(); await c.auth.signOut(); },
+  async list() {
+    const c = await client();
+    const projects = ok(await c.from('projects').select('*, profiles(name,avatar), updates(count), comments(count)').order('updated_at', { ascending: false }));
+    const imgs = ok(await c.from('updates').select('project_id,images,created_at').order('created_at', { ascending: false }).limit(300));
+    return projects.map(p => ({ ...p, n_updates: p.updates?.[0]?.count || 0, n_comments: p.comments?.[0]?.count || 0, last_images: imgs.find(i => i.project_id === p.id && i.images?.length)?.images || [] }));
+  },
+  async detail(id) {
+    const c = await client();
+    const [updates, comments] = await Promise.all([
+      c.from('updates').select('*').eq('project_id', id).order('created_at', { ascending: false }).then(ok),
+      c.from('comments').select('*, profiles(name,avatar)').eq('project_id', id).order('created_at').then(ok),
+    ]);
+    return { updates, comments };
+  },
+  async saveProject(fields, id) { const c = await client(); return ok(id ? await c.from('projects').update(fields).eq('id', id).select().single() : await c.from('projects').insert(fields).select().single()); },
+  async deleteProject(p) { const c = await client(); const ups = ok(await c.from('updates').select('images').eq('project_id', p.id)); await this.removeImages([...(p.images || []), ...ups.flatMap(u => u.images || [])]); ok(await c.from('projects').delete().eq('id', p.id)); },
+  async setHidden(id, hidden) { const c = await client(); ok(await c.from('projects').update({ hidden }).eq('id', id)); },
+  async addUpdate(project_id, body, images) { const c = await client(); ok(await c.from('updates').insert({ project_id, body, images })); },
+  async deleteUpdate(u) { const c = await client(); await this.removeImages(u.images || []); ok(await c.from('updates').delete().eq('id', u.id)); },
+  async addComment(project_id, body) { const c = await client(); ok(await c.from('comments').insert({ project_id, body })); },
+  async deleteComment(id) { const c = await client(); ok(await c.from('comments').delete().eq('id', id)); },
+  async hideComment(id, hidden) { const c = await client(); ok(await c.from('comments').update({ hidden }).eq('id', id)); },
+  async report(target, reason) { const c = await client(); const r = await c.from('reports').insert({ ...target, reason }); if (r.error && !/duplicate|unique/i.test(r.error.message)) throw new Error(r.error.message); },
+  async reports() { const c = await client(); return ok(await c.from('reports').select('*').order('created_at', { ascending: false })); },
+  async clearReport(id) { const c = await client(); ok(await c.from('reports').delete().eq('id', id)); },
+  async ban(uid, value) { const c = await client(); ok(await c.rpc('set_banned', { target: uid, value })); },
+  async siteSettings() { const c = await client(); return ok(await c.from('site_settings').select('*').eq('id', 1).maybeSingle()); },
+  async setDisclaimer(fields) { const c = await client(); ok(await c.rpc('set_disclaimer', { p_enabled: fields.enabled, p_img: fields.img, p_text_fr: fields.text_fr, p_text_en: fields.text_en, p_show_stats: fields.show_stats, p_frequency: fields.frequency, p_expires_at: fields.expires_at, p_font: fields.font, p_color: fields.color })); },
+  async uploadDisclaimerImage(file) {
+    const c = await client();
+    const blob = await shrink(file, 640, 0.82);   // le bandeau reste compact quelle que soit la taille d'origine (CSS + petite résolution stockée)
+    const path = `${wipMe.id}/disclaimer-${Date.now().toString(36)}.webp`;
+    ok(await c.storage.from('wip').upload(path, blob, { contentType: 'image/webp', upsert: false, cacheControl: '31536000' }));
+    return path;
+  },
+  async upload(file) {
+    const c = await client();
+    const [big, small] = await Promise.all([shrink(file, 1000, 0.82), shrink(file, 420, 0.75)]);
+    const path = `${wipMe.id}/${Date.now().toString(36)}.webp`;
+    const opt = { contentType: 'image/webp', upsert: false, cacheControl: '31536000' };   // une capture ne change jamais : cache d'un an
+    ok(await c.storage.from('wip').upload(path, big, opt));
+    await c.storage.from('wip').upload(thumbOf(path), small, opt);
+    return path;
+  },
+  async removeImages(paths) { const c = await client(); const list = paths.filter(x => x && !/^(https?:|data:|blob:)/.test(x)).flatMap(x => [x, thumbOf(x)]); if (list.length) await c.storage.from('wip').remove(list); },
+  async requestLink(cid) { const c = await client(); ok(await c.rpc('request_creator_link', { cid })); },
+  async pendingLinks() { const c = await client(); return ok(await c.from('profiles').select('id,name,avatar,creator_id').eq('creator_status', 'pending')); },
+  async reviewLink(target, approve) { const c = await client(); ok(await c.rpc('review_creator_link', { target, approve })); },
+  async deleteAccount() {
+    const c = await client();
+    const files = ok(await c.storage.from('wip').list(wipMe.id, { limit: 1000 }));
+    if (files.length) await c.storage.from('wip').remove(files.map(f => `${wipMe.id}/${f.name}`));
+    ok(await c.rpc('delete_my_account')); await c.auth.signOut();
+  },
+};
+const api = () => window.__WIP_MOCK || realApi;
+
+// Réduit la capture avant envoi : 1000 px de large au maximum, format WebP
+const thumbOf = path => String(path).replace(/\.webp$/, '-t.webp');
+const isExternalImg = x => /^(https?:|data:|blob:)/.test(x);
+
+// Une ou plusieurs captures : vignette simple, ou carrousel glissable façon Reddit au-delà de une
+function galleryHTML(paths, alt, cardMode = false) {
+  const src1 = x => cardMode && !isExternalImg(x) ? imgURL(thumbOf(x)) : imgURL(x);
+  const full1 = x => cardMode && !isExternalImg(x) ? imgURL(x) : '';
+  const imgTag = (x, extraAlt) => { const full = full1(x);
+    return `<img src="${esc(src1(x))}" ${full ? `data-full="${esc(full)}" onerror="if(this.dataset.full&&this.src!==this.dataset.full)this.src=this.dataset.full"` : ''} alt="${esc(alt)}${extraAlt || ''}" loading="lazy">`; };
+  if (paths.length <= 1) return paths.length ? `<div class="gal">${imgTag(paths[0])}</div>` : '';
+  return `<div class="gal multi"><div class="gtrack">${paths.map((x, i) => imgTag(x, ` ${i + 1}/${paths.length}`)).join('')}</div>
+    <div class="gdots">${paths.map((_, i) => `<span class="${i === 0 ? 'on' : ''}"></span>`).join('')}</div>
+    <button type="button" class="gnav prev" aria-label="${esc(L('Précédente', 'Previous'))}">‹</button>
+    <button type="button" class="gnav next" aria-label="${esc(L('Suivante', 'Next'))}">›</button></div>`;
+}
+function wireGalleries(root) {
+  root.querySelectorAll('.gal.multi').forEach(g => {
+    if (g.dataset.wired) return; g.dataset.wired = '1';
+    const track = g.querySelector('.gtrack'), dots = [...g.querySelectorAll('.gdots span')];
+    const upd = () => { const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth)); dots.forEach((d, k) => d.classList.toggle('on', k === i)); };
+    track.addEventListener('scroll', () => { clearTimeout(track._t); track._t = setTimeout(upd, 80); }, { passive: true });
+    g.querySelector('.prev')?.addEventListener('click', e => { e.stopPropagation(); track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' }); });
+    g.querySelector('.next')?.addEventListener('click', e => { e.stopPropagation(); track.scrollBy({ left: track.clientWidth, behavior: 'smooth' }); });
+  });
+}
+
+// Sélecteur de captures : jusqu'à IMG_MAX images, avec miniatures et retrait individuel
+function setupPicker(root, existing = []) {
+  const kept = existing.slice(), added = [];
+  const thumbs = root.querySelector('.ithumbs'), input = root.querySelector('.picker-input'), addBtn = root.querySelector('.add-img'), count = root.querySelector('.picker-count');
+  const total = () => kept.length + added.length;
+  const render = () => {
+    thumbs.innerHTML = kept.map((path, i) => `<span class="pth"><img src="${esc(imgURL(thumbOf(path)) || imgURL(path))}" alt=""><button type="button" data-k="kept" data-i="${i}">✕</button></span>`).join('')
+      + added.map((file, i) => `<span class="pth"><img src="${URL.createObjectURL(file)}" alt=""><button type="button" data-k="added" data-i="${i}">✕</button></span>`).join('');
+    count.textContent = `${total()} / ${IMG_MAX}`;
+    addBtn.disabled = total() >= IMG_MAX;
+    thumbs.querySelectorAll('button').forEach(b => b.onclick = () => { (b.dataset.k === 'kept' ? kept : added).splice(+b.dataset.i, 1); render(); });
+  };
+  addBtn.onclick = () => input.click();
+  input.onchange = () => {
+    for (const file of input.files) { if (total() >= IMG_MAX) break; if (/^image\//.test(file.type)) added.push(file); }
+    input.value = ''; render();
+  };
+  render();
+  return { kept: () => kept, added: () => added };
+}
+function shrink(file, max = 1000, q = 0.82) {
+  return new Promise((res, rej) => {
+    if (!/^image\//.test(file.type)) return rej(new Error(L('Choisissez une image.', 'Please choose an image.')));
+    const img = new Image(); img.onload = () => {
+      const w = Math.min(max, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      const x = cv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h);
+      cv.toBlob(b => b ? res(b) : rej(new Error('image')), 'image/webp', q); URL.revokeObjectURL(img.src);
+    };
+    img.onerror = () => rej(new Error(L('Image illisible.', 'Unreadable image.'))); img.src = URL.createObjectURL(file);
+  });
+}
+
+// Retour de la connexion Discord : ?code=… dans l'adresse
+async function wipBoot() {
+  if (!wipReady() && !window.__WIP_MOCK) return;
+  const back = new URLSearchParams(location.search).has('code');
+  if (back || store.get('trmnl-wip-session', '') === '1') {
+    try { const s = await api().session(); wipMe = s.user; wipProfile = s.profile; } catch {}
+    if (back) {
+      const target = store.get('trmnl-wip-return', hr('elaboration'));
+      history.replaceState(null, '', location.pathname + target);
+      store.del('trmnl-wip-return'); route();
+    }
+    store.set('trmnl-wip-session', wipMe ? '1' : '');
+  }
+}
+
+// ---------- Publication officielle : déclarée par l'auteur, ou repérée automatiquement
+const STOP = new Set(['trmnl', 'the', 'and', 'for', 'les', 'des', 'une', 'plugin', 'recipe', 'recette']);
+const toks = t => new Set(String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^a-z0-9]+/).filter(w => w.length >= 3 && !STOP.has(w)));
+function sameName(a, b) { const A = toks(a), B = toks(b); if (!A.size || !B.size) return false; let n = 0; A.forEach(w => { if (B.has(w)) n++; }); return n / Math.min(A.size, B.size) >= 0.6; }
+function shippedOf(p) {
+  if (!p.creator_id) return null;   // numéro vérifié uniquement
+  if (p.shipped_recipe) { const r = byR.get(String(p.shipped_recipe)); if (r && r.u === p.creator_id) return { r, d: r.p || p.updated_at }; }
+  const from = Date.parse(p.created_at) - 2 * DAY;
+  const r = D.recipes.find(r => r.p && Date.parse(r.p) >= from && r.u === p.creator_id && sameName(r.n, p.name));
+  return r ? { r, d: r.p } : null;
+}
+const ago2 = iso => { const d = Math.floor((Date.now() - Date.parse(iso)) / DAY); return d <= 0 ? L("aujourd'hui", 'today') : d === 1 ? L('hier', 'yesterday') : L(`il y a ${d} jours`, `${d} days ago`); };
+const fdate = iso => new Date(iso).toLocaleDateString(LOC, { day: 'numeric', month: 'long', year: 'numeric' });
+const isOwner = p => wipMe && p.owner === wipMe.id;
+const isAdmin = () => !!wipProfile?.is_admin;
+const avatarHTML = pr => pr?.avatar ? `<img class="av" src="${esc(pr.avatar)}" alt="" width="22" height="22" loading="lazy">` : '<span class="av ph2">👤</span>';
+
+// Nom affiché : le nom revendiqué s'il existe, sinon le nom Discord ; lien vers le profil de créateur si on le connaît
+const wipWho = p => {
+  const label = p.creator_id && hasName(p.creator_id) ? nameOf(p.creator_id) : (p.profiles?.name || (p.creator_id ? nameOf(p.creator_id) : ''));
+  return p.creator_id && byU.has(p.creator_id) ? `<a href="${hr('createur', p.creator_id)}">${esc(label)}</a>` : esc(label);
+};
+function wipCard(p, ship) {
+  const st = WSTAT[p.status] || WSTAT.building, r = ship?.r;
+  const paths = (p.last_images && p.last_images.length) ? p.last_images : (p.images && p.images.length) ? p.images : (r?.sc ? [r.sc] : []);
+  const shot = paths.length ? galleryHTML(paths, p.name, true) : `<div class="ph">${st.e}</div>`;
+  const badge = ship ? `<span class="fresh">🎉 ${L('Disponible', 'Now available')}</span>` : `<span class="fresh" style="background:var(${st.c})">${st.e} ${st.l()}</span>`;
+  const who = wipWho(p);
+  const days = ship ? Math.max(1, Math.round((Date.parse(ship.d) - Date.parse(p.created_at)) / DAY)) : 0;
+  return `<article class="card wip ${ship ? 'shipped' : ''} ${isOwner(p) ? 'mine' : ''}" data-wip="${p.id}" tabindex="0">
+    <div class="shot">${shot}${badge}${p.hidden ? `<span class="rk">${L('masqué', 'hidden')}</span>` : ''}</div>
+    <div class="body"><h4>${esc(p.name)}</h4>${p.description ? `<p class="desc">${esc(p.description)}</p>` : ''}
+      <p class="tagline">${avatarHTML(p.profiles)} ${who}${p.category ? ' · ' + esc(p.category) : ''}</p>
+      <p class="upd">${p.n_updates ? `📝 ${L(`${p.n_updates} avancée${p.n_updates > 1 ? 's' : ''}`, `${p.n_updates} update${p.n_updates > 1 ? 's' : ''}`)}` : ''}${p.n_updates && p.n_comments ? ' · ' : ''}${p.n_comments ? `💬 ${p.n_comments}` : ''}</p>
+      <p class="meta">${ship ? `<span>${L(`En élaboration ${days} j, publiée ${ago2(ship.d)}`, `In the making for ${days} day${days > 1 ? 's' : ''}, published ${ago2(ship.d)}`)}</span>`
+        : `<span>${L('Mise à jour', 'Updated')} ${ago2(p.updated_at)}</span>${p.eta ? `<span>· ${L('prévue', 'expected')} ${esc(p.eta)}</span>` : ''}`}</p>
+      ${r ? `<div class="acts"><a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>` : ''}
+    </div></article>`;
+}
+
+async function renderWip() {
+  const el = $('#tab-elaboration');
+  const head = `<h2>${L("Recettes en cours d'élaboration", 'Recipes in the making')}</h2>
+    <p class="lead">${L("Les recettes que la communauté construit en ce moment. Partagez la vôtre, suivez celles que vous attendez, posez vos questions, et voyez-les arriver le jour de leur publication.",
+      "Recipes the community is building right now. Share yours, follow the ones you're waiting for, ask questions, and see them land the day they're published.")}</p>`;
+  if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L('Cette section ouvre très bientôt.', 'This section opens very soon.')}</p>`; return; }
+  if (!wipList) {
+    el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
+    try { await wipLoadSession(); wipList = await api().list(); wipErr = ''; }
+    catch (e) { wipErr = trErr(e.message); wipList = []; }
+  }
+  const items = wipList.map(p => ({ p, ship: shippedOf(p) }));
+  const justShipped = items.filter(x => x.ship && Date.now() - Date.parse(x.ship.d) < WIP_SHIPPED_DAYS * DAY).sort((a, b) => Date.parse(b.ship.d) - Date.parse(a.ship.d));
+  const open = items.filter(x => !x.ship);
+  const active = open.filter(x => Date.now() - Date.parse(x.p.updated_at) < WIP_HOLD_DAYS * DAY);
+  const hold = open.filter(x => Date.now() - Date.parse(x.p.updated_at) >= WIP_HOLD_DAYS * DAY);
+  const shown = active.filter(x => !wipFilter || x.p.status === wipFilter);
+  const count = k => active.filter(x => x.p.status === k).length;
+  const account = wipMe
+    ? `<div class="tools-row"><span class="who2">${avatarHTML(wipProfile)} <b>${esc(wipProfile?.name || '')}</b>${isAdmin() ? ` <span class="badge">admin</span>` : ''}</span>
+        ${linkChip()}
+        ${wipProfile?.banned ? `<span class="down">${L('Compte bloqué', 'Account blocked')}</span>` : `<button class="btn" type="button" id="wipNew">+ ${L('Partager mon projet', "Share what you're building")}</button>`}
+        ${isAdmin() ? `<button class="btn ghost small" type="button" id="wipReports">${L('Signalements', 'Reports')}</button><button class="btn ghost small" type="button" id="wipLinks">${L('Liaisons à valider', 'Links to review')}${wipPending ? ` (${wipPending})` : ''}</button><button class="btn ghost small" type="button" id="wipDisclaimer">${L("Bandeau d'accueil", 'Home banner')}</button>` : ''}
+        <button class="btn ghost small" type="button" id="wipOut">${L('Se déconnecter', 'Sign out')}</button></div>`
+    : `<div class="tools-row"><button class="btn" type="button" id="wipIn"><span aria-hidden="true">🎮</span> ${L('Se connecter avec Discord', 'Sign in with Discord')}</button>
+        <span class="muted" style="font-size:.86rem">${L('pour partager un projet ou commenter. La lecture est libre.', 'to share a project or comment. Reading is open to everyone.')}</span></div>`;
+  el.innerHTML = head + account + (wipErr ? `<p class="notice">${esc(wipErr)}</p>` : '') + `
+    ${justShipped.length ? `<h3 style="margin-top:8px">🎉 ${L('Tout juste publiées', 'Just shipped')}</h3><div class="cards" style="margin-bottom:26px">${justShipped.map(x => wipCard(x.p, x.ship)).join('')}</div>` : ''}
+    ${active.length ? `<div class="tools"><div class="seg" role="group">
+        <button type="button" data-wf="" aria-pressed="${!wipFilter}">${L('Toutes', 'All')} (${active.length})</button>
+        ${Object.entries(WSTAT).map(([k, v]) => `<button type="button" data-wf="${k}" aria-pressed="${wipFilter === k}" ${count(k) ? '' : 'disabled'}>${v.e} ${v.l()}</button>`).join('')}</div></div>
+      <div class="cards">${shown.map(x => wipCard(x.p)).join('') || `<p class="muted">${L('Aucun projet à ce stade.', 'No project at this stage.')}</p>`}</div>`
+      : `<p class="notice">${L("Aucun projet partagé pour l'instant. Soyez le premier !", 'No project shared yet. Be the first!')}</p>`}
+    ${hold.length ? `<details class="onhold"><summary>${L(`En pause (${hold.length}) : sans nouvelles depuis ${WIP_HOLD_DAYS} jours`, `On hold (${hold.length}): no news for ${WIP_HOLD_DAYS} days`)}</summary><div class="cards">${hold.map(x => wipCard(x.p)).join('')}</div></details>` : ''}
+    <p class="note" style="margin-top:26px"><a href="#" id="wipPrivacy">${L('Données et confidentialité', 'Data and privacy')}</a>${wipMe ? ` · <a href="#" id="wipDelete">${L('Supprimer mon compte et mes contenus', 'Delete my account and content')}</a>` : ''}</p>`;
+  wireGalleries(el);
+  el.querySelectorAll('[data-wf]').forEach(b => b.onclick = () => { wipFilter = b.dataset.wf; renderWip(); });
+  el.querySelectorAll('[data-wip]').forEach(c => {
+    const openIt = e => { if (e.target.closest('a,.gnav')) return; wipDetail(wipList.find(p => p.id === +c.dataset.wip)); };
+    c.onclick = openIt; c.onkeydown = e => { if (e.key === 'Enter') openIt(e); };
+  });
+  $('#wipIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', hr('elaboration')); track('connexion-discord', true); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
+  $('#wipOut')?.addEventListener('click', async () => { await api().signOut(); wipMe = wipProfile = null; store.set('trmnl-wip-session', ''); renderWip(); });
+  $('#wipNew')?.addEventListener('click', () => wipForm());
+  $('#wipReports')?.addEventListener('click', wipReportsView);
+  $('#wipLinks')?.addEventListener('click', wipLinksView);
+  $('#wipDisclaimer')?.addEventListener('click', wipDisclaimerForm);
+  $('#wipLink')?.addEventListener('click', wipLinkForm);
+  $('#wipUnlink')?.addEventListener('click', async () => { try { await api().requestLink(null); await wipReload(); } catch (x) { toast(trErr(x.message)); } });
+  $('#wipPrivacy')?.addEventListener('click', e => { e.preventDefault(); wipPrivacy(); });
+  $('#wipDelete')?.addEventListener('click', async e => {
+    e.preventDefault();
+    if (!confirm(L('Supprimer définitivement votre compte, vos projets, vos avancées, vos commentaires et vos images ?', 'Permanently delete your account, projects, updates, comments and images?'))) return;
+    try { await api().deleteAccount(); wipMe = wipProfile = null; store.set('trmnl-wip-session', ''); await wipRefresh(); toast(L('Compte supprimé.', 'Account deleted.')); } catch (err) { toast(trErr(err.message)); }
+  });
+}
+async function wipLoadSession() {
+  const s = await api().session(); wipMe = s.user; wipProfile = s.profile;
+  store.set('trmnl-wip-session', wipMe ? '1' : '');
+  // un créateur vérifié retrouve automatiquement son profil dans « Mon profil »
+  if (wipProfile?.creator_status === 'verified' && !me) { me = wipProfile.creator_id; store.set('trmnl-me', me); }
+  wipPending = isAdmin() ? (await api().pendingLinks().catch(() => [])).length : 0;
+}
+async function wipReload() { await wipLoadSession(); await wipRefresh(); }
+function linkChip() {
+  const pr = wipProfile; if (!pr) return '';
+  if (pr.creator_status === 'verified') return `<span class="badge" title="${esc(L('Numéro de créateur vérifié', 'Verified creator number'))}">✔ ${esc(hasName(pr.creator_id) ? nameOf(pr.creator_id) : L('Créateur', 'Creator') + ' #' + pr.creator_id)}</span>`;
+  if (pr.creator_status === 'pending') return `<span class="muted" style="font-size:.86rem">⏳ ${L(`Numéro #${esc(pr.creator_id)} en attente de validation`, `Creator #${esc(pr.creator_id)} awaiting review`)}</span><button class="linkbtn" type="button" id="wipUnlink">${L('annuler', 'cancel')}</button>`;
+  return `<button class="btn ghost small" type="button" id="wipLink">${L('Lier mon numéro de créateur', 'Link my creator number')}</button>`;
+}
+function wipLinkForm() {
+  const m = modal(`<h3>${L('Lier mon numéro de créateur', 'Link my creator number')}</h3>
+    <p>${L("Une fois validé, vos projets afficheront votre nom de créateur, renverront vers votre profil, et leur publication officielle sera repérée automatiquement.", 'Once approved, your projects show your creator name, link to your profile, and their official release is spotted automatically.')}</p>
+    <p class="muted" style="font-size:.9rem">${L("Chaque demande est vérifiée à la main, pour que personne ne puisse se faire passer pour un autre créateur. Votre numéro figure dans l'adresse de vos recettes publiques sur trmnl.com, après user_id=.", 'Every request is checked by hand, so nobody can pose as another creator. Your number appears in the address of your public recipes on trmnl.com, after user_id=.')}</p>
+    <form class="wform"><label>${L('Numéro de créateur', 'Creator number')}<input name="cid" inputmode="numeric" required placeholder="12345"></label><p class="hint" id="lkHint"></p><p class="err" hidden></p>
+    <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${L('Envoyer la demande', 'Send request')}</button></div></form>`, 'wipd');
+  const f = m.$('form'), err = m.$('.err');
+  f.cid.oninput = () => { const c = f.cid.value.replace(/\D/g, ''), cr = byU.get(c);
+    m.$('#lkHint').textContent = cr ? L(`${nameOf(c)} : ${plural(cr.n, 'recette')}, par exemple « ${cr.recipes[0]?.n || ''} »`, `${nameOf(c)}: ${plural(cr.n, 'recipe', 'recipe')}, e.g. "${cr.recipes[0]?.n || ''}"`) : (c ? L('Aucun créateur public avec ce numéro.', 'No public creator with this number.') : ''); };
+  f.onsubmit = async e => {
+    e.preventDefault(); err.hidden = true; const c = f.cid.value.replace(/\D/g, '');
+    if (!byU.has(c)) { err.textContent = L('Aucun créateur public avec ce numéro.', 'No public creator with this number.'); err.hidden = false; return; }
+    try { await api().requestLink(c); m.close(); track('liaison-demandee', true); toast(L('Demande envoyée', 'Request sent')); await wipReload(); }
+    catch (x) { err.textContent = trErr(x.message); err.hidden = false; }
+  };
+}
+async function wipLinksView() {
+  const m = modal(`<h3>${L('Liaisons à valider', 'Links to review')}</h3>
+    <p class="muted" style="font-size:.9rem">${L("Comparez le nom Discord avec le créateur demandé (nom revendiqué, recettes). En cas de doute, demandez confirmation sur Discord avant de valider.", 'Compare the Discord name with the requested creator (claimed name, recipes). If in doubt, ask on Discord before approving.')}</p>
+    <div class="lk"><p class="muted">${L('Chargement…', 'Loading…')}</p></div><div class="row"><button class="btn ghost" data-close>${L('Fermer', 'Close')}</button></div>`, 'wipd');
+  const draw = async () => {
+    const list = await api().pendingLinks(); wipPending = list.length;
+    m.$('.lk').innerHTML = list.length ? `<ul class="coms">${list.map(u => { const cr = byU.get(u.creator_id);
+      return `<li><div class="ch">${avatarHTML(u)} <b>${esc(u.name)}</b> → <a href="${hr('createur', u.creator_id)}" target="_blank">${esc(nameOf(u.creator_id))}</a></div>
+        <p class="muted" style="font-size:.86rem">${cr ? `${plural(cr.n, 'recette', 'recipe')} : ${esc(cr.recipes.slice(0, 3).map(r => r.n).join(', '))}` : L('Aucun créateur public avec ce numéro.', 'No public creator with this number.')}</p>
+        <div class="cacts"><button class="btn small" data-ok="${u.id}">${L('Valider', 'Approve')}</button><button class="btn ghost small" data-no="${u.id}">${L('Refuser', 'Reject')}</button></div></li>`; }).join('')}</ul>`
+      : `<p class="muted">${L('Aucune demande en attente.', 'No pending request.')}</p>`;
+    m.wrap.querySelectorAll('[data-ok],[data-no]').forEach(b => b.onclick = async () => {
+      try { await api().reviewLink(b.dataset.ok || b.dataset.no, !!b.dataset.ok); await draw(); wipRefresh(); } catch (x) { toast(trErr(x.message)); }
+    });
+  };
+  draw().catch(e => { m.$('.lk').innerHTML = `<p class="err">${esc(trErr(e.message))}</p>`; });
+}
+async function wipRefresh() { try { wipList = await api().list(); wipErr = ''; } catch (e) { wipErr = trErr(e.message); } renderWip(); }
+
+// ---------- Bandeau d'accueil (disclaimer) — réglages gérés par l'admin depuis le site (Supabase)
+function disclaimerStats() {
+  if (!D) return null;
+  const now = Date.now();
+  const newRecipes = D.recipes.filter(r => r.p && now - Date.parse(r.p) < DAY).length;
+  const newAuthors = D.creators.filter(c => c.first && now - Date.parse(c.first) < DAY).length;
+  return { newRecipes, newAuthors };
+}
+async function showDisclaimer() {
+  if (!wipReady() && !window.__WIP_MOCK) return;
+  let s;
+  try { s = await api().siteSettings(); } catch { return; }
+  if (!s || !s.enabled) return;
+  if (s.expires_at && Date.parse(s.expires_at) < Date.now()) return;   // durée d'affichage écoulée
+  const body = L(s.text_fr, s.text_en) || s.text_fr || s.text_en || '';
+  const stats = s.show_stats ? disclaimerStats() : null;
+  if (!body && !s.img && !stats) return;
+  const freq = ['day', 'week', 'always'].includes(s.frequency) ? s.frequency : 'day';
+  if (freq !== 'always') {
+    const period = freq === 'week' ? 'w' + Math.floor(Date.now() / (7 * DAY)) : 'd' + new Date().toISOString().slice(0, 10);
+    const key = 'trmnl-disclaimer-seen';
+    const sig = `${s.version}|${period}`;
+    if (store.get(key) === sig) return;   // déjà vu sur cette période (même version) : on ne réaffiche pas
+    store.set(key, sig);
+  }
+  await applyDiscFont(s.font);
+  const reminder = L(
+    `💡 Vous pouvez <a href="${hr('moi')}">revendiquer votre profil de créateur et lier votre compte Discord</a> pour apparaître sous votre propre nom.`,
+    `💡 You can <a href="${hr('moi')}">claim your creator profile and link your Discord account</a> to appear under your own name.`);
+  const statsHTML = stats ? `<p class="discstats">${[
+    L(`🆕 ${nf(stats.newRecipes)} nouvelle${stats.newRecipes > 1 ? 's' : ''} recette${stats.newRecipes > 1 ? 's' : ''} (24 h)`, `🆕 ${nf(stats.newRecipes)} new recipe${stats.newRecipes > 1 ? 's' : ''} (24h)`),
+    L(`👤 ${nf(stats.newAuthors)} nouvel${stats.newAuthors > 1 ? 's' : ''} auteur${stats.newAuthors > 1 ? 's' : ''} (24 h)`, `👤 ${nf(stats.newAuthors)} new author${stats.newAuthors > 1 ? 's' : ''} (24h)`),
+  ].join(' · ')}</p>` : '';
+  const bodyStyle = [DISC_FONTS[s.font]?.css ? `font-family:${DISC_FONTS[s.font].css}` : '', s.color ? `color:${s.color}` : ''].filter(Boolean).join(';');
+  modal(`${s.img ? `<img src="${esc(imgURL(s.img))}" alt="">` : ''}
+    ${body ? `<div class="discbody"${bodyStyle ? ` style="${esc(bodyStyle)}"` : ''}>${body}</div>` : ''}
+    ${statsHTML}
+    <div class="discreminder">${reminder}</div>
+    <div class="row"><button class="btn" type="button" data-close>${L('Compris', 'Got it')}</button></div>`, 'disc');
+}
+// ---------- Polices proposées pour le texte du bandeau (lazy-load des polices Google si besoin)
+const DISC_FONTS = {
+  default: { label: L('Police du site', 'Site font'), css: '' },
+  sans:    { label: L('Sans-serif', 'Sans-serif'), css: `system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif` },
+  serif:   { label: L('Serif', 'Serif'), css: `Georgia, 'Times New Roman', Times, serif` },
+  mono:    { label: L('Monospace', 'Monospace'), css: `'SF Mono', 'Cascadia Code', Consolas, Menlo, monospace` },
+  rounded: { label: L('Arrondie (Poppins)', 'Rounded (Poppins)'), css: `'Poppins', system-ui, sans-serif`, gfont: 'Poppins:wght@500;700' },
+  hand:    { label: L('Manuscrite (Caveat)', 'Handwritten (Caveat)'), css: `'Caveat', cursive`, gfont: 'Caveat:wght@600;700' },
+};
+const DISC_COLORS = [
+  { label: L('Orange TRMNL', 'TRMNL orange'), value: '#FF6600' },
+  { label: L('Rouge du site', "Site's accent red"), value: '#F8654B' },
+  { label: L('Noir', 'Black'), value: '#1D1D1B' },
+  { label: L('Blanc', 'White'), value: '#FFFFFF' },
+];
+const loadedFonts = new Set();
+function applyDiscFont(key) {
+  const f = DISC_FONTS[key];
+  if (!f?.gfont || loadedFonts.has(f.gfont)) return Promise.resolve();
+  loadedFonts.add(f.gfont);
+  return new Promise(res => {
+    const link = document.createElement('link'); link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${f.gfont}&display=swap`;
+    link.onload = res; link.onerror = res; document.head.append(link);
+  });
+}
+// ---------- Édition du bandeau, réservée à l'administrateur (bouton dans l'onglet « En élaboration »)
+const toLocalInput = iso => { if (!iso) return ''; const d = new Date(iso); if (isNaN(d)) return ''; const pad = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+async function wipDisclaimerForm() {
+  const m = modal(`<h3>${L("Bandeau d'accueil", 'Home banner')}</h3><p class="muted">${L('Chargement…', 'Loading…')}</p>`, 'wipd');
+  let s = {};
+  try { s = (await api().siteSettings()) || {}; } catch (e) { m.wrap.querySelector('.box').innerHTML = `<h3>${L("Bandeau d'accueil", 'Home banner')}</h3><p class="err">${esc(trErr(e.message))}</p><div class="row"><button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`; m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close); return; }
+  m.wrap.querySelector('.box').innerHTML = `<h3>${L("Bandeau d'accueil", 'Home banner')}</h3>
+    <form class="wform" novalidate>
+      <label class="chk"><input type="checkbox" name="enabled" ${s?.enabled ? 'checked' : ''}> ${L('Afficher le bandeau aux visiteurs', 'Show the banner to visitors')}</label>
+      <label>${L('Image du bandeau', 'Banner image')}
+        <div class="imgpick">
+          <input name="img" type="text" placeholder="https://… (ou importez un fichier)" value="${esc(s?.img || '')}">
+          <button class="btn ghost small" type="button" id="discImgPick">${L('Importer…', 'Upload…')}</button>
+          <input id="discImgFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+        </div>
+        <div id="discImgPreview" class="discimgprev"></div>
+        <small class="muted">${L("Redimensionnée et compressée automatiquement à l'import : le bandeau reste compact quelle que soit la taille du fichier d'origine.", 'Automatically resized and compressed on upload: the banner stays compact whatever the size of the original file.')}</small>
+      </label>
+      <label>${L('Texte — Français', 'Text — French')}<textarea name="text_fr" rows="4">${esc(s?.text_fr || '')}</textarea></label>
+      <label>${L('Texte — Anglais', 'Text — English')}<textarea name="text_en" rows="4">${esc(s?.text_en || '')}</textarea></label>
+      <div class="two">
+        <label>${L('Police du texte', 'Text font')}<select name="font">
+          ${Object.entries(DISC_FONTS).map(([k, v]) => `<option value="${k}" ${((s?.font || 'default') === k) ? 'selected' : ''}>${v.label}</option>`).join('')}
+        </select></label>
+        <label>${L('Couleur du texte', 'Text color')}
+          <div class="colorpick">
+            <label class="chk inline"><input type="checkbox" name="color_on" ${s?.color ? 'checked' : ''}> ${L('Personnalisée', 'Custom')}</label>
+            <input name="color" type="color" value="${esc(/^#/.test(s?.color || '') ? s.color : '#ff6600')}">
+            <div class="swatches">${DISC_COLORS.map(c => `<button type="button" class="swatch" data-color="${esc(c.value)}" title="${esc(c.label)}" style="background:${c.value}"></button>`).join('')}</div>
+          </div>
+          <small class="muted">${L('Décochez pour garder la couleur de texte habituelle du site (adaptée au mode clair/sombre).', "Uncheck to keep the site's usual text colour (adapts to light/dark mode).")}</small>
+        </label>
+      </div>
+      <label class="chk"><input type="checkbox" name="show_stats" ${s?.show_stats ? 'checked' : ''}> ${L('Afficher automatiquement les statistiques des dernières 24 h (nouvelles recettes, nouveaux auteurs)', 'Automatically show the last 24h stats (new recipes, new authors)')}</label>
+      <div class="two">
+        <label>${L('Réapparition', 'Reappearance')}<select name="frequency">
+          <option value="day" ${(!s?.frequency || s.frequency === 'day') ? 'selected' : ''}>${L('Une fois par jour et par visiteur', 'Once a day per visitor')}</option>
+          <option value="week" ${s?.frequency === 'week' ? 'selected' : ''}>${L('Une fois par semaine et par visiteur', 'Once a week per visitor')}</option>
+          <option value="always" ${s?.frequency === 'always' ? 'selected' : ''}>${L('À chaque visite', 'Every visit')}</option>
+        </select></label>
+        <label>${L('Désactivation automatique (facultatif)', 'Auto-disable (optional)')}<input name="expires_at" type="datetime-local" value="${esc(toLocalInput(s?.expires_at))}"></label>
+      </div>
+      <p class="muted" style="font-size:.84rem;margin:0">${L(
+        "Le rappel « revendiquez votre profil / liez votre Discord » s'affiche automatiquement en dessous : inutile de le répéter ici. Chaque enregistrement fait réapparaître le bandeau pour tout le monde, même déjà vu. Laissez la désactivation automatique vide pour que le bandeau reste actif tant que vous ne le désactivez pas vous-même.",
+        "The « claim your profile / link your Discord » reminder is added automatically below: no need to repeat it here. Every save makes the banner reappear for everyone, even if already seen. Leave auto-disable empty to keep the banner active until you turn it off yourself.")}</p>
+      <p class="err" hidden></p>
+      <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${L('Enregistrer', 'Save')}</button></div>
+    </form>`;
+  const f = m.$('form'), err = m.$('.err');
+  m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close);
+  const oldImg = s?.img || '';
+  const preview = m.$('#discImgPreview');
+  const renderPreview = () => { preview.innerHTML = f.img.value ? `<img src="${esc(imgURL(f.img.value))}" alt="">` : ''; };
+  renderPreview();
+  m.$('#discImgPick').onclick = () => m.$('#discImgFile').click();
+  m.$('#discImgFile').onchange = async () => {
+    const file = m.$('#discImgFile').files[0]; if (!file) return;
+    const pick = m.$('#discImgPick'); pick.disabled = true; pick.textContent = '…';
+    err.hidden = true;
+    try {
+      const path = await api().uploadDisclaimerImage(file);
+      f.img.value = path; renderPreview();
+    } catch (x) { err.textContent = trErr(x.message); err.hidden = false; }
+    pick.disabled = false; pick.textContent = L('Importer…', 'Upload…'); m.$('#discImgFile').value = '';
+  };
+  f.querySelectorAll('.swatch').forEach(b => b.onclick = () => { f.color.value = b.dataset.color; f.color_on.checked = true; });
+  f.onsubmit = async e => {
+    e.preventDefault(); err.hidden = true;
+    const fields = { enabled: f.enabled.checked, img: f.img.value.trim(), text_fr: f.text_fr.value.trim(), text_en: f.text_en.value.trim(),
+      show_stats: f.show_stats.checked, frequency: f.frequency.value, expires_at: f.expires_at.value ? new Date(f.expires_at.value).toISOString() : null,
+      font: f.font.value, color: f.color_on.checked ? f.color.value : '' };
+    const btn = f.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = '…';
+    try {
+      await api().setDisclaimer(fields);
+      if (oldImg && oldImg !== fields.img && !/^(https?:|data:)/.test(oldImg)) { try { await api().removeImages([oldImg]); } catch {} }
+      m.close(); track('bandeau-modifie', true);
+      toast(L('Bandeau enregistré.', 'Banner saved.'));
+    } catch (x) { err.textContent = trErr(x.message); err.hidden = false; btn.disabled = false; btn.textContent = L('Enregistrer', 'Save'); }
+  };
+}
+function modal(html, cls = '') {
+  const wrap = document.createElement('div'); wrap.className = 'modal';
+  wrap.innerHTML = `<div class="box ${cls}" role="dialog" aria-modal="true">${html}</div>`;
+  document.body.append(wrap);
+  const close = () => { wrap.remove(); document.removeEventListener('keydown', esck); };
+  const esck = e => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', esck);
+  wrap.addEventListener('mousedown', e => { if (e.target === wrap) close(); });
+  wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = close);
+  return { wrap, close, $: s => wrap.querySelector(s) };
+}
+const counter = (input, out, max) => { const f = () => { out.textContent = `${input.value.length} / ${max}`; out.classList.toggle('down', input.value.length > max); }; input.addEventListener('input', f); f(); };
+
+// ---------- Formulaire de projet (création et modification)
+function wipForm(p = null) {
+  const edit = !!p;
+  const m = modal(`<h3>${edit ? L('Modifier le projet', 'Edit project') : L('Partager mon projet', "Share what you're building")}</h3>
+    <form class="wform" novalidate>
+      <label>${L('Nom du projet', 'Project name')}<input name="name" maxlength="60" required value="${esc(p?.name || '')}"></label>
+      <label>${L('Description courte', 'Short description')} <small class="muted" id="dc"></small><textarea name="description" rows="3" maxlength="${DESC_MAX}">${esc(p?.description || '')}</textarea>
+        <small class="muted">${L(`${DESC_MAX} caractères maximum. Le résumé de la carte s'arrête à trois lignes ; le texte complet reste visible sur la fiche du projet.`, `${DESC_MAX} characters max. The card preview stops at three lines; the full text stays visible on the project's page.`)}</small></label>
+      <div class="two"><label>${L('État', 'Status')}<select name="status">${Object.entries(WSTAT).map(([k, v]) => `<option value="${k}" ${(p?.status || 'building') === k ? 'selected' : ''}>${v.e} ${v.l()}</option>`).join('')}</select></label>
+        <label>${L('Catégorie', 'Category')}<select name="category">${WCATS.map(c => `<option ${(p?.category || 'other') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></label></div>
+      <div class="wform-imgs"><label>${L('Captures', 'Screenshots')}</label><div class="ithumbs"></div>
+        <div class="row"><button type="button" class="btn ghost small add-img">+ ${L('Ajouter une capture', 'Add a screenshot')}</button><small class="muted picker-count"></small></div>
+        <input type="file" accept="image/*" multiple hidden class="picker-input"></div>
+      <label>${L('Sortie prévue (facultatif)', 'Expected release (optional)')}<input name="eta" maxlength="40" value="${esc(p?.eta || '')}"></label>
+      <p class="muted" style="font-size:.84rem;margin:0">${wipProfile?.creator_status === 'verified'
+        ? L(`✔ Ce projet sera relié à votre profil de créateur (${esc(nameOf(wipProfile.creator_id))}).`, `✔ This project will be linked to your creator profile (${esc(nameOf(wipProfile.creator_id))}).`)
+        : L('Il sera affiché sous votre nom Discord. Liez votre numéro de créateur pour le relier à votre profil et faire repérer sa publication automatiquement.', 'It will show under your Discord name. Link your creator number to connect it to your profile and have its release spotted automatically.')}</p>
+      <label>${L('Lien pour suivre le projet (facultatif)', 'Link to follow the project (optional)')}<input name="link" type="url" placeholder="https://" value="${esc(p?.link || '')}"></label>
+      ${edit ? (wipProfile?.creator_status === 'verified' ? `<label>${L('Déjà publiée ? Numéro de la recette', 'Already published? Recipe number')}<input name="shipped_recipe" inputmode="numeric" value="${esc(p?.shipped_recipe || '')}" placeholder="123456"></label>` : '')
+        : `<label class="chk"><input type="checkbox" name="consent" required> ${L("C'est mon propre projet, et j'accepte qu'il soit affiché publiquement.", "This is my own project and I'm happy for it to be shown publicly.")}</label>`}
+      <p class="err" hidden></p>
+      <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${edit ? L('Enregistrer', 'Save') : L('Publier', 'Publish')}</button></div>
+    </form>`, 'wipd');
+  const f = m.$('form'), err = m.$('.err');
+  counter(f.description, m.$('#dc'), DESC_MAX);
+  const picker = setupPicker(f, p?.images || []);
+  f.onsubmit = async e => {
+    e.preventDefault(); err.hidden = true;
+    const val = n => (f[n]?.value || '').trim();
+    const fields = { name: val('name'), description: val('description'), status: val('status'), category: val('category'),
+      eta: val('eta') || null, link: val('link') || null };
+    const fail = msg => { err.textContent = msg; err.hidden = false; };
+    if (edit && f.shipped_recipe) {
+      fields.shipped_recipe = (val('shipped_recipe').match(/\d{3,}/) || [])[0] || null;
+      if (fields.shipped_recipe && byR.get(fields.shipped_recipe)?.u !== wipProfile.creator_id) return fail(L("Ce numéro ne correspond à aucune de vos recettes publiées.", "This number doesn't match any of your published recipes."));
+    }
+    if (fields.name.length < 2) return fail(L('Donnez un nom à votre projet.', 'Please name your project.'));
+    if (fields.link && !/^https?:\/\//i.test(fields.link)) return fail(L('Le lien doit commencer par https://', 'The link must start with https://'));
+    if (!edit && !f.consent.checked) return fail(L('Merci de cocher la case de consentement.', 'Please tick the consent box.'));
+    const btn = f.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = '…';
+    try {
+      const keptPaths = picker.kept(), addedFiles = picker.added();
+      const uploaded = await Promise.all(addedFiles.map(file => api().upload(file)));
+      fields.images = [...keptPaths, ...uploaded];
+      const removed = (p?.images || []).filter(x => !keptPaths.includes(x));
+      if (removed.length) api().removeImages(removed).catch(() => {});
+      await api().saveProject(fields, p?.id);
+      m.close(); track(edit ? 'projet-modifie' : 'projet-publie', true);
+      toast(edit ? L('Projet enregistré', 'Project saved') : L('Projet publié !', 'Project published!'));
+      await wipRefresh();
+    } catch (x) { fail(trErr(x.message)); btn.disabled = false; btn.textContent = edit ? L('Enregistrer', 'Save') : L('Publier', 'Publish'); }
+  };
+}
+
+// ---------- Fiche détaillée : infos, journal de bord, commentaires
+async function wipDetail(p) {
+  if (!p) return;
+  const ship = shippedOf(p), st = WSTAT[p.status] || WSTAT.building, r = ship?.r;
+  const who = wipWho(p);
+  const m = modal(`<div class="wipbody"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`, 'wipd');
+  track('projet-ouvert', true);
+  const draw = async () => {
+    let d; try { d = await api().detail(p.id); } catch (e) { m.$('.wipbody').innerHTML = `<p class="err">${esc(trErr(e.message))}</p>`; return; }
+    const own = isOwner(p), adm = isAdmin();
+    m.$('.wipbody').innerHTML = `
+      ${p.images?.length ? `<div class="hero-img">${galleryHTML(p.images, p.name)}</div>` : ''}
+      <p style="margin:0 0 6px">${ship ? `<span class="badge">🎉 ${L('Disponible', 'Now available')}</span>` : `<span class="badge" style="background:var(${st.c});color:#fff">${st.e} ${st.l()}</span>`}${p.hidden ? ` <span class="badge">${L('masqué', 'hidden')}</span>` : ''}</p>
+      <h3>${esc(p.name)}</h3>
+      <p class="muted" style="margin:0 0 10px">${avatarHTML(p.profiles)} ${who} · ${p.category ? esc(p.category) + ' · ' : ''}${L('partagé le', 'shared on')} ${fdate(p.created_at)}${p.eta && !ship ? ` · ${L('prévue', 'expected')} ${esc(p.eta)}` : ''}</p>
+      ${p.description ? `<p>${esc(p.description)}</p>` : ''}
+      <div class="tools-row">${r ? `<a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>` : ''}
+        ${p.link ? `<a class="btn ghost" href="${esc(p.link)}" target="_blank" rel="noopener nofollow ugc">${L('Suivre le projet', 'Follow the project')} ↗</a>` : ''}
+        ${own ? `<button class="btn ghost small" data-act="edit">${L('Modifier', 'Edit')}</button><button class="btn ghost small" data-act="del">${L('Supprimer', 'Delete')}</button>` : ''}
+        ${adm && !own ? `<button class="btn ghost small" data-act="hide">${p.hidden ? L('Afficher', 'Unhide') : L('Masquer', 'Hide')}</button><button class="btn ghost small" data-act="del">${L('Supprimer', 'Delete')}</button><button class="btn ghost small" data-act="ban" data-uid="${p.owner}">${L("Bloquer l'auteur", 'Block author')}</button>` : ''}
+        ${wipMe && !own ? `<button class="btn ghost small" data-act="reportp">${L('Signaler', 'Report')}</button>` : ''}</div>
+
+      <h4 style="margin:20px 0 0">${L('Avancées', 'Progress updates')}${d.updates.length ? ` (${d.updates.length})` : ''}</h4>
+      ${own ? `<form class="wform upd-form"><textarea name="body" rows="2" maxlength="${UPD_MAX}" placeholder="${L('Où en êtes-vous ?', "Where are you at?")}"></textarea>
+        <div class="ithumbs"></div>
+        <div class="row" style="justify-content:space-between"><button type="button" class="btn ghost small add-img">+ ${L('Capture', 'Screenshot')} <span class="picker-count"></span></button><small class="muted" id="uc"></small></div>
+        <input type="file" accept="image/*" multiple hidden class="picker-input">
+        <p class="err" hidden></p><div class="row"><button class="btn small" type="submit">${L('Publier cette avancée', 'Post update')}</button></div></form>` : ''}
+      ${d.updates.length ? `<ol class="tl">${d.updates.map(u => `<li><time>${fdate(u.created_at)}</time>${u.body ? `<p>${esc(u.body)}</p>` : ''}${u.images?.length ? galleryHTML(u.images, p.name) : ''}
+        ${own || adm ? `<button class="linkbtn" data-act="delupd" data-id="${u.id}">${L('supprimer', 'delete')}</button>` : ''}</li>`).join('')}</ol>`
+        : `<p class="muted" style="font-size:.9rem">${L("Pas encore d'avancée publiée.", 'No update yet.')}</p>`}
+
+      <h4 style="margin:22px 0 8px">${L('Commentaires et questions', 'Comments and questions')}${d.comments.length ? ` (${d.comments.length})` : ''}</h4>
+      <ul class="coms">${d.comments.map(c => `<li class="${c.hidden ? 'hid' : ''}"><div class="ch">${avatarHTML(c.profiles)} <b>${esc(c.profiles?.name || '')}</b>${c.author === p.owner ? ` <span class="badge">${L('auteur', 'author')}</span>` : ''} <time>${fdate(c.created_at)}</time>${c.hidden ? ` <span class="badge">${L('masqué', 'hidden')}</span>` : ''}</div>
+        <p>${esc(c.body)}</p><div class="cacts">
+        ${wipMe && c.author === wipMe.id || adm ? `<button class="linkbtn" data-act="delcom" data-id="${c.id}">${L('supprimer', 'delete')}</button>` : ''}
+        ${adm ? `<button class="linkbtn" data-act="hidecom" data-id="${c.id}" data-h="${c.hidden ? 0 : 1}">${c.hidden ? L('afficher', 'unhide') : L('masquer', 'hide')}</button>${c.author !== wipMe?.id ? `<button class="linkbtn" data-act="ban" data-uid="${c.author}">${L('bloquer', 'block')}</button>` : ''}` : ''}
+        ${wipMe && c.author !== wipMe.id ? `<button class="linkbtn" data-act="reportc" data-id="${c.id}">${L('signaler', 'report')}</button>` : ''}</div></li>`).join('') || `<li class="muted" style="font-size:.9rem">${L('Aucun commentaire. Posez la première question !', 'No comment yet. Ask the first question!')}</li>`}</ul>
+      ${wipMe ? (wipProfile?.banned ? '' : `<form class="wform com-form"><textarea name="body" rows="2" maxlength="${COM_MAX}" placeholder="${L('Un commentaire, une question…', 'A comment, a question…')}"></textarea>
+          <p class="err" hidden></p><div class="row" style="justify-content:space-between"><small class="muted" id="cc"></small><button class="btn small" type="submit">${L('Envoyer', 'Send')}</button></div></form>`)
+        : `<p><button class="btn ghost small" data-act="signin">🎮 ${L('Se connecter avec Discord pour commenter', 'Sign in with Discord to comment')}</button></p>`}
+      <div class="row"><button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`;
+    wireGalleries(m.wrap);
+    m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close);
+    const uf = m.$('.upd-form'), cf = m.$('.com-form');
+    if (uf) { counter(uf.body, m.$('#uc'), UPD_MAX); const upicker = setupPicker(uf, []); uf.onsubmit = async e => {
+      e.preventDefault(); const er = uf.querySelector('.err'); er.hidden = true; const b = uf.querySelector('[type=submit]'); b.disabled = true;
+      try { const body = uf.body.value.trim(); const files = upicker.added(); if (!body && !files.length) throw new Error(L('Écrivez quelques mots ou ajoutez une capture.', 'Write a few words or add a screenshot.'));
+        const images = await Promise.all(files.map(file => api().upload(file)));
+        await api().addUpdate(p.id, body, images); track('avancee-publiee', true); p.updated_at = new Date().toISOString(); await draw(); wipRefresh();
+      } catch (x) { er.textContent = trErr(x.message); er.hidden = false; b.disabled = false; } }; }
+    if (cf) { counter(cf.body, m.$('#cc'), COM_MAX); cf.onsubmit = async e => {
+      e.preventDefault(); const er = cf.querySelector('.err'); er.hidden = true; const b = cf.querySelector('[type=submit]'); b.disabled = true;
+      try { const body = cf.body.value.trim(); if (!body) throw new Error(L('Le commentaire est vide.', 'The comment is empty.'));
+        await api().addComment(p.id, body); track('commentaire-publie', true); await draw(); wipRefresh();
+      } catch (x) { er.textContent = trErr(x.message); er.hidden = false; b.disabled = false; } }; }
+    m.wrap.querySelectorAll('[data-act]').forEach(b => b.onclick = async () => {
+      const act = b.dataset.act, id = +b.dataset.id;
+      try {
+        if (act === 'edit') { m.close(); return wipForm(p); }
+        if (act === 'signin') { store.set('trmnl-wip-return', hr('elaboration')); return api().signIn(); }
+        if (act === 'del') { if (!confirm(L('Supprimer ce projet, ses avancées et ses commentaires ?', 'Delete this project, its updates and comments?'))) return; await api().deleteProject(p); m.close(); return wipRefresh(); }
+        if (act === 'hide') { await api().setHidden(p.id, !p.hidden); p.hidden = !p.hidden; await draw(); return wipRefresh(); }
+        if (act === 'ban') { if (!confirm(L('Bloquer cette personne ? Elle ne pourra plus publier ni commenter.', 'Block this person? They will no longer be able to post or comment.'))) return; await api().ban(b.dataset.uid, true); return toast(L('Personne bloquée', 'User blocked')); }
+        if (act === 'delupd') { if (!confirm(L('Supprimer cette avancée ?', 'Delete this update?'))) return; await api().deleteUpdate(d.updates.find(u => u.id === id)); await draw(); return wipRefresh(); }
+        if (act === 'delcom') { if (!confirm(L('Supprimer ce commentaire ?', 'Delete this comment?'))) return; await api().deleteComment(id); await draw(); return wipRefresh(); }
+        if (act === 'hidecom') { await api().hideComment(id, b.dataset.h === '1'); return draw(); }
+        if (act === 'reportc' || act === 'reportp') {
+          const reason = prompt(L('Pourquoi signalez-vous ce contenu ? (facultatif)', 'Why are you reporting this? (optional)')) ?? null; if (reason === null) return;
+          await api().report(act === 'reportc' ? { comment_id: id } : { project_id: p.id }, reason.slice(0, 200)); return toast(L('Merci, signalement transmis.', 'Thanks, report sent.'));
+        }
+      } catch (x) { toast(trErr(x.message)); }
+    });
+  };
+  draw();
+}
+
+// ---------- Signalements (administrateur)
+async function wipReportsView() {
+  const m = modal(`<h3>${L('Signalements', 'Reports')}</h3><div class="rep"><p class="muted">${L('Chargement…', 'Loading…')}</p></div><div class="row"><button class="btn ghost" data-close>${L('Fermer', 'Close')}</button></div>`, 'wipd');
+  const draw = async () => {
+    const list = await api().reports();
+    m.$('.rep').innerHTML = list.length ? `<ul class="coms">${list.map(r => { const p = wipList.find(x => x.id === r.project_id);
+      return `<li><div class="ch"><time>${fdate(r.created_at)}</time> · ${r.comment_id ? L('commentaire', 'comment') + ' #' + r.comment_id : L('projet', 'project') + ' « ' + esc(p?.name || '#' + r.project_id) + ' »'}</div>
+      <p>${esc(r.reason || L('(sans raison)', '(no reason given)'))}</p><div class="cacts">${p ? `<button class="linkbtn" data-open="${p.id}">${L('ouvrir', 'open')}</button>` : ''}<button class="linkbtn" data-clear="${r.id}">${L('classer', 'dismiss')}</button></div></li>`; }).join('')}</ul>`
+      : `<p class="muted">${L('Aucun signalement. Tout va bien !', 'No report. All good!')}</p>`;
+    m.wrap.querySelectorAll('[data-clear]').forEach(b => b.onclick = async () => { await api().clearReport(+b.dataset.clear); draw(); });
+    m.wrap.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { m.close(); wipDetail(wipList.find(x => x.id === +b.dataset.open)); });
+  };
+  draw().catch(e => { m.$('.rep').innerHTML = `<p class="err">${esc(trErr(e.message))}</p>`; });
+}
+
+function wipPrivacy() {
+  modal(`<h3>${L('Données et confidentialité', 'Data and privacy')}</h3>
+    ${L(`<p>Pour publier un projet ou commenter, vous vous connectez avec Discord. Le site conserve alors :</p>
+      <ul><li>votre nom d'affichage et votre avatar Discord, affichés à côté de vos contenus ;</li>
+      <li>vos projets, avancées, commentaires et captures, avec leurs dates ;</li>
+      <li>l'adresse e-mail de votre compte Discord, utilisée uniquement pour la connexion et jamais affichée.</li></ul>
+      <p>Ces données sont hébergées par Supabase et ne sont ni vendues, ni partagées, ni utilisées à d'autres fins. Vous pouvez supprimer à tout moment votre compte et l'ensemble de vos contenus avec le lien « Supprimer mon compte et mes contenus », en bas de cette section. Pour toute question : nb.bouteiller@gmail.com.</p>
+      <p>La lecture de la section est libre et ne nécessite aucun compte.</p>`,
+    `<p>To share a project or comment, you sign in with Discord. The site then keeps:</p>
+      <ul><li>your Discord display name and avatar, shown next to your content;</li>
+      <li>your projects, updates, comments and screenshots, with their dates;</li>
+      <li>the email address of your Discord account, used only to sign you in and never shown.</li></ul>
+      <p>This data is hosted by Supabase and is never sold, shared or used for anything else. You can delete your account and all your content at any time with the "Delete my account and content" link at the bottom of this section. Questions: nb.bouteiller@gmail.com.</p>
+      <p>Reading this section is open to everyone and needs no account.</p>`)}
+    <div class="row"><button class="btn" data-close>OK</button></div>`, 'wipd');
+}
+
+/* ================= Vignette partageable ================= */
+async function shareCard(r) {
+  if (!r) return;
+  track('vignette-ouverte', true);
+  const W = 1200, H = 630;
+  const wrap = document.createElement('div');
+  wrap.className = 'modal';
+  wrap.innerHTML = `<div class="box"><canvas id="cardCv" width="${W}" height="${H}"></canvas>
+    <div class="row"><button class="btn ghost" type="button" id="cardClose">${L('Fermer', 'Close')}</button>
+      <button class="btn ghost" type="button" id="cardDl">${L("Télécharger l'image", 'Download image')}</button>
+      <button class="btn" type="button" id="cardLink">${L('Copier le lien', 'Copy link')}</button>
+      <button class="btn" type="button" id="cardShare" hidden>${L('Partager', 'Share')}</button></div>
+    <p class="note">${L(`L'image fait 1200 × 630. Le lien, lui, affiche automatiquement un aperçu quand on le colle sur Discord, Reddit, Slack ou X : <code>${esc(shareURL(r))}</code>`,
+      `The image is 1200 × 630. The link unfurls into a preview on its own when pasted on Discord, Reddit, Slack or X: <code>${esc(shareURL(r))}</code>`)}</p></div>`;
+  document.body.append(wrap);
+  wrap.addEventListener('click', e => { if (e.target === wrap) wrap.remove(); });
+  $('#cardClose', wrap).onclick = () => wrap.remove();
+  const cv = $('#cardCv', wrap), x = cv.getContext('2d');
+  const F = (w, size, wd = 100) => `${w} ${size}px Archivo, system-ui, sans-serif`;
+  const PAPER = '#f2f0ed', INK = '#1d1d1b', INK2 = '#5d5c58', ACC = '#f8654b';
+  x.fillStyle = PAPER; x.fillRect(0, 0, W, H);
+  x.fillStyle = ACC; x.fillRect(0, 0, W, 10);
+  // aperçu de la recette
+  const img = new Image(); img.crossOrigin = 'anonymous';
+  const drawn = await new Promise(res => { img.onload = () => res(true); img.onerror = () => res(false); img.src = r.sc ? r.sc + (r.sc.includes('?') ? '&' : '?') + 'x=card' : ''; });
+  const bx = 660, by = 120, bw = 500, bh = 300;
+  x.fillStyle = '#fff'; x.fillRect(bx, by, bw, bh);
+  if (drawn) x.drawImage(img, bx, by, bw, bh);
+  x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(bx, by, bw, bh);
+  // textes
+  const wrapText = (t, max, size, weight, color, y0, lh, limit = 3) => {
+    x.font = F(weight, size); x.fillStyle = color;
+    const words = String(t).split(' '); let line = '', y = y0, n = 0;
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (x.measureText(test).width > max && line) {
+        x.fillText(line, 60, y); y += lh; line = w; if (++n >= limit - 1) break;
+      } else line = test;
+    }
+    if (line) { let t2 = line; while (x.measureText(t2).width > max) t2 = t2.slice(0, -2) + '…'; x.fillText(t2, 60, y); y += lh; }
+    return y;
+  };
+  x.font = F(700, 24); x.fillStyle = ACC; x.fillText('TRMNL RECIPE', 60, 96);
+  let y = wrapText(r.n, 540, 60, 800, INK, 168, 66, 2);
+  y = wrapText(r.d || '', 540, 26, 400, INK2, y + 16, 34, 3);
+  const c = byU.get(r.u);
+  x.font = F(600, 26); x.fillStyle = INK;
+  x.fillText(`${L('par', 'by')} ${nameOf(r.u)}`, 60, Math.min(y + 34, 468));
+  x.font = F(700, 30); x.fillStyle = INK;
+  x.fillText(`${nf(r.i)} ${L('installations', 'installs')}   ·   ${nf(r.f)} forks   ·   #${r.r} ${L('au classement', 'overall')}`, 60, 520);
+  // pied
+  x.strokeStyle = '#dcdbd9'; x.lineWidth = 2; x.beginPath(); x.moveTo(60, 556); x.lineTo(W - 60, 556); x.stroke();
+  x.font = F(400, 22); x.fillStyle = INK2;
+  x.fillText(location.host + location.pathname.replace(/\/$/, ''), 60, 590);
+  x.textAlign = 'right'; x.fillStyle = ACC; x.font = F(700, 22);
+  x.fillText(c ? `${nameOf(r.u)} · #${c.r} / ${nf(D.creators.length)}` : '', W - 60, 590);
+  x.textAlign = 'left';
+  const name = `trmnl-${r.n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.png`;
+  $('#cardDl', wrap).onclick = () => cv.toBlob(b => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000); track('vignette-telechargee', true);
+  }, 'image/png');
+  const url = shareURL(r);
+  $('#cardLink', wrap).onclick = async () => {
+    try { await navigator.clipboard.writeText(url); toast(L('Lien copié', 'Link copied')); }
+    catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }
+    track('lien-recette-copie', true);
+  };
+  if (navigator.share) {
+    const bt = $('#cardShare', wrap); bt.hidden = false;
+    bt.onclick = () => navigator.share({ title: r.n, text: r.d || '', url }).then(() => track('recette-partagee', true)).catch(() => {});
+  }
+}
+
+/* ================= Actu TRMNL ================= */
+let trmnlData = null;
+async function renderTrmnl() {
+  const el = $('#tab-trmnl');
+  const T = D.totals;
+  if (!trmnlData) trmnlData = await getJSON('data/trmnl.json').catch(() => ({}));
+  const d = trmnlData || {};
+  el.innerHTML = `<h2>${L('Actualité TRMNL', 'TRMNL news')}</h2>
+    <p class="lead">${L("L'état des services, les dernières annonces et les chiffres de la communauté, rassemblés depuis les sources publiques de TRMNL.", 'Service status, latest announcements and community figures, gathered from TRMNL public sources.')}</p>
+    <div class="grid g2">
+      <div class="sheet" id="statusCard"><h3>${L('État des services', 'Service status')}</h3><p class="muted">${L('Chargement…', 'Loading…')}</p></div>
+      <div class="sheet"><h3>${L('La communauté en chiffres', 'The community in numbers')}</h3>
+        <div class="kpis" style="margin:0">
+          <div><b>${nf(T.recipes)}</b>${L('recettes publiques', 'public recipes')}</div>
+          <div><b>${nf(T.creators)}</b>${L('créateurs', 'creators')}</div>
+          <div><b>${nf(T.installs)}</b>${L('installations', 'installs')}</div>
+          <div><b>${nf(T.forks)}</b>forks</div>
+          ${d.firmware?.version ? `<div><b>${esc(d.firmware.version)}</b>${L('dernier firmware', 'latest firmware')}</div>` : ''}
+        </div>
+        <p class="note">${L('Chiffres calculés à partir des recettes publiques ; TRMNL ne publie pas le nombre d\'appareils en service.', 'Figures computed from public recipes; TRMNL does not publish the number of devices in use.')}</p></div>
+      <div class="sheet"><h3>${L('Dernières annonces', 'Latest announcements')}</h3>
+        <ul class="news">${(d.announcements || []).slice(0, 8).map(newsHTML).join('') || `<p class="muted">${L('Indisponible pour le moment.', 'Unavailable right now.')}</p>`}</ul></div>
+      <div class="sheet"><h3>${L('Sur le blog de TRMNL', 'From the TRMNL blog')}</h3>
+        <ul class="news">${(d.posts || []).slice(0, 6).map(newsHTML).join('') || `<p class="muted">${L('Indisponible pour le moment.', 'Unavailable right now.')}</p>`}</ul></div>
+    </div>
+    <p class="note">${L('Sources : page de statut publique de TRMNL, flux d\'annonces et blog officiels.', 'Sources: TRMNL public status page, official announcements feed and blog.')}</p>`;
+  drawStatus(d.status);
+  // statut en direct si possible, sinon celui du dernier relevé
+  try {
+    const live = await (await fetch('https://trmnl.statuspage.io/api/v2/summary.json', { cache: 'no-store' })).json();
+    drawStatus({
+      indicator: live.status?.indicator, description: live.status?.description, updated: live.page?.updated_at,
+      components: (live.components || []).filter(c => !c.group).map(c => ({ n: c.name, s: c.status })),
+      incidents: (live.incidents || []).map(i => ({ n: i.name, s: i.status, u: i.shortlink, d: i.updated_at })),
+      maintenances: (live.scheduled_maintenances || []).map(i => ({ n: i.name, s: i.status, u: i.shortlink, d: i.scheduled_for })),
+    }, true);
+  } catch {}
+}
+const newsHTML = n => `<li><a href="${esc(n.u)}" target="_blank" rel="noopener">${esc(n.t)}</a>
+  <span class="when">${n.d ? dfmt(n.d) : ''}</span>${n.s ? `<p>${esc(n.s)}</p>` : ''}</li>`;
+function drawStatus(st, live = false) {
+  const box = $('#statusCard'); if (!box) return;
+  if (!st) { box.innerHTML = `<h3>${L('État des services', 'Service status')}</h3><p class="muted">${L('Statut indisponible.', 'Status unavailable.')}</p>`; return; }
+  const cls = st.indicator === 'none' ? '' : (st.indicator === 'critical' || st.indicator === 'major') ? 'bad' : 'warn';
+  const bad = c => c.s !== 'operational';
+  box.innerHTML = `<h3>${L('État des services', 'Service status')}</h3>
+    <p class="stat"><span class="dot ${cls}"></span>${esc(st.description || '')}</p>
+    ${(st.incidents || []).length ? `<ul class="news">${st.incidents.map(i => `<li><a href="${esc(i.u)}" target="_blank" rel="noopener">${esc(i.n)}</a><span class="when">${esc(i.s)} · ${dfmt(i.d)}</span></li>`).join('')}</ul>` : ''}
+    ${(st.maintenances || []).length ? `<ul class="news">${st.maintenances.map(i => `<li><a href="${esc(i.u)}" target="_blank" rel="noopener">${esc(i.n)}</a><span class="when">${L('maintenance prévue', 'scheduled maintenance')} · ${dfmt(i.d)}</span></li>`).join('')}</ul>` : ''}
+    <ul class="comps">${(st.components || []).map(c => `<li><span>${esc(c.n)}</span><span class="${bad(c) ? 'down' : 'muted'}">${esc(c.s.replace(/_/g, ' '))}</span></li>`).join('')}</ul>
+    <p class="note">${live ? L('En direct depuis la page de statut de TRMNL.', 'Live from the TRMNL status page.') : L('Dernier relevé enregistré.', 'Last recorded snapshot.')}
+      <a href="https://status.usetrmnl.com" target="_blank" rel="noopener">status.usetrmnl.com</a></p>`;
+}
+
+/* ================= Classements thématiques ================= */
+const BOARDS = [
+  { k: 's', t: () => L('Points (classement général)', 'Points (overall)'), kind: 'c', val: c => c.s, fmt: v => nf(v) + ' pts', d: () => L('Installations + forks de toutes les recettes publiques.', 'Installs + forks across all public recipes.') },
+  { k: 'i', t: () => L('Installations', 'Installs'), kind: 'c', val: c => c.i, fmt: v => nf(v), d: () => L("Nombre total d'installations.", 'Total number of installs.') },
+  { k: 'f', t: () => 'Forks', kind: 'c', val: c => c.f, fmt: v => nf(v), d: () => L('Nombre total de forks : les recettes que les autres copient pour les adapter.', 'Total forks: recipes others copy to adapt.') },
+  { k: 'n', t: () => L('Recettes publiées', 'Published recipes'), kind: 'c', val: c => c.n, fmt: v => plural(v, 'recette', 'recipe'), d: () => L('Les créateurs les plus prolifiques.', 'The most prolific creators.') },
+  { k: 'avg', t: () => L('Moyenne par recette', 'Average per recipe'), kind: 'c', filter: c => c.n >= 3, val: c => c.s / c.n, fmt: v => nf1(v) + ' pts', d: () => L('Points moyens par recette, créateurs ayant au moins 3 recettes.', 'Average points per recipe, creators with at least 3 recipes.') },
+  { k: 'rate', t: () => L('Taux de fork', 'Fork rate'), kind: 'c', filter: c => c.i >= 50, val: c => 100 * c.f / c.i, fmt: v => nf1(v) + ' %', d: () => L('Forks pour 100 installations, créateurs ayant au moins 50 installations.', 'Forks per 100 installs, creators with at least 50 installs.') },
+  { k: 'best', t: () => L('Meilleure recette', 'Best recipe'), kind: 'c', val: c => byR.get(c.best)?.s, fmt: v => nf(v) + ' pts', sub: c => byR.get(c.best)?.n, d: () => L('Classés selon leur recette la plus populaire.', 'Ranked by their most popular recipe.') },
+  { k: 'rookie', t: () => L('Révélations (moins de 90 jours)', 'Rising stars (under 90 days)'), kind: 'c', filter: c => c.first && Date.now() - Date.parse(c.first) < 90 * DAY, val: c => c.s, fmt: v => nf(v) + ' pts', d: () => L('Créateurs dont la première recette publique a moins de 90 jours.', 'Creators whose first public recipe is under 90 days old.') },
+  { k: 'veteran', t: () => L('Régularité (recettes par mois)', 'Consistency (recipes per month)'), kind: 'c', filter: c => c.n >= 3 && c.first, val: c => c.n / Math.max(1, (Date.now() - Date.parse(c.first)) / (30.44 * DAY)), fmt: v => nf1(v) + L(' / mois', ' / month'), d: () => L('Rythme de publication depuis la première recette, au moins 3 recettes.', 'Publishing pace since the first recipe, at least 3 recipes.') },
+  { k: 'd24', t: () => L('Progression sur 24 h', '24 h gain'), kind: 'c', need: 'd24', val: c => c.d24, fmt: sg, d: () => L('Points gagnés ces dernières 24 heures.', 'Points gained in the last 24 hours.') },
+  { k: 'd7', t: () => L('Progression sur 7 jours', '7-day gain'), kind: 'c', need: 'd7', val: c => c.d7, fmt: sg, d: () => L('Points gagnés ces 7 derniers jours.', 'Points gained in the last 7 days.') },
+  { k: 'd30', t: () => L('Progression sur 30 jours', '30-day gain'), kind: 'c', need: 'd30', val: c => c.d30, fmt: sg, d: () => L('Points gagnés ces 30 derniers jours.', 'Points gained in the last 30 days.') },
+  { k: 'climb', t: () => L('Places gagnées en 24 h', 'Spots climbed in 24 h'), kind: 'c', need: 'd24', filter: c => c.r24 != null, val: c => c.r24 - c.r, fmt: v => (v > 0 ? '▲ ' : v < 0 ? '▼ ' : '') + Math.abs(v), d: () => L("Différence de rang par rapport à hier.", 'Rank change since yesterday.') },
+  { k: 'cat', t: () => L('Par catégorie', 'By category'), kind: 'cat', d: () => L('Points des recettes de la catégorie choisie, par créateur.', 'Points from recipes in the chosen category, per creator.') },
+  { k: 'ri', t: () => L('Recettes : les plus installées', 'Recipes: most installed'), kind: 'r', val: r => r.i, fmt: v => nf(v), d: () => L('Toutes recettes confondues.', 'All recipes.') },
+  { k: 'rf', t: () => L('Recettes : les plus forkées', 'Recipes: most forked'), kind: 'r', val: r => r.f, fmt: v => nf(v), d: () => L('Les recettes qui servent le plus de point de départ.', 'The recipes most often used as a starting point.') },
+  { k: 'rspeed', t: () => L('Recettes : les plus rapides', 'Recipes: fastest growing'), kind: 'r', filter: r => ageDays(r.p) >= 7, val: r => r.ipd, fmt: v => nf1(v) + L(' / jour', ' / day'), d: () => L("Installations par jour depuis la publication, recettes d'au moins 7 jours.", 'Installs per day since publication, recipes at least 7 days old.') },
+  { k: 'rnew', t: () => L('Recettes : meilleures nouveautés (30 jours)', 'Recipes: best newcomers (30 days)'), kind: 'r', filter: r => r.p && Date.now() - Date.parse(r.p) < 30 * DAY, val: r => r.s, fmt: v => nf(v) + ' pts', d: () => L('Recettes publiées ces 30 derniers jours.', 'Recipes published in the last 30 days.') },
+  { k: 'rd7', t: () => L('Recettes : hausse sur 7 jours', 'Recipes: 7-day gain'), kind: 'r', need: 'd7', val: r => r.d7, fmt: sg, d: () => L('Points gagnés ces 7 derniers jours.', 'Points gained in the last 7 days.') },
+];
+let boardK = 's', boardCat = null, boardAll = false;
+const strip = html => html.replace(/^<ol class="rows">|<\/ol>$/g, '');
+function renderBoards() {
+  const el = $('#tab-classements');
+  const cats = [...catRanks.keys()].sort((a, b) => catRanks.get(b).size - catRanks.get(a).size);
+  if (!boardCat || !catRanks.has(boardCat)) boardCat = cats[0];
+  const B = BOARDS.find(b => b.k === boardK) || BOARDS[0];
+  let items = [], val, fmt = B.fmt, link, sub;
+  const mineFn = x => isMe(x.u);
+  const avail = !B.need || D.history.windows[B.need];
+  if (B.kind === 'cat') {
+    const R = catRanks.get(boardCat);
+    items = R.list.map(e => ({ u: e[0], s: e[1], __rank: R.map.get(e) }));
+    val = x => x.s; fmt = v => nf(v) + ' pts'; link = x => `<a href="${hr('createur', x.u)}">${esc(nameOf(x.u))}</a>`;
+    sub = x => L(`${byU.get(x.u)?.recipes.filter(r => catsOf(r).includes(boardCat)).length} recette(s) dans la catégorie`, `${byU.get(x.u)?.recipes.filter(r => catsOf(r).includes(boardCat)).length} recipe(s) in this category`);
+  } else if (avail) {
+    const src = B.kind === 'c' ? D.creators : D.recipes;
+    const R = rankMap(src.filter(x => !B.filter || B.filter(x)), B.val, x => x.s);
+    items = R.list.map(x => Object.assign(Object.create(x), { __rank: R.map.get(x) }));
+    val = B.val;
+    link = B.kind === 'c' ? creatorLink : recipeLink;
+    sub = B.kind === 'c' ? (B.sub || (c => `${L(`${ordTxt(c.r)} au général`, `${ordTxt(c.r)} overall`)}, ${plural(c.n, 'recette', 'recipe')}`)) : (r => `${nameOf(r.u)}, ${L('publiée le', 'published')} ${dfmt(r.p)}`);
+  }
+  const total = items.length, LIMIT = 50;
+  const myIdx = items.findIndex(mineFn);
+  const shown = boardAll ? items : items.slice(0, LIMIT);
+  const extra = !boardAll && myIdx >= LIMIT ? `<li class="gapline">…</li>` + strip(miniList(items.slice(Math.max(LIMIT, myIdx - 2), myIdx + 3), val, x => fmt(val(x)), link, sub, mineFn)) : '';
+  const myLine = myIdx >= 0 ? `<p class="target" style="margin:0 0 14px">${L('Votre position dans ce classement', 'Your position in this ranking')}${CO()}<b>${ord(items[myIdx].__rank)}</b> ${L('sur', 'of')} ${nf(total)}, ${L('avec', 'with')} ${fmt(val(items[myIdx]))}.</p>`
+    : (me && B.kind !== 'r' && avail ? `<p class="notice">${L("Vous n'apparaissez pas dans ce classement (critère non rempli).", "You don't appear in this ranking (criteria not met).")}</p>` : '');
+  el.innerHTML = `<h2>${L('Classements', 'Rankings')}</h2>
+    <p class="lead">${L(`${BOARDS.length} classements différents, créateurs et recettes. Les 10 premiers apparaissent aussi dans le graphique.`, `${BOARDS.length} different rankings, creators and recipes. The top 10 also appear in the chart.`)}</p>
+    <div class="boardhead">
+      <select id="boardSel" aria-label="${L('Classement', 'Ranking')}">${[[L('Créateurs', 'Creators'), false], [L('Recettes', 'Recipes'), true]].map(([g, isR]) => `<optgroup label="${g}">${BOARDS.filter(b => isR === (b.kind === 'r')).map(b => { const off = b.need && !D.history.windows[b.need]; return `<option value="${b.k}" ${b.k === B.k ? 'selected' : ''} ${off ? 'disabled' : ''}>${esc(b.t())}${off ? L(' (bientôt)', ' (soon)') : ''}</option>`; }).join('')}</optgroup>`).join('')}</select>
+      ${B.kind === 'cat' ? `<select id="catSel" aria-label="${L('Catégorie', 'Category')}">${cats.map((k, i) => `<option value="${i}" ${k === boardCat ? 'selected' : ''}>${esc(catLabel(k))}</option>`).join('')}</select>` : ''}
+    </div>
+    <p class="muted" style="margin:0 0 14px">${esc(B.d())} ${L(`${nf(total)} classés.`, `${nf(total)} ranked.`)}</p>
+    ${avail ? myLine : historyNotice()}
+    ${avail ? `<div class="grid g2">
+      <div class="sheet"><ol class="rows">${strip(miniList(shown, val, x => fmt(val(x)), link, sub, mineFn))}${extra}</ol>
+        ${total > LIMIT ? `<button class="btn ghost more" type="button" id="boardMore">${boardAll ? L('Réduire', 'Show less') : L(`Afficher les ${nf(total)}`, `Show all ${nf(total)}`)}</button>` : ''}</div>
+      <div class="sheet" style="align-self:start"><h3>Top 10</h3><div class="chart tall"><canvas id="chBoard"></canvas></div><p class="hint">${B.kind === 'r' ? L('Touchez une barre pour ouvrir la recette.', 'Tap a bar to open the recipe.') : L('Touchez une barre pour ouvrir le profil.', 'Tap a bar to open the profile.')}</p></div>
+    </div>` : ''}`;
+  $('#boardSel').onchange = e => { boardK = e.target.value; boardAll = false; renderBoards(); };
+  $('#catSel')?.addEventListener('change', e => { boardCat = cats[+e.target.value]; renderBoards(); });
+  $('#boardMore')?.addEventListener('click', () => { boardAll = !boardAll; renderBoards(); });
+  if (!avail) return;
+  const top10 = items.slice(0, 10), P = PAL();
+  chart('chBoard', { type: 'bar', data: { labels: top10.map(x => { const s = B.kind === 'r' ? x.n : nameOf(x.u); return s.length > 22 ? s.slice(0, 21) + '…' : s; }),
+    datasets: [{ data: top10.map(val), backgroundColor: top10.map((x, k) => mineFn(x) ? css('--ink') : P[k % P.length]), borderRadius: 5 }] },
+    options: { indexAxis: 'y', plugins: { tooltip: { callbacks: { label: x => fmt(x.raw) } } }, scales: { y: { grid: { display: false } } } } },
+    e0 => { const x = top10[e0.index]; if (B.kind === 'r') openRecipe(x); else go(hr('createur', x.u)); });
+}
+
+/* ================= Tableaux triables ================= */
+function sortableTable({ cols, rows, key, dir = 'desc', rowHTML, rowClass = () => '', onRow, pageSize = 0 }) {
+  const wrap = document.createElement('div');
+  let sortK = key, sortD = dir, shown = pageSize;
+  const draw = () => {
+    const col = cols.find(c => c.k === sortK);
+    const data = rows().slice().sort((a, b) => {
+      const va = col.v(a), vb = col.v(b);
+      if (va == null && vb == null) return 0; if (va == null) return 1; if (vb == null) return -1;
+      const r = typeof va === 'string' ? va.localeCompare(vb, LOC) : va - vb;
+      return sortD === 'asc' ? r : -r;
+    });
+    const part = pageSize ? data.slice(0, shown) : data;
+    wrap.innerHTML = `<div class="scroll"><table><thead><tr>${cols.map(c => `<th class="${c.l ? 'l' : ''}" ${c.k === sortK ? `aria-sort="${sortD === 'asc' ? 'ascending' : 'descending'}"` : ''}><button type="button" data-k="${c.k}">${c.t}</button></th>`).join('')}</tr></thead>
+      <tbody>${part.map(r => `<tr class="${rowClass(r)}">${rowHTML(r)}</tr>`).join('') || `<tr><td class="l muted" colspan="${cols.length}">${L('Aucun résultat pour ces filtres.', 'No results for these filters.')}</td></tr>`}</tbody></table></div>
+      ${pageSize && data.length > shown ? `<button class="btn ghost more" type="button">${L(`Afficher ${Math.min(pageSize, data.length - shown)} de plus (${nf(data.length - shown)} restants)`, `Show ${Math.min(pageSize, data.length - shown)} more (${nf(data.length - shown)} left)`)}</button>` : ''}
+      <p class="note">${plural(data.length, 'ligne', 'row')}.</p>`;
+    wrap.querySelectorAll('th button').forEach(b => b.onclick = () => {
+      const k = b.dataset.k, c = cols.find(x => x.k === k);
+      if (k === sortK) sortD = sortD === 'asc' ? 'desc' : 'asc'; else { sortK = k; sortD = c.asc ? 'asc' : 'desc'; }
+      draw();
+    });
+    wrap.querySelector('.more')?.addEventListener('click', () => { shown += pageSize; draw(); });
+    wrap.querySelectorAll('tbody tr').forEach((tr, n) => tr.onclick = e => { if (!e.target.closest('a') && part[n]) onRow?.(part[n]); });
+  };
+  wrap.redraw = () => { shown = pageSize; draw(); };
+  draw();
+  return wrap;
+}
+const deltaRank = c => c.r24 == null ? null : c.r24 - c.r;
+
+/* ================= Créateurs ================= */
+let creatorFilter = {};
+function renderCreators() {
+  const el = $('#tab-createurs');
+  if (pending.createurs) { creatorFilter = pending.createurs; pending.createurs = null; delete el.dataset.ready; }
+  if (el.dataset.ready) return;
+  el.dataset.ready = 1;
+  el.innerHTML = `<h2>${L('Tous les créateurs', 'All creators')}</h2>
+    <p class="lead">${L('Touchez un en-tête pour trier, une ligne pour ouvrir le profil détaillé.', 'Tap a header to sort, a row to open the detailed profile.')}</p>
+    ${historyNotice()}
+    <div class="tools"><label>${L('Rechercher', 'Search')}<input type="search" id="cq" placeholder="${L("Numéro ou nom d'une recette", 'Number or recipe name')}"></label>
+      <label>${L('Recettes publiées', 'Published recipes')}<select id="cn"><option value="0">${L('Toutes tailles', 'Any')}</option><option value="2">${L('2 ou plus', '2 or more')}</option><option value="5">${L('5 ou plus', '5 or more')}</option><option value="10">${L('10 ou plus', '10 or more')}</option></select></label></div>
+    <div class="filters" id="cfil"></div><div id="ctab"></div>`;
+  const q = () => $('#cq').value.trim().toLowerCase(), minN = () => +$('#cn').value;
+  const drawFil = () => { $('#cfil').innerHTML = creatorFilter.label ? `<button type="button" id="cclear">${esc(creatorFilter.label)} ✕</button>` : '';
+    $('#cclear')?.addEventListener('click', () => { creatorFilter = {}; drawFil(); tbl.redraw(); }); };
+  const tbl = sortableTable({
+    key: 's',
+    cols: [
+      { k: 'r', t: L('Rang', 'Rank'), v: c => c.r, asc: true }, { k: 'u', t: L('Créateur', 'Creator'), v: c => nameOf(c.u), l: 1, asc: true },
+      { k: 'n', t: L('Recettes', 'Recipes'), v: c => c.n }, { k: 'i', t: 'Installs', v: c => c.i }, { k: 'f', t: 'Forks', v: c => c.f },
+      { k: 's', t: 'Points', v: c => c.s }, { k: 'avg', t: L('Moy./recette', 'Avg/recipe'), v: c => c.s / c.n },
+      { k: 'rate', t: L('Taux fork', 'Fork rate'), v: c => c.i ? c.f / c.i : null },
+      { k: 'd24', t: '+24 h', v: c => c.d24 }, { k: 'd7', t: L('+7 j', '+7 d'), v: c => c.d7 }, { k: 'd30', t: L('+30 j', '+30 d'), v: c => c.d30 },
+      { k: 'dr', t: L('Places 24 h', 'Spots 24 h'), v: deltaRank }, { k: 'first', t: L('Depuis', 'Since'), v: c => c.first ? Date.parse(c.first) : null, asc: true },
+      { k: 'spark', t: L('Progression', 'Trend'), v: c => c.d30, l: 1 },
+    ],
+    rows: () => D.creators.filter(c => c.n >= minN() && (creatorFilter.nmin == null || (c.n >= creatorFilter.nmin && c.n <= creatorFilter.nmax))
+      && (!q() || c.u.includes(q()) || nameOf(c.u).toLowerCase().includes(q()) || c.recipes.some(r => r.n.toLowerCase().includes(q())))),
+    rowClass: c => isMe(c.u) ? 'me' : '',
+    rowHTML: c => { const best = byR.get(c.best), dr = deltaRank(c);
+      return `<td>${c.r}</td><td class="l name">${creatorLink(c)}<span class="sub">${best ? L('meilleure : ', 'best: ') + esc(best.n) : ''}</span></td>
+      <td>${c.n}</td><td>${nf(c.i)}</td><td>${nf(c.f)}</td><td class="pos">${nf(c.s)}</td><td>${nf1(c.s / c.n)}</td><td>${c.i ? nf1(100 * c.f / c.i) + ' %' : '—'}</td>
+      <td>${sgc(c.d24)}</td><td>${sgc(c.d7)}</td><td>${sgc(c.d30)}</td><td>${dr == null ? '—' : dr > 0 ? `<span class="up">▲ ${dr}</span>` : dr < 0 ? `<span class="down">▼ ${-dr}</span>` : '='}</td><td>${dfmt(c.first)}</td>
+      <td class="l">${creatorSpark.get(c.u) || ''}</td>`; },
+    onRow: c => go(hr('createur', c.u)),
+  });
+  $('#ctab').append(tbl); drawFil();
+  $('#cq').oninput = () => tbl.redraw(); $('#cn').onchange = () => tbl.redraw();
+}
+
+/* ================= Recettes ================= */
+let recipeFilter = {};
+function renderRecipes() {
+  const el = $('#tab-recettes');
+  if (pending.recettes) { recipeFilter = pending.recettes; pending.recettes = null; delete el.dataset.ready; }
+  if (el.dataset.ready) return;
+  el.dataset.ready = 1;
+  const cats = new Map();
+  D.recipes.forEach(r => catsOf(r).forEach(x => cats.set(x, (cats.get(x) || 0) + 1)));
+  const catKeys = [...cats].sort((a, b) => b[1] - a[1]);
+  el.innerHTML = `<h2>${L('Toutes les recettes', 'All recipes')}</h2>
+    <p class="lead">${L(`${nf(D.recipes.length)} recettes publiques, classées par points. Touchez une ligne pour ouvrir la recette sur trmnl.com.`, `${nf(D.recipes.length)} public recipes, ranked by points. Tap a row to open the recipe on trmnl.com.`)}</p>
+    <div class="tools">
+      <label>${L('Rechercher', 'Search')}<input type="search" id="rq" placeholder="${L('Nom de recette', 'Recipe name')}"></label>
+      <label>${L('Catégorie', 'Category')}<select id="rc"><option value="">${L('Toutes', 'All')}</option>${catKeys.map(([k, n], i) => `<option value="${i}">${esc(catLabel(k))} (${n})</option>`).join('')}</select></label>
+      <label>${L('Publiées', 'Published')}<select id="rp"><option value="0">${L('Depuis toujours', 'Any time')}</option><option value="7">${L('Ces 7 derniers jours', 'Last 7 days')}</option><option value="30">${L('Ces 30 derniers jours', 'Last 30 days')}</option><option value="90">${L('Ces 90 derniers jours', 'Last 90 days')}</option><option value="365">${L('Cette année', 'Last 12 months')}</option></select></label>
+      ${me ? `<label>${L('Afficher', 'Show')}<select id="rm"><option value="">${L('Tous les créateurs', 'All creators')}</option><option value="me">${L('Mes recettes', 'My recipes')}</option></select></label>` : ''}
+    </div><div class="filters" id="rfil"></div><div id="rtab"></div>`;
+  if (recipeFilter.cat != null) { const i = catKeys.findIndex(e => e[0] === recipeFilter.cat); if (i >= 0) $('#rc').value = String(i); }
+  const drawFil = () => {
+    const chips = [];
+    if (recipeFilter.u) chips.push(['u', `${L('Créateur', 'Creator')}${CO()}${nameOf(recipeFilter.u)}`]);
+    if (recipeFilter.month) chips.push(['month', `${L('Publiées en', 'Published in')} ${monthLbl(recipeFilter.month, true)}`]);
+    if (recipeFilter.imin != null) chips.push(['imin', `${L('Installations', 'Installs')}${CO()}${recipeFilter.label}`]);
+    $('#rfil').innerHTML = chips.map(([k, l]) => `<button type="button" data-k="${k}">${esc(l)} ✕</button>`).join('');
+    $('#rfil').querySelectorAll('button').forEach(b => b.onclick = () => { const k = b.dataset.k; if (k === 'imin') { delete recipeFilter.imin; delete recipeFilter.imax; } else delete recipeFilter[k]; drawFil(); tbl.redraw(); });
+  };
+  const tbl = sortableTable({
+    key: 's', pageSize: 100,
+    cols: [
+      { k: 'r', t: L('Rang', 'Rank'), v: r => r.r, asc: true }, { k: 'n', t: L('Recette', 'Recipe'), v: r => r.n, l: 1, asc: true },
+      { k: 'u', t: L('Créateur', 'Creator'), v: r => byU.get(r.u)?.r, l: 1, asc: true },
+      { k: 'i', t: 'Installs', v: r => r.i }, { k: 'f', t: 'Forks', v: r => r.f }, { k: 's', t: 'Points', v: r => r.s },
+      { k: 'ipd', t: L('Inst./jour', 'Inst./day'), v: r => r.ipd },
+      { k: 'd1', t: '+1 h', v: r => r.d1 }, { k: 'd24', t: '+24 h', v: r => r.d24 }, { k: 'd7', t: L('+7 j', '+7 d'), v: r => r.d7 }, { k: 'd30', t: L('+30 j', '+30 d'), v: r => r.d30 },
+      { k: 'p', t: L('Publiée', 'Published'), v: r => r.p ? Date.parse(r.p) : null },
+      { k: 'spark', t: L('Progression', 'Trend'), v: r => r.d30, l: 1 },
+    ],
+    rows: () => {
+      const q = $('#rq').value.trim().toLowerCase(), ci = $('#rc').value, cat = ci === '' ? null : catKeys[+ci][0], days = +$('#rp').value, mine = $('#rm')?.value === 'me';
+      const since = Date.now() - days * DAY, F = recipeFilter;
+      return D.recipes.filter(r => (!q || r.n.toLowerCase().includes(q)) && (cat == null || catsOf(r).includes(cat))
+        && (!days || (r.p && Date.parse(r.p) >= since)) && (!mine || isMe(r.u)) && (!F.u || r.u === F.u)
+        && (!F.month || (r.p || '').startsWith(F.month)) && (F.imin == null || (r.i >= F.imin && r.i <= F.imax)));
+    },
+    rowClass: r => isMe(r.u) ? 'me' : '',
+    rowHTML: r => `<td>${r.r}</td><td class="l name">${r.ic ? `<img class="ico" src="${esc(r.ic)}" alt="" loading="lazy">` : ''}${recipeLink(r)}<span class="sub">${esc(catsTxt(r))}</span></td>
+      <td class="l"><a href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a><span class="sub">${L(`${ord(byU.get(r.u)?.r)} au général`, `${ord(byU.get(r.u)?.r)} overall`)}</span></td>
+      <td>${nf(r.i)}</td><td>${nf(r.f)}</td><td class="pos">${nf(r.s)}</td><td>${nf1(r.ipd)}</td><td>${sgc(r.d1)}</td><td>${sgc(r.d24)}</td><td>${sgc(r.d7)}</td><td>${sgc(r.d30)}</td><td>${dfmt(r.p)}</td>
+      <td class="l">${recipeSpark.get(r.id) || ''}</td>`,
+    onRow: openRecipe,
+  });
+  $('#rtab').append(tbl); drawFil();
+  ['#rq', '#rc', '#rp', '#rm'].forEach(s => $(s)?.addEventListener(s === '#rq' ? 'input' : 'change', () => tbl.redraw()));
+}
+
+/* ================= Tendances ================= */
+let trendWin = null;
+function renderTrends() {
+  const el = $('#tab-tendances');
+  const W = [['d1', L('1 heure', '1 hour')], ['d24', L('24 heures', '24 hours')], ['d7', L('7 jours', '7 days')], ['d30', L('30 jours', '30 days')]];
+  const avail = W.filter(([k]) => D.history.windows[k]);
+  if (!trendWin || !D.history.windows[trendWin]) trendWin = (avail.find(([k]) => k === 'd24') || avail.at(-1) || [null])[0];
+  const week = Date.now() - 7 * DAY;
+  const fresh = D.recipes.filter(r => r.p && Date.parse(r.p) >= week).sort((a, b) => b.s - a.s).slice(0, 15);
+  const freshBlock = `<div class="sheet"><h3>${L('Nouvelles recettes de la semaine', "This week's new recipes")}</h3>${miniList(fresh, r => r.s, r => nf(r.s) + ' pts', recipeLink, r => `${nameOf(r.u)}, ${L('publiée le', 'published')} ${dfmt(r.p)}`)}</div>`;
+  const moveSub = c => L(`de la ${ordTxt(c.r24)} à la ${ordTxt(c.r)} place`, `from ${ordTxt(c.r24)} to ${ordTxt(c.r)}`);
+  const need24 = `<p class="muted">${L("Disponible après 24 heures d'historique.", 'Available after 24 hours of history.')}</p>`;
+  let body = '';
+  if (trendWin) {
+    const k = trendWin;
+    const rUp = D.recipes.filter(r => r[k] > 0).sort((a, b) => b[k] - a[k]).slice(0, 15);
+    const cUp = D.creators.filter(c => c[k] > 0).sort((a, b) => b[k] - a[k]).slice(0, 15);
+    const climb = D.creators.filter(c => deltaRank(c) > 0).sort((a, b) => deltaRank(b) - deltaRank(a)).slice(0, 15);
+    const fall = D.creators.filter(c => deltaRank(c) < 0).sort((a, b) => deltaRank(a) - deltaRank(b)).slice(0, 10);
+    const myC = me && byU.get(me);
+    const myRank = myC && myC[k] != null ? 1 + D.creators.filter(c => (c[k] ?? -1) > myC[k]).length : null;
+    const catGain = new Map(); D.recipes.forEach(r => { if (r[k] > 0) catsOf(r).forEach(x => catGain.set(x, (catGain.get(x) || 0) + r[k])); });
+    const topCats = [...catGain].sort((a, b) => b[1] - a[1]).slice(0, 8);
+    body = `${myC ? `<p class="target" style="margin:0 0 18px">${L(`Sur cette période, vous avez gagné <b>${plural(myC[k] || 0, 'point')}</b>`, `Over this period you gained <b>${plural(myC[k] || 0, 'point')}</b>`)}${myRank ? L(`, ${ord(myRank)} plus forte progression parmi les créateurs`, `, the ${ord(myRank)} biggest gain among creators`) : ''}.</p>` : ''}
+    <div class="sheet" style="margin-bottom:14px"><h3>${L('Top 15 des recettes qui montent', 'Top 15 rising recipes')}</h3><div class="chart tall"><canvas id="chTrend"></canvas></div><p class="hint">${L('Touchez une barre pour ouvrir la recette.', 'Tap a bar to open the recipe.')}</p></div>
+    <div class="grid g2">
+      <div class="sheet"><h3>${L('Créateurs qui montent', 'Rising creators')}</h3>${miniList(cUp, c => c[k], c => sg(c[k]), creatorLink, c => `${L(`${ordTxt(c.r)} au général`, `${ordTxt(c.r)} overall`)}, ${plural(c.n, 'recette', 'recipe')}`)}</div>
+      <div class="sheet"><h3>${L('Catégories en vogue', 'Trending categories')}</h3><div class="chart"><canvas id="chTrendCat"></canvas></div><p class="hint">${L('Touchez une barre pour voir les recettes de la catégorie.', 'Tap a bar to see recipes in that category.')}</p></div>
+      <div class="sheet"><h3>${L('Plus fortes remontées en 24 h', 'Biggest climbs in 24 h')}</h3>${D.history.windows.d24 ? miniList(climb, deltaRank, c => '▲ ' + deltaRank(c), creatorLink, moveSub) : need24}</div>
+      <div class="sheet"><h3>${L('Plus fortes baisses en 24 h', 'Biggest drops in 24 h')}</h3>${D.history.windows.d24 ? miniList(fall, c => -deltaRank(c), c => '▼ ' + -deltaRank(c), creatorLink, moveSub) : need24}</div>
+      ${freshBlock}
+    </div>`;
+    setTimeout(() => {
+      const P = PAL();
+      chart('chTrend', { type: 'bar', data: { labels: rUp.map(r => r.n.length > 24 ? r.n.slice(0, 23) + '…' : r.n), datasets: [{ data: rUp.map(r => r[k]), backgroundColor: rUp.map(r => isMe(r.u) ? css('--ink') : P[0]), borderRadius: 5 }] },
+        options: { indexAxis: 'y', plugins: { tooltip: { callbacks: { label: x => `${sg(x.raw)} pts, ${nameOf(rUp[x.dataIndex].u)}` } } }, scales: { y: { grid: { display: false } } } } },
+        e0 => openRecipe(rUp[e0.index]));
+      chart('chTrendCat', { type: 'bar', data: { labels: topCats.map(e => catLabel(e[0])), datasets: [{ data: topCats.map(e => e[1]), backgroundColor: topCats.map((_, i) => P[i % P.length]), borderRadius: 5 }] },
+        options: { scales: { x: { grid: { display: false } } } } },
+        e0 => { pending.recettes = { cat: topCats[e0.index][0] }; go(hr('recettes')); });
+    });
+  } else body = freshBlock;
+  el.innerHTML = `<h2>${L('Tendances', 'Trends')}</h2><p class="lead">${L('Ce qui gagne des installations et des forks en ce moment.', 'What is gaining installs and forks right now.')}</p>${historyNotice()}
+    <div class="tools"><div class="seg" role="group">${W.map(([k, l]) => `<button type="button" data-w="${k}" aria-pressed="${k === trendWin}" ${D.history.windows[k] ? '' : 'disabled'}>${l}</button>`).join('')}</div></div>${body}`;
+  el.querySelectorAll('[data-w]').forEach(b => b.onclick = () => { trendWin = b.dataset.w; renderTrends(); });
+}
+
+/* ================= Analyses ================= */
+async function renderAnalyses() {
+  const el = $('#tab-analyses');
+  const T = D.totals, C = D.creators, R = D.recipes, TOT = T.installs + T.forks;
+  const sortedS = C.map(c => c.s).sort((a, b) => b - a);
+  const share = n => 100 * sortedS.slice(0, n).reduce((a, b) => a + b, 0) / Math.max(1, TOT);
+  const half = (() => { let acc = 0, k = 0; while (acc < TOT / 2 && k < sortedS.length) acc += sortedS[k++]; return k; })();
+  const myC = me && byU.get(me);
+  const med = arr => { const a = arr.slice().sort((x, y) => x - y); const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; };
+  const zero = R.filter(r => r.i === 0).length, rGoal = R.filter(r => r.i >= goal).length;
+  const cGoal = C.filter(c => c.recipes.some(r => r.i >= goal)).length;
+  const gini = (() => { const a = sortedS.slice().reverse(), n = a.length, s = a.reduce((x, y) => x + y, 0) || 1; let g = 0; a.forEach((v, i) => { g += (2 * (i + 1) - n - 1) * v; }); return g / (n * s); })();
+  const cat = new Map();
+  R.forEach(r => catsOf(r).forEach(k => { const o = cat.get(k) || { n: 0, i: 0, f: 0, u: new Set() }; o.n++; o.i += r.i; o.f += r.f; o.u.add(r.u); cat.set(k, o); }));
+  const catList = [...cat].sort((a, b) => b[1].i - a[1].i);
+  const tapBar = L('Touchez une barre pour voir les recettes de la catégorie.', 'Tap a bar to see recipes in that category.');
+
+  el.innerHTML = `<h2>${L("Vue d'ensemble", 'Overview')}</h2>
+    <div class="kpis" style="margin-top:0">
+      <div><b>${nf1(med(R.map(r => r.i)))}</b>${L('installations médianes par recette', 'median installs per recipe')}</div>
+      <div><b>${nf1(T.installs / T.recipes)}</b>${L('installations moyennes par recette', 'average installs per recipe')}</div>
+      <div><b>${nf1(T.recipes / T.creators)}</b>${L('recettes par créateur en moyenne', 'recipes per creator on average')}</div>
+      <div><b>${nf(rGoal)}</b>${L(`recettes à ${goal} installations ou plus`, `recipes with ${goal}+ installs`)}</div>
+      <div><b>${nf(cGoal)}</b>${L(`créateurs ayant au moins une recette à ${goal}`, `creators with at least one ${goal}+ recipe`)}</div>
+      <div><b>${nf1(100 * T.forks / Math.max(1, T.installs))} %</b>${L('taux de fork global', 'overall fork rate')}</div>
+    </div>
+    <p class="lead">${L(`${nf(zero)} recettes n'ont encore aucune installation. La moitié de tous les points est détenue par ${half} créateurs, soit ${nf1(100 * half / T.creators)} % d'entre eux (indice de Gini : ${nf1(gini)}).`,
+      `${nf(zero)} recipes have no installs yet. Half of all points belong to ${half} creators, ${nf1(100 * half / T.creators)} % of them (Gini index: ${nf1(gini)}).`)}</p>
+
+    <h2>${L('Concentration', 'Concentration')}</h2>
+    <div class="grid g2">
+      <div class="sheet"><h3>${L('Part des points détenue par les premiers', 'Share of points held by the top creators')}</h3>
+        <ol class="rows">${[1, 5, 10, 25, 50, 100].map(n => `<li><span class="n">${n}</span><span>${n === 1 ? L('le premier créateur', 'the top creator') : L(`les ${n} premiers`, `the top ${n}`)}</span><span class="v">${nf1(share(n))} %</span><div class="bar"><i style="width:${share(n)}%"></i></div></li>`).join('')}
+        ${myC ? `<li class="me"><span class="n">${myC.r}</span><span>${L('vous', 'you')}</span><span class="v">${nf1(100 * myC.s / TOT)} %</span><div class="bar"><i style="width:${Math.max(1, 100 * myC.s / TOT)}%"></i></div></li>` : ''}</ol></div>
+      <div class="sheet"><h3>${L('Qui détient les points ?', 'Who holds the points?')}</h3><div class="chart"><canvas id="aShare"></canvas></div><p class="hint">${L('Touchez une part pour ouvrir le profil.', 'Tap a slice to open the profile.')}</p></div>
+      <div class="sheet"><h3>${L('Courbe de concentration', 'Concentration curve')}</h3><div class="chart"><canvas id="aLorenz"></canvas></div>
+        <p class="note">${L('Part cumulée des points selon la part des créateurs, du plus petit au plus gros. La diagonale serait une répartition parfaitement égale.', 'Cumulative share of points by share of creators, smallest to largest. The diagonal would be a perfectly equal split.')}</p></div>
+      <div class="sheet"><h3>${L('Créateurs selon leur nombre de recettes', 'Creators by number of recipes')}</h3><div class="chart"><canvas id="aNrec"></canvas></div><p class="hint">${L('Touchez une barre pour lister ces créateurs.', 'Tap a bar to list those creators.')}</p></div>
+    </div>
+
+    <h2>${L('Recettes', 'Recipes')}</h2>
+    <div class="grid g2">
+      <div class="sheet"><h3>${L('Recettes selon leurs installations', 'Recipes by installs')}</h3><div class="chart"><canvas id="aInst"></canvas></div><p class="hint">${L('Touchez une barre pour lister ces recettes.', 'Tap a bar to list those recipes.')}</p></div>
+      <div class="sheet"><h3>${L('Publications et nouveaux créateurs par mois', 'Recipes and new creators per month')}</h3><div class="chart"><canvas id="aMonth"></canvas></div><p class="hint">${L('Touchez un mois pour voir ses recettes.', "Tap a month to see its recipes.")}</p></div>
+      <div class="sheet"><h3>${L('Âge des recettes et installations', 'Recipe age vs installs')}</h3><div class="chart tall"><canvas id="aAge"></canvas></div><p class="hint">${L("Chaque point est une recette. Touchez-la pour l'ouvrir.", 'Each dot is a recipe. Tap it to open.')}</p></div>
+      <div class="sheet"><h3>${L('Catégories les plus installées', 'Most installed categories')}</h3><div class="chart tall"><canvas id="aCat"></canvas></div><p class="hint">${tapBar}</p></div>
+    </div>
+
+    <h2>${L('Catégories', 'Categories')}</h2>
+    <div class="scroll"><table><thead><tr><th class="l">${L('Catégorie', 'Category')}</th><th>${L('Recettes', 'Recipes')}</th><th>${L('Créateurs', 'Creators')}</th><th>Installs</th><th>Forks</th><th>${L('Moy./recette', 'Avg/recipe')}</th><th class="l">${L('Meneur', 'Leader')}</th></tr></thead>
+      <tbody>${catList.map(([k, o], i) => { const lead = catRanks.get(k)?.list[0]; return `<tr data-ci="${i}"><td class="l">${esc(catLabel(k))}</td><td>${o.n}</td><td>${o.u.size}</td><td class="pos">${nf(o.i)}</td><td>${nf(o.f)}</td><td>${nf1(o.i / o.n)}</td><td class="l">${lead ? esc(nameOf(lead[0])) : '—'}</td></tr>`; }).join('')}</tbody></table></div>
+
+    <h2>${L('Où se placent les créateurs', 'Where creators stand')}</h2>
+    <div class="sheet"><h3>${L('Nombre de recettes et points de chaque créateur', 'Recipes and points for every creator')}</h3><div class="chart tall"><canvas id="aScatter"></canvas></div>
+      <p class="note">${L(`Échelles logarithmiques. Couleur selon le rang${myC ? " ; le gros point noir, c'est vous" : ''}. Touchez un point pour ouvrir le profil ; touchez la légende pour masquer un groupe.`, `Log scales. Colour by rank${myC ? '; the big black dot is you' : ''}. Tap a dot to open the profile; tap the legend to hide a group.`)}</p></div>
+
+    <h2>${L('Croissance de la communauté', 'Community growth')}</h2>
+    <div class="sheet"><h3>${L('Installations et recettes publiées', 'Installs and published recipes')}</h3><div class="chart"><canvas id="aGrowth"></canvas></div><p class="note" id="aGrowthNote"></p></div>`;
+
+  el.querySelectorAll('tr[data-ci]').forEach(tr => tr.onclick = () => { pending.recettes = { cat: catList[+tr.dataset.ci][0] }; go(hr('recettes')); });
+  const P = PAL(), ink = css('--ink'), grey = css('--grey'), noGrid = { grid: { display: false } };
+
+  const top10 = C.slice(0, 10), rest = TOT - top10.reduce((a, c) => a + c.s, 0);
+  chart('aShare', { type: 'doughnut', data: { labels: [...top10.map(c => nameOf(c.u)), L('Tous les autres', 'Everyone else')], datasets: [{ data: [...top10.map(c => c.s), rest], backgroundColor: [...top10.map((_, k) => P[k % P.length]), css('--rule2')], borderColor: css('--sheet'), borderWidth: 2 }] },
+    options: { cutout: '55%', plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 8, font: { size: 11 } } }, tooltip: { callbacks: { label: x => `${x.label}${CO()}${nf1(100 * x.raw / TOT)} %` } } } } },
+    e0 => { if (e0.index < 10) go(hr('createur', top10[e0.index].u)); });
+
+  const asc = sortedS.slice().reverse(), tot = asc.reduce((a, b) => a + b, 0) || 1;
+  let acc = 0; const pts = [{ x: 0, y: 0 }]; asc.forEach((v, k) => { acc += v; pts.push({ x: 100 * (k + 1) / asc.length, y: 100 * acc / tot }); });
+  chart('aLorenz', { type: 'scatter', data: { datasets: [
+    { data: pts, showLine: true, borderColor: P[0], backgroundColor: ctx => fade(ctx, P[0]), fill: true, pointRadius: 0, borderWidth: 2.5 },
+    { data: [{ x: 0, y: 0 }, { x: 100, y: 100 }], showLine: true, borderColor: grey, borderDash: [4, 4], pointRadius: 0, borderWidth: 1 }] },
+    options: { plugins: { tooltip: { callbacks: { label: x => L(`${nf1(x.raw.x)} % des créateurs : ${nf1(x.raw.y)} % des points`, `${nf1(x.raw.x)} % of creators: ${nf1(x.raw.y)} % of points`) } } }, scales: { x: { min: 0, max: 100, ticks: { callback: v => v + ' %' } }, y: { min: 0, max: 100, ticks: { callback: v => v + ' %' } } } } });
+
+  const nb = [['1', 1, 1], ['2', 2, 2], [L('3 à 5', '3–5'), 3, 5], [L('6 à 10', '6–10'), 6, 10], [L('11 à 20', '11–20'), 11, 20], [L('21 et +', '21+'), 21, 1e9]];
+  const myB = myC ? nb.findIndex(([, a, b]) => myC.n >= a && myC.n <= b) : -1;
+  chart('aNrec', { type: 'bar', data: { labels: nb.map(x => x[0]), datasets: [{ data: nb.map(([, a, b]) => C.filter(c => c.n >= a && c.n <= b).length), backgroundColor: nb.map((_, k) => k === myB ? ink : P[2]), borderRadius: 5 }] },
+    options: { plugins: { tooltip: { callbacks: { label: x => `${x.raw} ${L('créateurs', 'creators')}${x.dataIndex === myB ? L(' (dont vous)', ' (including you)') : ''}` } } }, scales: { x: noGrid, y: { ticks: { precision: 0 } } } } },
+    e0 => { const [l, a, b] = nb[e0.index]; pending.createurs = { nmin: a, nmax: b, label: L(`${l} recette(s)`, `${l} recipe(s)`) }; go(hr('createurs')); });
+
+  const ib = [['0', 0, 0], [L('1 à 9', '1–9'), 1, 9], [L('10 à 24', '10–24'), 10, 24], [L('25 à 49', '25–49'), 25, 49], [L('50 à 99', '50–99'), 50, 99], [L('100 à 499', '100–499'), 100, 499], [L('500 et +', '500+'), 500, 1e9]];
+  chart('aInst', { type: 'bar', data: { labels: ib.map(x => x[0]), datasets: [
+    { label: L('Toutes les recettes', 'All recipes'), data: ib.map(([, a, b]) => R.filter(r => r.i >= a && r.i <= b).length), backgroundColor: ib.map(([, a]) => a >= 50 ? P[1] : P[0]), borderRadius: 5 },
+    ...(myC ? [{ label: L('Les vôtres', 'Yours'), data: ib.map(([, a, b]) => myC.recipes.filter(r => r.i >= a && r.i <= b).length), backgroundColor: ink, borderRadius: 5 }] : [])] },
+    options: { plugins: { legend: { display: !!myC, position: 'bottom' } }, scales: { x: noGrid, y: { type: 'logarithmic', ticks: { callback: v => [1, 10, 100, 1000].includes(v) ? v : '' } } } } },
+    e0 => { const [l, a, b] = ib[e0.index]; pending.recettes = { imin: a, imax: b, label: l, u: e0.datasetIndex === 1 ? me : undefined }; go(hr('recettes')); });
+
+  const months = new Map(), newC = new Map();
+  R.forEach(r => { if (r.p) { const k = r.p.slice(0, 7); months.set(k, (months.get(k) || 0) + 1); } });
+  C.forEach(c => { if (c.first) { const k = c.first.slice(0, 7); newC.set(k, (newC.get(k) || 0) + 1); } });
+  const mk = [...months.keys()].sort().slice(-24);
+  chart('aMonth', { type: 'bar', data: { labels: mk.map(k => monthLbl(k)), datasets: [
+    { label: L('Recettes publiées', 'Recipes published'), data: mk.map(k => months.get(k)), backgroundColor: P[0], borderRadius: 4, order: 2 },
+    { label: L('Nouveaux créateurs', 'New creators'), type: 'line', data: mk.map(k => newC.get(k) || 0), borderColor: P[2], backgroundColor: P[2], pointRadius: 2, borderWidth: 2, tension: .3, order: 1 }] },
+    options: { interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: true, position: 'bottom' } }, scales: { x: { ...noGrid, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8 } }, y: { ticks: { precision: 0 } } } } },
+    e0 => { pending.recettes = { month: mk[e0.index] }; go(hr('recettes')); });
+
+  const agePts = R.filter(r => r.p).map(r => ({ x: ageDays(r.p), y: Math.max(.8, r.i), r }));
+  chart('aAge', { type: 'scatter', data: { datasets: [
+    { label: L('Recettes', 'Recipes'), data: agePts.filter(p => !isMe(p.r.u)), backgroundColor: alpha(P[0], .45), pointRadius: 3, pointHoverRadius: 6 },
+    ...(myC ? [{ label: L('Les vôtres', 'Yours'), data: agePts.filter(p => isMe(p.r.u)), backgroundColor: ink, pointRadius: 6 }] : [])] },
+    options: { plugins: { legend: { display: !!myC, position: 'bottom' }, tooltip: { callbacks: { label: x => L(`${x.raw.r.n} : ${nf(x.raw.r.i)} installations, ${Math.round(x.raw.x)} jours`, `${x.raw.r.n}: ${nf(x.raw.r.i)} installs, ${Math.round(x.raw.x)} days`) } } },
+      scales: { x: { title: { display: true, text: L('Âge (jours)', 'Age (days)') } }, y: { type: 'logarithmic', title: { display: true, text: L('Installations', 'Installs') }, ticks: { callback: v => [1, 10, 100, 1000].includes(v) ? v : '' } } } } },
+    (e0, ch) => openRecipe(ch.data.datasets[e0.datasetIndex].data[e0.index].r));
+
+  const topCat = catList.slice(0, 12);
+  chart('aCat', { type: 'bar', data: { labels: topCat.map(([k, o]) => `${catLabel(k)} (${o.n})`), datasets: [{ data: topCat.map(([, o]) => o.i), backgroundColor: topCat.map((_, k) => P[k % P.length]), borderRadius: 5 }] },
+    options: { indexAxis: 'y', plugins: { tooltip: { callbacks: { label: x => `${nf(x.raw)} ${L('installations', 'installs')}` } } }, scales: { y: noGrid, x: { ticks: { maxTicksLimit: 5 } } } } },
+    e0 => { pending.recettes = { cat: topCat[e0.index][0] }; go(hr('recettes')); });
+
+  const grp = (name, f, color, r) => ({ label: name, data: C.filter(c => f(c) && !isMe(c.u)).map(c => ({ x: c.n, y: Math.max(1, c.s), u: c.u })), backgroundColor: color, pointRadius: r, pointHoverRadius: r + 3 });
+  chart('aScatter', { type: 'scatter', data: { datasets: [
+    grp('Top 10', c => c.r <= 10, P[0], 6), grp(L('11 à 50', '11–50'), c => c.r > 10 && c.r <= 50, P[3], 5), grp(L('51 à 100', '51–100'), c => c.r > 50 && c.r <= 100, P[1], 4),
+    grp(L('Au-delà de 100', 'Beyond 100'), c => c.r > 100, alpha(P[2], .55), 3),
+    ...(myC ? [{ label: L('Vous', 'You'), data: [{ x: myC.n, y: Math.max(1, myC.s), u: myC.u }], backgroundColor: ink, borderColor: P[0], borderWidth: 3, pointRadius: 9 }] : [])] },
+    options: { plugins: { legend: { display: true, position: 'bottom' }, tooltip: { callbacks: { label: x => `${nameOf(x.raw.u)}${CO()}${plural(x.raw.x, 'recette', 'recipe')}, ${nf(x.raw.y)} pts` } } },
+      scales: { x: { type: 'logarithmic', title: { display: true, text: L('Recettes', 'Recipes') }, ticks: { callback: v => [1, 2, 5, 10, 20, 50, 100].includes(v) ? v : '' } },
+                y: { type: 'logarithmic', title: { display: true, text: 'Points' }, ticks: { callback: v => [1, 10, 100, 1000, 10000].includes(v) ? NF.format(v) : '' } } } } },
+    (e0, ch) => go(hr('createur', ch.data.datasets[e0.datasetIndex].data[e0.index].u)));
+
+  const [h, hh] = await Promise.all([loadHist('daily'), loadHist('hourly')]);
+  const src = h && h.snaps.length >= 3 ? h : hh;
+  const note = $('#aGrowthNote'); if (!note) return;
+  if (!src || src.snaps.length < 2) { note.textContent = L('La courbe apparaîtra après quelques relevés.', 'The chart will appear after a few snapshots.'); return; }
+  const daily = src === h, g = src.global;
+  note.textContent = L(`${g.length} relevés ${daily ? 'quotidiens' : 'horaires'}. Entre le premier et le dernier : ${sg(g.at(-1).i - g[0].i)} installations, ${sg(g.at(-1).n - g[0].n)} recettes, ${sg(g.at(-1).c - g[0].c)} créateurs.`,
+    `${g.length} ${daily ? 'daily' : 'hourly'} snapshots. From first to last: ${sg(g.at(-1).i - g[0].i)} installs, ${sg(g.at(-1).n - g[0].n)} recipes, ${sg(g.at(-1).c - g[0].c)} creators.`);
+  chart('aGrowth', { type: 'line', data: { labels: g.map(x => new Date(x.t).toLocaleString(LOC, daily ? { day: 'numeric', month: 'short' } : { weekday: 'short', hour: '2-digit' })), datasets: [
+    { label: L('Installations', 'Installs'), data: g.map(x => x.i), borderColor: P[0], backgroundColor: ctx => fade(ctx, P[0]), fill: true, pointRadius: 0, borderWidth: 2.5, tension: .25, yAxisID: 'y' },
+    { label: L('Recettes publiées', 'Published recipes'), data: g.map(x => x.n), borderColor: P[2], backgroundColor: P[2], pointRadius: 0, borderWidth: 2, tension: .25, yAxisID: 'y2' }] },
+    options: { interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: true, position: 'bottom' } },
+      scales: { x: { ticks: { maxTicksLimit: 6, maxRotation: 0 } }, y: { ticks: { callback: v => NF.format(v) } }, y2: { position: 'right', grid: { display: false }, ticks: { precision: 0 } } } } });
+}
+
+init();
+
+// Installation en application (écran d'accueil) et mode hors-ligne
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>

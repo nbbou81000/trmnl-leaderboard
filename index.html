@@ -332,6 +332,16 @@ footer p{margin:0 0 12px;max-width:80ch}
 .modal .box.disc img{max-width:100%;max-height:160px;border-radius:10px;margin:0 0 12px;display:block;margin-left:auto;margin-right:auto}
 .modal .box.disc .discbody{text-align:left;font-size:.92rem;line-height:1.5}
 .modal .box.disc .discstats{text-align:left;font-size:.86rem;color:var(--ink2);margin:10px 0 0;font-weight:600}
+.imgpick{display:flex;gap:8px;align-items:center}
+.imgpick input[type=text]{flex:1;min-width:0}
+.discimgprev{margin-top:6px}
+.discimgprev img{max-height:70px;max-width:100%;border-radius:8px;display:block}
+.colorpick{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.colorpick input[type=color]{width:40px;height:32px;padding:0;border:1px solid var(--rule2);border-radius:6px;background:none;cursor:pointer}
+.chk.inline{display:inline-flex;align-items:center;gap:6px;font-weight:400;font-size:.86rem;color:var(--ink2)}
+.swatches{display:flex;gap:6px}
+.swatch{width:24px;height:24px;border-radius:50%;border:1px solid var(--rule2);cursor:pointer;padding:0}
+.swatch:hover{outline:2px solid var(--accent);outline-offset:1px}
 .modal .box.disc .discreminder{margin-top:14px;padding-top:12px;border-top:1px dashed var(--rule);font-size:.85rem;color:var(--ink2)}
 .modal .box.disc .row{justify-content:center}
 .loading{padding:60px 0;text-align:center;color:var(--ink2)}
@@ -1055,7 +1065,14 @@ const realApi = {
   async clearReport(id) { const c = await client(); ok(await c.from('reports').delete().eq('id', id)); },
   async ban(uid, value) { const c = await client(); ok(await c.rpc('set_banned', { target: uid, value })); },
   async siteSettings() { const c = await client(); return ok(await c.from('site_settings').select('*').eq('id', 1).maybeSingle()); },
-  async setDisclaimer(fields) { const c = await client(); ok(await c.rpc('set_disclaimer', { p_enabled: fields.enabled, p_img: fields.img, p_text_fr: fields.text_fr, p_text_en: fields.text_en, p_show_stats: fields.show_stats, p_frequency: fields.frequency, p_expires_at: fields.expires_at })); },
+  async setDisclaimer(fields) { const c = await client(); ok(await c.rpc('set_disclaimer', { p_enabled: fields.enabled, p_img: fields.img, p_text_fr: fields.text_fr, p_text_en: fields.text_en, p_show_stats: fields.show_stats, p_frequency: fields.frequency, p_expires_at: fields.expires_at, p_font: fields.font, p_color: fields.color })); },
+  async uploadDisclaimerImage(file) {
+    const c = await client();
+    const blob = await shrink(file, 640, 0.82);   // le bandeau reste compact quelle que soit la taille d'origine (CSS + petite résolution stockée)
+    const path = `${wipMe.id}/disclaimer-${Date.now().toString(36)}.webp`;
+    ok(await c.storage.from('wip').upload(path, blob, { contentType: 'image/webp', upsert: false, cacheControl: '31536000' }));
+    return path;
+  },
   async upload(file) {
     const c = await client();
     const [big, small] = await Promise.all([shrink(file, 1000, 0.82), shrink(file, 420, 0.75)]);
@@ -1312,7 +1329,7 @@ async function showDisclaimer() {
   try { s = await api().siteSettings(); } catch { return; }
   if (!s || !s.enabled) return;
   if (s.expires_at && Date.parse(s.expires_at) < Date.now()) return;   // durée d'affichage écoulée
-  const body = L(s.text_fr, s.text_en);
+  const body = L(s.text_fr, s.text_en) || s.text_fr || s.text_en || '';
   const stats = s.show_stats ? disclaimerStats() : null;
   if (!body && !s.img && !stats) return;
   const freq = ['day', 'week', 'always'].includes(s.frequency) ? s.frequency : 'day';
@@ -1323,6 +1340,7 @@ async function showDisclaimer() {
     if (store.get(key) === sig) return;   // déjà vu sur cette période (même version) : on ne réaffiche pas
     store.set(key, sig);
   }
+  await applyDiscFont(s.font);
   const reminder = L(
     `💡 Vous pouvez <a href="${hr('moi')}">revendiquer votre profil de créateur et lier votre compte Discord</a> pour apparaître sous votre propre nom.`,
     `💡 You can <a href="${hr('moi')}">claim your creator profile and link your Discord account</a> to appear under your own name.`);
@@ -1330,11 +1348,38 @@ async function showDisclaimer() {
     L(`🆕 ${nf(stats.newRecipes)} nouvelle${stats.newRecipes > 1 ? 's' : ''} recette${stats.newRecipes > 1 ? 's' : ''} (24 h)`, `🆕 ${nf(stats.newRecipes)} new recipe${stats.newRecipes > 1 ? 's' : ''} (24h)`),
     L(`👤 ${nf(stats.newAuthors)} nouvel${stats.newAuthors > 1 ? 's' : ''} auteur${stats.newAuthors > 1 ? 's' : ''} (24 h)`, `👤 ${nf(stats.newAuthors)} new author${stats.newAuthors > 1 ? 's' : ''} (24h)`),
   ].join(' · ')}</p>` : '';
-  modal(`${s.img ? `<img src="${esc(s.img)}" alt="">` : ''}
-    ${body ? `<div class="discbody">${body}</div>` : ''}
+  const bodyStyle = [DISC_FONTS[s.font]?.css ? `font-family:${DISC_FONTS[s.font].css}` : '', s.color ? `color:${s.color}` : ''].filter(Boolean).join(';');
+  modal(`${s.img ? `<img src="${esc(imgURL(s.img))}" alt="">` : ''}
+    ${body ? `<div class="discbody"${bodyStyle ? ` style="${esc(bodyStyle)}"` : ''}>${body}</div>` : ''}
     ${statsHTML}
     <div class="discreminder">${reminder}</div>
     <div class="row"><button class="btn" type="button" data-close>${L('Compris', 'Got it')}</button></div>`, 'disc');
+}
+// ---------- Polices proposées pour le texte du bandeau (lazy-load des polices Google si besoin)
+const DISC_FONTS = {
+  default: { label: L('Police du site', 'Site font'), css: '' },
+  sans:    { label: L('Sans-serif', 'Sans-serif'), css: `system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif` },
+  serif:   { label: L('Serif', 'Serif'), css: `Georgia, 'Times New Roman', Times, serif` },
+  mono:    { label: L('Monospace', 'Monospace'), css: `'SF Mono', 'Cascadia Code', Consolas, Menlo, monospace` },
+  rounded: { label: L('Arrondie (Poppins)', 'Rounded (Poppins)'), css: `'Poppins', system-ui, sans-serif`, gfont: 'Poppins:wght@500;700' },
+  hand:    { label: L('Manuscrite (Caveat)', 'Handwritten (Caveat)'), css: `'Caveat', cursive`, gfont: 'Caveat:wght@600;700' },
+};
+const DISC_COLORS = [
+  { label: L('Orange TRMNL', 'TRMNL orange'), value: '#FF6600' },
+  { label: L('Rouge du site', "Site's accent red"), value: '#F8654B' },
+  { label: L('Noir', 'Black'), value: '#1D1D1B' },
+  { label: L('Blanc', 'White'), value: '#FFFFFF' },
+];
+const loadedFonts = new Set();
+function applyDiscFont(key) {
+  const f = DISC_FONTS[key];
+  if (!f?.gfont || loadedFonts.has(f.gfont)) return Promise.resolve();
+  loadedFonts.add(f.gfont);
+  return new Promise(res => {
+    const link = document.createElement('link'); link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${f.gfont}&display=swap`;
+    link.onload = res; link.onerror = res; document.head.append(link);
+  });
 }
 // ---------- Édition du bandeau, réservée à l'administrateur (bouton dans l'onglet « En élaboration »)
 const toLocalInput = iso => { if (!iso) return ''; const d = new Date(iso); if (isNaN(d)) return ''; const pad = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
@@ -1345,9 +1390,30 @@ async function wipDisclaimerForm() {
   m.wrap.querySelector('.box').innerHTML = `<h3>${L("Bandeau d'accueil", 'Home banner')}</h3>
     <form class="wform" novalidate>
       <label class="chk"><input type="checkbox" name="enabled" ${s?.enabled ? 'checked' : ''}> ${L('Afficher le bandeau aux visiteurs', 'Show the banner to visitors')}</label>
-      <label>${L('Image (URL, facultatif)', 'Image (URL, optional)')}<input name="img" type="url" placeholder="https://" value="${esc(s?.img || '')}"></label>
+      <label>${L('Image du bandeau', 'Banner image')}
+        <div class="imgpick">
+          <input name="img" type="text" placeholder="https://… (ou importez un fichier)" value="${esc(s?.img || '')}">
+          <button class="btn ghost small" type="button" id="discImgPick">${L('Importer…', 'Upload…')}</button>
+          <input id="discImgFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+        </div>
+        <div id="discImgPreview" class="discimgprev"></div>
+        <small class="muted">${L("Redimensionnée et compressée automatiquement à l'import : le bandeau reste compact quelle que soit la taille du fichier d'origine.", 'Automatically resized and compressed on upload: the banner stays compact whatever the size of the original file.')}</small>
+      </label>
       <label>${L('Texte — Français', 'Text — French')}<textarea name="text_fr" rows="4">${esc(s?.text_fr || '')}</textarea></label>
       <label>${L('Texte — Anglais', 'Text — English')}<textarea name="text_en" rows="4">${esc(s?.text_en || '')}</textarea></label>
+      <div class="two">
+        <label>${L('Police du texte', 'Text font')}<select name="font">
+          ${Object.entries(DISC_FONTS).map(([k, v]) => `<option value="${k}" ${((s?.font || 'default') === k) ? 'selected' : ''}>${v.label}</option>`).join('')}
+        </select></label>
+        <label>${L('Couleur du texte', 'Text color')}
+          <div class="colorpick">
+            <label class="chk inline"><input type="checkbox" name="color_on" ${s?.color ? 'checked' : ''}> ${L('Personnalisée', 'Custom')}</label>
+            <input name="color" type="color" value="${esc(/^#/.test(s?.color || '') ? s.color : '#ff6600')}">
+            <div class="swatches">${DISC_COLORS.map(c => `<button type="button" class="swatch" data-color="${esc(c.value)}" title="${esc(c.label)}" style="background:${c.value}"></button>`).join('')}</div>
+          </div>
+          <small class="muted">${L('Décochez pour garder la couleur de texte habituelle du site (adaptée au mode clair/sombre).', "Uncheck to keep the site's usual text colour (adapts to light/dark mode).")}</small>
+        </label>
+      </div>
       <label class="chk"><input type="checkbox" name="show_stats" ${s?.show_stats ? 'checked' : ''}> ${L('Afficher automatiquement les statistiques des dernières 24 h (nouvelles recettes, nouveaux auteurs)', 'Automatically show the last 24h stats (new recipes, new authors)')}</label>
       <div class="two">
         <label>${L('Réapparition', 'Reappearance')}<select name="frequency">
@@ -1365,13 +1431,31 @@ async function wipDisclaimerForm() {
     </form>`;
   const f = m.$('form'), err = m.$('.err');
   m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close);
+  const oldImg = s?.img || '';
+  const preview = m.$('#discImgPreview');
+  const renderPreview = () => { preview.innerHTML = f.img.value ? `<img src="${esc(imgURL(f.img.value))}" alt="">` : ''; };
+  renderPreview();
+  m.$('#discImgPick').onclick = () => m.$('#discImgFile').click();
+  m.$('#discImgFile').onchange = async () => {
+    const file = m.$('#discImgFile').files[0]; if (!file) return;
+    const pick = m.$('#discImgPick'); pick.disabled = true; pick.textContent = '…';
+    err.hidden = true;
+    try {
+      const path = await api().uploadDisclaimerImage(file);
+      f.img.value = path; renderPreview();
+    } catch (x) { err.textContent = trErr(x.message); err.hidden = false; }
+    pick.disabled = false; pick.textContent = L('Importer…', 'Upload…'); m.$('#discImgFile').value = '';
+  };
+  f.querySelectorAll('.swatch').forEach(b => b.onclick = () => { f.color.value = b.dataset.color; f.color_on.checked = true; });
   f.onsubmit = async e => {
     e.preventDefault(); err.hidden = true;
     const fields = { enabled: f.enabled.checked, img: f.img.value.trim(), text_fr: f.text_fr.value.trim(), text_en: f.text_en.value.trim(),
-      show_stats: f.show_stats.checked, frequency: f.frequency.value, expires_at: f.expires_at.value ? new Date(f.expires_at.value).toISOString() : null };
+      show_stats: f.show_stats.checked, frequency: f.frequency.value, expires_at: f.expires_at.value ? new Date(f.expires_at.value).toISOString() : null,
+      font: f.font.value, color: f.color_on.checked ? f.color.value : '' };
     const btn = f.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = '…';
     try {
       await api().setDisclaimer(fields);
+      if (oldImg && oldImg !== fields.img && !/^(https?:|data:)/.test(oldImg)) { try { await api().removeImages([oldImg]); } catch {} }
       m.close(); track('bandeau-modifie', true);
       toast(L('Bandeau enregistré.', 'Banner saved.'));
     } catch (x) { err.textContent = trErr(x.message); err.hidden = false; btn.disabled = false; btn.textContent = L('Enregistrer', 'Save'); }

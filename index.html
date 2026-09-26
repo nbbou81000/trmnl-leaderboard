@@ -178,6 +178,14 @@ p.lead{color:var(--ink2);max-width:64ch;margin:0 0 14px}
 .card h4{margin:0;font-size:1rem;font-weight:700;line-height:1.25}
 .card h4 a{text-decoration:none}
 .card .desc{font-size:.85rem;color:var(--ink2);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .desc.full{display:block;-webkit-line-clamp:unset;overflow:visible}
+.archive-list{list-style:none;margin:0;padding:0}
+.archive-list li{padding:8px 4px;border-bottom:1px solid var(--rule)}
+.archive-list .row1{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.archive-list .rn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none}
+.archive-list a.rn:hover{text-decoration:underline}
+.archive-list .date{flex:none;font-weight:700;font-size:.85rem;white-space:nowrap}
+.archive-list .sub{font-size:.8rem;color:var(--ink2);margin-top:2px}
 .card .meta{font-size:.8rem;color:var(--ink2);display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:auto;padding-top:6px}
 .card .meta b{color:var(--ink)}
 .card .acts{display:flex;gap:6px;margin-top:8px}
@@ -376,6 +384,7 @@ footer p{margin:0 0 12px;max-width:80ch}
   <section id="tab-tendances" hidden></section>
   <section id="tab-analyses" hidden></section>
   <section id="tab-trmnl" hidden></section>
+  <section id="tab-jour" hidden></section>
 </main>
 
 <footer id="footer"></footer>
@@ -422,10 +431,10 @@ function setLocale() {
 setLocale();
 
 // Onglets : identifiants internes (français) et adresses selon la langue
-const SLUGS = { accueil: 'home', moi: 'me', galerie: 'gallery', elaboration: 'in-the-making', classements: 'rankings', createurs: 'creators', recettes: 'recipes', tendances: 'trends', analyses: 'insights', trmnl: 'trmnl', createur: 'creator' };
+const SLUGS = { accueil: 'home', moi: 'me', galerie: 'gallery', elaboration: 'in-the-making', classements: 'rankings', createurs: 'creators', recettes: 'recipes', tendances: 'trends', analyses: 'insights', trmnl: 'trmnl', jour: 'daily', createur: 'creator' };
 const FROM_SLUG = Object.fromEntries(Object.entries(SLUGS).map(([fr, en]) => [en, fr]));
 const hr = (k, arg) => '#' + (EN() ? SLUGS[k] : k) + (arg != null ? '/' + arg : '');
-const TAB_LABELS = () => ({ accueil: L('Accueil', 'Home'), moi: L('Mon profil', 'My profile'), galerie: L('Galerie', 'Gallery'), elaboration: L('En élaboration', 'In the making'), classements: L('Classements', 'Rankings'), createurs: L('Créateurs', 'Creators'), recettes: L('Recettes', 'Recipes'), tendances: L('Tendances', 'Trends'), analyses: L('Analyses', 'Insights'), trmnl: L('Actu TRMNL', 'TRMNL news') });
+const TAB_LABELS = () => ({ accueil: L('Accueil', 'Home'), moi: L('Mon profil', 'My profile'), galerie: L('Galerie', 'Gallery'), elaboration: L('En élaboration', 'In the making'), classements: L('Classements', 'Rankings'), createurs: L('Créateurs', 'Creators'), recettes: L('Recettes', 'Recipes'), tendances: L('Tendances', 'Trends'), analyses: L('Analyses', 'Insights'), trmnl: L('Actu TRMNL', 'TRMNL news'), jour: L('Recette du jour', 'Recipe of the day') });
 
 /* ================= Outils / Helpers ================= */
 const $ = (s, el = document) => el.querySelector(s);
@@ -440,6 +449,7 @@ const ord = n => { const t = ordTxt(n); const m = t.match(/^(\d+)(\D+)$/); retur
 const CO = () => L(' : ', ': ');
 const plural = (n, fr, en) => { const w = EN() ? (en ?? fr) : fr; return `${nf(n)} ${w}${Math.abs(n) > 1 ? 's' : ''}`; };
 const DAY = 864e5;
+const BREAKOUT_VERIFY_DAYS_JS = 7; // doit rester égal à BREAKOUT_VERIFY_DAYS dans scripts/spotlight.mjs
 const ageDays = iso => iso ? Math.max(1, (Date.now() - Date.parse(iso)) / DAY) : null;
 function ago(iso) {
   const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
@@ -510,6 +520,7 @@ if (GOATCOUNTER) {
 /* ================= État / State ================= */
 let D = null, NAMES = {}, byU = new Map(), byR = new Map(), metricRanks = {}, catRanks = new Map();
 let DAILY = null, recipeSpark = new Map(), creatorSpark = new Map();
+let SPOT = null, SPOT_HIST = null, SPOT_BREAK = null;
 let me = store.get('trmnl-me', '');
 let myName = store.get('trmnl-myname', '');
 let goal = +store.get('trmnl-goal', DEFAULT_GOAL) || DEFAULT_GOAL;
@@ -650,7 +661,7 @@ async function init() {
   paintChrome();
   $('#loading').textContent = L('Chargement des classements…', 'Loading rankings…');
   try {
-    [D, NAMES, DAILY] = await Promise.all([getJSON('data/latest.json'), getJSON('names.json').catch(() => ({})), getJSON('data/daily.json').catch(() => null)]);
+    [D, NAMES, DAILY, SPOT, SPOT_HIST, SPOT_BREAK] = await Promise.all([getJSON('data/latest.json'), getJSON('names.json').catch(() => ({})), getJSON('data/daily.json').catch(() => null), getJSON('data/spotlight.json').catch(() => null), getJSON('data/spotlight-history.json').catch(() => null), getJSON('data/breakout.json').catch(() => null)]);
   } catch (e) {
     $('#loading').innerHTML = L(`Les données ne sont pas encore disponibles.<br>Lancez le workflow « Mise à jour des stats TRMNL » dans l'onglet Actions du dépôt, puis rechargez la page dans deux minutes.`,
       `Data is not available yet.<br>Run the "Mise à jour des stats TRMNL" workflow from the repository's Actions tab, then reload this page in two minutes.`);
@@ -674,7 +685,7 @@ async function init() {
 }
 
 /* ================= Routage ================= */
-const TABS = ['accueil', 'moi', 'galerie', 'elaboration', 'classements', 'createurs', 'recettes', 'tendances', 'analyses', 'trmnl'];
+const TABS = ['accueil', 'moi', 'galerie', 'elaboration', 'classements', 'createurs', 'recettes', 'tendances', 'analyses', 'trmnl', 'jour'];
 function route() {
   if (!D) return;
   const [raw, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');
@@ -686,7 +697,7 @@ function route() {
     if (a.dataset.tab === 'moi') a.classList.toggle('mine', !!me);
   });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, analyses: renderAnalyses, trmnl: renderTrmnl })[t]();
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, analyses: renderAnalyses, trmnl: renderTrmnl, jour: renderSpotlightTab })[t]();
   window.scrollTo({ top: 0 });
 }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -733,6 +744,68 @@ function miniList(items, val, label, link, sub, isMine = x => isMe(x.u)) {
   return `<ol class="rows">${items.map((x, n) => `<li class="${isMine(x) ? 'me' : ''}"><span class="n">${x.__rank ?? n + 1}</span>${link(x)}<span class="v">${label(x)}</span>
     <div class="bar"><i style="width:${Math.max(2, 100 * val(x) / max)}%"></i></div>${sub ? `<span class="s">${esc(sub(x))}</span>` : ''}</li>`).join('')
     || `<li><span></span><span class="muted">${L('Rien à afficher pour le moment.', 'Nothing to show yet.')}</span></li>`}</ol>`;
+}
+function renderSpotlightTab() {
+  const el = $('#tab-jour');
+  const settingsHTML = spot => spot.settings?.length
+    ? `<ul class="rows" style="margin-top:10px">${spot.settings.map(s => `<li><span class="n">⚙️</span><b>${esc(s.n)}</b><span class="s">${esc(s.d)}</span></li>`).join('')}</ul>`
+    : '';
+  const today = SPOT && !SPOT.empty ? `<div class="cards"><article class="card">
+      <div class="shot">${SPOT.sc ? `<img src="${esc(SPOT.sc)}" alt="${esc(SPOT.n)}" loading="lazy">` : ''}</div>
+      <div class="body">
+        <h4><a href="https://trmnl.com/recipes/${SPOT.id}" target="_blank" rel="noopener">${esc(SPOT.n)}</a></h4>
+        <p class="tagline"><a href="${hr('createur', SPOT.u)}">${esc(nameOf(SPOT.u))}</a>${SPOT.c?.length ? ' · ' + esc(SPOT.c.join(', ')) : ''}</p>
+        <p class="desc full">${esc(EN() ? (SPOT.text_en || SPOT.text_fr) : SPOT.text_fr)}</p>
+        ${settingsHTML(SPOT)}
+        <p class="meta"><span><b>${nf(SPOT.i)}</b> ${L('installs', 'installs')}</span><span>${L(`${nf(SPOT.missing)} avant le seuil de 50`, `${nf(SPOT.missing)} to go to 50`)}</span></p>
+        <div class="acts"><a class="btn" href="https://trmnl.com/recipes/${SPOT.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>
+      </div>
+    </article></div>`
+    : `<p class="notice">${L("Aucune recette sous le seuil actuellement : rien à mettre en avant aujourd'hui.", 'No recipe under the threshold right now: nothing to feature today.')}</p>`;
+  const past = (SPOT_HIST?.shown || []).slice().reverse().filter(x => !SPOT || x.id !== SPOT.id || x.date !== new Date().toISOString().slice(0, 10));
+  const archive = past.length ? `<div class="sheet" style="margin-top:22px"><h3>${L('Déjà mises en avant', 'Previously featured')}</h3>
+    <ul class="archive-list">${past.slice(0, 60).map(x => { const r = byR.get(x.id);
+      const nameHTML = r ? `<a class="rn" href="https://trmnl.com/recipes/${x.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : `<span class="rn">${esc(x.n)}</span>`;
+      return `<li><div class="row1">${nameHTML}<span class="date">${dfmt(x.date)}</span></div><div class="sub">${esc(nameOf(x.u))}${r ? ` · ${nf(r.i)} installs` : ''}</div></li>`; }).join('')}</ul></div>`
+    : '';
+
+  const picks = (SPOT_BREAK?.picks || []).slice();
+  const todayISO = new Date().toISOString().slice(0, 10);
+  const bToday = picks.filter(x => x.date === todayISO).at(-1);
+  const bPast = picks.filter(x => x !== bToday).reverse();
+  const isHit = x => x.result && x.result.i_now != null && x.result.gain >= x.i && x.result.gain >= 20;
+  const bTodayHTML = bToday ? `<div class="cards"><article class="card">
+      <div class="shot">${bToday.sc ? `<img src="${esc(bToday.sc)}" alt="${esc(bToday.n)}" loading="lazy">` : ''}</div>
+      <div class="body">
+        <h4><a href="https://trmnl.com/recipes/${bToday.id}" target="_blank" rel="noopener">${esc(bToday.n)}</a></h4>
+        <p class="tagline"><a href="${hr('createur', bToday.u)}">${esc(nameOf(bToday.u))}</a>${bToday.c?.length ? ' · ' + esc(bToday.c.join(', ')) : ''}</p>
+        ${bToday.d ? `<p class="desc full">${esc(bToday.d)}</p>` : ''}
+        <p class="meta"><span><b>${nf(bToday.i)}</b> ${L('installs', 'installs')}</span><span><b>${sg(bToday.d24)}</b> ${L('sur 24 h', 'in 24 h')}</span></p>
+        <p class="note">${L(`Verdict le ${dfmt(new Date(Date.parse(bToday.date) + BREAKOUT_VERIFY_DAYS_JS * DAY).toISOString())} : on regardera si l'accélération s'est confirmée.`,
+          `Verdict on ${dfmt(new Date(Date.parse(bToday.date) + BREAKOUT_VERIFY_DAYS_JS * DAY).toISOString())}: we'll see if the acceleration held up.`)}</p>
+        <div class="acts"><a class="btn" href="https://trmnl.com/recipes/${bToday.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>
+      </div>
+    </article></div>`
+    : `<p class="notice">${L("Aucune recette ne montre un signal d'accélération suffisant aujourd'hui : pas de pari.", 'No recipe shows a strong enough acceleration signal today: no bet.')}</p>`;
+  const bArchive = bPast.length ? `<div class="sheet" style="margin-top:22px"><h3>${L('Paris précédents', 'Previous bets')}</h3>
+    <ul class="archive-list">${bPast.slice(0, 60).map(x => { const r = byR.get(x.id);
+      const nameHTML = r ? `<a class="rn" href="https://trmnl.com/recipes/${x.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : `<span class="rn">${esc(x.n)}</span>`;
+      const verdict = x.result
+        ? (x.result.i_now == null ? L('recette disparue', 'recipe gone') : `${nf(x.i)} → ${nf(x.result.i_now)} (${sg(x.result.gain)})${isHit(x) ? ' 🎯' : ''}`)
+        : L('verdict à venir', 'verdict pending');
+      return `<li><div class="row1">${nameHTML}<span class="date">${dfmt(x.date)}</span></div><div class="sub">${verdict}</div></li>`; }).join('')}</ul></div>`
+    : '';
+
+  el.innerHTML = `<h2>🔦 ${L('Recette du jour', 'Recipe of the day')}</h2>
+    <p class="lead">${L("Chaque jour, un coup de projecteur sur une recette qui n'a pas encore atteint les 50 installations nécessaires pour être éligible au Creator Fund TRMNL, en rotation équitable entre toutes celles sous ce seuil.",
+      "Every day, a spotlight on one recipe that hasn't yet reached the 50 installs needed for the TRMNL Creator Fund, in fair rotation among every recipe under that threshold.")}</p>
+    ${today}
+    ${archive}
+    <h2 style="margin-top:34px">🚀 ${L('Ça va cartonner', "It's about to take off")}</h2>
+    <p class="lead">${L("Chaque jour, un pari sur la recette du catalogue qui accélère le plus par rapport à son propre rythme habituel — pas forcément la plus installée, mais celle dont la courbe change de forme.",
+      "Every day, a bet on the catalog recipe accelerating the most relative to its own usual pace — not necessarily the most installed, but the one whose curve is changing shape.")}</p>
+    ${bTodayHTML}
+    ${bArchive}`;
 }
 function renderHome() {
   const el = $('#tab-accueil');

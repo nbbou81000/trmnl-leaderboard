@@ -1,0 +1,16 @@
+{
+  "name": "TRMNL Creator Leaderboard",
+  "short_name": "TRMNL Rank",
+  "description": "Where do you rank among TRMNL recipe creators? Ranks, trends and stats for every creator.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f2f0ed",
+  "theme_color": "#f8654b",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

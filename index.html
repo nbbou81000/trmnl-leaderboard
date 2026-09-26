@@ -781,19 +781,27 @@ function renderSpotlightTab() {
         <p class="tagline"><a href="${hr('createur', bToday.u)}">${esc(nameOf(bToday.u))}</a>${bToday.c?.length ? ' · ' + esc(bToday.c.join(', ')) : ''}</p>
         ${bToday.d ? `<p class="desc full">${esc(bToday.d)}</p>` : ''}
         <p class="meta"><span><b>${nf(bToday.i)}</b> ${L('installs', 'installs')}</span><span><b>${sg(bToday.d24)}</b> ${L('sur 24 h', 'in 24 h')}</span></p>
+        ${bToday.pred ? `<p class="meta"><span>${L('Prévision', 'Forecast')} 24h : <b>${nf(bToday.pred.h24)}</b></span><span>48h : <b>${nf(bToday.pred.h48)}</b></span><span>${L('7j', '7d')} : <b>${nf(bToday.pred.d7)}</b></span></p>` : ''}
         <p class="note">${L(`Verdict le ${dfmt(new Date(Date.parse(bToday.date) + BREAKOUT_VERIFY_DAYS_JS * DAY).toISOString())} : on regardera si l'accélération s'est confirmée.`,
           `Verdict on ${dfmt(new Date(Date.parse(bToday.date) + BREAKOUT_VERIFY_DAYS_JS * DAY).toISOString())}: we'll see if the acceleration held up.`)}</p>
         <div class="acts"><a class="btn" href="https://trmnl.com/recipes/${bToday.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>
       </div>
     </article></div>`
     : `<p class="notice">${L("Aucune recette ne montre un signal d'accélération suffisant aujourd'hui : pas de pari.", 'No recipe shows a strong enough acceleration signal today: no bet.')}</p>`;
+  const checkpoints = x => {
+    const parts = [];
+    if (x.check_h24) parts.push(`24h : ${nf(x.check_h24.i)}${x.pred ? ` (${L('prévu', 'pred.')} ${nf(x.pred.h24)})` : ''}`);
+    if (x.check_h48) parts.push(`48h : ${nf(x.check_h48.i)}${x.pred ? ` (${L('prévu', 'pred.')} ${nf(x.pred.h48)})` : ''}`);
+    if (x.result) {
+      const v = x.result.i_now == null ? L('recette disparue', 'recipe gone') : `${nf(x.i)} → ${nf(x.result.i_now)} (${sg(x.result.gain)})${isHit(x) ? ' 🎯' : ''}`;
+      parts.push(`${L('7j', '7d')} : ${v}${x.pred ? ` (${L('prévu', 'pred.')} ${nf(x.pred.d7)})` : ''}`);
+    }
+    return parts.length ? parts.join(' · ') : L('verdict à venir', 'verdict pending');
+  };
   const bArchive = bPast.length ? `<div class="sheet" style="margin-top:22px"><h3>${L('Paris précédents', 'Previous bets')}</h3>
     <ul class="archive-list">${bPast.slice(0, 60).map(x => { const r = byR.get(x.id);
       const nameHTML = r ? `<a class="rn" href="https://trmnl.com/recipes/${x.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : `<span class="rn">${esc(x.n)}</span>`;
-      const verdict = x.result
-        ? (x.result.i_now == null ? L('recette disparue', 'recipe gone') : `${nf(x.i)} → ${nf(x.result.i_now)} (${sg(x.result.gain)})${isHit(x) ? ' 🎯' : ''}`)
-        : L('verdict à venir', 'verdict pending');
-      return `<li><div class="row1">${nameHTML}<span class="date">${dfmt(x.date)}</span></div><div class="sub">${verdict}</div></li>`; }).join('')}</ul></div>`
+      return `<li><div class="row1">${nameHTML}<span class="date">${dfmt(x.date)}</span></div><div class="sub">${checkpoints(x)}</div></li>`; }).join('')}</ul></div>`
     : '';
 
   el.innerHTML = `<h2>🔦 ${L('Recette du jour', 'Recipe of the day')}</h2>
@@ -801,7 +809,7 @@ function renderSpotlightTab() {
       "Every day, a spotlight on one recipe that hasn't yet reached the 50 installs needed for the TRMNL Creator Fund, in fair rotation among every recipe under that threshold.")}</p>
     ${today}
     ${archive}
-    <h2 style="margin-top:34px">🚀 ${L('Ça va cartonner', "It's about to take off")}</h2>
+    <h2 style="margin-top:34px">🚀 ${L('Ça va cartonner', "It's about to take off")} <span class="badge">${L('Expérimental', 'Experimental')}</span></h2>
     <p class="lead">${L("Chaque jour, un pari sur la recette du catalogue qui accélère le plus par rapport à son propre rythme habituel — pas forcément la plus installée, mais celle dont la courbe change de forme.",
       "Every day, a bet on the catalog recipe accelerating the most relative to its own usual pace — not necessarily the most installed, but the one whose curve is changing shape.")}</p>
     ${bTodayHTML}

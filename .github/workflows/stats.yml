@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p public/data
           if git fetch --depth=1 origin gh-pages 2>/dev/null; then
-            for f in hourly.json daily.json latest.json trmnl.json; do
+            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json; do
               git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
             done
           else
@@ -49,6 +49,11 @@ jobs:
             node scripts/fetch-stats.mjs public/data
             node scripts/fetch-trmnl.mjs public/data
           fi
+
+      - name: Recette du jour (rotation équitable + présentation Mistral)
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+        run: node scripts/spotlight.mjs public/data
 
       # Un projet Supabase gratuit se met en pause après 7 jours sans activité : on le réveille à chaque passage
       - name: Garder Supabase éveillé

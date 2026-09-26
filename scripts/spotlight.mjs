@@ -161,19 +161,36 @@ function breakoutScore(r) {
   return accel * Math.log(1 + r.d24);                      // pondère par un volume minimum réel
 }
 
+// Prévision à 24h/48h/7j : le rythme de fond (moyenne historique) continue, et le sursaut du jour
+// (l'écart entre la vitesse des dernières 24h et ce rythme de fond) se dissipe par demi-vie plutôt
+// que de rester constant — une extrapolation en ligne droite surestimerait très largement un pic ponctuel.
+const BREAKOUT_HALF_LIFE_DAYS = 3;
+function predictInstalls(r) {
+  const age = ageDaysOf(r.p);
+  const base = r.i / age;
+  const boost = Math.max(0, (r.d24 ?? 0) - base);
+  const hl = BREAKOUT_HALF_LIFE_DAYS;
+  const at = H => Math.round(r.i + base * H + boost * (hl / Math.LN2) * (1 - Math.pow(0.5, H / hl)));
+  return { h24: at(1), h48: at(2), d7: at(7) };
+}
+
 async function runBreakout(latest) {
   const hist = await readJSON(path.join(OUT, 'breakout.json'), { v: 1, picks: [] });
   if (hist.picks.some(x => x.date === today)) { console.log('Pari du jour déjà choisi.'); return; }
 
-  // On confronte aux chiffres actuels tout pari devenu assez ancien pour être jugé.
+  // On confronte aux prévisions les chiffres réels, à chacune des trois échéances.
   const byId = new Map(latest.recipes.map(r => [r.id, r]));
   for (const p of hist.picks) {
-    if (p.result) continue;
-    if (Date.now() - Date.parse(p.date) < BREAKOUT_VERIFY_DAYS * DAY) continue;
+    const ageP = (Date.now() - Date.parse(p.date)) / DAY;
     const now = byId.get(p.id);
-    p.result = now
-      ? { i_now: now.i, gain: now.i - p.i, checked_at: new Date().toISOString() }
-      : { i_now: null, gain: null, checked_at: new Date().toISOString() }; // recette disparue de l'API
+    const snap = () => now ? { i: now.i, checked_at: new Date().toISOString() } : { i: null, checked_at: new Date().toISOString() };
+    if (!p.check_h24 && ageP >= 1) p.check_h24 = snap();
+    if (!p.check_h48 && ageP >= 2) p.check_h48 = snap();
+    if (!p.result && ageP >= BREAKOUT_VERIFY_DAYS) {
+      p.result = now
+        ? { i_now: now.i, gain: now.i - p.i, checked_at: new Date().toISOString() }
+        : { i_now: null, gain: null, checked_at: new Date().toISOString() }; // recette disparue de l'API
+    }
   }
 
   const recentIds = new Set(hist.picks.filter(x => Date.now() - Date.parse(x.date) < BREAKOUT_COOLDOWN_DAYS * DAY).map(x => x.id));
@@ -187,7 +204,8 @@ async function runBreakout(latest) {
   if (best) {
     hist.picks.push({
       id: best.id, u: best.u, n: best.n, c: best.c, ic: best.ic, sc: best.sc, d: best.d,
-      i: best.i, d24: best.d24, score: Math.round(bestScore * 100) / 100, date: today, result: null,
+      i: best.i, d24: best.d24, score: Math.round(bestScore * 100) / 100, date: today,
+      pred: predictInstalls(best), check_h24: null, check_h48: null, result: null,
     });
     console.log(`Pari du jour : #${best.id} « ${best.n} » (score ${bestScore.toFixed(2)}, +${best.d24} sur 24 h).`);
   } else {

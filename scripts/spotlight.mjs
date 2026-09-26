@@ -149,10 +149,12 @@ async function runSpotlight(latest) {
 // mémoire pour être confronté aux chiffres réels BREAKOUT_VERIFY_DAYS plus tard.
 const BREAKOUT_VERIFY_DAYS = 7;   // délai avant de vérifier si le pari était bon (voir note dans la réponse)
 const BREAKOUT_MIN_D24 = 3;       // mouvement minimum sur 24h pour écarter le simple bruit
+const BREAKOUT_MAX_INSTALLS = 150; // au-delà, la recette a déjà fait ses preuves : ce n'est plus "en train de décoller"
 const BREAKOUT_COOLDOWN_DAYS = 3; // on évite de reproposer une recette déjà pariée récemment
 
 function ageDaysOf(p) { return p ? Math.max(1, (Date.now() - Date.parse(p)) / DAY) : null; }
 function breakoutScore(r) {
+  if (r.i > BREAKOUT_MAX_INSTALLS) return null;
   if (r.d24 == null || r.d24 < BREAKOUT_MIN_D24) return null;
   const age = ageDaysOf(r.p);
   if (!age) return null;

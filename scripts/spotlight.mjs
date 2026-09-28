@@ -1,4 +1,4 @@
-// Choisit une "recette du jour" parmi celles à moins de 50 installations (seuil Creator Fund),
+// Choisit une "recette du jour" parmi celles à moins de 50 connexions = installs + forks (seuil Creator Fund, comme sur trmnl.com),
 // en rotation équitable (chaque recette éligible passe avant qu'aucune ne repasse), récupère ses
 // réglages sur sa page publique trmnl.com, et fait rédiger une présentation par Mistral.
 // Aucune dépendance : Node 20+. Ne casse jamais le workflow : en cas d'erreur, on log et on sort proprement.
@@ -103,9 +103,9 @@ async function runSpotlight(latest) {
   // Déjà traité aujourd'hui (le workflow tourne toutes les heures) : on ne fait rien de plus.
   if (hist.shown.some(x => x.date === today)) { console.log('Recette du jour déjà choisie aujourd\'hui.'); return; }
 
-  // On écarte les recettes trop récentes : elles auraient de toute façon moins de 50 installations,
+  // On écarte les recettes trop récentes : elles auraient de toute façon moins de 50 connexions,
   // pas parce qu'elles sont délaissées mais simplement parce qu'elles viennent de sortir.
-  const eligible = latest.recipes.filter(r => r.i < THRESHOLD && r.p && Date.now() - Date.parse(r.p) >= MIN_AGE_DAYS * DAY);
+  const eligible = latest.recipes.filter(r => r.s < THRESHOLD && r.p && Date.now() - Date.parse(r.p) >= MIN_AGE_DAYS * DAY);
   if (!eligible.length) {
     console.log('Aucune recette sous le seuil actuellement : rien à mettre en avant.');
     await fs.writeFile(path.join(OUT, 'spotlight.json'), JSON.stringify({ v: 1, generated_at: new Date().toISOString(), empty: true }));
@@ -131,7 +131,7 @@ async function runSpotlight(latest) {
 
   const spotlight = {
     v: 1, generated_at: new Date().toISOString(), cycle: hist.cycle,
-    id: picked.id, u: picked.u, n: picked.n, i: picked.i, missing: Math.max(0, THRESHOLD - picked.i),
+    id: picked.id, u: picked.u, n: picked.n, i: picked.i, s: picked.s, missing: Math.max(0, THRESHOLD - picked.s),
     c: picked.c, ic: picked.ic, sc: picked.sc, p: picked.p, settings, text_fr, text_en,
   };
   await fs.writeFile(path.join(OUT, 'spotlight.json'), JSON.stringify(spotlight));
@@ -139,7 +139,7 @@ async function runSpotlight(latest) {
   hist.shown.push({ id: picked.id, u: picked.u, n: picked.n, date: today, cycle: hist.cycle });
   await fs.writeFile(path.join(OUT, 'spotlight-history.json'), JSON.stringify(hist));
 
-  console.log(`Recette du jour : #${picked.id} « ${picked.n} » (${picked.i}/${THRESHOLD} installs, cycle ${hist.cycle}).`);
+  console.log(`Recette du jour : #${picked.id} « ${picked.n} » (${picked.s}/${THRESHOLD} connexions, cycle ${hist.cycle}).`);
 }
 
 // ================= Pari du jour : "Ça va cartonner" =================
@@ -149,16 +149,16 @@ async function runSpotlight(latest) {
 // mémoire pour être confronté aux chiffres réels BREAKOUT_VERIFY_DAYS plus tard.
 const BREAKOUT_VERIFY_DAYS = 7;   // délai avant de vérifier si le pari était bon (voir note dans la réponse)
 const BREAKOUT_MIN_D24 = 3;       // mouvement minimum sur 24h pour écarter le simple bruit
-const BREAKOUT_MAX_INSTALLS = 150; // au-delà, la recette a déjà fait ses preuves : ce n'est plus "en train de décoller"
+const BREAKOUT_MAX_CONNECTIONS = 150; // connexions = installs + forks (comme trmnl.com) ; au-delà, la recette a déjà fait ses preuves
 const BREAKOUT_COOLDOWN_DAYS = 3; // on évite de reproposer une recette déjà pariée récemment
 
 function ageDaysOf(p) { return p ? Math.max(1, (Date.now() - Date.parse(p)) / DAY) : null; }
 function breakoutScore(r) {
-  if (r.i > BREAKOUT_MAX_INSTALLS) return null;
+  if (r.s > BREAKOUT_MAX_CONNECTIONS) return null;
   if (r.d24 == null || r.d24 < BREAKOUT_MIN_D24) return null;
   const age = ageDaysOf(r.p);
   if (!age) return null;
-  const ipd = r.i / age;                                  // rythme moyen historique (installs/jour)
+  const ipd = r.s / age;                                  // rythme moyen historique (connexions/jour) : d24 est lui aussi en installs + forks
   const accel = ipd > 0 ? r.d24 / ipd : r.d24;             // vitesse d'aujourd'hui vs ce rythme
   return accel * Math.log(1 + r.d24);                      // pondère par un volume minimum réel
 }
@@ -169,10 +169,10 @@ function breakoutScore(r) {
 const BREAKOUT_HALF_LIFE_DAYS = 3;
 function predictInstalls(r) {
   const age = ageDaysOf(r.p);
-  const base = r.i / age;
+  const base = r.s / age;
   const boost = Math.max(0, (r.d24 ?? 0) - base);
   const hl = BREAKOUT_HALF_LIFE_DAYS;
-  const at = H => Math.round(r.i + base * H + boost * (hl / Math.LN2) * (1 - Math.pow(0.5, H / hl)));
+  const at = H => Math.round(r.s + base * H + boost * (hl / Math.LN2) * (1 - Math.pow(0.5, H / hl)));
   return { h24: at(1), h48: at(2), d7: at(7) };
 }
 
@@ -185,12 +185,14 @@ async function runBreakout(latest) {
   for (const p of hist.picks) {
     const ageP = (Date.now() - Date.parse(p.date)) / DAY;
     const now = byId.get(p.id);
-    const snap = () => now ? { i: now.i, checked_at: new Date().toISOString() } : { i: null, checked_at: new Date().toISOString() };
+    // Les paris récents (champ s) sont suivis en connexions (installs + forks) ; les anciens restent suivis en installs.
+    const cur = now ? (p.s != null ? now.s : now.i) : null;
+    const snap = () => ({ i: cur, checked_at: new Date().toISOString() });
     if (!p.check_h24 && ageP >= 1) p.check_h24 = snap();
     if (!p.check_h48 && ageP >= 2) p.check_h48 = snap();
     if (!p.result && ageP >= BREAKOUT_VERIFY_DAYS) {
       p.result = now
-        ? { i_now: now.i, gain: now.i - p.i, checked_at: new Date().toISOString() }
+        ? { i_now: cur, gain: cur - (p.s != null ? p.s : p.i), checked_at: new Date().toISOString() }
         : { i_now: null, gain: null, checked_at: new Date().toISOString() }; // recette disparue de l'API
     }
   }
@@ -206,7 +208,7 @@ async function runBreakout(latest) {
   if (best) {
     hist.picks.push({
       id: best.id, u: best.u, n: best.n, c: best.c, ic: best.ic, sc: best.sc, d: best.d,
-      i: best.i, d24: best.d24, score: Math.round(bestScore * 100) / 100, date: today,
+      i: best.i, s: best.s, d24: best.d24, score: Math.round(bestScore * 100) / 100, date: today,
       pred: predictInstalls(best), check_h24: null, check_h48: null, result: null,
     });
     console.log(`Pari du jour : #${best.id} « ${best.n} » (score ${bestScore.toFixed(2)}, +${best.d24} sur 24 h).`);

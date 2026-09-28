@@ -275,7 +275,29 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .news a{font-weight:650;text-decoration:none}
 .news a:hover{text-decoration:underline}
 .news .when{font-size:.78rem;color:var(--ink2)}
-.enews li{padding:14px 0}
+.enews li{padding:14px 0;cursor:pointer}
+.enews li.has-img{display:grid;grid-template-columns:104px 1fr;gap:14px;align-items:start}
+.enews li:hover h4{text-decoration:underline}
+.enews .etop{flex-wrap:wrap;row-gap:4px}
+.enews .src{white-space:nowrap}
+.enews .ethumb{width:104px;height:78px;object-fit:cover;border-radius:8px;background:var(--rule)}
+.enews p{display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical;overflow:hidden!important}
+.enews .more{display:inline-block;margin-top:6px;font-size:.84rem;font-weight:700;color:var(--accent-ink)}
+@media(max-width:480px){.enews li.has-img{grid-template-columns:84px 1fr;gap:12px}.enews .ethumb{width:84px;height:66px}}
+.modal .box.reader{width:min(720px,96vw);padding:0 20px 16px}
+.modal .box.reader .ehero{display:block;width:calc(100% + 40px);max-height:300px;object-fit:cover;border-radius:14px 14px 0 0;margin:0 -20px 14px}
+.modal .box.reader .etop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:18px}
+.modal .box.reader .ehero+.etop{margin-top:0}
+.modal .box.reader .src{font-size:.82rem;color:var(--ink2)}
+.modal .box.reader .cat{font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.modal .box.reader .cat.screens{background:color-mix(in srgb,var(--sky) 20%,transparent);color:var(--sky)}
+.modal .box.reader .cat.diy{background:color-mix(in srgb,var(--sage) 20%,transparent);color:var(--sage)}
+.modal .box.reader .cat.dashboards{background:color-mix(in srgb,var(--mustard) 20%,transparent);color:var(--mustard)}
+.modal .box.reader .etitle{font-size:1.45rem;line-height:1.25;margin:8px 0 10px}
+.modal .box.reader .elead{font-size:1.05rem;font-weight:600;line-height:1.45;margin:0 0 12px}
+.modal .box.reader .ebody{font-size:1rem;line-height:1.65}
+.modal .box.reader .ebody h2{font-size:1.1rem;margin:18px 0 6px}
+.modal .box.reader .ebody p{margin:0 0 12px}
 .wk-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}
 .wk-kpis div{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px;text-align:center}
 .wk-kpis b{display:block;font-size:1.6rem;font-weight:800}
@@ -300,7 +322,7 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .enews .cat.dashboards{background:color-mix(in srgb,var(--mustard) 20%,transparent);color:var(--mustard)}
 .enews h4{margin:2px 0 4px;font-size:1.02rem;line-height:1.3}
 .enews h4 a{text-decoration:none}.enews h4 a:hover{text-decoration:underline}
-.enews p{margin:0;font-size:.9rem;color:var(--ink2);line-height:1.45;display:block;-webkit-line-clamp:unset;overflow:visible}
+.enews p{margin:0;font-size:.9rem;color:var(--ink2);line-height:1.45}
 .news p{margin:4px 0 0;font-size:.86rem;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 /* Tableaux */
@@ -2023,17 +2045,48 @@ async function renderPronos() {
 /* ================= Actu e-ink & dashboards ================= */
 let einkData = null, einkCat = 'all';
 const EINK_CATS = () => [['all', L('Tout', 'All')], ['screens', L('Écrans & liseuses', 'Screens & e-readers')], ['diy', L('DIY & projets', 'DIY & projects')], ['dashboards', L('Dashboards', 'Dashboards')]];
+// Corps d'article : seules quelques balises de mise en forme, sans attribut (déjà nettoyé à la source, re-vérifié ici)
+function safeBody(html) {
+  const s = String(html || ''); let out = '', last = 0;
+  const txt = t => t.replace(/[<>]/g, ' ');
+  for (const m of s.matchAll(/<\s*(\/?)\s*([a-z0-9]+)[^>]*>/gi)) {
+    out += txt(s.slice(last, m.index)); last = m.index + m[0].length;
+    if (/^(p|h2|h3|ul|ol|li|strong|em)$/i.test(m[2])) out += `<${m[1]}${m[2].toLowerCase()}>`;
+  }
+  return out + txt(s.slice(last));
+}
+const einkText = a => ({
+  title: EN() ? a.title_en : a.title_fr,
+  lead: (EN() ? a.lead_en : a.lead_fr) || (EN() ? a.sum_en : a.sum_fr) || '',
+  body: (EN() ? a.body_en : a.body_fr) || `<p>${esc((EN() ? a.sum_en : a.sum_fr) || '')}</p>`,
+});
+function openEink(a) {
+  const t = einkText(a), cats = Object.fromEntries(EINK_CATS());
+  const m = modal(`${a.img ? `<img class="ehero" src="${esc(a.img)}" alt="" referrerpolicy="no-referrer">` : ''}
+    <div class="etop"><span class="src"><b>${esc(a.src)}</b> · ${dfmt(a.d)}${a.wc ? ` · ${Math.max(1, Math.round(a.wc / 200))} min` : ''}</span><span class="cat ${esc(a.cat)}">${esc(cats[a.cat] || a.cat)}</span></div>
+    <h2 class="etitle">${esc(t.title)}</h2>
+    ${t.lead ? `<p class="elead">${esc(t.lead)}</p>` : ''}
+    <div class="ebody">${safeBody(t.body)}</div>
+    <p class="note">${L("Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.", 'Article written by an AI (Mistral) from the cited source. Check important details at the source.')}</p>
+    <div class="row">${a.hn ? `<a class="btn ghost" href="${esc(a.hn)}" target="_blank" rel="noopener">${L('Discussion Hacker News', 'Hacker News thread')}</a>` : ''}
+      <a class="btn" href="${esc(a.u)}" target="_blank" rel="noopener">${L(`Lire l'original (${esc(a.src)})`, `Read the original (${esc(a.src)})`)} ↗</a>
+      <button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`, 'reader');
+  m.$('.ehero')?.addEventListener('error', e => e.target.remove());
+  track('actu-eink-lue', true);
+}
 async function renderEink() {
   const el = $('#tab-eink');
   if (!einkData) einkData = await getJSON('data/eink-news.json').catch(() => ({}));
   const all = einkData?.articles || [];
   const list = einkCat === 'all' ? all : all.filter(a => a.cat === einkCat);
-  const catLabel = Object.fromEntries(EINK_CATS());
-  const item = a => `<li>
-      <div class="etop"><span class="src"><b>${esc(a.src)}</b> · ${dfmt(a.d)}</span><span class="cat ${esc(a.cat)}">${esc(catLabel[a.cat] || a.cat)}</span></div>
-      <h4><a href="${esc(a.u)}" target="_blank" rel="noopener">${esc(EN() ? a.title_en : a.title_fr)}</a></h4>
-      ${(EN() ? a.sum_en : a.sum_fr) ? `<p>${esc(EN() ? a.sum_en : a.sum_fr)}</p>` : ''}
-    </li>`;
+  const cats = Object.fromEntries(EINK_CATS());
+  const item = a => { const t = einkText(a); return `<li data-eid="${esc(a.id)}" tabindex="0" role="button" class="${a.img ? 'has-img' : ''}">
+      ${a.img ? `<img class="ethumb" src="${esc(a.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
+      <div><div class="etop"><span class="src"><b>${esc(a.src)}</b> · ${dfmt(a.d)}</span><span class="cat ${esc(a.cat)}">${esc(cats[a.cat] || a.cat)}</span></div>
+        <h4>${esc(t.title)}</h4>
+        ${t.lead ? `<p>${esc(t.lead)}</p>` : ''}
+        <span class="more">${L("Lire l'article", 'Read the article')}${a.wc ? ` · ${Math.max(1, Math.round(a.wc / 200))} min` : ''} →</span></div>
+    </li>`; };
   el.innerHTML = `<h2>🗞️ ${L('Actu e-ink & dashboards', 'E-ink & dashboards news')}</h2>
     <p class="lead">${L("Ce qui bouge autour des écrans e-ink, des liseuses et des tableaux de bord maison, trié et résumé automatiquement à partir de sources spécialisées.",
       'What is happening around e-ink screens, e-readers and home dashboards, automatically sorted and summarized from specialized sources.')}</p>
@@ -2041,10 +2094,16 @@ async function renderEink() {
     ${list.length ? `<div class="sheet"><ul class="news enews">${list.map(item).join('')}</ul></div>`
       : `<p class="notice">${all.length ? L('Rien dans cette catégorie pour le moment.', 'Nothing in this category yet.')
         : L("Les premières actus arrivent au prochain passage de la veille (jusqu'à 4 fois par jour).", 'The first stories arrive with the next news run (up to 4 times a day).')}</p>`}
-    <p class="note">${L("Titres et résumés rédigés par une IA (Mistral) à partir des sources citées : lisez l'article complet chez la source avant de vous y fier. Mise à jour jusqu'à 4 fois par jour.",
-      'Titles and summaries written by an AI (Mistral) from the cited sources: read the full article at the source before relying on it. Updated up to 4 times a day.')}
+    <p class="note">${L("Articles rédigés par une IA (Mistral) à partir des sources citées : vérifiez les détails importants chez la source. Mise à jour jusqu'à 4 fois par jour.",
+      'Articles written by an AI (Mistral) from the cited sources: check important details at the source. Updated up to 4 times a day.')}
       ${einkData?.last_run ? L(` Dernier passage : ${ago(einkData.last_run)}.`, ` Last run: ${ago(einkData.last_run)}.`) : ''}</p>`;
   el.querySelectorAll('[data-ecat]').forEach(b => b.onclick = () => { einkCat = b.dataset.ecat; renderEink(); });
+  el.querySelectorAll('.ethumb').forEach(img => img.addEventListener('error', () => { img.closest('li')?.classList.remove('has-img'); img.remove(); }));
+  el.querySelectorAll('li[data-eid]').forEach(li => {
+    const a = all.find(x => x.id === li.dataset.eid);
+    li.onclick = () => openEink(a);
+    li.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEink(a); } };
+  });
 }
 
 /* ================= Actu TRMNL ================= */

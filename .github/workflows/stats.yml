@@ -9,6 +9,10 @@ on:
         description: 'Relever les recettes sur TRMNL (décocher pour republier seulement le site, par exemple après un changement de nom)'
         type: boolean
         default: true
+      eink:
+        description: 'Chercher tout de suite de nouveaux articles pour « Actu e-ink » (sans attendre le délai de 6 h)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -55,10 +59,11 @@ jobs:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
         run: node scripts/spotlight.mjs public/data
 
-      # Le script se limite lui-même à un passage toutes les 6 h (4 par jour au plus) et à un seul appel Mistral par passage
-      - name: Actu e-ink & dashboards (Mistral, 4 fois par jour au plus)
+      # Automatiquement : un passage toutes les 6 h au plus (4 par jour). À la main : tout de suite si la case « eink » est cochée.
+      - name: Actu e-ink & dashboards (Mistral)
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          EINK_FORCE: ${{ inputs.eink }}
         run: node scripts/eink-news.mjs public/data
 
       - name: Visites du jour (GoatCounter)

@@ -2055,11 +2055,11 @@ function safeBody(html) {
   }
   return out + txt(s.slice(last));
 }
-const einkText = a => ({
-  title: EN() ? a.title_en : a.title_fr,
-  lead: (EN() ? a.lead_en : a.lead_fr) || (EN() ? a.sum_en : a.sum_fr) || '',
-  body: (EN() ? a.body_en : a.body_fr) || `<p>${esc((EN() ? a.sum_en : a.sum_fr) || '')}</p>`,
-});
+// Un ancien article sans corps n'affiche son résumé qu'une fois (pas à la fois en accroche et en corps)
+const einkText = a => {
+  const body = EN() ? a.body_en : a.body_fr, sum = (EN() ? a.sum_en : a.sum_fr) || '';
+  return { title: EN() ? a.title_en : a.title_fr, lead: body ? ((EN() ? a.lead_en : a.lead_fr) || '') : '', body: body || `<p>${esc(sum)}</p>`, teaser: (EN() ? a.lead_en : a.lead_fr) || sum };
+};
 function openEink(a) {
   const t = einkText(a), cats = Object.fromEntries(EINK_CATS());
   const m = modal(`${a.img ? `<img class="ehero" src="${esc(a.img)}" alt="" referrerpolicy="no-referrer">` : ''}
@@ -2084,7 +2084,7 @@ async function renderEink() {
       ${a.img ? `<img class="ethumb" src="${esc(a.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
       <div><div class="etop"><span class="src"><b>${esc(a.src)}</b> · ${dfmt(a.d)}</span><span class="cat ${esc(a.cat)}">${esc(cats[a.cat] || a.cat)}</span></div>
         <h4>${esc(t.title)}</h4>
-        ${t.lead ? `<p>${esc(t.lead)}</p>` : ''}
+        ${t.teaser ? `<p>${esc(t.teaser)}</p>` : ''}
         <span class="more">${L("Lire l'article", 'Read the article')}${a.wc ? ` · ${Math.max(1, Math.round(a.wc / 200))} min` : ''} →</span></div>
     </li>`; };
   el.innerHTML = `<h2>🗞️ ${L('Actu e-ink & dashboards', 'E-ink & dashboards news')}</h2>

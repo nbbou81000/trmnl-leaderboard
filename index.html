@@ -7,6 +7,8 @@
 <meta name="description" content="Classement horaire de tous les créateurs de recettes publiques TRMNL : rangs, installations, forks, tendances et statistiques détaillées.">
 <meta name="theme-color" content="#f8654b">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="La semaine en bref (FR)" href="feed.xml">
+<link rel="alternate" type="application/rss+xml" title="The week in brief (EN)" href="feed-en.xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TRMNL Rank">
@@ -273,6 +275,32 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .news a{font-weight:650;text-decoration:none}
 .news a:hover{text-decoration:underline}
 .news .when{font-size:.78rem;color:var(--ink2)}
+.enews li{padding:14px 0}
+.wk-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}
+.wk-kpis div{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px;text-align:center}
+.wk-kpis b{display:block;font-size:1.6rem;font-weight:800}
+.wk-kpis span{font-size:.82rem;color:var(--ink2)}
+.wk-list{list-style:none;margin:0;padding:0}
+.wk-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--rule)}
+.wk-list li:last-child{border-bottom:0}
+.wk-list .sub{display:block;font-size:.8rem;color:var(--ink2)}
+.mile{font-size:.76rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap;background:var(--accent-soft);color:var(--accent-ink)}
+.mile.cf{background:color-mix(in srgb,var(--sage) 20%,transparent);color:var(--sage)}
+.rss{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.86rem;text-decoration:none;border:1.5px solid var(--accent);border-radius:8px;padding:5px 10px}
+.pr-card{border:1.5px solid var(--accent);}
+.pr-pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pr-pick input{flex:1;min-width:200px}
+.pr-bar{height:6px;background:var(--rule);border-radius:3px;overflow:hidden;margin-top:8px}
+.pr-bar i{display:block;height:100%;background:var(--accent)}
+.enews .etop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.enews .src{font-size:.8rem;color:var(--ink2)}
+.enews .cat{font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.enews .cat.screens{background:color-mix(in srgb,var(--sky) 20%,transparent);color:var(--sky)}
+.enews .cat.diy{background:color-mix(in srgb,var(--sage) 20%,transparent);color:var(--sage)}
+.enews .cat.dashboards{background:color-mix(in srgb,var(--mustard) 20%,transparent);color:var(--mustard)}
+.enews h4{margin:2px 0 4px;font-size:1.02rem;line-height:1.3}
+.enews h4 a{text-decoration:none}.enews h4 a:hover{text-decoration:underline}
+.enews p{margin:0;font-size:.9rem;color:var(--ink2);line-height:1.45;display:block;-webkit-line-clamp:unset;overflow:visible}
 .news p{margin:4px 0 0;font-size:.86rem;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 /* Tableaux */
@@ -385,9 +413,12 @@ footer p{margin:0 0 12px;max-width:80ch}
   <section id="tab-createurs" hidden></section>
   <section id="tab-recettes" hidden></section>
   <section id="tab-tendances" hidden></section>
+  <section id="tab-semaine" hidden></section>
   <section id="tab-analyses" hidden></section>
   <section id="tab-trmnl" hidden></section>
+  <section id="tab-eink" hidden></section>
   <section id="tab-jour" hidden></section>
+  <section id="tab-pronos" hidden></section>
 </main>
 
 <footer id="footer"></footer>
@@ -434,10 +465,10 @@ function setLocale() {
 setLocale();
 
 // Onglets : identifiants internes (français) et adresses selon la langue
-const SLUGS = { accueil: 'home', moi: 'me', galerie: 'gallery', elaboration: 'in-the-making', classements: 'rankings', createurs: 'creators', recettes: 'recipes', tendances: 'trends', analyses: 'insights', trmnl: 'trmnl', jour: 'daily', createur: 'creator' };
+const SLUGS = { accueil: 'home', moi: 'me', galerie: 'gallery', elaboration: 'in-the-making', classements: 'rankings', createurs: 'creators', recettes: 'recipes', tendances: 'trends', semaine: 'this-week', analyses: 'insights', trmnl: 'trmnl', eink: 'eink', jour: 'daily', pronos: 'predictions', createur: 'creator' };
 const FROM_SLUG = Object.fromEntries(Object.entries(SLUGS).map(([fr, en]) => [en, fr]));
 const hr = (k, arg) => '#' + (EN() ? SLUGS[k] : k) + (arg != null ? '/' + arg : '');
-const TAB_LABELS = () => ({ accueil: L('Accueil', 'Home'), moi: L('Mon profil', 'My profile'), galerie: L('Galerie', 'Gallery'), elaboration: L('En élaboration', 'In the making'), classements: L('Classements', 'Rankings'), createurs: L('Créateurs', 'Creators'), recettes: L('Recettes', 'Recipes'), tendances: L('Tendances', 'Trends'), analyses: L('Analyses', 'Insights'), trmnl: L('Actu TRMNL', 'TRMNL news'), jour: L('Recette du jour', 'Recipe of the day') });
+const TAB_LABELS = () => ({ accueil: L('Accueil', 'Home'), moi: L('Mon profil', 'My profile'), galerie: L('Galerie', 'Gallery'), elaboration: L('En élaboration', 'In the making'), classements: L('Classements', 'Rankings'), createurs: L('Créateurs', 'Creators'), recettes: L('Recettes', 'Recipes'), tendances: L('Tendances', 'Trends'), semaine: L('Cette semaine', 'This week'), analyses: L('Analyses', 'Insights'), trmnl: L('Actu TRMNL', 'TRMNL news'), eink: L('Actu e-ink', 'E-ink news'), jour: L('Recette du jour', 'Recipe of the day'), pronos: L('Pronostics', 'Predictions') });
 
 /* ================= Outils / Helpers ================= */
 const $ = (s, el = document) => el.querySelector(s);
@@ -688,7 +719,7 @@ async function init() {
 }
 
 /* ================= Routage ================= */
-const TABS = ['accueil', 'moi', 'galerie', 'elaboration', 'classements', 'createurs', 'recettes', 'tendances', 'analyses', 'trmnl', 'jour'];
+const TABS = ['accueil', 'moi', 'galerie', 'elaboration', 'classements', 'createurs', 'recettes', 'tendances', 'semaine', 'analyses', 'trmnl', 'eink', 'jour', 'pronos'];
 function route() {
   if (!D) return;
   const [raw, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');
@@ -700,7 +731,7 @@ function route() {
     if (a.dataset.tab === 'moi') a.classList.toggle('mine', !!me);
   });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, analyses: renderAnalyses, trmnl: renderTrmnl, jour: renderSpotlightTab })[t]();
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: renderWeek, analyses: renderAnalyses, trmnl: renderTrmnl, eink: renderEink, jour: renderSpotlightTab, pronos: renderPronos })[t]();
   window.scrollTo({ top: 0 });
 }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -857,14 +888,28 @@ function renderHome() {
   bindFinder('homeFind', chooseMe);
 }
 
+/* ================= Compte à rebours vers l'objectif ================= */
+// Rythme récent : moyenne depuis la publication pour une recette de moins de 30 jours, sinon les 30 derniers jours.
+function etaText(r, target) {
+  const left = target - r.s; if (left <= 0) return '';
+  const age = r.p ? Math.max(1, (Date.now() - Date.parse(r.p)) / DAY) : null;
+  const rate = age != null && age < 30 ? r.s / age : (r.d30 ?? 0) / 30;
+  if (!(rate > 0)) return L('pas encore de rythme', 'no pace yet');
+  const days = left / rate;
+  if (days > 365) return L("plus d'un an", 'over a year');
+  const n = Math.max(1, Math.round(days));
+  const when = new Date(Date.now() + days * DAY).toLocaleDateString(LOC, { day: 'numeric', month: 'short' });
+  return `<span title="${L('Estimation au rythme récent, pas une promesse', 'Estimate at the recent pace, not a promise')}">${L(`≈ ${n} j (${when})`, `≈ ${n} d (${when})`)}</span>`;
+}
+
 /* ================= Profil ================= */
 function badgesOf(c) {
   const b = [], N = D.creators.length, best = byR.get(c.best);
   if (c.r === 1) b.push(L('🥇 Numéro 1', '🥇 Number 1')); else if (c.r <= 3) b.push('🏆 Podium'); else if (c.r <= 10) b.push('⭐ Top 10'); else if (c.r <= 50) b.push('Top 50'); else if (c.r <= 100) b.push('Top 100');
   if (c.r > 100 && c.r / N <= .25) b.push(L('Quart supérieur', 'Top quarter'));
   if (best?.i >= 1000) b.push(L('Une recette à 1 000 installations', 'A 1,000-install recipe')); else if (best?.i >= 100) b.push(L('Une recette à 100 installations', 'A 100-install recipe'));
-  const reached = c.recipes.filter(r => r.i >= goal).length;
-  if (reached) b.push(L(`${reached} recette${reached > 1 ? 's' : ''} à ${goal} installations`, `${reached} recipe${reached > 1 ? 's' : ''} at ${goal} installs`));
+  const reached = c.recipes.filter(r => r.s >= goal).length;
+  if (reached) b.push(L(`${reached} recette${reached > 1 ? 's' : ''} à ${goal} connexions`, `${reached} recipe${reached > 1 ? 's' : ''} at ${goal} connections`));
   if (c.n >= 20) b.push(L('Très prolifique', 'Very prolific')); else if (c.n >= 10) b.push(L('Prolifique', 'Prolific'));
   if (c.first && Date.now() - Date.parse(c.first) < 90 * DAY) b.push(L('Révélation', 'Rising star'));
   if (c.first && Date.now() - Date.parse(c.first) > 365 * DAY) b.push(L('Pionnier', 'Pioneer'));
@@ -932,7 +977,7 @@ function renderProfile(u) {
       <div class="val">${m.show(c)}${top ? `, top ${top} %` : ''}</div><div class="pc"><i style="width:${top ? 101 - top : 0}%"></i></div></div>`;
   }).join('');
   const recs = c.recipes.slice().sort((a, b) => b.s - a.s);
-  const reached = recs.filter(r => r.i >= goal).length;
+  const reached = recs.filter(r => r.s >= goal).length;
   const myCats = new Map(); recs.forEach(r => catsOf(r).forEach(k => { const o = myCats.get(k) || { n: 0, s: 0 }; o.n++; o.s += r.s; myCats.set(k, o); }));
   const catRows = [...myCats].sort((a, b) => b[1].s - a[1].s);
   const months = c.first ? Math.max(1, (Date.now() - Date.parse(c.first)) / (30.44 * DAY)) : 1;
@@ -990,7 +1035,7 @@ function renderProfile(u) {
       <tbody>${catRows.map(([k, o], i) => { const R = catRanks.get(k); const e = R?.list.find(x => x[0] === c.u); return `<tr data-ci="${i}"><td class="l">${esc(catLabel(k))}</td><td>${o.n}</td><td>${nf(o.s)}</td><td>${e ? `${R.map.get(e)} ${L('sur', 'of')} ${R.size}` : '—'}</td></tr>`; }).join('')}</tbody></table></div></div>
   </div>
   <div class="tools" style="margin-top:18px">
-    <label>${L("Objectif d'installations par recette", 'Installs goal per recipe')}<input id="goalIn" type="number" min="1" value="${goal}" style="width:110px"></label>
+    <label>${L("Objectif de connexions par recette (installs + forks, comme le Creator Fund)", 'Connections goal per recipe (installs + forks, as for the Creator Fund)')}<input id="goalIn" type="number" min="1" value="${goal}" style="width:110px"></label>
     <p class="muted" style="margin:0 0 6px">${L(`${reached} recette${reached > 1 ? 's' : ''} sur ${recs.length} à l'objectif.`, `${reached} of ${recs.length} recipe${recs.length > 1 ? 's' : ''} at goal.`)}</p>
   </div>
   <div class="scroll"><table>
@@ -999,7 +1044,7 @@ function renderProfile(u) {
       <td class="l name">${r.ic ? `<img class="ico" src="${esc(r.ic)}" alt="" loading="lazy">` : ''}${recipeLink(r)}<span class="sub">${esc(catsTxt(r))}</span></td>
       <td>${r.r}<span class="sub">${L('sur', 'of')} ${nf(D.recipes.length)}</span></td><td>${nf(r.i)}</td><td>${nf(r.f)}</td><td>${nf1(r.ipd)}</td>
       <td>${sgc(r.d24)}</td><td>${sgc(r.d7)}</td><td>${sgc(r.d30)}</td>
-      <td class="l"><div class="bar ${r.i >= goal ? 'done' : ''}" title="${r.i} / ${goal}"><i style="width:${Math.min(100, 100 * r.i / goal)}%"></i></div><span class="sub">${r.i >= goal ? L('atteint', 'reached') : L(`encore ${goal - r.i}`, `${goal - r.i} to go`)}</span></td>
+      <td class="l"><div class="bar ${r.s >= goal ? 'done' : ''}" title="${r.s} / ${goal}"><i style="width:${Math.min(100, 100 * r.s / goal)}%"></i></div><span class="sub">${r.s >= goal ? L('atteint', 'reached') : `${L(`encore ${goal - r.s}`, `${goal - r.s} to go`)} · ${etaText(r, goal)}`}</span></td>
       <td>${c.s ? nf1(100 * r.s / c.s) : 0} %</td><td>${dfmt(r.p)}</td>
       <td><button class="btn ghost small" type="button" data-share="${r.id}">${L('Vignette', 'Card')}</button></td>
       <td class="l">${recipeSpark.get(r.id) || ''}</td></tr>`).join('')}</tbody>
@@ -1210,6 +1255,8 @@ const realApi = {
   async requestLink(cid) { const c = await client(); ok(await c.rpc('request_creator_link', { cid })); },
   async pendingLinks() { const c = await client(); return ok(await c.from('profiles').select('id,name,avatar,creator_id').eq('creator_status', 'pending')); },
   async reviewLink(target, approve) { const c = await client(); ok(await c.rpc('review_creator_link', { target, approve })); },
+  async predictions() { const c = await client(); return ok(await c.from('predictions').select('id,user_id,recipe_id,week,created_at,profiles(name,avatar)').order('created_at', { ascending: false }).limit(3000)); },
+  async predict(recipeId) { const c = await client(); ok(await c.from('predictions').insert({ recipe_id: String(recipeId) })); },
   async deleteAccount() {
     const c = await client();
     const files = ok(await c.storage.from('wip').list(wipMe.id, { limit: 1000 }));
@@ -1833,6 +1880,171 @@ async function shareCard(r) {
     const bt = $('#cardShare', wrap); bt.hidden = false;
     bt.onclick = () => navigator.share({ title: r.n, text: r.d || '', url }).then(() => track('recette-partagee', true)).catch(() => {});
   }
+}
+
+/* ================= Cette semaine (La semaine en bref) ================= */
+let weekData = null;
+async function renderWeek() {
+  const el = $('#tab-semaine');
+  if (!weekData) weekData = await getJSON('data/weekly.json').catch(() => ({}));
+  const cur = weekData?.current, issues = weekData?.issues || [];
+  const head = `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <h2 style="margin:0">📅 ${L('La semaine en bref', 'The week in brief')}</h2>
+      <a class="rss" href="${EN() ? 'feed-en.xml' : 'feed.xml'}" target="_blank" rel="noopener">📡 ${L('Flux RSS', 'RSS feed')}</a></div>
+    <p class="lead">${L("Les 7 derniers jours du catalogue, recalculés chaque heure. Chaque lundi, l'édition est archivée et publiée dans le flux RSS, pour suivre le palmarès sans venir sur le site.",
+      'The last 7 days of the catalog, recomputed every hour. Every Monday the edition is archived and published in the RSS feed, so you can follow the leaderboard without visiting the site.')}</p>`;
+  if (!cur) { el.innerHTML = head + `<p class="notice">${L('La première édition arrive au prochain passage de mise à jour.', 'The first edition arrives with the next update run.')}</p>`; return; }
+  const rec = x => `<a href="https://trmnl.com/recipes/${x.id}" target="_blank" rel="noopener">${esc(x.n)}</a><a class="sub" href="${hr('createur', x.u)}">${esc(nameOf(x.u))}</a>`;
+  const block = w => `
+    <div class="wk-kpis"><div><b>${nf(w.new_recipes)}</b><span>${L('nouvelles recettes', 'new recipes')}</span></div>
+      <div><b>${nf(w.new_creators)}</b><span>${L('nouveaux créateurs', 'new creators')}</span></div>
+      <div><b>${nf(w.milestones.length)}</b><span>${L('paliers franchis', 'milestones')}</span></div></div>
+    <div class="grid g2">
+      <div class="sheet"><h3>🏁 ${L('Paliers franchis', 'Milestones reached')}</h3>
+        ${w.milestones.length ? `<ul class="wk-list">${w.milestones.map(m => `<li><span>${rec(m)}</span><span class="mile ${m.T === 50 ? 'cf' : ''}">${m.T === 50 ? '50 · Creator Fund' : `${nf(m.T)} ${L('connexions', 'connections')}`}</span></li>`).join('')}</ul>`
+          : `<p class="muted">${L('Aucun palier franchi cette semaine.', 'No milestone reached this week.')}</p>`}</div>
+      <div class="sheet"><h3>📈 ${L('Plus fortes hausses', 'Biggest gains')}</h3>
+        <ul class="wk-list">${w.top.map(g => `<li><span>${rec(g)}</span><span class="up">+${nf(g.g)}</span></li>`).join('')}</ul></div>
+      ${w.new_list?.length ? `<div class="sheet"><h3>🆕 ${L('Nouveautés les plus adoptées', 'Most adopted newcomers')}</h3>
+        <ul class="wk-list">${w.new_list.map(r => `<li><span>${rec(r)}</span><span class="muted">${nf(r.s)} ${L('connexions', 'connections')}</span></li>`).join('')}</ul></div>` : ''}
+    </div>`;
+  const past = issues.filter(w => w.week !== cur.week);
+  el.innerHTML = head + `<p class="muted" style="margin:-6px 0 12px">${dfmt(cur.from)} → ${dfmt(cur.to)}</p>` + block(cur)
+    + (past.length ? `<h2 style="margin-top:30px">${L('Éditions précédentes', 'Previous editions')}</h2>` + past.map(w =>
+      `<details class="sheet" style="margin-bottom:10px"><summary style="cursor:pointer;font-weight:700">${dfmt(w.from)} → ${dfmt(w.to)}</summary><div style="margin-top:12px">${block(w)}</div></details>`).join('') : '')
+    + `<p class="note">${L('Connexions = installs + forks. Mêmes chiffres que la colonne « +7 j » du site.', 'Connections = installs + forks. Same figures as the site\'s "+7 d" column.')}</p>`;
+}
+
+/* ================= Pronostics ================= */
+const PRONO_MAX = 150;
+let pronoList = null, pronoPeriod = 'month', dailyPos = null;
+function isoWeekKey(ms) {
+  const d = new Date(ms); d.setUTCHours(0, 0, 0, 0);
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const y = d.getUTCFullYear();
+  return `${y}-W${String(Math.ceil(((d - Date.UTC(y, 0, 1)) / DAY + 1) / 7)).padStart(2, '0')}`;
+}
+// Connexions d'une recette au premier relevé quotidien postérieur à ms (null si ce relevé n'existe pas encore)
+function connAfter(id, ms) {
+  if (!DAILY?.snaps?.length) return null;
+  if (!dailyPos) dailyPos = new Map(DAILY.idx.map(([rid], k) => [rid, k]));
+  const snap = DAILY.snaps.find(x => Date.parse(x.t) >= ms);
+  if (!snap) return null;
+  const k = dailyPos.get(id);
+  return k == null || snap.i[k] == null ? 0 : snap.i[k] + (snap.f[k] || 0);
+}
+// Score d'un pari : connexions gagnées entre le premier relevé après le pari et le premier relevé 7 jours plus tard
+function scoreBet(b) {
+  const t0 = Date.parse(b.created_at), r = byR.get(b.recipe_id);
+  const start = connAfter(b.recipe_id, t0);
+  const end = connAfter(b.recipe_id, t0 + 7 * DAY);
+  const done = end != null;
+  const base = start ?? r?.s ?? 0;
+  const gain = done ? end - base : (r?.s ?? base) - base;
+  return { r, start: base, gain: Math.max(0, gain), done, valid: base <= PRONO_MAX, verdict: t0 + 7 * DAY };
+}
+async function renderPronos() {
+  const el = $('#tab-pronos');
+  const head = `<h2>🔮 ${L('Pronostics', 'Predictions')}</h2>
+    <p class="lead">${L(`Chaque semaine, parie sur la recette qui va le plus progresser. Un seul pari par semaine (du lundi au dimanche), définitif, sur une recette de ${PRONO_MAX} connexions au plus. Ton score : les connexions qu'elle gagne pendant les 7 jours suivants.`,
+      `Every week, bet on the recipe that will grow the most. One bet per week (Monday to Sunday), final, on a recipe with at most ${PRONO_MAX} connections. Your score: the connections it gains over the next 7 days.`)}</p>`;
+  if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L('Les pronostics ne sont pas encore activés sur ce site.', 'Predictions are not enabled on this site yet.')}</p>`; return; }
+  if (!pronoList) {
+    el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
+    try { if (!wipMe && store.get('trmnl-wip-session', '') === '1') { const ss = await api().session(); wipMe = ss.user; wipProfile = ss.profile; } } catch {}
+    try { pronoList = await api().predictions(); } catch (e) { el.innerHTML = head + `<p class="notice">${esc(trErr(e.message))}</p>`; return; }
+  }
+  const week = isoWeekKey(Date.now());
+  const mine = wipMe ? pronoList.filter(b => b.user_id === wipMe.id) : [];
+  const current = mine.find(b => b.week === week);
+  const recLink = r => r ? `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : L('recette disparue', 'recipe gone');
+
+  let me_ = '';
+  if (!wipMe) {
+    me_ = `<div class="sheet pr-card"><h3>${L('Mon pronostic de la semaine', 'My prediction this week')}</h3>
+      <p class="muted">${L('Connecte-toi avec Discord pour participer. Seuls ton pseudo Discord et tes paris sont enregistrés.', 'Sign in with Discord to take part. Only your Discord name and your bets are stored.')}</p>
+      <button class="btn" type="button" id="prIn">${L('Se connecter avec Discord', 'Sign in with Discord')}</button></div>`;
+  } else if (current) {
+    const sc = scoreBet(current);
+    const day = Math.min(7, Math.max(0, Math.floor((Date.now() - Date.parse(current.created_at)) / DAY)));
+    me_ = `<div class="sheet pr-card"><h3>${L('Mon pronostic de la semaine', 'My prediction this week')}</h3>
+      <p style="margin:0 0 4px;font-size:1.1rem;font-weight:700">${recLink(sc.r)}</p>
+      <p class="muted" style="margin:0">${L(`Posé le ${dfmt(current.created_at)} · départ : ${nf(sc.start)} connexions`, `Placed on ${dfmt(current.created_at)} · start: ${nf(sc.start)} connections`)}</p>
+      <p style="margin:10px 0 0;display:flex;justify-content:space-between"><span class="muted">${L(`Verdict le ${dfmt(new Date(sc.verdict).toISOString())}`, `Verdict on ${dfmt(new Date(sc.verdict).toISOString())}`)}</span><span>${L('depuis', 'so far')} : <b class="up">+${nf(sc.gain)}</b></span></p>
+      <div class="pr-bar"><i style="width:${Math.round(100 * day / 7)}%"></i></div></div>`;
+  } else {
+    const eligible = D.recipes.filter(r => r.s <= PRONO_MAX).sort((a, b) => a.n.localeCompare(b.n));
+    me_ = `<div class="sheet pr-card"><h3>${L('Mon pronostic de la semaine', 'My prediction this week')}</h3>
+      <p class="muted" style="margin-top:0">${L(`Choisis une recette parmi les ${nf(eligible.length)} éligibles (${PRONO_MAX} connexions au plus).`, `Pick one of the ${nf(eligible.length)} eligible recipes (at most ${PRONO_MAX} connections).`)}</p>
+      <div class="pr-pick"><input id="prQ" list="prList" placeholder="${L('Nom de la recette', 'Recipe name')}" autocomplete="off">
+        <datalist id="prList">${eligible.map(r => `<option value="${esc(r.n)} · #${r.id}">`).join('')}</datalist>
+        <button class="btn" type="button" id="prGo">${L('Parier', 'Bet')}</button></div>
+      <p class="err" id="prErr" hidden></p></div>`;
+  }
+
+  const monthKey = new Date().toISOString().slice(0, 7);
+  const scored = pronoList.map(b => ({ b, ...scoreBet(b) })).filter(x => x.done && x.valid && (pronoPeriod === 'all' || x.b.created_at.slice(0, 7) === monthKey));
+  const byUser = new Map();
+  for (const x of scored) {
+    const o = byUser.get(x.b.user_id) || { name: x.b.profiles?.name || 'Anonymous', n: 0, total: 0, best: null };
+    o.n++; o.total += x.gain; if (!o.best || x.gain > o.best.gain) o.best = x;
+    byUser.set(x.b.user_id, o);
+  }
+  const board = [...byUser.entries()].sort((a, b) => b[1].total - a[1].total).slice(0, 30);
+  const medal = i => ['🥇', '🥈', '🥉'][i] || `${i + 1}.`;
+  const boardHTML = `<div class="sheet"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <h3 style="margin:0">🏆 ${L('Classement des flairs', 'Best instincts')}</h3>
+      <div class="seg" role="group"><button type="button" data-pp="month" aria-pressed="${pronoPeriod === 'month'}">${L('Ce mois-ci', 'This month')}</button><button type="button" data-pp="all" aria-pressed="${pronoPeriod === 'all'}">${L('Depuis le début', 'All time')}</button></div></div>
+    ${board.length ? `<ul class="wk-list">${board.map(([uid, o], i) => `<li><span><b>${medal(i)} ${esc(o.name)}</b>${wipMe && uid === wipMe.id ? ` <span class="badge">${L('toi', 'you')}</span>` : ''}
+        <span class="sub">${o.n} ${L(o.n > 1 ? 'pronostics' : 'pronostic', o.n > 1 ? 'predictions' : 'prediction')} · ${L('meilleur coup', 'best call')} : ${esc(o.best.r?.n || '—')} (+${nf(o.best.gain)})</span></span><span class="up">+${nf(o.total)}</span></li>`).join('')}</ul>`
+      : `<p class="muted">${L("Pas encore de verdict sur cette période : le classement se remplit 7 jours après les premiers paris.", 'No verdict yet for this period: the ranking fills up 7 days after the first bets.')}</p>`}</div>`;
+
+  const pastMine = mine.filter(b => b !== current).map(b => ({ b, ...scoreBet(b) }));
+  const pastHTML = pastMine.length ? `<div class="sheet" style="margin-top:14px"><h3>${L('Mes pronostics passés', 'My past predictions')}</h3><ul class="wk-list">${pastMine.map(x => `<li><span>${recLink(x.r)}<span class="sub">${dfmt(x.b.created_at)} → ${dfmt(new Date(x.verdict).toISOString())}${x.done ? '' : ' · ' + L('en cours', 'ongoing')}${x.valid ? '' : ' · ' + L('hors règle', 'not eligible')}</span></span><span class="up">+${nf(x.gain)}</span></li>`).join('')}</ul></div>` : '';
+
+  const open = pronoList.filter(b => b.week === week).length;
+  el.innerHTML = head + `<div class="grid g2">${me_}${boardHTML}</div>${pastHTML}
+    <p class="note">${L(`${open} pari${open > 1 ? 's' : ''} posé${open > 1 ? 's' : ''} cette semaine. Les scores sont calculés à partir des relevés quotidiens du site, 7 jours après chaque pari.`, `${open} bet${open > 1 ? 's' : ''} placed this week. Scores are computed from the site's daily snapshots, 7 days after each bet.`)}</p>`;
+
+  el.querySelectorAll('[data-pp]').forEach(b => b.onclick = () => { pronoPeriod = b.dataset.pp; renderPronos(); });
+  $('#prIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', hr('pronos')); track('connexion-discord', true); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
+  $('#prGo')?.addEventListener('click', async () => {
+    const err = $('#prErr'); err.hidden = true;
+    const id = ($('#prQ').value.match(/#(\d+)\s*$/) || [])[1];
+    const r = id && byR.get(id);
+    if (!r || r.s > PRONO_MAX) { err.textContent = L('Choisis une recette dans la liste proposée.', 'Pick a recipe from the suggested list.'); err.hidden = false; return; }
+    if (!confirm(L(`Parier sur « ${r.n} » ? Ce pari est définitif pour la semaine.`, `Bet on "${r.n}"? This bet is final for the week.`))) return;
+    const btn = $('#prGo'); btn.disabled = true;
+    try { await api().predict(r.id); pronoList = null; track('pronostic', true); toast(L('Pari enregistré !', 'Bet saved!')); renderPronos(); }
+    catch (e) { err.textContent = /duplicate|unique/i.test(e.message) ? L('Tu as déjà parié cette semaine.', 'You already bet this week.') : trErr(e.message); err.hidden = false; btn.disabled = false; }
+  });
+}
+
+/* ================= Actu e-ink & dashboards ================= */
+let einkData = null, einkCat = 'all';
+const EINK_CATS = () => [['all', L('Tout', 'All')], ['screens', L('Écrans & liseuses', 'Screens & e-readers')], ['diy', L('DIY & projets', 'DIY & projects')], ['dashboards', L('Dashboards', 'Dashboards')]];
+async function renderEink() {
+  const el = $('#tab-eink');
+  if (!einkData) einkData = await getJSON('data/eink-news.json').catch(() => ({}));
+  const all = einkData?.articles || [];
+  const list = einkCat === 'all' ? all : all.filter(a => a.cat === einkCat);
+  const catLabel = Object.fromEntries(EINK_CATS());
+  const item = a => `<li>
+      <div class="etop"><span class="src"><b>${esc(a.src)}</b> · ${dfmt(a.d)}</span><span class="cat ${esc(a.cat)}">${esc(catLabel[a.cat] || a.cat)}</span></div>
+      <h4><a href="${esc(a.u)}" target="_blank" rel="noopener">${esc(EN() ? a.title_en : a.title_fr)}</a></h4>
+      ${(EN() ? a.sum_en : a.sum_fr) ? `<p>${esc(EN() ? a.sum_en : a.sum_fr)}</p>` : ''}
+    </li>`;
+  el.innerHTML = `<h2>🗞️ ${L('Actu e-ink & dashboards', 'E-ink & dashboards news')}</h2>
+    <p class="lead">${L("Ce qui bouge autour des écrans e-ink, des liseuses et des tableaux de bord maison, trié et résumé automatiquement à partir de sources spécialisées.",
+      'What is happening around e-ink screens, e-readers and home dashboards, automatically sorted and summarized from specialized sources.')}</p>
+    <div class="seg" role="group" style="margin-bottom:14px">${EINK_CATS().map(([k, lb]) => `<button type="button" data-ecat="${k}" aria-pressed="${k === einkCat}">${lb}</button>`).join('')}</div>
+    ${list.length ? `<div class="sheet"><ul class="news enews">${list.map(item).join('')}</ul></div>`
+      : `<p class="notice">${all.length ? L('Rien dans cette catégorie pour le moment.', 'Nothing in this category yet.')
+        : L("Les premières actus arrivent au prochain passage de la veille (jusqu'à 4 fois par jour).", 'The first stories arrive with the next news run (up to 4 times a day).')}</p>`}
+    <p class="note">${L("Titres et résumés rédigés par une IA (Mistral) à partir des sources citées : lisez l'article complet chez la source avant de vous y fier. Mise à jour jusqu'à 4 fois par jour.",
+      'Titles and summaries written by an AI (Mistral) from the cited sources: read the full article at the source before relying on it. Updated up to 4 times a day.')}
+      ${einkData?.last_run ? L(` Dernier passage : ${ago(einkData.last_run)}.`, ` Last run: ${ago(einkData.last_run)}.`) : ''}</p>`;
+  el.querySelectorAll('[data-ecat]').forEach(b => b.onclick = () => { einkCat = b.dataset.ecat; renderEink(); });
 }
 
 /* ================= Actu TRMNL ================= */

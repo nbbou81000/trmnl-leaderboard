@@ -9,6 +9,12 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="La semaine en bref (FR)" href="feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The week in brief (EN)" href="feed-en.xml">
+<link rel="alternate" type="application/rss+xml" title="Nouvelles recettes (FR)" href="feed-recettes.xml">
+<link rel="alternate" type="application/rss+xml" title="New recipes (EN)" href="feed-recettes-en.xml">
+<link rel="alternate" type="application/rss+xml" title="Paliers atteints (FR)" href="feed-paliers.xml">
+<link rel="alternate" type="application/rss+xml" title="Milestones (EN)" href="feed-paliers-en.xml">
+<link rel="alternate" type="application/rss+xml" title="Actu e-ink &amp; dashboards (FR)" href="feed-eink.xml">
+<link rel="alternate" type="application/rss+xml" title="E-ink &amp; dashboards news (EN)" href="feed-eink-en.xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TRMNL Rank">
@@ -753,7 +759,7 @@ function route() {
     if (a.dataset.tab === 'moi') a.classList.toggle('mine', !!me);
   });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: renderWeek, analyses: renderAnalyses, trmnl: renderTrmnl, eink: renderEink, jour: renderSpotlightTab, pronos: renderPronos })[t]();
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: renderWeek, analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos })[t]();
   window.scrollTo({ top: 0 });
 }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -1904,6 +1910,26 @@ async function shareCard(r) {
   }
 }
 
+/* ================= Flux RSS ================= */
+function rssBlock() {
+  const f = base => EN() ? `${base}-en.xml` : `${base}.xml`;
+  const feeds = [
+    ['📅', L('La semaine en bref', 'The week in brief'), EN() ? 'feed-en.xml' : 'feed.xml', L('Chaque lundi, le résumé de la semaine.', 'Every Monday, the week summed up.')],
+    ['🆕', L('Nouvelles recettes', 'New recipes'), f('feed-recettes'), L("Chaque recette publiée, avec le mot de son auteur et l'annonce de TRMNL.", "Every published recipe, with its author's note and TRMNL's announcement.")],
+    ['🏁', L('Paliers atteints', 'Milestones'), f('feed-paliers'), L('Chaque recette qui passe 50, 100, 500, 1 000 connexions…', 'Every recipe that passes 50, 100, 500, 1,000 connections…')],
+    ['🗞️', L('Actu e-ink & dashboards', 'E-ink & dashboards news'), f('feed-eink'), L('Les articles complets de la veille e-ink.', 'The full articles from the e-ink news.')],
+  ];
+  return `<div class="sheet" style="margin-top:22px"><h3>📡 ${L('Suivre le palmarès par RSS', 'Follow the leaderboard by RSS')}</h3>
+    <p class="muted" style="margin-top:0">${L("Copie une adresse dans ton lecteur RSS préféré pour recevoir les nouveautés sans venir sur le site.", 'Copy a link into your favorite RSS reader to get updates without visiting the site.')}</p>
+    <ul class="wk-list">${feeds.map(([ico, name, file, desc]) => `<li><span><b>${ico} ${name}</b><span class="sub">${desc}</span></span>
+      <span style="display:flex;gap:6px;flex:none"><a class="rss" href="${file}" target="_blank" rel="noopener">RSS</a><button class="btn ghost small" type="button" data-copyfeed="${file}">${L('Copier', 'Copy')}</button></span></li>`).join('')}</ul></div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-copyfeed]'); if (!b) return;
+  const url = new URL(b.dataset.copyfeed, location.href).href;
+  navigator.clipboard?.writeText(url).then(() => toast(L('Adresse copiée', 'Link copied')), () => prompt(L("Copie l'adresse :", 'Copy the link:'), url));
+});
+
 /* ================= Cette semaine (La semaine en bref) ================= */
 let weekData = null;
 async function renderWeek() {
@@ -1934,6 +1960,7 @@ async function renderWeek() {
   el.innerHTML = head + `<p class="muted" style="margin:-6px 0 12px">${dfmt(cur.from)} → ${dfmt(cur.to)}</p>` + block(cur)
     + (past.length ? `<h2 style="margin-top:30px">${L('Éditions précédentes', 'Previous editions')}</h2>` + past.map(w =>
       `<details class="sheet" style="margin-bottom:10px"><summary style="cursor:pointer;font-weight:700">${dfmt(w.from)} → ${dfmt(w.to)}</summary><div style="margin-top:12px">${block(w)}</div></details>`).join('') : '')
+    + rssBlock()
     + `<p class="note">${L('Connexions = installs + forks. Mêmes chiffres que la colonne « +7 j » du site.', 'Connections = installs + forks. Same figures as the site\'s "+7 d" column.')}</p>`;
 }
 
@@ -2074,7 +2101,7 @@ function openEink(a) {
   m.$('.ehero')?.addEventListener('error', e => e.target.remove());
   track('actu-eink-lue', true);
 }
-async function renderEink() {
+async function renderEink(openId) {
   const el = $('#tab-eink');
   if (!einkData) einkData = await getJSON('data/eink-news.json').catch(() => ({}));
   const all = einkData?.articles || [];
@@ -2087,7 +2114,9 @@ async function renderEink() {
         ${t.teaser ? `<p>${esc(t.teaser)}</p>` : ''}
         <span class="more">${L("Lire l'article", 'Read the article')}${a.wc ? ` · ${Math.max(1, Math.round(a.wc / 200))} min` : ''} →</span></div>
     </li>`; };
-  el.innerHTML = `<h2>🗞️ ${L('Actu e-ink & dashboards', 'E-ink & dashboards news')}</h2>
+  el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <h2 style="margin:0">🗞️ ${L('Actu e-ink & dashboards', 'E-ink & dashboards news')}</h2>
+      <a class="rss" href="${EN() ? 'feed-eink-en.xml' : 'feed-eink.xml'}" target="_blank" rel="noopener">📡 ${L('Flux RSS', 'RSS feed')}</a></div>
     <p class="lead">${L("Ce qui bouge autour des écrans e-ink, des liseuses et des tableaux de bord maison, trié et résumé automatiquement à partir de sources spécialisées.",
       'What is happening around e-ink screens, e-readers and home dashboards, automatically sorted and summarized from specialized sources.')}</p>
     <div class="seg" role="group" style="margin-bottom:14px">${EINK_CATS().map(([k, lb]) => `<button type="button" data-ecat="${k}" aria-pressed="${k === einkCat}">${lb}</button>`).join('')}</div>
@@ -2104,6 +2133,8 @@ async function renderEink() {
     li.onclick = () => openEink(a);
     li.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEink(a); } };
   });
+  const target = openId && all.find(x => x.id === openId);
+  if (target) openEink(target);
 }
 
 /* ================= Actu TRMNL ================= */

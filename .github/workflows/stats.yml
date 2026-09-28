@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p public/data
           if git fetch --depth=1 origin gh-pages 2>/dev/null; then
-            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json; do
+            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json; do
               git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
             done
           else
@@ -54,6 +54,12 @@ jobs:
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
         run: node scripts/spotlight.mjs public/data
+
+      # Le script se limite lui-même à un passage toutes les 6 h (4 par jour au plus) et à un seul appel Mistral par passage
+      - name: Actu e-ink & dashboards (Mistral, 4 fois par jour au plus)
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+        run: node scripts/eink-news.mjs public/data
 
       - name: Visites du jour (GoatCounter)
         run: node scripts/goatcounter-today.mjs public/data
@@ -81,6 +87,7 @@ jobs:
           if [ "$REPO" = "$OWNER.github.io" ]; then SITE="https://$REPO/"; else SITE="https://$OWNER.github.io/$REPO/"; fi
           sed -i "s#__SITE_URL__#$SITE#g; s#__REPO__#$GITHUB_REPOSITORY#g; s#__SUPABASE_URL__#${SUPABASE_URL}#g; s#__SUPABASE_KEY__#${SUPABASE_ANON_KEY}#g" public/index.html
           SITE_URL="$SITE" node scripts/build-pages.mjs public
+          SITE_URL="$SITE" node scripts/weekly.mjs public
           touch public/.nojekyll
           cd public
           git init -q -b gh-pages

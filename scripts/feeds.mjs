@@ -3,7 +3,7 @@
 //  - feed-recettes.xml / feed-recettes-en.xml : chaque nouvelle recette publique, avec le texte « About This Plugin »
 //                                               de son auteur et, quand TRMNL l'a annoncée, sa petite phrase d'annonce ;
 //  - feed-paliers.xml / feed-paliers-en.xml   : chaque fois qu'une recette franchit 50, 100, 250, 500… connexions ;
-//  - feed-createur-<n°>.xml (+ -en)           : les statistiques heure par heure d'un créateur (voir STATS_FEEDS).
+//  - feed-createur-<n°>.xml (+ -en)           : les statistiques d'un créateur, un flux pour chaque créateur du palmarès.
 // Aucune IA ici : un seul appel à l'API publique de TRMNL par passage (les 50 dernières recettes publiées).
 // Usage : SITE_URL=https://…/ node scripts/feeds.mjs public
 import fs from 'node:fs/promises';
@@ -13,10 +13,10 @@ const ROOT = process.argv[2] || 'public';
 const DATA = path.join(ROOT, 'data');
 const SITE = (process.env.SITE_URL || '').replace(/\/?$/, '/');
 const MILESTONES = [50, 100, 250, 500, 1000, 2000, 5000];
-// Créateurs qui ont leur flux de statistiques horaires : ajoutez un numéro pour en créer un autre
-const STATS_FEEDS = ['40325'];
-// Parmi eux, ceux qui veulent un article à chaque relevé horaire, même quand rien n'a bougé
+// Chaque créateur a son flux de statistiques (un article quand ses chiffres bougent).
+// Ceux-ci ont en plus un article à chaque relevé horaire, même quand rien n'a bougé :
 const STATS_EVERY_HOUR = ['40325'];
+const STATS_KEEP = 24, STATS_KEEP_EVERY_HOUR = 72;   // articles gardés par flux
 const KEEP = { eink: 30, recipes: 40, milestones: 60 };
 const DAY = 864e5;
 const log = (...a) => console.log('[flux RSS]', ...a);
@@ -134,30 +134,33 @@ function milestonesFeed(list, names, en) {
 // ─── 4. Statistiques horaires d'un créateur ──────────────────────────────────
 // Un article à chaque relevé où quelque chose a bougé (total, classement ou une recette),
 // ou à chaque relevé horaire sans exception pour les créateurs listés dans STATS_EVERY_HOUR.
-function statsSnapshot(latest, u) {
-  const c = latest.creators.find(x => x.u === u); if (!c) return null;
-  const recipes = latest.recipes.filter(r => r.u === u).sort((a, b) => b.s - a.s).map(r => ({ id: r.id, n: r.n, i: r.i, f: r.f, s: r.s }));
-  return { at: latest.generated_at, total: c.s, i: c.i, f: c.f, rank: c.r, of: latest.creators.length, d24: c.d24 ?? null, recipes };
+// Format compact pour 400 créateurs : une recette = [id, installs, forks, connexions, évolution] ; les noms sont gardés à part.
+function statsSnapshot(latest, c, recipes) {
+  return { at: latest.generated_at, total: c.s, i: c.i, f: c.f, rank: c.r, of: latest.creators.length, d24: c.d24 ?? null,
+    recipes: recipes.slice().sort((a, b) => b.s - a.s).map(r => [r.id, r.i, r.f, r.s]) };
 }
 function statsUpdate(state, cur, everyHour) {
   const prev = state.last;
-  const before = new Map((prev?.recipes || []).map(r => [r.id, r.s]));
-  const recipes = cur.recipes.map(r => ({ ...r, ds: before.has(r.id) ? r.s - before.get(r.id) : null }));
-  const changed = !prev || prev.total !== cur.total || prev.rank !== cur.rank || recipes.some(r => r.ds !== 0) || prev.recipes.length !== cur.recipes.length;
-  state.last = cur;
+  const before = new Map(prev ? (prev.rs || (prev.recipes || []).map(r => Array.isArray(r) ? [r[0], r[3]] : [r.id, r.s])) : []);
+  const recipes = cur.recipes.map(r => [...r, before.has(r[0]) ? r[3] - before.get(r[0]) : null]);
+  const changed = !prev || prev.total !== cur.total || prev.rank !== cur.rank || recipes.some(r => r[4] !== 0) || before.size !== cur.recipes.length;
+  state.last = { at: cur.at, total: cur.total, rank: cur.rank, rs: cur.recipes.map(r => [r[0], r[3]]) };
   if (!changed && !everyHour) return false;
-  state.items = [{ ...cur, recipes, first: !prev, dTotal: prev ? cur.total - prev.total : null, dRank: prev ? prev.rank - cur.rank : null, since: prev?.at || null }, ...(state.items || [])].slice(0, 72);
+  state.items = [{ ...cur, recipes, first: !prev, dTotal: prev ? cur.total - prev.total : null, dRank: prev ? prev.rank - cur.rank : null, since: prev?.at || null },
+    ...(state.items || [])].slice(0, everyHour ? STATS_KEEP_EVERY_HOUR : STATS_KEEP);
   return true;
 }
 const ordEN = n => { const m = n % 100; return n + (m >= 11 && m <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th'); };
-function statsFeed(u, st, names, en) {
+function statsFeed(u, st, names, rn, en) {
   const t = (fr, e) => en ? e : fr;
   const who = names[u] || t(`Créateur #${u}`, `Creator #${u}`);
   const sg = n => n == null ? '' : n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '=';
   const nfmt = n => Number(n).toLocaleString(en ? 'en-US' : 'fr-FR');
   const rankTxt = x => t(`${x.rank}${x.rank === 1 ? 'er' : 'e'} au général`, `${ordEN(x.rank)} overall`);
   const moveTxt = d => d == null || d === 0 ? '' : d > 0 ? t(`▲ ${d} place${d > 1 ? 's' : ''}`, `▲ ${d} spot${d > 1 ? 's' : ''}`) : t(`▼ ${-d} place${-d > 1 ? 's' : ''}`, `▼ ${-d} spot${-d > 1 ? 's' : ''}`);
-  const items = (st.items || []).map(x => {
+  const items = (st.items || []).map(x0 => {
+    // Articles déjà enregistrés sous l'ancien format (objets) ou le format compact (tableaux)
+    const x = { ...x0, recipes: x0.recipes.map(r => Array.isArray(r) ? { id: r[0], i: r[1], f: r[2], s: r[3], ds: r[4] ?? null, n: rn[r[0]] || `#${r[0]}` } : r) };
     const title = x.first
       ? t(`📊 ${nfmt(x.total)} connexions · ${rankTxt(x)} (point de départ)`, `📊 ${nfmt(x.total)} connections · ${rankTxt(x)} (starting point)`)
       : `📊 ${nfmt(x.total)} ${t('connexions', 'connections')} (${sg(x.dTotal)}) · ${rankTxt(x)}${moveTxt(x.dRank) ? ` (${moveTxt(x.dRank)})` : ''}`;
@@ -219,14 +222,17 @@ async function main() {
   state.milestones = [...events, ...state.milestones].slice(0, KEEP.milestones);
   if (events.length) log(`${events.length} palier(s) franchi(s) : ${events.map(e => `${e.n} (${e.T})`).join(', ')}.`);
 
-  // Statistiques horaires des créateurs suivis
-  state.stats ||= {};
-  for (const u of STATS_FEEDS) {
-    const cur = statsSnapshot(latest, u); if (!cur) continue;
-    state.stats[u] ||= {};
-    if (state.stats[u].last?.at === cur.at) continue;   // même relevé que le passage précédent (publication seule)
-    if (statsUpdate(state.stats[u], cur, STATS_EVERY_HOUR.includes(u))) log(`Statistiques de ${names[u] || u} : ${cur.total} connexions, ${cur.rank}e.`);
+  // Statistiques de chaque créateur
+  state.stats ||= {}; state.rn ||= {};
+  const byCreator = new Map();
+  for (const r of latest.recipes) { state.rn[r.id] = r.n; if (!byCreator.has(r.u)) byCreator.set(r.u, []); byCreator.get(r.u).push(r); }
+  let updated = 0;
+  for (const c of latest.creators) {
+    const st = (state.stats[c.u] ||= {});
+    if (st.last?.at === latest.generated_at) continue;   // même relevé que le passage précédent (publication seule)
+    if (statsUpdate(st, statsSnapshot(latest, c, byCreator.get(c.u) || []), STATS_EVERY_HOUR.includes(c.u))) updated++;
   }
+  log(`Statistiques : ${updated} flux de créateur mis à jour sur ${latest.creators.length}.`);
 
   await fs.writeFile(path.join(DATA, 'feeds-state.json'), JSON.stringify(state));
   const out = [
@@ -234,7 +240,7 @@ async function main() {
     ['feed-recettes.xml', recipesFeed(state.recipes, names, false)], ['feed-recettes-en.xml', recipesFeed(state.recipes, names, true)],
     ['feed-paliers.xml', milestonesFeed(state.milestones, names, false)], ['feed-paliers-en.xml', milestonesFeed(state.milestones, names, true)],
   ];
-  for (const u of STATS_FEEDS) if (state.stats[u]) out.push([`feed-createur-${u}.xml`, statsFeed(u, state.stats[u], names, false)], [`feed-createur-${u}-en.xml`, statsFeed(u, state.stats[u], names, true)]);
+  for (const c of latest.creators) if (state.stats[c.u]?.items?.length) out.push([`feed-createur-${c.u}.xml`, statsFeed(c.u, state.stats[c.u], names, state.rn, false)], [`feed-createur-${c.u}-en.xml`, statsFeed(c.u, state.stats[c.u], names, state.rn, true)]);
   for (const [f, body] of out) await fs.writeFile(path.join(ROOT, f), body);
   log(`Flux écrits : ${(news.articles || []).filter(a => a.body_fr).length} article(s) e-ink, ${state.recipes.length} recette(s), ${state.milestones.length} palier(s).`);
 }

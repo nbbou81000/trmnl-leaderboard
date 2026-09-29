@@ -1911,6 +1911,7 @@ async function shareCard(r) {
 }
 
 /* ================= Flux RSS ================= */
+const STATS_FEEDS = ['40325'];   // créateurs qui ont un flux de statistiques horaires (même liste que scripts/feeds.mjs)
 function rssBlock() {
   const f = base => EN() ? `${base}-en.xml` : `${base}.xml`;
   const feeds = [
@@ -1919,6 +1920,7 @@ function rssBlock() {
     ['🏁', L('Paliers atteints', 'Milestones'), f('feed-paliers'), L('Chaque recette qui passe 50, 100, 500, 1 000 connexions…', 'Every recipe that passes 50, 100, 500, 1,000 connections…')],
     ['🗞️', L('Actu e-ink & dashboards', 'E-ink & dashboards news'), f('feed-eink'), L('Les articles complets de la veille e-ink.', 'The full articles from the e-ink news.')],
   ];
+  if (me && STATS_FEEDS.includes(String(me))) feeds.push(['📊', L('Mes statistiques', 'My stats'), f(`feed-createur-${me}`), L('Chaque heure où ça bouge : tes connexions par recette, ton total, tes gains et pertes, ton classement.', 'Every hour something moves: your connections per recipe, your total, gains and losses, your ranking.')]);
   return `<div class="sheet" style="margin-top:22px"><h3>📡 ${L('Suivre le palmarès par RSS', 'Follow the leaderboard by RSS')}</h3>
     <p class="muted" style="margin-top:0">${L("Copie une adresse dans ton lecteur RSS préféré pour recevoir les nouveautés sans venir sur le site.", 'Copy a link into your favorite RSS reader to get updates without visiting the site.')}</p>
     <ul class="wk-list">${feeds.map(([ico, name, file, desc]) => `<li><span><b>${ico} ${name}</b><span class="sub">${desc}</span></span>

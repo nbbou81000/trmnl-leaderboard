@@ -84,6 +84,11 @@ nav.tabs .in::-webkit-scrollbar{display:none}
 nav.tabs a{flex:none;padding:12px 10px 9px;text-decoration:none;font-weight:600;font-stretch:88%;color:var(--ink2);border-bottom:3px solid transparent;margin-bottom:-1px}
 nav.tabs a:hover{color:var(--ink)}
 nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+/* Ordinateur : tous les onglets restent visibles (un peu plus de largeur, un peu moins d'espace, deux lignes si l'écran est trop étroit) */
+@media (min-width:900px){
+  nav.tabs .in{max-width:1400px;flex-wrap:wrap;justify-content:center;overflow:visible}
+  nav.tabs a{padding:12px 8px 9px}
+}
 nav.tabs a.mine::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:5px;vertical-align:.2em}
 
 main{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
@@ -758,6 +763,9 @@ function route() {
     a.toggleAttribute('aria-current', false); if (on) a.setAttribute('aria-current', 'page');
     if (a.dataset.tab === 'moi') a.classList.toggle('mine', !!me);
   });
+  // Mobile : l'onglet actif est ramené dans la partie visible de la barre qui défile
+  const cur = document.querySelector('nav.tabs a[aria-current="page"]'), bar = $('#tabsIn');
+  if (cur && bar && bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: cur.offsetLeft - (bar.clientWidth - cur.offsetWidth) / 2, behavior: 'smooth' });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
   ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: renderWeek, analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos })[t]();
   window.scrollTo({ top: 0 });

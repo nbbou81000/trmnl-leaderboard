@@ -93,3 +93,87 @@ footer{color:var(--ink2);font-size:.8rem;margin-top:34px;border-top:1px solid va
 let n = 0;
 for (const r of data.recipes) { await fs.writeFile(path.join(dir, `${r.id}.html`), page(r)); n++; }
 console.log(`${n} pages de recette écrites dans r/.`);
+
+// ─── Pages de partage des articles « Actu e-ink » (public/a/<id>.html en français, <id>-en.html en anglais) ───
+// Discord, Reddit, X… lisent ces balises pour afficher la vignette ; un visiteur, lui, est renvoyé aussitôt sur l'article dans le site.
+let news = { articles: [] };
+try { news = JSON.parse(await fs.readFile(path.join(OUT, 'data/eink-news.json'), 'utf8')); } catch {}
+const adir = path.join(OUT, 'a');
+await fs.rm(adir, { recursive: true, force: true });
+await fs.mkdir(adir, { recursive: true });
+const CAT = {
+  displays: ["Écrans d'affichage", 'Display screens'], screens: ["Écrans d'affichage", 'Display screens'], diy: ['Bidouille e-ink', 'E-ink hacks'],
+  dashboards: ['Dashboards & domotique', 'Dashboards & home automation'], maker: ['Bidouille geek', 'Maker & geek'],
+};
+const BODY_TAGS = /^(p|h2|h3|ul|ol|li|strong|em)$/i;
+const cleanBody = h => String(h || '').replace(/<\s*(\/?)\s*([a-z0-9]+)[^>]*>/gi, (m, sl, t) => BODY_TAGS.test(t) ? `<${sl}${t.toLowerCase()}>` : ' ');
+const articlePage = (a, en) => {
+  const t = (fr, e) => en ? e : fr;
+  const title = en ? a.title_en : a.title_fr, lead = (en ? a.lead_en : a.lead_fr) || '', body = en ? a.body_en : a.body_fr;
+  const file = `${a.id}${en ? '-en' : ''}.html`, self = `${SITE}a/${file}`;
+  const target = `${SITE}${en ? '?lang=en' : '?lang=fr'}#eink/${a.id}`;
+  const img = a.img || `${SITE}og.png`;
+  const site = t('Palmarès des créateurs TRMNL · Actu e-ink', 'TRMNL Creator Leaderboard · E-ink news');
+  const cat = (CAT[a.cat] || [a.cat, a.cat])[en ? 1 : 0];
+  const date = new Date(a.d).toLocaleDateString(en ? 'en-US' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  return `<!DOCTYPE html>
+<html lang="${en ? 'en' : 'fr'}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${esc(title)} · ${esc(site)}</title>
+<meta name="description" content="${esc(lead)}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="${esc(site)}">
+<meta property="og:locale" content="${en ? 'en_US' : 'fr_FR'}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(lead)}">
+<meta property="og:url" content="${esc(self)}">
+<meta property="og:image" content="${esc(img)}">
+<meta property="article:published_time" content="${esc(a.d)}">
+<meta property="article:section" content="${esc(cat)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(lead)}">
+<meta name="twitter:image" content="${esc(img)}">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="${esc(SITE)}icon-192.png">
+<link rel="canonical" href="${esc(self)}">
+<link rel="alternate" hreflang="${en ? 'fr' : 'en'}" href="${esc(SITE)}a/${a.id}${en ? '' : '-en'}.html">
+<script>location.replace(${JSON.stringify(target)});</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  ${a.img ? `<img class="hero" src="${esc(a.img)}" alt="" referrerpolicy="no-referrer">` : ''}
+  <p class="meta">${esc(cat)} · ${esc(date)} · ${t('source', 'source')} : ${esc(a.src)}</p>
+  <h1>${esc(title)}</h1>
+  ${lead ? `<p class="lead">${esc(lead)}</p>` : ''}
+  <a class="btn" href="${esc(target)}">${t("Lire l'article sur le Palmarès TRMNL", 'Read the article on the TRMNL Leaderboard')} →</a>
+  ${cleanBody(body)}
+  <footer>${t("Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.", 'Article written by an AI (Mistral) from the cited source. Check important details at the source.')}</footer>
+</main>
+</body>
+</html>`;
+};
+let na = 0;
+for (const a of news.articles || []) {
+  if (!a.id || !a.body_fr || !a.body_en) continue;
+  await fs.writeFile(path.join(adir, `${a.id}.html`), articlePage(a, false));
+  await fs.writeFile(path.join(adir, `${a.id}-en.html`), articlePage(a, true));
+  na++;
+}
+console.log(`${na} article(s) e-ink : pages de partage écrites dans a/ (français et anglais).`);

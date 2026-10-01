@@ -298,6 +298,18 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .enews .src{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .enews p{display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical;overflow:hidden!important}
 .enews .more{display:inline-block;margin-top:auto;padding-top:8px;font-size:.84rem;font-weight:700;color:var(--accent-ink)}
+.enews li{position:relative}
+.enews .eshare{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:1rem;cursor:pointer;display:grid;place-items:center;opacity:.85}
+.enews .eshare:hover,.enews .eshare:focus-visible{opacity:1;background:var(--accent)}
+.modal .box.eshr{width:min(460px,96vw)}
+.eshr .pv{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;background:var(--sheet);padding:10px 12px;margin:10px 0 12px}
+.eshr .pv small{color:var(--ink2);font-size:.75rem}
+.eshr .pv b{display:block;margin:2px 0 4px;line-height:1.3}
+.eshr .pv p{margin:0 0 8px;font-size:.86rem;color:var(--ink2)}
+.eshr .pv img{width:100%;aspect-ratio:1.91/1;object-fit:cover;border-radius:6px;display:block;background:var(--rule)}
+.eshr .nets{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.eshr .nets .btn{text-align:center}
+.eshr input{width:100%;padding:8px 10px;border:1.5px solid var(--rule2);border-radius:8px;background:var(--sheet);font-size:.85rem;margin-top:10px}
 .emore{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 4px}
 .emore .muted{font-size:.82rem}
 .modal .box.reader{width:min(720px,96vw);padding:0 20px 16px}
@@ -2106,6 +2118,44 @@ const einkText = a => {
   const body = EN() ? a.body_en : a.body_fr, sum = (EN() ? a.sum_en : a.sum_fr) || '';
   return { title: EN() ? a.title_en : a.title_fr, lead: body ? ((EN() ? a.lead_en : a.lead_fr) || '') : '', body: body || `<p>${esc(sum)}</p>`, teaser: (EN() ? a.lead_en : a.lead_fr) || sum };
 };
+// Lien de partage : une page du site avec la vignette de l'article (balises d'aperçu), qui renvoie sur l'article ici
+const einkShareURL = a => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}a/${a.id}${EN() ? '-en' : ''}.html`;
+function shareEink(a) {
+  const t = einkText(a), url = einkShareURL(a), u = encodeURIComponent(url), tt = encodeURIComponent(t.title);
+  const copy = async msg => {
+    try { await navigator.clipboard.writeText(url); toast(msg); } catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }
+  };
+  const nets = [
+    ['discord', '💬 Discord', null],
+    ['reddit', '🟠 Reddit', `https://www.reddit.com/submit?url=${u}&title=${tt}`],
+    ['bluesky', '🦋 Bluesky', `https://bsky.app/intent/compose?text=${encodeURIComponent(`${t.title} ${url}`)}`],
+    ['x', '✖️ X', `https://x.com/intent/post?url=${u}&text=${tt}`],
+    ['mastodon', '🐘 Mastodon', `https://mastodonshare.com/?url=${u}&text=${tt}`],
+    ['linkedin', '💼 LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${u}`],
+    ['facebook', '📘 Facebook', `https://www.facebook.com/sharer/sharer.php?u=${u}`],
+    ['whatsapp', '🟢 WhatsApp', `https://wa.me/?text=${encodeURIComponent(`${t.title} ${url}`)}`],
+  ];
+  const m = modal(`<h3 style="margin:0">${L('Partager cet article', 'Share this article')}</h3>
+    <div class="pv"><small>${L('Palmarès des créateurs TRMNL · Actu e-ink', 'TRMNL Creator Leaderboard · E-ink news')}</small>
+      <b>${esc(t.title)}</b>${t.teaser ? `<p>${esc(t.teaser)}</p>` : ''}
+      <img src="${esc(a.img || 'og.png')}" alt="" referrerpolicy="no-referrer"></div>
+    <div class="nets">${nets.map(([k, lb, href]) => href
+      ? `<a class="btn ghost" data-net="${k}" href="${esc(href)}" target="_blank" rel="noopener">${lb}</a>`
+      : `<button class="btn ghost" type="button" data-net="${k}">${lb}</button>`).join('')}
+      ${navigator.share ? `<button class="btn ghost" type="button" data-net="native">📤 ${L('Autre…', 'More…')}</button>` : ''}</div>
+    <input type="text" readonly value="${esc(url)}" aria-label="${L('Lien de partage', 'Share link')}">
+    <p class="note">${L("Le lien mène à l'article sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", 'The link leads to the article on this site, and shows up with its thumbnail on Discord, Reddit and social networks.')}</p>
+    <div class="row"><button class="btn" type="button" id="eCopy">🔗 ${L('Copier le lien', 'Copy link')}</button>
+      <button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`, 'eshr');
+  m.$('.pv img')?.addEventListener('error', e => { e.target.src = 'og.png'; }, { once: true });
+  m.$('input').onclick = e => e.target.select();
+  m.$('#eCopy').onclick = () => { copy(L('Lien copié', 'Link copied')); track('actu-eink-partagee', true); };
+  m.wrap.querySelectorAll('[data-net]').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.net; track('actu-eink-partagee', true);
+    if (k === 'discord') copy(L('Lien copié : collez-le dans Discord', 'Link copied: paste it in Discord'));
+    else if (k === 'native') navigator.share({ title: t.title, text: t.teaser || '', url }).catch(() => {});
+  }));
+}
 function openEink(a) {
   const t = einkText(a), cats = Object.fromEntries(EINK_CATS());
   const m = modal(`${a.img ? `<img class="ehero" src="${esc(a.img)}" alt="" referrerpolicy="no-referrer">` : ''}
@@ -2115,8 +2165,10 @@ function openEink(a) {
     <div class="ebody">${safeBody(t.body)}</div>
     <p class="note">${L("Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.", 'Article written by an AI (Mistral) from the cited source. Check important details at the source.')}</p>
     <div class="row">${a.hn ? `<a class="btn ghost" href="${esc(a.hn)}" target="_blank" rel="noopener">${L('Discussion Hacker News', 'Hacker News thread')}</a>` : ''}
+      <button class="btn ghost" type="button" id="eShare">📤 ${L('Partager', 'Share')}</button>
       <a class="btn" href="${esc(a.u)}" target="_blank" rel="noopener">${L(`Lire l'original (${esc(a.src)})`, `Read the original (${esc(a.src)})`)} ↗</a>
       <button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`, 'reader');
+  m.$('#eShare').onclick = () => shareEink(a);
   m.$('.ehero')?.addEventListener('error', e => e.target.remove());
   track('actu-eink-lue', true);
 }
@@ -2133,6 +2185,7 @@ async function renderEink(openId) {
   const shown = list.slice(0, einkShown), left = list.length - shown.length;
   const item = a => { const t = einkText(a); return `<li data-eid="${esc(a.id)}" data-cat="${esc(a.cat)}" tabindex="0" role="button">
       ${a.img ? `<img class="ethumb" src="${esc(a.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="eph" aria-hidden="true">${EINK_ICON[a.cat] || '🗞️'}</span>`}
+      <button class="eshare" type="button" data-eshare="${esc(a.id)}" title="${L('Partager', 'Share')}" aria-label="${L('Partager cet article', 'Share this article')}">📤</button>
       <div class="ebox"><div class="etop"><span class="src"><b>${esc(a.src)}</b> · ${dfmt(a.d)}</span><span class="cat ${esc(a.cat)}">${esc(cats[a.cat] || a.cat)}</span></div>
         <h4>${esc(t.title)}</h4>
         ${t.teaser ? `<p>${esc(t.teaser)}</p>` : ''}
@@ -2166,6 +2219,8 @@ async function renderEink(openId) {
   el.querySelectorAll('li[data-eid]').forEach(li => {
     const a = all.find(x => x.id === li.dataset.eid);
     li.onclick = () => openEink(a);
+    li.querySelector('.eshare').onclick = e => { e.stopPropagation(); shareEink(a); };
+    li.querySelector('.eshare').onkeydown = e => e.stopPropagation();
     li.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEink(a); } };
   });
   const target = openId && all.find(x => x.id === openId);

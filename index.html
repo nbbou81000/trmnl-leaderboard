@@ -265,13 +265,37 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .linkbtn:hover{color:var(--accent-ink)}
 .upd-form{margin:8px 0 6px;padding:12px;background:var(--sheet);border:1px solid var(--rule);border-radius:10px}
 .modal .box.wipd{width:min(640px,96vw)}
-.modal .box.vbox{width:min(820px,96vw)}
-.vbox .kpis{margin:14px 0 4px}
-.vbox h4{margin:18px 0 8px}
-.vcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 24px}
+.sthead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.stlive{display:inline-flex;align-items:center;gap:6px;background:var(--sheet);border:1px solid var(--rule);border-radius:99px;padding:6px 14px;font-size:.9rem}
+.stlive b{font-size:1.1rem}
+.stlive .dot{width:10px;height:10px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 0 var(--sage);animation:stpulse 2s infinite}
+@keyframes stpulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--sage) 60%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.stbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:6px 0 18px}
+.stbar .muted{font-size:.8rem}
+.sttiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:16px}
+.sttiles>div{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;font-size:.84rem;color:var(--ink2)}
+.sttiles b{display:block;color:var(--ink);font-stretch:115%;font-weight:800;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.sttiles small{display:block;font-size:.76rem;margin-top:2px}
+.sttiles .up{color:var(--sage);font-weight:700}.sttiles .down{color:var(--accent-ink);font-weight:700}
+.stgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.stgrid .wide{grid-column:1/-1}
+.stgrid h3{margin:0 0 10px;font-size:1rem}
+.chart.short{height:200px}
 .vlist{list-style:none;margin:0;padding:0}
-.vlist li{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--rule);font-size:.9rem}
+.vlist li{position:relative;display:flex;justify-content:space-between;gap:10px;padding:6px 8px;font-size:.88rem;border-radius:6px;overflow:hidden}
+.vlist li span,.vlist li b{position:relative;z-index:1}
+.vlist li i{position:absolute;left:0;top:2px;bottom:2px;background:color-mix(in srgb,var(--accent) 14%,transparent);border-radius:5px}
 .vlist b{font-variant-numeric:tabular-nums}
+.heat{display:grid;grid-template-columns:34px repeat(24,1fr);gap:3px;font-size:.7rem;color:var(--ink2);overflow-x:auto;min-width:0}
+.heat i{height:clamp(12px,2.6vw,24px);min-width:10px;border-radius:3px;background:color-mix(in srgb,var(--accent) calc(var(--a)*100%),var(--rule))}
+.heat .hh{text-align:center}.heat .dd{align-self:center}
+.sttabw{overflow-x:auto}
+.sttab{width:100%;border-collapse:collapse;font-size:.84rem}
+.sttab th,.sttab td{text-align:left!important}
+.sttab th{color:var(--ink2);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--rule)}
+.sttab td{padding:5px 8px;border-bottom:1px solid var(--rule);white-space:nowrap}
+.sttab tr.ev td{color:var(--ink2)}
+.sttab .nw{font-size:.7rem;background:color-mix(in srgb,var(--sage) 22%,transparent);color:var(--sage);border-radius:99px;padding:1px 6px;font-weight:700}
 /* Vignette partageable */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:60}
 .modal .box{background:var(--paper);border-radius:14px;padding:16px;max-width:min(720px,96vw);max-height:92vh;overflow:auto}
@@ -477,6 +501,7 @@ footer p{margin:0 0 12px;max-width:80ch}
   <section id="tab-eink" hidden></section>
   <section id="tab-jour" hidden></section>
   <section id="tab-pronos" hidden></section>
+  <section id="tab-stats" hidden></section>
 </main>
 
 <footer id="footer"></footer>
@@ -609,23 +634,59 @@ function visitorId() {
   return { id: v.id, isNew: v.since === today };
 }
 let firstHit = true;
-function countVisit(path) {
+const sbRPC = (fn, body) => fetch(`${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/rpc/${fn}`, {
+  method: 'POST', keepalive: true,
+  headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+  body: JSON.stringify(body) }).catch(() => {});
+const countOK = () => counted() && wipReady() && !navigator.webdriver && !/bot|crawl|spider|preview|headless|lighthouse/i.test(navigator.userAgent);
+// Navigateur, système et taille d'écran, en grandes familles seulement
+function deviceInfo() {
+  const ua = navigator.userAgent;
+  const browser = /Edg\//.test(ua) ? 'Edge' : /OPR\/|Opera/.test(ua) ? 'Opera' : /SamsungBrowser/.test(ua) ? 'Samsung' : /Vivaldi/.test(ua) ? 'Vivaldi'
+    : /Firefox|FxiOS/.test(ua) ? 'Firefox' : /Chrome|CriOS/.test(ua) ? 'Chrome' : /Safari/.test(ua) ? 'Safari' : 'Autre';
+  const os = /Android/.test(ua) ? 'Android' : /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'iOS'
+    : /Windows/.test(ua) ? 'Windows' : /Mac OS X/.test(ua) ? 'macOS' : /CrOS/.test(ua) ? 'ChromeOS' : /Linux/.test(ua) ? 'Linux' : 'Autre';
+  const w = screen.width || innerWidth;
+  const scr = w < 480 ? '<480' : w < 768 ? '480-768' : w < 1024 ? '768-1024' : w < 1440 ? '1024-1440' : w < 1920 ? '1440-1920' : '1920+';
+  let tz = null; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch {}
+  return { p_browser: browser, p_os: os, p_screen: scr, p_tz: tz };
+}
+function countVisit(path, kind = 'view') {
   try {
-    if (!counted() || !wipReady() || navigator.webdriver || /bot|crawl|spider|preview|headless|lighthouse/i.test(navigator.userAgent)) return;
-    const tab = (path.split('#')[1] || 'accueil').toLowerCase();
+    if (!countOK()) return;
+    const tab = kind === 'event' ? path : (path.split('#')[1] || 'accueil').toLowerCase();
+    if (tab === 'stats') return;   // la page de statistiques ne se compte pas elle-même
     let ref = null;
-    if (firstHit && document.referrer) { try { const h = new URL(document.referrer).hostname.replace(/^www\./, ''); if (h && h !== location.hostname) ref = h; } catch {} }
-    firstHit = false;
-    const v = visitorId(), key = SUPABASE_KEY;
-    fetch(`${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/rpc/track_visit`, {
-      method: 'POST', keepalive: true,
-      headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ p_visitor: v.id, p_path: tab, p_new: v.isNew, p_ref: ref, p_lang: EN() ? 'en' : 'fr', p_mobile: matchMedia('(pointer:coarse)').matches }),
-    }).catch(() => {});
+    if (kind === 'view' && firstHit && document.referrer) { try { const h = new URL(document.referrer).hostname.replace(/^www\./, ''); if (h && h !== location.hostname) ref = h; } catch {} }
+    if (kind === 'view') firstHit = false;
+    const v = visitorId();
+    sbRPC('track_hit', { p_visitor: v.id, p_kind: kind, p_path: tab, p_new: v.isNew, p_ref: ref, p_lang: EN() ? 'en' : 'fr', p_mobile: matchMedia('(pointer:coarse)').matches, ...deviceInfo() });
+    startPing();
   } catch {}
 }
+// Temps passé : un signal toutes les 30 secondes tant que la page est visible (4 heures au plus)
+let pingTimer = null, pingAcc = 0, pingLast = 0, pingTotal = 0;
+function startPing() {
+  if (pingTimer) return;
+  pingLast = Date.now();
+  const flush = () => {
+    if (pingAcc < 5 || !countOK()) return;
+    sbRPC('track_ping', { p_visitor: visitorId().id, p_seconds: Math.round(Math.min(pingAcc, 60)) }); pingAcc = 0;
+  };
+  pingTimer = setInterval(() => {
+    const now = Date.now();
+    if (document.visibilityState === 'visible' && pingTotal < 4 * 3600) { const dt = Math.min((now - pingLast) / 1000, 35); pingAcc += dt; pingTotal += dt; }
+    pingLast = now;
+    if (pingAcc >= 30) flush();
+  }, 5000);
+  document.addEventListener('visibilitychange', () => {
+    const now = Date.now();
+    if (document.visibilityState === 'hidden') { pingAcc += Math.min((now - pingLast) / 1000, 35); flush(); }
+    pingLast = now;
+  });
+}
 function track(path, event = false) {
-  if (!event) countVisit(path);
+  if (location.hash.split('/')[0] !== '#stats') countVisit(path, event ? 'event' : 'view');
   if (!GOATCOUNTER || !window.goatcounter?.count) return;
   window.goatcounter.count({ path, title: event ? path : document.title, event });
 }
@@ -832,7 +893,8 @@ function route() {
   if (!D) return;
   const [raw, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');
   const tab = FROM_SLUG[raw] || raw || 'accueil';
-  const t = tab === 'createur' ? 'moi' : (TABS.includes(tab) ? tab : 'accueil');
+  const t = tab === 'createur' ? 'moi' : tab === 'stats' ? 'stats' : (TABS.includes(tab) ? tab : 'accueil');
+  if (t !== 'stats') stopStats();
   document.querySelectorAll('nav.tabs a').forEach(a => {
     const on = a.dataset.tab === t && !(tab === 'createur' && !isMe(arg));
     a.toggleAttribute('aria-current', false); if (on) a.setAttribute('aria-current', 'page');
@@ -842,7 +904,7 @@ function route() {
   const cur = document.querySelector('nav.tabs a[aria-current="page"]'), bar = $('#tabsIn');
   if (cur && bar && bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: cur.offsetLeft - (bar.clientWidth - cur.offsetWidth) / 2, behavior: 'smooth' });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: renderWeek, analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos })[t]();
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: renderWeek, analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos, stats: renderStats })[t]();
   window.scrollTo({ top: 0 });
 }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -1343,6 +1405,7 @@ const realApi = {
   async hideComment(id, hidden) { const c = await client(); ok(await c.from('comments').update({ hidden }).eq('id', id)); },
   async report(target, reason) { const c = await client(); const r = await c.from('reports').insert({ ...target, reason }); if (r.error && !/duplicate|unique/i.test(r.error.message)) throw new Error(r.error.message); },
   async visitStats(days) { const c = await client(); return ok(await c.rpc('visit_stats', { p_days: days })); },
+  async visitLive() { const c = await client(); return ok(await c.rpc('visit_live')); },
   async reports() { const c = await client(); return ok(await c.from('reports').select('*').order('created_at', { ascending: false })); },
   async clearReport(id) { const c = await client(); ok(await c.from('reports').delete().eq('id', id)); },
   async ban(uid, value) { const c = await client(); ok(await c.rpc('set_banned', { target: uid, value })); },
@@ -1539,7 +1602,7 @@ async function renderWip() {
   $('#wipOut')?.addEventListener('click', async () => { await api().signOut(); wipMe = wipProfile = null; store.set('trmnl-wip-session', ''); renderWip(); });
   $('#wipNew')?.addEventListener('click', () => wipForm());
   $('#wipReports')?.addEventListener('click', wipReportsView);
-  $('#wipVisits')?.addEventListener('click', () => visitsView());
+  $('#wipVisits')?.addEventListener('click', () => go('#stats'));
   $('#wipLinks')?.addEventListener('click', wipLinksView);
   $('#wipDisclaimer')?.addEventListener('click', wipDisclaimerForm);
   $('#wipLink')?.addEventListener('click', wipLinkForm);
@@ -1890,45 +1953,158 @@ async function wipDetail(p) {
   draw();
 }
 
-// ---------- Statistiques de visite (administrateur)
-async function visitsView(days = 30) {
-  const m = modal(`<h3>📈 ${L('Visites du site', 'Site visits')}</h3>
-    <div class="seg" role="group">${[7, 30, 90, 365].map(n => `<button type="button" data-vd="${n}" aria-pressed="${n === days}">${n === 365 ? L('1 an', '1 year') : L(`${n} jours`, `${n} days`)}</button>`).join('')}</div>
-    <div class="vst"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>
-    <div class="row"><button class="btn ghost" data-close>${L('Fermer', 'Close')}</button></div>`, 'wipd vbox');
-  m.wrap.querySelectorAll('[data-vd]').forEach(b => b.onclick = () => { m.close(); visitsView(+b.dataset.vd); });
+// ---------- Statistiques de visite : page pleine, réservée aux administrateurs (adresse #stats)
+let statsDays = 30, statsTimers = [], statsLiveAt = 0;
+const stopStats = () => { statsTimers.forEach(clearInterval); statsTimers = []; };
+const TZ_CC = { 'Europe/Paris': 'FR', 'Europe/Brussels': 'BE', 'Europe/Zurich': 'CH', 'Europe/Luxembourg': 'LU', 'Europe/Monaco': 'MC', 'America/Montreal': 'CA', 'America/Toronto': 'CA', 'America/Vancouver': 'CA', 'America/Edmonton': 'CA', 'America/Winnipeg': 'CA', 'America/Halifax': 'CA',
+  'Europe/London': 'GB', 'Europe/Dublin': 'IE', 'Europe/Berlin': 'DE', 'Europe/Vienna': 'AT', 'Europe/Amsterdam': 'NL', 'Europe/Madrid': 'ES', 'Atlantic/Canary': 'ES', 'Europe/Lisbon': 'PT', 'Europe/Rome': 'IT', 'Europe/Copenhagen': 'DK', 'Europe/Stockholm': 'SE', 'Europe/Oslo': 'NO', 'Europe/Helsinki': 'FI', 'Europe/Warsaw': 'PL', 'Europe/Prague': 'CZ', 'Europe/Budapest': 'HU', 'Europe/Bucharest': 'RO', 'Europe/Athens': 'GR', 'Europe/Kiev': 'UA', 'Europe/Kyiv': 'UA', 'Europe/Istanbul': 'TR', 'Europe/Moscow': 'RU', 'Europe/Tallinn': 'EE', 'Europe/Riga': 'LV', 'Europe/Vilnius': 'LT', 'Europe/Bratislava': 'SK', 'Europe/Ljubljana': 'SI', 'Europe/Zagreb': 'HR', 'Europe/Belgrade': 'RS', 'Europe/Sofia': 'BG',
+  'America/New_York': 'US', 'America/Chicago': 'US', 'America/Denver': 'US', 'America/Phoenix': 'US', 'America/Los_Angeles': 'US', 'America/Anchorage': 'US', 'Pacific/Honolulu': 'US', 'America/Detroit': 'US', 'America/Indiana/Indianapolis': 'US', 'America/Boise': 'US',
+  'America/Mexico_City': 'MX', 'America/Sao_Paulo': 'BR', 'America/Argentina/Buenos_Aires': 'AR', 'America/Santiago': 'CL', 'America/Bogota': 'CO', 'America/Lima': 'PE',
+  'Asia/Tokyo': 'JP', 'Asia/Seoul': 'KR', 'Asia/Shanghai': 'CN', 'Asia/Hong_Kong': 'HK', 'Asia/Taipei': 'TW', 'Asia/Singapore': 'SG', 'Asia/Kolkata': 'IN', 'Asia/Calcutta': 'IN', 'Asia/Bangkok': 'TH', 'Asia/Jakarta': 'ID', 'Asia/Manila': 'PH', 'Asia/Ho_Chi_Minh': 'VN', 'Asia/Kuala_Lumpur': 'MY', 'Asia/Dubai': 'AE', 'Asia/Jerusalem': 'IL', 'Asia/Karachi': 'PK',
+  'Australia/Sydney': 'AU', 'Australia/Melbourne': 'AU', 'Australia/Brisbane': 'AU', 'Australia/Perth': 'AU', 'Australia/Adelaide': 'AU', 'Pacific/Auckland': 'NZ',
+  'Africa/Casablanca': 'MA', 'Africa/Algiers': 'DZ', 'Africa/Tunis': 'TN', 'Africa/Dakar': 'SN', 'Africa/Abidjan': 'CI', 'Africa/Johannesburg': 'ZA', 'Africa/Cairo': 'EG', 'Africa/Lagos': 'NG', 'Africa/Nairobi': 'KE', 'Indian/Reunion': 'RE', 'America/Martinique': 'MQ', 'America/Guadeloupe': 'GP', 'America/Cayenne': 'GF', 'Pacific/Noumea': 'NC', 'Pacific/Tahiti': 'PF' };
+const flagOf = cc => cc ? String.fromCodePoint(...[...cc].map(c => 0x1F1A5 + c.charCodeAt(0))) : '🌐';
+const countryOf = tz => { const cc = TZ_CC[tz]; let name = tz || '?';
+  if (cc) { try { name = new Intl.DisplayNames([EN() ? 'en' : 'fr'], { type: 'region' }).of(cc); } catch { name = cc; } } else if (tz) name = tz.split('/').pop().replace(/_/g, ' ');
+  return { cc: cc || tz || '?', label: `${flagOf(cc)} ${name}` }; };
+const EVENT_LABELS = () => ({ 'actu-eink-lue': L('Article e-ink lu', 'E-ink article read'), 'actu-eink-partagee': L('Article e-ink partagé', 'E-ink article shared'), 'avancee-publiee': L('Avancée publiée', 'Update posted'),
+  'bandeau-modifie': L("Bandeau d'accueil modifié", 'Home banner edited'), 'commentaire-publie': L('Commentaire publié', 'Comment posted'), 'connexion-discord': L('Connexion Discord', 'Discord sign-in'),
+  'liaison-demandee': L('Liaison de profil demandée', 'Profile link requested'), 'lien-pied-de-page': L('Lien du pied de page', 'Footer link'), 'lien-profil-copie': L('Lien de profil copié', 'Profile link copied'),
+  'lien-recette-copie': L('Lien de recette copié', 'Recipe link copied'), 'profil-choisi': L('Profil choisi', 'Profile picked'), 'projet-ouvert': L('Projet ouvert', 'Project opened'), 'projet-publie': L('Projet publié', 'Project posted'),
+  'projet-modifie': L('Projet modifié', 'Project edited'), 'pronostic': L('Pronostic', 'Prediction'), 'recette-partagee': L('Recette partagée', 'Recipe shared'), 'revendication-ouverte': L('Revendication ouverte', 'Claim opened'),
+  'vignette-ouverte': L('Vignette ouverte', 'Card opened'), 'vignette-telechargee': L('Vignette téléchargée', 'Card downloaded'), 'langue-en': L('Site en anglais', 'Site in English'), 'langue-fr': L('Site en français', 'Site in French') });
+const dur = s => { s = Math.round(s || 0); return s < 60 ? `${s} s` : s < 3600 ? `${Math.floor(s / 60)} min ${String(s % 60).padStart(2, '0')}` : `${Math.floor(s / 3600)} h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}`; };
+const pctOf = (a, b) => b ? Math.round(100 * a / b) : 0;
+const vrows = (list, label, val, max) => { const top = Math.max(1, ...list.map(val));
+  return list.length ? `<ol class="vlist">${list.map(x => `<li><span>${label(x)}</span><b>${nf(val(x))}</b><i style="width:${100 * val(x) / top}%"></i></li>`).join('')}</ol>` : `<p class="muted">—</p>`; };
+
+async function renderStats() {
+  stopStats();
+  const el = $('#tab-stats');
+  const head = `<h2>📈 ${L('Statistiques de visite', 'Visitor statistics')}</h2>`;
+  if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L('Supabase n\'est pas configuré sur ce site.', 'Supabase is not set up on this site.')}</p>`; return; }
+  if (!wipMe) { el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
+    try { const ss = await api().session(); wipMe = ss.user; wipProfile = ss.profile; } catch {} }
+  if (!isAdmin()) {
+    el.innerHTML = head + `<p class="notice">${L('Cette page est réservée à l\'administrateur du site.', 'This page is for the site administrator only.')}</p>
+      ${wipMe ? '' : `<button class="btn" type="button" id="stIn">${L('Se connecter avec Discord', 'Sign in with Discord')}</button>`}`;
+    $('#stIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', '#stats'); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
+    return;
+  }
+  el.innerHTML = `<div class="sthead">${head}
+      <div class="stlive" id="stLive"><span class="dot"></span> <b id="stNow">…</b> ${L('en ce moment', 'right now')}</div></div>
+    <div class="stbar"><div class="seg" role="group">${[1, 7, 30, 90, 365].map(n => `<button type="button" data-sd="${n}" aria-pressed="${n === statsDays}">${n === 1 ? L("Aujourd'hui", 'Today') : n === 365 ? L('1 an', '1 year') : L(`${n} jours`, `${n} days`)}</button>`).join('')}</div>
+      <button class="btn ghost small" type="button" id="stRefresh">↻ ${L('Actualiser', 'Refresh')}</button>
+      <span class="muted" id="stAt"></span></div>
+    <div id="stBody"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`;
+  el.querySelectorAll('[data-sd]').forEach(b => b.onclick = () => { statsDays = +b.dataset.sd; renderStats(); });
+  $('#stRefresh').onclick = () => { loadStats(); loadLive(); };
+  await Promise.all([loadStats(), loadLive()]);
+  statsTimers.push(setInterval(loadLive, 15000), setInterval(loadStats, 120000),
+    setInterval(() => { const e = $('#stAt'); if (e && statsLiveAt) e.textContent = L(`en direct · mis à jour il y a ${Math.round((Date.now() - statsLiveAt) / 1000)} s`, `live · updated ${Math.round((Date.now() - statsLiveAt) / 1000)} s ago`); }, 1000));
+}
+
+async function loadLive() {
+  if (!$('#stBody') || document.hidden && statsLiveAt) return;
   try {
-    const S = await api().visitStats(days), T = TAB_LABELS(), P = PAL();
-    const ret = Math.max(0, S.unique - S.new), pct = (a, b) => b ? Math.round(100 * a / b) : 0;
-    const daily = S.daily || [];
-    const fmtDay = x => new Date(x + 'T12:00:00').toLocaleDateString(LOC, days > 60 ? { day: 'numeric', month: 'short' } : { weekday: 'short', day: 'numeric' });
-    m.$('.vst').innerHTML = `
-      <div class="kpis">
-        <div><b>${nf(S.today)}</b>${L("visiteurs aujourd'hui", 'visitors today')}</div>
-        <div><b>${nf(S.unique_7)}</b>${L('visiteurs uniques sur 7 jours', 'unique visitors, last 7 days')}</div>
-        <div><b>${nf(S.unique_30)}</b>${L('visiteurs uniques sur 30 jours', 'unique visitors, last 30 days')}</div>
-      </div>
-      <div class="kpis">
-        <div><b>${nf(S.unique)}</b>${L('visiteurs uniques sur la période', 'unique visitors in the period')}</div>
-        <div><b>${nf(S.new)} / ${nf(ret)}</b>${L('nouveaux / déjà venus', 'new / returning')}</div>
-        <div><b>${nf(S.views)}</b>${L('pages vues', 'page views')}</div>
-        <div><b>${pct(S.mobile, S.visits)} %</b>${L('sur téléphone', 'on phones')}</div>
-      </div>
-      <h4>${L('Visiteurs par jour', 'Visitors per day')}</h4>
-      <div class="chart"><canvas id="chVisits"></canvas></div>
-      <div class="vcols">
-        <div><h4>${L('Onglets les plus vus', 'Most viewed tabs')}</h4><ol class="vlist">${(S.pages || []).filter(p => T[p.path]).map(p => `<li><span>${esc(T[p.path] || p.path)}</span><b>${nf(p.views)}</b></li>`).join('') || `<li class="muted">—</li>`}</ol></div>
-        <div><h4>${L('Venus de', 'Coming from')}</h4><ol class="vlist">${(S.refs || []).map(r => `<li><span>${esc(r.ref)}</span><b>${nf(r.visitors)}</b></li>`).join('') || `<li class="muted">${L('Aucun site référent', 'No referring site')}</li>`}</ol></div>
-      </div>
-      <p class="note">${L("Comptage maison, sans cookie. Les visiteurs qui ont choisi « Ne plus être compté » ou dont le navigateur bloque Supabase n'apparaissent pas. Un même visiteur sur deux appareils compte deux fois.", 'Home-made counting, no cookies. Visitors who chose "Stop counting me" or whose browser blocks Supabase do not appear. The same person on two devices counts twice.')}</p>`;
-    chart('chVisits', { type: 'bar', data: { labels: daily.map(x => fmtDay(x.day)), datasets: [
-      { type: 'bar', label: L('Visiteurs', 'Visitors'), data: daily.map(x => x.visitors), backgroundColor: P[0], borderRadius: 4, order: 2 },
-      { type: 'bar', label: L('dont nouveaux', 'of which new'), data: daily.map(x => x.new), backgroundColor: P[1], borderRadius: 4, order: 1 },
-      { type: 'line', label: L('Pages vues', 'Page views'), data: daily.map(x => x.views), borderColor: css('--ink2'), backgroundColor: 'transparent', pointRadius: 0, borderWidth: 1.5, tension: .3, yAxisID: 'y2', order: 0 }] },
-      options: { plugins: { legend: { display: true, position: 'bottom' } }, interaction: { mode: 'index', intersect: false },
-        scales: { x: { stacked: false, grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }, y: { beginAtZero: true, ticks: { precision: 0 } },
-          y2: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { precision: 0 } } } } });
-  } catch (e) { m.$('.vst').innerHTML = `<p class="err">${esc(/visit_stats|function/i.test(e.message) ? L("Base pas encore prête : collez le fichier supabase/visites.sql dans l'éditeur SQL de Supabase.", 'Database not ready: paste supabase/visites.sql into the Supabase SQL editor.') : trErr(e.message))}</p>`; }
+    const V = await api().visitLive(); statsLiveAt = Date.now();
+    $('#stNow').textContent = nf(V.now);
+    $('#stLive').title = L(`${V.last5} sur les 5 dernières minutes`, `${V.last5} in the last 5 minutes`);
+    const P = PAL(), T = TAB_LABELS(), E = EVENT_LABELS();
+    const mins = V.minutes || [];
+    if ($('#chLive')) chart('chLive', { type: 'bar', data: { labels: mins.map(m => m.m === 29 ? L('maint.', 'now') : `-${29 - m.m}`), datasets: [{ label: L('Pages vues', 'Page views'), data: mins.map(m => m.views), backgroundColor: P[0], borderRadius: 3 }] },
+      options: { animation: false, scales: { x: { grid: { display: false }, ticks: { autoSkip: true, maxRotation: 0 } }, y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+    const rec = $('#stRecent');
+    if (rec) rec.innerHTML = (V.recent || []).map(h => { const c = countryOf(h.tz);
+      return `<tr class="${h.kind === 'event' ? 'ev' : ''}"><td>${new Date(h.at).toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
+        <td><code>${esc(h.who)}</code>${h.is_new ? ` <span class="nw">${L('nouveau', 'new')}</span>` : ''}</td>
+        <td>${h.kind === 'event' ? '⚡ ' + esc(E[h.path] || h.path) : esc(T[h.path] || h.path)}</td>
+        <td>${h.mobile ? '📱' : h.mobile === false ? '💻' : ''} ${esc([h.browser, h.os].filter(Boolean).join(' · '))}</td>
+        <td>${h.tz ? esc(c.label) : ''}</td><td>${esc(h.ref || '')}</td></tr>`; }).join('') || `<tr><td colspan="6" class="muted">—</td></tr>`;
+  } catch (e) { const n = $('#stNow'); if (n) n.textContent = '?'; }
+}
+
+async function loadStats() {
+  const body = $('#stBody'); if (!body) return;
+  let S;
+  try { S = await api().visitStats(statsDays); }
+  catch (e) { body.innerHTML = `<p class="err">${esc(/visit_stats|visit_live|function|schema cache/i.test(e.message) ? L("Base pas encore prête : collez la dernière version de supabase/visites.sql dans l'éditeur SQL de Supabase.", 'Database not ready: paste the latest supabase/visites.sql into the Supabase SQL editor.') : trErr(e.message))}</p>`; return; }
+  const P = PAL(), T = TAB_LABELS(), E = EVENT_LABELS(), ret = Math.max(0, S.unique - S.new);
+  const daily = S.daily || [], one = statsDays === 1;
+  const fmtDay = x => new Date(x + 'T12:00:00').toLocaleDateString(LOC, statsDays > 60 ? { day: 'numeric', month: 'short' } : { weekday: 'short', day: 'numeric' });
+  const hh = h => `${String(h).padStart(2, '0')} h`;
+  const trend = (a, b) => b ? `<span class="${a >= b ? 'up' : 'down'}">${a >= b ? '▲' : '▼'} ${Math.abs(pctOf(a - b, b))} %</span>` : '';
+  // Pays : plusieurs fuseaux d'un même pays sont regroupés
+  const countries = new Map(); for (const x of S.tzs || []) { const c = countryOf(x.k === '?' ? null : x.k); const o = countries.get(c.cc) || { label: x.k === '?' ? L('Inconnu', 'Unknown') : c.label, v: 0 }; o.v += x.v; countries.set(c.cc, o); }
+  const ctry = [...countries.values()].sort((a, b) => b.v - a.v).slice(0, 15);
+  const LOY = { 1: L('1 jour', '1 day'), 2: L('2 à 3 jours', '2–3 days'), 3: L('4 à 7 jours', '4–7 days'), 4: L('8 jours et plus', '8+ days') };
+  const DUR = { 1: L('moins de 30 s', 'under 30 s'), 2: L('30 s à 2 min', '30 s – 2 min'), 3: L('2 à 10 min', '2–10 min'), 4: L('10 à 30 min', '10–30 min'), 5: L('plus de 30 min', 'over 30 min') };
+  const heat = Array.from({ length: 7 }, () => Array(24).fill(0)); let hmax = 1;
+  for (const x of S.heat || []) { heat[x.dow - 1][x.hour] = x.views; hmax = Math.max(hmax, x.views); }
+  const DOW = [L('lun', 'Mon'), L('mar', 'Tue'), L('mer', 'Wed'), L('jeu', 'Thu'), L('ven', 'Fri'), L('sam', 'Sat'), L('dim', 'Sun')];
+  const box = (title, html, cls = '') => `<div class="sheet ${cls}"><h3>${title}</h3>${html}</div>`;
+
+  body.innerHTML = `
+    <div class="sttiles">
+      <div><b>${nf(S.today)}</b>${L("visiteurs aujourd'hui", 'visitors today')} ${trend(S.today, S.yesterday)}<small>${L(`hier : ${nf(S.yesterday)}`, `yesterday: ${nf(S.yesterday)}`)}</small></div>
+      <div><b>${nf(S.unique_7)}</b>${L('visiteurs uniques, 7 jours', 'unique visitors, 7 days')}</div>
+      <div><b>${nf(S.unique_30)}</b>${L('visiteurs uniques, 30 jours', 'unique visitors, 30 days')}</div>
+      <div><b>${nf(S.unique)}</b>${L('visiteurs uniques sur la période', 'unique visitors in the period')}</div>
+      <div><b>${nf(S.new)} <span class="muted">/</span> ${nf(ret)}</b>${L('nouveaux / déjà venus', 'new / returning')}</div>
+      <div><b>${nf(S.views)}</b>${L('pages vues', 'page views')}<small>${S.visits ? (S.views / S.visits).toFixed(1).replace('.', EN() ? '.' : ',') : 0} ${L('par visite', 'per visit')}</small></div>
+      <div><b>${dur(S.timed ? S.seconds / S.timed : 0)}</b>${L('temps moyen par visite', 'average time per visit')}</div>
+      <div><b>${pctOf(S.bounces, S.visits)} %</b>${L('de rebond', 'bounce rate')}<small>${L('une seule page vue', 'a single page viewed')}</small></div>
+      <div><b>${pctOf(S.mobile, S.visits)} %</b>${L('sur téléphone ou tablette', 'on phone or tablet')}</div>
+    </div>
+
+    <div class="stgrid">
+      ${box(L('En direct : pages vues, 30 dernières minutes', 'Live: page views, last 30 minutes'), `<div class="chart short"><canvas id="chLive"></canvas></div>`, 'wide')}
+      ${one ? '' : box(L('Visiteurs par jour', 'Visitors per day'), `<div class="chart"><canvas id="chDays"></canvas></div>`, 'wide')}
+      ${box(L("Par heure : aujourd'hui et hier", 'By hour: today and yesterday'), `<div class="chart"><canvas id="chHours"></canvas></div><p class="note">${L('Heure de Paris. La ligne pointillée donne la moyenne de pages vues par heure sur la période.', 'Paris time. The dotted line is the average page views per hour over the period.')}</p>`, 'wide')}
+      ${box(L('Jours et heures les plus actifs', 'Busiest days and hours'), `<div class="heat"><span></span>${Array.from({ length: 24 }, (_, h) => `<span class="hh">${h % 3 ? '' : h}</span>`).join('')}
+        ${heat.map((row, d) => `<span class="dd">${DOW[d]}</span>${row.map((v, h) => `<i style="--a:${v ? .12 + .88 * v / hmax : 0}" title="${DOW[d]} ${hh(h)} : ${nf(v)} ${L('pages vues', 'page views')}"></i>`).join('')}`).join('')}</div>`, 'wide')}
+      ${box(L('Onglets les plus vus', 'Most viewed tabs'), `<div class="chart" style="height:${Math.max(160, 30 * (S.pages || []).length + 50)}px"><canvas id="chPages"></canvas></div>`)}
+      ${box(L("Pages d'arrivée", 'Landing tabs'), vrows(S.entries || [], x => esc(T[x.path] || x.path), x => x.visitors) + `<p class="note">${L('Le premier onglet vu par chaque visiteur dans la journée.', 'The first tab each visitor saw that day.')}</p>`)}
+      ${box(L('Provenance', 'Where visitors come from'), vrows([{ ref: L('Accès direct ou inconnu', 'Direct or unknown'), visitors: S.direct, direct: 1 }, ...(S.refs || [])].sort((a, b) => b.visitors - a.visitors), x => x.direct ? `<em>${esc(x.ref)}</em>` : esc(x.ref), x => x.visitors))}
+      ${box(L('Pays', 'Countries'), vrows(ctry, x => esc(x.label), x => x.v) + `<p class="note">${L("Déduit du fuseau horaire de l'appareil, sans adresse IP.", "Guessed from the device's time zone, no IP address.")}</p>`)}
+      ${box(L('Navigateurs', 'Browsers'), `<div class="chart short"><canvas id="chBrowsers"></canvas></div>`)}
+      ${box(L("Systèmes d'exploitation", 'Operating systems'), `<div class="chart short"><canvas id="chOs"></canvas></div>`)}
+      ${box(L("Largeur d'écran", 'Screen width'), vrows(S.screens || [], x => esc(x.k === '?' ? L('Inconnue', 'Unknown') : x.k + ' px'), x => x.v))}
+      ${box(L('Langue du site', 'Site language'), vrows(S.langs || [], x => x.k === 'fr' ? '🇫🇷 Français' : x.k === 'en' ? '🇬🇧 English' : L('Inconnue', 'Unknown'), x => x.v))}
+      ${box(L('Fidélité', 'Loyalty'), `<div class="chart short"><canvas id="chLoyal"></canvas></div><p class="note">${L('Nombre de jours différents où chaque visiteur est venu sur la période.', 'Number of different days each visitor came during the period.')}</p>`)}
+      ${box(L('Durée des visites', 'Visit length'), `<div class="chart short"><canvas id="chDur"></canvas></div>`)}
+      ${box(L('Actions des visiteurs', 'Visitor actions'), (S.events || []).length ? `<table class="sttab"><thead><tr><th>${L('Action', 'Action')}</th><th>${L('Fois', 'Times')}</th><th>${L('Visiteurs', 'Visitors')}</th></tr></thead><tbody>${S.events.map(x => `<tr><td>${esc(E[x.path] || x.path)}</td><td>${nf(x.n)}</td><td>${nf(x.visitors)}</td></tr>`).join('')}</tbody></table>` : `<p class="muted">—</p>`, 'wide')}
+      ${box(L('Dernières visites', 'Latest visits'), `<div class="sttabw"><table class="sttab"><thead><tr><th>${L('Heure', 'Time')}</th><th>${L('Visiteur', 'Visitor')}</th><th>${L('Onglet ou action', 'Tab or action')}</th><th>${L('Appareil', 'Device')}</th><th>${L('Pays', 'Country')}</th><th>${L('Venu de', 'From')}</th></tr></thead><tbody id="stRecent"></tbody></table></div>
+        <p class="note">${L('Le visiteur est désigné par les 4 premiers caractères de son numéro au hasard. Mis à jour toutes les 15 secondes.', 'Each visitor is shown by the first 4 characters of their random number. Refreshed every 15 seconds.')}</p>`, 'wide')}
+    </div>
+    <p class="note">${L("Comptage maison, sans cookie. N'apparaissent pas : les visiteurs qui ont choisi « Ne plus être compté », ceux dont le navigateur bloque Supabase, et vos propres passages sur cette page. Une même personne sur deux appareils compte deux fois. Les données de plus de 13 mois sont effacées.",
+      'Home-made counting, no cookies. Not shown: visitors who chose "Stop counting me", those whose browser blocks Supabase, and your own visits to this page. The same person on two devices counts twice. Data older than 13 months is deleted.')}</p>`;
+
+  if (!one) chart('chDays', { type: 'bar', data: { labels: daily.map(x => fmtDay(x.day)), datasets: [
+    { label: L('Visiteurs', 'Visitors'), data: daily.map(x => x.visitors), backgroundColor: P[0], borderRadius: 4, order: 2 },
+    { label: L('dont nouveaux', 'of which new'), data: daily.map(x => x.new), backgroundColor: P[1], borderRadius: 4, order: 1 },
+    { type: 'line', label: L('Pages vues', 'Page views'), data: daily.map(x => x.views), borderColor: css('--ink2'), backgroundColor: 'transparent', pointRadius: 0, borderWidth: 1.5, tension: .3, yAxisID: 'y2', order: 0 }] },
+    options: { plugins: { legend: { display: true, position: 'bottom' } }, interaction: { mode: 'index', intersect: false },
+      scales: { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }, y: { beginAtZero: true, ticks: { precision: 0 } }, y2: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { precision: 0 } } } } });
+  const H0 = S.hours_today || [], H1 = S.hours_yesterday || [], HA = S.hours_avg || [], curH = +new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris', hour: '2-digit', hour12: false }) % 24;
+  chart('chHours', { type: 'line', data: { labels: H0.map(x => hh(x.hour)), datasets: [
+    { label: L("Visiteurs aujourd'hui", 'Visitors today'), data: H0.map(x => x.hour <= curH ? x.visitors : null), borderColor: P[0], backgroundColor: alpha(P[0], .15), fill: true, tension: .3, pointRadius: 2 },
+    { label: L('Visiteurs hier', 'Visitors yesterday'), data: H1.map(x => x.visitors), borderColor: P[2], backgroundColor: 'transparent', tension: .3, pointRadius: 0, borderWidth: 1.5 },
+    { label: L('Pages vues, moyenne', 'Page views, average'), data: HA.map(x => +x.views), borderColor: css('--ink2'), borderDash: [4, 4], backgroundColor: 'transparent', tension: .3, pointRadius: 0, borderWidth: 1.2, yAxisID: 'y2' }] },
+    options: { plugins: { legend: { display: true, position: 'bottom' } }, interaction: { mode: 'index', intersect: false },
+      scales: { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }, y: { beginAtZero: true, ticks: { precision: 0 } }, y2: { position: 'right', beginAtZero: true, grid: { display: false } } } } });
+  const pages = S.pages || [];
+  chart('chPages', { type: 'bar', data: { labels: pages.map(x => T[x.path] || x.path), datasets: [
+    { label: L('Pages vues', 'Page views'), data: pages.map(x => x.views), backgroundColor: P[0], borderRadius: 4 },
+    { label: L('Visiteurs', 'Visitors'), data: pages.map(x => x.visitors), backgroundColor: P[4], borderRadius: 4 }] },
+    options: { indexAxis: 'y', plugins: { legend: { display: true, position: 'bottom' } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { grid: { display: false } } } } });
+  const donut = (id, list) => chart(id, { type: 'doughnut', data: { labels: list.map(x => x.k === '?' ? L('Inconnu', 'Unknown') : x.k === 'Autre' ? L('Autre', 'Other') : x.k), datasets: [{ data: list.map(x => x.v), backgroundColor: list.map((_, k) => P[k % P.length]), borderColor: css('--sheet'), borderWidth: 2 }] },
+    options: { cutout: '58%', plugins: { legend: { display: true, position: 'right' } } } });
+  donut('chBrowsers', S.browsers || []); donut('chOs', S.oses || []);
+  const bars = (id, list, lab, key, color) => chart(id, { type: 'bar', data: { labels: list.map(x => lab[x.b]), datasets: [{ data: list.map(x => x[key]), backgroundColor: color, borderRadius: 4 }] },
+    options: { scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+  bars('chLoyal', S.loyalty || [], LOY, 'visitors', P[1]); bars('chDur', S.durations || [], DUR, 'visits', P[3]);
+  loadLive();
 }
 
 // ---------- Signalements (administrateur)

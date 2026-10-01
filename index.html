@@ -286,15 +286,20 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .news a{font-weight:650;text-decoration:none}
 .news a:hover{text-decoration:underline}
 .news .when{font-size:.78rem;color:var(--ink2)}
-.enews li{padding:14px 0;cursor:pointer}
-.enews li.has-img{display:grid;grid-template-columns:104px 1fr;gap:14px;align-items:start}
+.enews{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;list-style:none;margin:0;padding:0}
+.enews li{display:flex;flex-direction:column;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;overflow:hidden;cursor:pointer;padding:0;transition:border-color .15s,transform .15s}
+.enews li:last-child{border-bottom:1px solid var(--rule)}
+.enews li:hover{border-color:var(--accent);transform:translateY(-2px)}
 .enews li:hover h4{text-decoration:underline}
+.enews .ethumb,.enews .eph{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--rule)}
+.enews .eph{display:grid;place-items:center;font-size:2.2rem;background:color-mix(in srgb,var(--ink2) 10%,var(--sheet))}
+.enews .ebox{display:flex;flex-direction:column;flex:1;padding:12px 14px 14px}
 .enews .etop{flex-wrap:wrap;row-gap:4px}
-.enews .src{white-space:nowrap}
-.enews .ethumb{width:104px;height:78px;object-fit:cover;border-radius:8px;background:var(--rule)}
+.enews .src{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .enews p{display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical;overflow:hidden!important}
-.enews .more{display:inline-block;margin-top:6px;font-size:.84rem;font-weight:700;color:var(--accent-ink)}
-@media(max-width:480px){.enews li.has-img{grid-template-columns:84px 1fr;gap:12px}.enews .ethumb{width:84px;height:66px}}
+.enews .more{display:inline-block;margin-top:auto;padding-top:8px;font-size:.84rem;font-weight:700;color:var(--accent-ink)}
+.emore{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 4px}
+.emore .muted{font-size:.82rem}
 .modal .box.reader{width:min(720px,96vw);padding:0 20px 16px}
 .modal .box.reader .ehero{display:block;width:calc(100% + 40px);max-height:300px;object-fit:cover;border-radius:14px 14px 0 0;margin:0 -20px 14px}
 .modal .box.reader .etop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:18px}
@@ -328,7 +333,8 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .enews .etop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
 .enews .src{font-size:.8rem;color:var(--ink2)}
 .enews .cat{font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
-.enews .cat.screens{background:color-mix(in srgb,var(--sky) 20%,transparent);color:var(--sky)}
+.enews .cat.displays,.enews .cat.screens{background:color-mix(in srgb,var(--sky) 20%,transparent);color:var(--sky)}
+.enews .cat.maker{background:color-mix(in srgb,var(--plum) 20%,transparent);color:var(--plum)}
 .enews .cat.diy{background:color-mix(in srgb,var(--sage) 20%,transparent);color:var(--sage)}
 .enews .cat.dashboards{background:color-mix(in srgb,var(--mustard) 20%,transparent);color:var(--mustard)}
 .enews h4{margin:2px 0 4px;font-size:1.02rem;line-height:1.3}
@@ -2080,8 +2086,11 @@ async function renderPronos() {
 }
 
 /* ================= Actu e-ink & dashboards ================= */
-let einkData = null, einkCat = 'all';
-const EINK_CATS = () => [['all', L('Tout', 'All')], ['screens', L('Écrans & liseuses', 'Screens & e-readers')], ['diy', L('DIY & projets', 'DIY & projects')], ['dashboards', L('Dashboards', 'Dashboards')]];
+let einkData = null, einkCat = 'all', einkShown = 0;
+const EINK_CATS = () => [['all', L('Tout', 'All')], ['displays', L("Écrans d'affichage", 'Display screens')], ['diy', L('Bidouille e-ink', 'E-ink hacks')], ['dashboards', L('Dashboards & domotique', 'Dashboards & home automation')], ['maker', L('Bidouille geek', 'Maker & geek')]];
+const EINK_ICON = { displays: '🖼️', screens: '🖼️', diy: '🛠️', dashboards: '📊', maker: '🔌' };
+// Articles affichés par « page » : 12 sur grand écran (grille de 2, 3 ou 4 colonnes), 6 sur téléphone
+const einkPage = () => matchMedia('(max-width:600px)').matches ? 6 : 12;
 // Corps d'article : seules quelques balises de mise en forme, sans attribut (déjà nettoyé à la source, re-vérifié ici)
 function safeBody(html) {
   const s = String(html || ''); let out = '', last = 0;
@@ -2114,12 +2123,17 @@ function openEink(a) {
 async function renderEink(openId) {
   const el = $('#tab-eink');
   if (!einkData) einkData = await getJSON('data/eink-news.json').catch(() => ({}));
-  const all = einkData?.articles || [];
+  const all = (einkData?.articles || []).map(a => a.cat === 'screens' ? { ...a, cat: 'displays' } : a);
   const list = einkCat === 'all' ? all : all.filter(a => a.cat === einkCat);
   const cats = Object.fromEntries(EINK_CATS());
-  const item = a => { const t = einkText(a); return `<li data-eid="${esc(a.id)}" tabindex="0" role="button" class="${a.img ? 'has-img' : ''}">
-      ${a.img ? `<img class="ethumb" src="${esc(a.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
-      <div><div class="etop"><span class="src"><b>${esc(a.src)}</b> · ${dfmt(a.d)}</span><span class="cat ${esc(a.cat)}">${esc(cats[a.cat] || a.cat)}</span></div>
+  if (!einkShown) einkShown = einkPage();
+  // Article ouvert par un lien direct : on déplie la grille jusqu'à lui
+  const pos = openId ? list.findIndex(x => x.id === openId) : -1;
+  if (pos >= einkShown) einkShown = Math.ceil((pos + 1) / einkPage()) * einkPage();
+  const shown = list.slice(0, einkShown), left = list.length - shown.length;
+  const item = a => { const t = einkText(a); return `<li data-eid="${esc(a.id)}" data-cat="${esc(a.cat)}" tabindex="0" role="button">
+      ${a.img ? `<img class="ethumb" src="${esc(a.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="eph" aria-hidden="true">${EINK_ICON[a.cat] || '🗞️'}</span>`}
+      <div class="ebox"><div class="etop"><span class="src"><b>${esc(a.src)}</b> · ${dfmt(a.d)}</span><span class="cat ${esc(a.cat)}">${esc(cats[a.cat] || a.cat)}</span></div>
         <h4>${esc(t.title)}</h4>
         ${t.teaser ? `<p>${esc(t.teaser)}</p>` : ''}
         <span class="more">${L("Lire l'article", 'Read the article')}${a.wc ? ` · ${Math.max(1, Math.round(a.wc / 200))} min` : ''} →</span></div>
@@ -2127,17 +2141,28 @@ async function renderEink(openId) {
   el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
       <h2 style="margin:0">🗞️ ${L('Actu e-ink & dashboards', 'E-ink & dashboards news')}</h2>
       <a class="rss" href="${EN() ? 'feed-eink-en.xml' : 'feed-eink.xml'}" target="_blank" rel="noopener">📡 ${L('Flux RSS', 'RSS feed')}</a></div>
-    <p class="lead">${L("Ce qui bouge autour des écrans e-ink, des liseuses et des tableaux de bord maison, trié et résumé automatiquement à partir de sources spécialisées.",
-      'What is happening around e-ink screens, e-readers and home dashboards, automatically sorted and summarized from specialized sources.')}</p>
+    <p class="lead">${L("Écrans d'affichage e-ink, bidouille, tableaux de bord et projets geeks : ce qui bouge chez les makers et les développeurs, trié et résumé automatiquement à partir de sources spécialisées.",
+      'E-ink display screens, hacks, dashboards and geeky projects: what makers and developers are up to, automatically sorted and summarized from specialized sources.')}</p>
     <div class="seg" role="group" style="margin-bottom:14px">${EINK_CATS().map(([k, lb]) => `<button type="button" data-ecat="${k}" aria-pressed="${k === einkCat}">${lb}</button>`).join('')}</div>
-    ${list.length ? `<div class="sheet"><ul class="news enews">${list.map(item).join('')}</ul></div>`
+    ${list.length ? `<ul class="news enews">${shown.map(item).join('')}</ul>
+      ${left > 0 ? `<div class="emore"><button class="btn ghost" type="button" id="einkMore">${L(`Afficher plus d'articles`, 'Show more articles')} (${left})</button>
+        <span class="muted">${L(`${shown.length} articles affichés sur ${list.length}`, `Showing ${shown.length} of ${list.length} articles`)}</span></div>` : ''}`
       : `<p class="notice">${all.length ? L('Rien dans cette catégorie pour le moment.', 'Nothing in this category yet.')
         : L("Les premières actus arrivent au prochain passage de la veille (jusqu'à 4 fois par jour).", 'The first stories arrive with the next news run (up to 4 times a day).')}</p>`}
     <p class="note">${L("Articles rédigés par une IA (Mistral) à partir des sources citées : vérifiez les détails importants chez la source. Mise à jour jusqu'à 4 fois par jour.",
       'Articles written by an AI (Mistral) from the cited sources: check important details at the source. Updated up to 4 times a day.')}
       ${einkData?.last_run ? L(` Dernier passage : ${ago(einkData.last_run)}.`, ` Last run: ${ago(einkData.last_run)}.`) : ''}</p>`;
-  el.querySelectorAll('[data-ecat]').forEach(b => b.onclick = () => { einkCat = b.dataset.ecat; renderEink(); });
-  el.querySelectorAll('.ethumb').forEach(img => img.addEventListener('error', () => { img.closest('li')?.classList.remove('has-img'); img.remove(); }));
+  el.querySelectorAll('[data-ecat]').forEach(b => b.onclick = () => { einkCat = b.dataset.ecat; einkShown = 0; renderEink(); });
+  const more = $('#einkMore');
+  if (more) more.onclick = () => {
+    const first = einkShown; einkShown += einkPage(); renderEink();
+    el.querySelectorAll('li[data-eid]')[first]?.focus({ preventScroll: true });   // le clavier reprend au premier nouvel article
+  };
+  // Vignette introuvable : remplacée par l'icône de la catégorie, la grille reste alignée
+  el.querySelectorAll('.ethumb').forEach(img => img.addEventListener('error', () => {
+    const ph = document.createElement('span'); ph.className = 'eph'; ph.setAttribute('aria-hidden', 'true');
+    ph.textContent = EINK_ICON[img.closest('li')?.dataset.cat] || '🗞️'; img.replaceWith(ph);
+  }));
   el.querySelectorAll('li[data-eid]').forEach(li => {
     const a = all.find(x => x.id === li.dataset.eid);
     li.onclick = () => openEink(a);

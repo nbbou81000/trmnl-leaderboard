@@ -7,8 +7,13 @@
 -- Tous les réglages de mise en page sont rangés dans une seule colonne
 alter table public.site_settings add column if not exists style jsonb not null default '{}'::jsonb;
 
+-- Nouveau rythme « une seule fois par visiteur »
+alter table public.site_settings drop constraint if exists site_settings_frequency_check;
+alter table public.site_settings add constraint site_settings_frequency_check check (frequency in ('once', 'day', 'week', 'always'));
+
 -- Enregistrement du bandeau en une fois (réservé aux administrateurs).
--- La version augmente à chaque enregistrement pour que le bandeau réapparaisse chez tout le monde.
+-- La version augmente quand c'est une nouvelle annonce, pour que le bandeau réapparaisse chez tout le monde ;
+-- une simple correction (p.silent = true) garde la version : ceux qui l'ont déjà vu ne le revoient pas.
 create or replace function public.set_banner(p jsonb) returns void
 language plpgsql security definer set search_path = public as $$
 begin
@@ -21,12 +26,12 @@ begin
     text_fr    = coalesce(p->>'text_fr', ''),
     text_en    = coalesce(p->>'text_en', ''),
     show_stats = coalesce((p->>'show_stats')::boolean, false),
-    frequency  = case when p->>'frequency' in ('day', 'week', 'always') then p->>'frequency' else 'day' end,
+    frequency  = case when p->>'frequency' in ('once', 'day', 'week', 'always') then p->>'frequency' else 'once' end,
     expires_at = nullif(p->>'expires_at', '')::timestamptz,
     font       = coalesce(nullif(btrim(p->>'font'), ''), 'default'),
     color      = coalesce(p->'style'->>'text', ''),
     style      = coalesce(p->'style', '{}'::jsonb),
-    version    = version + 1,
+    version    = version + case when coalesce((p->>'silent')::boolean, false) then 0 else 1 end,
     updated_at = now()
   where id = 1;
 end $$;

@@ -140,7 +140,16 @@ const articlePage = (a, en) => {
 <link rel="icon" href="${esc(SITE)}icon-192.png">
 <link rel="canonical" href="${esc(self)}">
 <link rel="alternate" hreflang="${en ? 'fr' : 'en'}" href="${esc(SITE)}a/${a.id}${en ? '' : '-en'}.html">
-<script>location.replace(${JSON.stringify(target)});</script>
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = ${JSON.stringify(target)}, i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
 <style>
 :root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
 @media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}

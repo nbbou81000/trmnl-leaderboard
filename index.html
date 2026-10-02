@@ -449,10 +449,25 @@ footer p{margin:0 0 12px;max-width:80ch}
 .fbot .kofi{margin-left:auto;color:var(--accent-ink);border-bottom-color:var(--accent2)}
 .fbot .kofi:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
 .fthanks{font-size:.78rem;color:var(--grey);margin:6px 0 0;text-align:right}
-.modal .box.disc{width:min(520px,96vw);text-align:center}
-.modal .box.disc img{max-width:100%;max-height:160px;border-radius:10px;margin:0 0 12px;display:block;margin-left:auto;margin-right:auto}
-.modal .box.disc .discbody{text-align:left;font-size:.92rem;line-height:1.5}
-.modal .box.disc .discstats{text-align:left;font-size:.86rem;color:var(--ink2);margin:10px 0 0;font-weight:600}
+.modal .box.disc{width:min(540px,96vw);color:var(--ink);font-family:var(--bfont,inherit)}
+.box.disc .dimg{display:block;max-width:100%;max-height:200px;border-radius:10px;margin:0 auto 14px}
+.box.disc .dimg.fill{width:100%;height:180px;max-height:none;object-fit:cover}
+.box.disc .dsplit{display:grid;grid-template-columns:minmax(110px,38%) 1fr;gap:18px;align-items:start}
+.box.disc .dsplit .dimg{margin:0;max-height:none}
+.box.disc .dsplit .dimg.fill{height:100%;min-height:160px}
+@media(max-width:560px){.box.disc .dsplit{grid-template-columns:1fr}}
+.box.disc .discbody{font-size:var(--bsize,.95rem);line-height:1.55;overflow-wrap:anywhere}
+.box.disc .discbody>:first-child{margin-top:0}
+.box.disc .discbody p{margin:0 0 .7em}
+.box.disc .discbody h1,.box.disc .discbody h2{font-size:1.65em;line-height:1.15;margin:.1em 0 .45em;font-stretch:110%;letter-spacing:-.01em}
+.box.disc .discbody h3{font-size:1.3em;line-height:1.2;margin:.6em 0 .35em}
+.box.disc .discbody h4{font-size:1.08em;margin:.6em 0 .3em;text-transform:uppercase;letter-spacing:.04em;opacity:.85}
+.box.disc .discbody ul,.box.disc .discbody ol{margin:0 0 .7em;padding-left:1.3em;text-align:left}
+.box.disc .discbody blockquote{margin:.4em 0 .8em;padding:.5em .9em;border-left:4px solid var(--accent);background:color-mix(in srgb,currentColor 7%,transparent);border-radius:0 8px 8px 0;font-style:italic}
+.box.disc .discbody hr{border:0;border-top:1.5px solid var(--rule);margin:.9em 0}
+.box.disc .discbody a{color:var(--accent-ink);font-weight:600}
+.box.disc .discbody mark{padding:0 .15em;border-radius:3px}
+.box.disc .discstats{font-size:.86rem;color:var(--ink2);margin:10px 0 0;font-weight:600}
 .imgpick{display:flex;gap:8px;align-items:center}
 .imgpick input[type=text]{flex:1;min-width:0}
 .discimgprev{margin-top:6px}
@@ -463,8 +478,62 @@ footer p{margin:0 0 12px;max-width:80ch}
 .swatches{display:flex;gap:6px}
 .swatch{width:24px;height:24px;border-radius:50%;border:1px solid var(--rule2);cursor:pointer;padding:0}
 .swatch:hover{outline:2px solid var(--accent);outline-offset:1px}
-.modal .box.disc .discreminder{margin-top:14px;padding-top:12px;border-top:1px dashed var(--rule);font-size:.85rem;color:var(--ink2)}
-.modal .box.disc .row{justify-content:center}
+.box.disc .discreminder{margin-top:14px;padding-top:12px;border-top:1px dashed var(--rule);font-size:.85rem;color:var(--ink2)}
+.box.disc .discreminder a{color:var(--accent-ink)}
+.box.disc .row{justify-content:center;margin-top:14px;flex-wrap:wrap}
+.box.disc .btn.ghost{background:transparent;color:inherit;border-color:var(--rule2)}
+/* Studio du bandeau */
+.modal .box.bedit{width:min(1200px,98vw);max-width:98vw;max-height:96vh;padding:18px 20px}
+.modal .box.disc{max-width:96vw}
+.wform .rtbar select{width:auto;padding:0 4px}
+.wform .colorpick input[type=color]{width:44px!important;height:32px;padding:2px!important;flex:none}
+.behead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.behead h3{margin:0}
+.chk.inline.big{font-size:.95rem;color:var(--ink);font-weight:650;background:var(--sheet);border:1px solid var(--rule);border-radius:99px;padding:6px 14px}
+.begrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px;align-items:start}
+@media(max-width:920px){.begrid{grid-template-columns:1fr}}
+.betabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--rule);margin-bottom:12px}
+.betabs button{background:none;border:0;border-bottom:3px solid transparent;padding:8px 10px;font:inherit;font-weight:650;color:var(--ink2);cursor:pointer}
+.betabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
+.bedit section{display:grid;gap:10px}
+.bedit section[hidden]{display:none}
+.bedit h4{margin:8px 0 0;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+.bedit .small{font-size:.8rem;margin:0}
+.bedit .row.left{justify-content:flex-start}
+.bedit .rv{font-weight:400;color:var(--ink2)}
+.bedit input[type=range]{width:100%;accent-color:var(--accent)}
+.bedit [hidden]{display:none!important}
+.cfield{display:grid;gap:4px;font-size:.86rem;font-weight:600}
+.swatches.mini{flex-wrap:wrap;gap:4px}.swatches.mini .swatch{width:18px;height:18px}
+.colorpick input[type=color]:disabled{opacity:.35;cursor:not-allowed}
+.bthemes{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.btheme{display:grid;gap:2px;justify-items:center;padding:10px 6px;border-radius:10px;border:2px solid var(--rule);cursor:pointer;font:inherit;font-size:.78rem}
+.btheme b{font-size:1.2rem}
+.btheme:hover{outline:2px solid var(--accent);outline-offset:1px}
+.rt{border:1px solid var(--rule2);border-radius:10px;background:var(--sheet);overflow:hidden;position:relative}
+.rtbar{display:flex;flex-wrap:wrap;gap:2px;align-items:center;padding:6px;border-bottom:1px solid var(--rule);background:var(--paper)}
+.rtbar button{min-width:30px;height:30px;border:1px solid transparent;border-radius:6px;background:none;color:var(--ink);cursor:pointer;font:inherit;font-size:.9rem;display:inline-grid;place-items:center;padding:0 6px}
+.rtbar button:hover{background:var(--sheet);border-color:var(--rule2)}
+.rtbar button.on{background:color-mix(in srgb,var(--accent) 18%,transparent);border-color:var(--accent)}
+.rtbar button:disabled,.rtbar select:disabled{opacity:.35}
+.rtbar select{font:inherit;font-size:.82rem;height:30px;border:1px solid var(--rule2);border-radius:6px;background:var(--sheet);color:var(--ink);padding:0 4px}
+.rtbar .sep{width:1px;height:20px;background:var(--rule2);margin:0 3px}
+.rtbar .ca{font-weight:800;line-height:1}
+.rtbar .cbar{display:block;width:16px;height:3px;border-radius:2px;margin-top:-6px}
+.rtcol button{flex-direction:column}
+.rtpop{position:absolute;z-index:3;top:44px;right:8px;background:var(--paper);border:1px solid var(--rule2);border-radius:10px;padding:10px;display:grid;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:260px}
+.rtpop .swatches{flex-wrap:wrap}
+.rtedit{min-height:220px;max-height:46vh;overflow:auto;padding:12px 14px;outline:none;line-height:1.55;font-size:.95rem}
+.rtedit:focus{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
+.rtedit h2{font-size:1.5em;margin:.2em 0 .4em}.rtedit h3{font-size:1.25em;margin:.4em 0 .3em}.rtedit h4{font-size:1.05em;text-transform:uppercase;letter-spacing:.04em;margin:.4em 0 .3em}
+.rtedit p{margin:0 0 .6em}.rtedit blockquote{margin:.4em 0;padding:.4em .8em;border-left:4px solid var(--accent);font-style:italic}
+.rtsrc{width:100%;min-height:260px;border:0;padding:12px;font:13px/1.5 ui-monospace,Consolas,monospace;background:var(--sheet);color:var(--ink);resize:vertical}
+.beprev{position:sticky;top:0;display:grid;gap:8px}
+.bebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bebar .btn{margin-left:auto}
+.bestage{background:repeating-conic-gradient(color-mix(in srgb,var(--ink) 6%,transparent) 0 25%,transparent 0 50%) 0 0/18px 18px,rgba(0,0,0,.45);border-radius:12px;padding:22px 14px;display:flex;justify-content:center;max-height:70vh;overflow:auto}
+.bestage .box.disc{background:var(--paper);max-height:none;overflow:visible}
+.befoot{justify-content:flex-end;margin-top:14px;position:sticky;bottom:-18px;background:var(--paper);padding:10px 0 4px;border-top:1px solid var(--rule)}
 .loading{padding:60px 0;text-align:center;color:var(--ink2)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:.9rem;z-index:50}
 @media (prefers-reduced-motion:no-preference){
@@ -1446,6 +1515,7 @@ const realApi = {
   async clearReport(id) { const c = await client(); ok(await c.from('reports').delete().eq('id', id)); },
   async ban(uid, value) { const c = await client(); ok(await c.rpc('set_banned', { target: uid, value })); },
   async siteSettings() { const c = await client(); return ok(await c.from('site_settings').select('*').eq('id', 1).maybeSingle()); },
+  async setBanner(d) { const c = await client(); ok(await c.rpc('set_banner', { p: d })); },
   async setDisclaimer(fields) { const c = await client(); ok(await c.rpc('set_disclaimer', { p_enabled: fields.enabled, p_img: fields.img, p_text_fr: fields.text_fr, p_text_en: fields.text_en, p_show_stats: fields.show_stats, p_frequency: fields.frequency, p_expires_at: fields.expires_at, p_font: fields.font, p_color: fields.color })); },
   async uploadDisclaimerImage(file) {
     const c = await client();
@@ -1707,15 +1777,93 @@ function disclaimerStats() {
   const newAuthors = D.creators.filter(c => c.first && now - Date.parse(c.first) < DAY).length;
   return { newRecipes, newAuthors };
 }
+// Réglages de mise en page du bandeau, avec leurs valeurs par défaut
+const BANNER_DEFAULT = { bg: 'site', bg1: '#FF6600', bg2: '#F8654B', angle: 135, text: '', accent: '', btnText: '#FFFFFF', border: '', radius: 14,
+  width: 'normal', pad: 'normal', size: 'md', align: 'left', imgPos: 'top', imgFit: 'contain', overlay: 45, shadow: true,
+  cta_fr: '', cta_en: '', cta_url: '', btn_fr: '', btn_en: '', reminder: true };
+const isHex = c => /^#[0-9a-f]{3,8}$/i.test(c || '');
+const bannerStyleOf = s => { const st = { ...BANNER_DEFAULT, ...(s?.style || {}) }; if (!st.text && isHex(s?.color) && !s?.style?.text) st.text = s.color; return st; };
+const B_WIDTH = { compact: 420, normal: 540, wide: 720, xl: 900 }, B_PAD = { tight: 14, normal: 22, roomy: 34 }, B_SIZE = { sm: .86, md: .95, lg: 1.06, xl: 1.18 };
+// Texte riche du bandeau : seules les balises et les styles de mise en forme sont gardés (rien d'exécutable)
+const B_TAGS = new Set(['P', 'DIV', 'BR', 'B', 'STRONG', 'I', 'EM', 'U', 'S', 'STRIKE', 'DEL', 'H1', 'H2', 'H3', 'H4', 'UL', 'OL', 'LI', 'A', 'SPAN', 'BLOCKQUOTE', 'HR', 'MARK', 'SMALL', 'SUB', 'SUP', 'CODE']);
+const B_STYLES = ['color', 'background-color', 'text-align', 'font-size', 'font-weight', 'font-style', 'text-decoration', 'text-decoration-line'];
+const FONT_SIZES = { 1: '.75em', 2: '.875em', 3: '1em', 4: '1.2em', 5: '1.5em', 6: '1.9em', 7: '2.4em' };
+function cleanBanner(html) {
+  const doc = new DOMParser().parseFromString(`<div>${html || ''}</div>`, 'text/html'), root = doc.body.firstChild;
+  const walk = el => [...el.childNodes].forEach(n => {
+    if (n.nodeType === 3) return;
+    if (n.nodeType !== 1) { n.remove(); return; }
+    if (/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|svg|MATH|FORM|INPUT|BUTTON|TEXTAREA|SELECT|IMG|VIDEO|AUDIO)$/i.test(n.tagName)) { n.remove(); return; }
+    walk(n);
+    if (n.tagName === 'FONT') {   // ancienne mise en forme des navigateurs → <span style>
+      const sp = doc.createElement('span');
+      if (n.getAttribute('color')) sp.style.color = n.getAttribute('color');
+      if (n.getAttribute('size')) sp.style.fontSize = FONT_SIZES[n.getAttribute('size')] || '';
+      sp.style.cssText += n.style.cssText; while (n.firstChild) sp.append(n.firstChild); n.replaceWith(sp); n = sp;
+    }
+    if (!B_TAGS.has(n.tagName)) { n.replaceWith(...n.childNodes); return; }
+    const keep = {};
+    if (n.tagName === 'A') { const h = n.getAttribute('href') || ''; if (/^(https?:|mailto:|#)/i.test(h)) keep.href = h; }
+    const css = B_STYLES.map(p => { const v = n.style.getPropertyValue(p); return v && !/url|expression|javascript/i.test(v) ? `${p}:${v}` : ''; }).filter(Boolean).join(';');
+    [...n.attributes].forEach(a => n.removeAttribute(a.name));
+    if (css) n.setAttribute('style', css);
+    if (keep.href) { n.setAttribute('href', keep.href); if (!keep.href.startsWith('#')) { n.setAttribute('target', '_blank'); n.setAttribute('rel', 'noopener'); } }
+  });
+  walk(root);
+  return root.innerHTML.trim();
+}
+// Ancien texte brut : les lignes vides séparent les paragraphes
+const toRich = t => !t ? '' : /<[a-z][\s\S]*>/i.test(t) ? t : t.split(/\n{2,}/).map(p => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`).join('');
+const isEmptyRich = h => !String(h || '').replace(/<br\s*\/?>|<\/?(p|div|span)[^>]*>|&nbsp;|\s/gi, '');
+
+// Style de la boîte du bandeau (fond, couleurs, bordure, taille…)
+function bannerBoxCSS(s) {
+  const st = bannerStyleOf(s), out = [];
+  const img = s?.img ? imgURL(s.img) : '';
+  if (st.imgPos === 'cover' && img) {
+    const o = Math.max(0, Math.min(90, +st.overlay || 0)) / 100;
+    out.push(`background:linear-gradient(rgba(0,0,0,${o}),rgba(0,0,0,${o})),url("${img.replace(/"/g, '%22')}") center/cover no-repeat`);
+    if (!st.text) st.text = '#FFFFFF';
+  } else if (st.bg === 'solid' && isHex(st.bg1)) out.push(`background:${st.bg1}`);
+  else if (st.bg === 'gradient' && isHex(st.bg1) && isHex(st.bg2)) out.push(`background:linear-gradient(${+st.angle || 135}deg,${st.bg1},${st.bg2})`);
+  if (isHex(st.text)) out.push(`color:${st.text}`, `--ink:${st.text}`, `--ink2:color-mix(in srgb,${st.text} 72%,transparent)`, `--rule:color-mix(in srgb,${st.text} 28%,transparent)`, `--rule2:color-mix(in srgb,${st.text} 40%,transparent)`);
+  if (isHex(st.accent)) out.push(`--accent:${st.accent}`, `--accent-ink:${st.accent}`);
+  if (isHex(st.btnText)) out.push(`--on-accent:${st.btnText}`);
+  out.push(isHex(st.border) ? `border:2px solid ${st.border}` : 'border:0');
+  out.push(`border-radius:${Math.max(0, Math.min(40, +st.radius || 0))}px`, `padding:${B_PAD[st.pad] || 22}px`, `width:min(${B_WIDTH[st.width] || 540}px,96vw)`);
+  out.push(`--bsize:${B_SIZE[st.size] || .95}rem`, `text-align:${st.align === 'center' ? 'center' : 'left'}`);
+  if (st.shadow) out.push('box-shadow:0 18px 50px rgba(0,0,0,.28)');
+  if (DISC_FONTS[s?.font]?.css) out.push(`--bfont:${DISC_FONTS[s.font].css}`);
+  return out.join(';');
+}
+// Contenu du bandeau, identique dans l'aperçu de l'éditeur et chez les visiteurs
+function bannerInner(s, en, stats) {
+  const st = bannerStyleOf(s), t = (fr, e) => en ? e : fr;
+  const body = cleanBanner(toRich(en ? (s.text_en || s.text_fr) : (s.text_fr || s.text_en)));
+  const img = s.img ? imgURL(s.img) : '';
+  const statsHTML = stats ? `<p class="discstats">${[
+    t(`🆕 ${nf(stats.newRecipes)} nouvelle${stats.newRecipes > 1 ? 's' : ''} recette${stats.newRecipes > 1 ? 's' : ''} (24 h)`, `🆕 ${nf(stats.newRecipes)} new recipe${stats.newRecipes > 1 ? 's' : ''} (24h)`),
+    t(`👤 ${nf(stats.newAuthors)} nouvel${stats.newAuthors > 1 ? 's' : ''} auteur${stats.newAuthors > 1 ? 's' : ''} (24 h)`, `👤 ${nf(stats.newAuthors)} new author${stats.newAuthors > 1 ? 's' : ''} (24h)`),
+  ].join(' · ')}</p>` : '';
+  const cta = (en ? st.cta_en || st.cta_fr : st.cta_fr || st.cta_en), url = st.cta_url && /^(https?:|#)/.test(st.cta_url) ? st.cta_url : '';
+  const close = (en ? st.btn_en : st.btn_fr) || t('Compris', 'Got it');
+  const reminder = st.reminder ? `<div class="discreminder">${t(
+    `💡 Vous pouvez <a href="${hr('moi')}">revendiquer votre profil de créateur et lier votre compte Discord</a> pour apparaître sous votre propre nom.`,
+    `💡 You can <a href="${hr('moi')}">claim your creator profile and link your Discord account</a> to appear under your own name.`)}</div>` : '';
+  const buttons = `<div class="row">${cta && url ? `<a class="btn" href="${esc(url)}" ${url.startsWith('#') ? 'data-close' : 'target="_blank" rel="noopener"'}>${esc(cta)}</a><button class="btn ghost" type="button" data-close>${esc(close)}</button>` : `<button class="btn" type="button" data-close>${esc(close)}</button>`}</div>`;
+  const content = `${body ? `<div class="discbody">${body}</div>` : ''}${statsHTML}${reminder}${buttons}`;
+  if (img && st.imgPos === 'side') return `<div class="dsplit"><img class="dimg ${st.imgFit === 'cover' ? 'fill' : ''}" src="${esc(img)}" alt=""><div>${content}</div></div>`;
+  if (img && st.imgPos === 'top') return `<img class="dimg ${st.imgFit === 'cover' ? 'fill' : ''}" src="${esc(img)}" alt="">${content}`;
+  return content;
+}
 async function showDisclaimer() {
   if (!wipReady() && !window.__WIP_MOCK) return;
   let s;
   try { s = await api().siteSettings(); } catch { return; }
   if (!s || !s.enabled) return;
   if (s.expires_at && Date.parse(s.expires_at) < Date.now()) return;   // durée d'affichage écoulée
-  const body = L(s.text_fr, s.text_en) || s.text_fr || s.text_en || '';
   const stats = s.show_stats ? disclaimerStats() : null;
-  if (!body && !s.img && !stats) return;
+  if (isEmptyRich(s.text_fr) && isEmptyRich(s.text_en) && !s.img && !stats) return;
   const freq = ['day', 'week', 'always'].includes(s.frequency) ? s.frequency : 'day';
   if (freq !== 'always') {
     const period = freq === 'week' ? 'w' + Math.floor(Date.now() / (7 * DAY)) : 'd' + new Date().toISOString().slice(0, 10);
@@ -1725,35 +1873,24 @@ async function showDisclaimer() {
     store.set(key, sig);
   }
   await applyDiscFont(s.font);
-  const reminder = L(
-    `💡 Vous pouvez <a href="${hr('moi')}">revendiquer votre profil de créateur et lier votre compte Discord</a> pour apparaître sous votre propre nom.`,
-    `💡 You can <a href="${hr('moi')}">claim your creator profile and link your Discord account</a> to appear under your own name.`);
-  const statsHTML = stats ? `<p class="discstats">${[
-    L(`🆕 ${nf(stats.newRecipes)} nouvelle${stats.newRecipes > 1 ? 's' : ''} recette${stats.newRecipes > 1 ? 's' : ''} (24 h)`, `🆕 ${nf(stats.newRecipes)} new recipe${stats.newRecipes > 1 ? 's' : ''} (24h)`),
-    L(`👤 ${nf(stats.newAuthors)} nouvel${stats.newAuthors > 1 ? 's' : ''} auteur${stats.newAuthors > 1 ? 's' : ''} (24 h)`, `👤 ${nf(stats.newAuthors)} new author${stats.newAuthors > 1 ? 's' : ''} (24h)`),
-  ].join(' · ')}</p>` : '';
-  const bodyStyle = [DISC_FONTS[s.font]?.css ? `font-family:${DISC_FONTS[s.font].css}` : '', s.color ? `color:${s.color}` : ''].filter(Boolean).join(';');
-  modal(`${s.img ? `<img src="${esc(imgURL(s.img))}" alt="">` : ''}
-    ${body ? `<div class="discbody"${bodyStyle ? ` style="${esc(bodyStyle)}"` : ''}>${body}</div>` : ''}
-    ${statsHTML}
-    <div class="discreminder">${reminder}</div>
-    <div class="row"><button class="btn" type="button" data-close>${L('Compris', 'Got it')}</button></div>`, 'disc');
+  const m = modal(bannerInner(s, EN(), stats), 'disc');
+  m.$('.box').setAttribute('style', bannerBoxCSS(s));
 }
-// ---------- Polices proposées pour le texte du bandeau (lazy-load des polices Google si besoin)
+// ---------- Polices proposées pour le texte du bandeau (chargées seulement si utilisées)
 const DISC_FONTS = {
-  default: { label: L('Police du site', 'Site font'), css: '' },
-  sans:    { label: L('Sans-serif', 'Sans-serif'), css: `system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif` },
-  serif:   { label: L('Serif', 'Serif'), css: `Georgia, 'Times New Roman', Times, serif` },
-  mono:    { label: L('Monospace', 'Monospace'), css: `'SF Mono', 'Cascadia Code', Consolas, Menlo, monospace` },
-  rounded: { label: L('Arrondie (Poppins)', 'Rounded (Poppins)'), css: `'Poppins', system-ui, sans-serif`, gfont: 'Poppins:wght@500;700' },
-  hand:    { label: L('Manuscrite (Caveat)', 'Handwritten (Caveat)'), css: `'Caveat', cursive`, gfont: 'Caveat:wght@600;700' },
+  default:  { label: L('Police du site', 'Site font'), css: '' },
+  sans:     { label: L('Sans-serif système', 'System sans-serif'), css: `system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif` },
+  inter:    { label: 'Inter', css: `'Inter', system-ui, sans-serif`, gfont: 'Inter:wght@400;600;800' },
+  grotesk:  { label: 'Space Grotesk', css: `'Space Grotesk', system-ui, sans-serif`, gfont: 'Space+Grotesk:wght@400;600;700' },
+  rounded:  { label: L('Arrondie (Poppins)', 'Rounded (Poppins)'), css: `'Poppins', system-ui, sans-serif`, gfont: 'Poppins:wght@400;600;700' },
+  serif:    { label: L('Serif classique', 'Classic serif'), css: `Georgia, 'Times New Roman', Times, serif` },
+  playfair: { label: L('Élégante (Playfair Display)', 'Elegant (Playfair Display)'), css: `'Playfair Display', Georgia, serif`, gfont: 'Playfair+Display:wght@400;700;800' },
+  merri:    { label: 'Merriweather', css: `'Merriweather', Georgia, serif`, gfont: 'Merriweather:wght@400;700' },
+  mono:     { label: L('Machine à écrire (mono)', 'Typewriter (mono)'), css: `'JetBrains Mono', 'SF Mono', Consolas, Menlo, monospace`, gfont: 'JetBrains+Mono:wght@400;700' },
+  pixel:    { label: L('Pixel (VT323)', 'Pixel (VT323)'), css: `'VT323', monospace`, gfont: 'VT323' },
+  hand:     { label: L('Manuscrite (Caveat)', 'Handwritten (Caveat)'), css: `'Caveat', cursive`, gfont: 'Caveat:wght@500;700' },
 };
-const DISC_COLORS = [
-  { label: L('Orange TRMNL', 'TRMNL orange'), value: '#FF6600' },
-  { label: L('Rouge du site', "Site's accent red"), value: '#F8654B' },
-  { label: L('Noir', 'Black'), value: '#1D1D1B' },
-  { label: L('Blanc', 'White'), value: '#FFFFFF' },
-];
+const DISC_COLORS = ['#FF6600', '#F8654B', '#E63946', '#F4A261', '#E9C46A', '#2A9D8F', '#3D8B6E', '#457B9D', '#5A67D8', '#9B5DE5', '#1D1D1B', '#6B6B66', '#FFFFFF', '#FFF4E6'];
 const loadedFonts = new Set();
 function applyDiscFont(key) {
   const f = DISC_FONTS[key];
@@ -1765,85 +1902,319 @@ function applyDiscFont(key) {
     link.onload = res; link.onerror = res; document.head.append(link);
   });
 }
-// ---------- Édition du bandeau, réservée à l'administrateur (bouton dans l'onglet « En élaboration »)
+// Thèmes prêts à l'emploi : un clic remplit les couleurs, on peut ensuite tout ajuster
+const BANNER_THEMES = () => [
+  { k: 'site', label: L('Site', 'Site'), st: { bg: 'site', text: '', accent: '', btnText: '#FFFFFF', border: '' } },
+  { k: 'trmnl', label: 'TRMNL', st: { bg: 'solid', bg1: '#FF6600', text: '#FFFFFF', accent: '#1D1D1B', btnText: '#FFFFFF', border: '' } },
+  { k: 'sunset', label: L('Coucher de soleil', 'Sunset'), st: { bg: 'gradient', bg1: '#FF6600', bg2: '#9B5DE5', angle: 135, text: '#FFFFFF', accent: '#FFFFFF', btnText: '#1D1D1B', border: '' } },
+  { k: 'night', label: L('Nuit', 'Night'), st: { bg: 'gradient', bg1: '#141E30', bg2: '#243B55', angle: 160, text: '#F1F1EE', accent: '#FF7C66', btnText: '#FFFFFF', border: '' } },
+  { k: 'paper', label: L('Papier', 'Paper'), st: { bg: 'solid', bg1: '#FBF6EC', text: '#2B2B28', accent: '#B5502E', btnText: '#FFFFFF', border: '#E5DCC8' } },
+  { k: 'eink', label: 'E-ink', st: { bg: 'solid', bg1: '#FFFFFF', text: '#111111', accent: '#111111', btnText: '#FFFFFF', border: '#111111' } },
+  { k: 'mint', label: L('Menthe', 'Mint'), st: { bg: 'gradient', bg1: '#D8F3DC', bg2: '#B7E4C7', angle: 120, text: '#1B4332', accent: '#2D6A4F', btnText: '#FFFFFF', border: '' } },
+  { k: 'alert', label: L('Alerte', 'Alert'), st: { bg: 'solid', bg1: '#FFF3CD', text: '#5C4400', accent: '#C0392B', btnText: '#FFFFFF', border: '#E0A800' } },
+];
+
+// ---------- Petit éditeur de texte riche (sans bibliothèque) : gras, titres, alignement, couleurs, listes, liens…
+function richEditor(host, html, onChange) {
+  host.innerHTML = `<div class="rtbar" role="toolbar">
+      <select data-block title="${L('Style de paragraphe', 'Paragraph style')}"><option value="p">${L('Texte', 'Text')}</option><option value="h2">${L('Grand titre', 'Big title')}</option><option value="h3">${L('Titre', 'Title')}</option><option value="h4">${L('Sous-titre', 'Subtitle')}</option><option value="blockquote">${L('Citation', 'Quote')}</option></select>
+      <select data-size title="${L('Taille du texte', 'Text size')}"><option value="">${L('Taille', 'Size')}</option><option value="2">${L('Petit', 'Small')}</option><option value="3">${L('Normal', 'Normal')}</option><option value="4">${L('Grand', 'Large')}</option><option value="5">${L('Très grand', 'Very large')}</option><option value="6">${L('Énorme', 'Huge')}</option></select>
+      <span class="sep"></span>
+      <button type="button" data-cmd="bold" title="${L('Gras', 'Bold')}"><b>B</b></button><button type="button" data-cmd="italic" title="${L('Italique', 'Italic')}"><i>I</i></button><button type="button" data-cmd="underline" title="${L('Souligné', 'Underline')}"><u>U</u></button><button type="button" data-cmd="strikeThrough" title="${L('Barré', 'Strikethrough')}"><s>S</s></button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="justifyLeft" title="${L('Aligner à gauche', 'Align left')}">${RT_ICON.left}</button><button type="button" data-cmd="justifyCenter" title="${L('Centrer', 'Center')}">${RT_ICON.center}</button><button type="button" data-cmd="justifyRight" title="${L('Aligner à droite', 'Align right')}">${RT_ICON.right}</button><button type="button" data-cmd="justifyFull" title="${L('Justifier', 'Justify')}">${RT_ICON.full}</button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="insertUnorderedList" title="${L('Liste à puces', 'Bullet list')}">•≡</button><button type="button" data-cmd="insertOrderedList" title="${L('Liste numérotée', 'Numbered list')}">1.≡</button>
+      <span class="sep"></span>
+      <span class="rtcol"><button type="button" data-pop="fore" title="${L('Couleur du texte', 'Text color')}"><span class="ca">A</span><i class="cbar" style="background:#FF6600"></i></button></span>
+      <span class="rtcol"><button type="button" data-pop="hilite" title="${L('Surligner', 'Highlight')}">🖍️</button></span>
+      <button type="button" data-link title="${L('Lien', 'Link')}">🔗</button><button type="button" data-cmd="insertHorizontalRule" title="${L('Ligne de séparation', 'Divider line')}">―</button>
+      <button type="button" data-cmd="removeFormat" title="${L('Effacer la mise en forme', 'Clear formatting')}">⌫</button>
+      <button type="button" data-undo title="${L('Annuler', 'Undo')}">↶</button><button type="button" data-redo title="${L('Rétablir', 'Redo')}">↷</button>
+      <button type="button" data-src title="${L('Voir le code HTML', 'View HTML code')}">&lt;/&gt;</button>
+    </div>
+    <div class="rtpop" hidden></div>
+    <div class="rtedit" contenteditable="true" spellcheck="true"></div>
+    <textarea class="rtsrc" hidden spellcheck="false"></textarea>`;
+  const ed = host.querySelector('.rtedit'), src = host.querySelector('.rtsrc'), pop = host.querySelector('.rtpop');
+  ed.innerHTML = cleanBanner(toRich(html)) || '<p><br></p>';
+  let range = null;
+  const save = () => { const s = getSelection(); if (s.rangeCount && ed.contains(s.anchorNode)) range = s.getRangeAt(0).cloneRange(); };
+  const restore = () => { ed.focus(); if (range) { const s = getSelection(); s.removeAllRanges(); s.addRange(range); } };
+  document.addEventListener('selectionchange', save);
+  const changed = () => onChange?.();
+  const exec = (cmd, val = null) => {
+    restore();
+    try { document.execCommand('styleWithCSS', false, true); document.execCommand('defaultParagraphSeparator', false, 'p'); } catch {}
+    document.execCommand(cmd, false, val); save(); changed(); sync();
+  };
+  const sync = () => host.querySelectorAll('[data-cmd]').forEach(b => { try { b.classList.toggle('on', document.queryCommandState(b.dataset.cmd)); } catch {} });
+  host.querySelector('.rtbar').addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });   // garde la sélection dans le texte
+  host.querySelectorAll('[data-cmd]').forEach(b => b.onclick = () => exec(b.dataset.cmd));
+  host.querySelector('[data-undo]').onclick = () => exec('undo');
+  host.querySelector('[data-redo]').onclick = () => exec('redo');
+  host.querySelector('[data-block]').onchange = e => { exec('formatBlock', `<${e.target.value}>`); e.target.value = 'p'; };
+  host.querySelector('[data-size]').onchange = e => {
+    const v = e.target.value; e.target.value = ''; if (!v) return;
+    exec('fontSize', '7');   // marqueur temporaire, remplacé par une vraie taille
+    ed.querySelectorAll('font[size="7"]').forEach(f => { const sp = document.createElement('span'); sp.style.fontSize = FONT_SIZES[v]; while (f.firstChild) sp.append(f.firstChild); f.replaceWith(sp); });
+    ed.querySelectorAll('span[style*="xxx-large"]').forEach(sp => { sp.style.fontSize = FONT_SIZES[v]; });
+    changed();
+  };
+  host.querySelector('[data-link]').onclick = () => {
+    save(); const url = prompt(L('Adresse du lien (https://… ou #onglet) — laissez vide pour retirer le lien :', 'Link address (https://… or #tab) — leave empty to remove the link:'), 'https://');
+    if (url === null) return;
+    if (!url.trim() || url.trim() === 'https://') exec('unlink'); else if (/^(https?:|mailto:|#)/i.test(url.trim())) exec('createLink', url.trim());
+  };
+  host.querySelectorAll('[data-pop]').forEach(b => b.onclick = () => {
+    const kind = b.dataset.pop; save();
+    if (!pop.hidden && pop.dataset.kind === kind) { pop.hidden = true; return; }
+    pop.dataset.kind = kind; pop.hidden = false;
+    pop.innerHTML = `<div class="swatches">${DISC_COLORS.map(c => `<button type="button" class="swatch" data-c="${c}" style="background:${c}" title="${c}"></button>`).join('')}</div>
+      <label class="chk inline">${L('Autre :', 'Other:')} <input type="color" value="#FF6600"></label>
+      <button type="button" class="btn ghost small" data-c="">${kind === 'fore' ? L('Couleur par défaut', 'Default colour') : L('Sans surlignage', 'No highlight')}</button>`;
+    const apply = c => {
+      if (kind === 'fore') { exec('foreColor', c || 'inherit'); if (c) host.querySelector('.cbar').style.background = c; if (!c) ed.querySelectorAll('[style*="color: inherit"]').forEach(x => x.style.removeProperty('color')); }
+      else exec('hiliteColor', c || 'transparent');
+      pop.hidden = true;
+    };
+    pop.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });
+    pop.querySelectorAll('[data-c]').forEach(x => x.onclick = () => apply(x.dataset.c));
+    pop.querySelector('input[type=color]').onchange = e => apply(e.target.value);
+  });
+  host.querySelector('[data-src]').onclick = () => {
+    const toSrc = src.hidden;
+    if (toSrc) { src.value = cleanBanner(ed.innerHTML).replace(/<\/(p|h2|h3|h4|li|blockquote|ul|ol)>/g, '</$1>\n'); }
+    else { ed.innerHTML = cleanBanner(src.value) || '<p><br></p>'; changed(); }
+    src.hidden = !toSrc; ed.hidden = toSrc; host.querySelector('[data-src]').classList.toggle('on', toSrc);
+    host.querySelectorAll('.rtbar > :not([data-src])').forEach(x => x.disabled = toSrc);
+  };
+  src.addEventListener('input', () => { ed.innerHTML = cleanBanner(src.value); changed(); });
+  ed.addEventListener('input', changed);
+  ed.addEventListener('keyup', sync); ed.addEventListener('mouseup', sync);
+  ed.addEventListener('paste', e => {   // collage : on garde la mise en forme simple, pas le reste
+    const h = e.clipboardData.getData('text/html'), t = e.clipboardData.getData('text/plain');
+    e.preventDefault(); document.execCommand('insertHTML', false, h ? cleanBanner(h) : esc(t).replace(/\n/g, '<br>'));
+  });
+  return {
+    get: () => { const h = cleanBanner(src.hidden ? ed.innerHTML : src.value); return isEmptyRich(h) ? '' : h; },
+    set: h => { ed.innerHTML = cleanBanner(toRich(h)) || '<p><br></p>'; if (!src.hidden) src.value = cleanBanner(ed.innerHTML); changed(); },
+    destroy: () => document.removeEventListener('selectionchange', save),
+  };
+}
+const RT_ICON = {
+  left: '<svg viewBox="0 0 16 16" width="15" height="15"><path d="M2 3h12M2 6.5h8M2 10h12M2 13.5h8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
+  center: '<svg viewBox="0 0 16 16" width="15" height="15"><path d="M2 3h12M4 6.5h8M2 10h12M4 13.5h8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
+  right: '<svg viewBox="0 0 16 16" width="15" height="15"><path d="M2 3h12M6 6.5h8M2 10h12M6 13.5h8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
+  full: '<svg viewBox="0 0 16 16" width="15" height="15"><path d="M2 3h12M2 6.5h12M2 10h12M2 13.5h12" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
+};
+
+// ---------- Studio du bandeau, réservé à l'administrateur (bouton dans l'onglet « En élaboration »)
 const toLocalInput = iso => { if (!iso) return ''; const d = new Date(iso); if (isNaN(d)) return ''; const pad = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const colorField = (name, label, value, auto) => `<label class="cfield">${label}
+  <span class="colorpick">${auto ? `<label class="chk inline"><input type="checkbox" data-auto="${name}" ${isHex(value) ? '' : 'checked'}> ${auto}</label>` : ''}
+    <input type="color" name="${name}" value="${isHex(value) ? value : '#FF6600'}" ${auto && !isHex(value) ? 'disabled' : ''}>
+    <span class="swatches mini">${DISC_COLORS.slice(0, 8).concat('#1D1D1B', '#FFFFFF').filter((c, i, a) => a.indexOf(c) === i).map(c => `<button type="button" class="swatch" data-for="${name}" data-color="${c}" style="background:${c}" title="${c}"></button>`).join('')}</span></span></label>`;
+
 async function wipDisclaimerForm() {
-  const m = modal(`<h3>${L("Bandeau d'accueil", 'Home banner')}</h3><p class="muted">${L('Chargement…', 'Loading…')}</p>`, 'wipd');
+  const m = modal(`<h3>${L("Bandeau d'accueil", 'Home banner')}</h3><p class="muted">${L('Chargement…', 'Loading…')}</p>`, 'wipd bedit');
   let s = {};
-  try { s = (await api().siteSettings()) || {}; } catch (e) { m.wrap.querySelector('.box').innerHTML = `<h3>${L("Bandeau d'accueil", 'Home banner')}</h3><p class="err">${esc(trErr(e.message))}</p><div class="row"><button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`; m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close); return; }
-  m.wrap.querySelector('.box').innerHTML = `<h3>${L("Bandeau d'accueil", 'Home banner')}</h3>
-    <form class="wform" novalidate>
-      <label class="chk"><input type="checkbox" name="enabled" ${s?.enabled ? 'checked' : ''}> ${L('Afficher le bandeau aux visiteurs', 'Show the banner to visitors')}</label>
-      <label>${L('Image du bandeau', 'Banner image')}
-        <div class="imgpick">
-          <input name="img" type="text" placeholder="https://… (ou importez un fichier)" value="${esc(s?.img || '')}">
-          <button class="btn ghost small" type="button" id="discImgPick">${L('Importer…', 'Upload…')}</button>
-          <input id="discImgFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+  try { s = (await api().siteSettings()) || {}; } catch (e) { m.$('.box').innerHTML = `<h3>${L("Bandeau d'accueil", 'Home banner')}</h3><p class="err">${esc(trErr(e.message))}</p><div class="row"><button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`; m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close); return; }
+  const st = bannerStyleOf(s);
+  const sel = (name, opts, val) => `<select name="${name}">${opts.map(([v, lb]) => `<option value="${v}" ${String(val) === String(v) ? 'selected' : ''}>${lb}</option>`).join('')}</select>`;
+  m.$('.box').innerHTML = `<div class="behead"><h3>${L("Studio du bandeau d'accueil", 'Home banner studio')}</h3>
+      <label class="chk inline big"><input type="checkbox" name="enabled" form="bForm" ${s.enabled ? 'checked' : ''}> ${L('Bandeau visible par les visiteurs', 'Banner shown to visitors')}</label></div>
+    <div class="begrid">
+    <form class="wform" id="bForm" novalidate>
+      <div class="betabs" role="tablist">${[['content', L('✏️ Contenu', '✏️ Content')], ['look', L('🎨 Apparence', '🎨 Look')], ['image', L('🖼️ Image', '🖼️ Image')], ['buttons', L('🔘 Boutons', '🔘 Buttons')], ['when', L('🕒 Affichage', '🕒 Display')]].map(([k, lb], i) => `<button type="button" role="tab" data-tab="${k}" aria-selected="${i === 0}">${lb}</button>`).join('')}</div>
+
+      <section data-pane="content">
+        <div class="seg langseg" role="group"><button type="button" data-lang="fr" aria-pressed="true">🇫🇷 Français</button><button type="button" data-lang="en" aria-pressed="false">🇬🇧 English</button></div>
+        <div class="rt" id="rtFr"></div><div class="rt" id="rtEn" hidden></div>
+        <div class="row left"><button type="button" class="btn ghost small" id="bCopy">${L('Copier la mise en page du français vers l\'anglais', 'Copy the French layout to English')}</button></div>
+        <p class="muted small">${L("Sélectionnez du texte puis utilisez la barre d'outils. Le bouton </> permet de voir et modifier le code HTML. L'anglais est montré aux visiteurs qui lisent le site en anglais ; s'il est vide, ils voient le français.", 'Select text then use the toolbar. The </> button shows and edits the HTML code. English is shown to visitors reading the site in English; if empty, they see French.')}</p>
+      </section>
+
+      <section data-pane="look" hidden>
+        <h4>${L('Thèmes prêts à l\'emploi', 'Ready-made themes')}</h4>
+        <div class="bthemes">${BANNER_THEMES().map(t => `<button type="button" class="btheme" data-theme="${t.k}" style="${t.st.bg === 'gradient' ? `background:linear-gradient(${t.st.angle}deg,${t.st.bg1},${t.st.bg2})` : t.st.bg === 'solid' ? `background:${t.st.bg1}` : 'background:var(--paper)'};color:${t.st.text || 'var(--ink)'};${t.st.border ? `border-color:${t.st.border}` : ''}"><b>Aa</b><span>${t.label}</span></button>`).join('')}</div>
+        <h4>${L('Fond', 'Background')}</h4>
+        <div class="two">
+          <label>${L('Type de fond', 'Background type')}${sel('bg', [['site', L('Celui du site (clair ou sombre)', "The site's (light or dark)")], ['solid', L('Couleur unie', 'Solid colour')], ['gradient', L('Dégradé', 'Gradient')]], st.bg)}</label>
+          <label class="ifgrad">${L('Angle du dégradé', 'Gradient angle')} <span class="rv" id="angV">${st.angle}°</span><input type="range" name="angle" min="0" max="360" step="5" value="${st.angle}"></label>
         </div>
-        <div id="discImgPreview" class="discimgprev"></div>
-        <small class="muted">${L("Redimensionnée et compressée automatiquement à l'import : le bandeau reste compact quelle que soit la taille du fichier d'origine.", 'Automatically resized and compressed on upload: the banner stays compact whatever the size of the original file.')}</small>
-      </label>
-      <label>${L('Texte — Français', 'Text — French')}<textarea name="text_fr" rows="4">${esc(s?.text_fr || '')}</textarea></label>
-      <label>${L('Texte — Anglais', 'Text — English')}<textarea name="text_en" rows="4">${esc(s?.text_en || '')}</textarea></label>
-      <div class="two">
-        <label>${L('Police du texte', 'Text font')}<select name="font">
-          ${Object.entries(DISC_FONTS).map(([k, v]) => `<option value="${k}" ${((s?.font || 'default') === k) ? 'selected' : ''}>${v.label}</option>`).join('')}
-        </select></label>
-        <label>${L('Couleur du texte', 'Text color')}
-          <div class="colorpick">
-            <label class="chk inline"><input type="checkbox" name="color_on" ${s?.color ? 'checked' : ''}> ${L('Personnalisée', 'Custom')}</label>
-            <input name="color" type="color" value="${esc(/^#/.test(s?.color || '') ? s.color : '#ff6600')}">
-            <div class="swatches">${DISC_COLORS.map(c => `<button type="button" class="swatch" data-color="${esc(c.value)}" title="${esc(c.label)}" style="background:${c.value}"></button>`).join('')}</div>
+        <div class="two">
+          <div class="ifbg">${colorField('bg1', L('Couleur de fond', 'Background colour'), st.bg1)}</div>
+          <div class="ifgrad">${colorField('bg2', L('Seconde couleur', 'Second colour'), st.bg2)}</div>
+        </div>
+        <h4>${L('Couleurs', 'Colours')}</h4>
+        <div class="two">
+          ${colorField('text', L('Texte', 'Text'), st.text, L('Auto', 'Auto'))}
+          ${colorField('accent', L('Liens et bouton principal', 'Links and main button'), st.accent, L('Auto', 'Auto'))}
+        </div>
+        <div class="two">
+          ${colorField('btnText', L('Texte du bouton principal', 'Main button text'), st.btnText)}
+          ${colorField('border', L('Bordure', 'Border'), st.border, L('Aucune', 'None'))}
+        </div>
+        <h4>${L('Typographie et mise en page', 'Typography and layout')}</h4>
+        <div class="two">
+          <label>${L('Police', 'Font')}${sel('font', Object.entries(DISC_FONTS).map(([k, v]) => [k, v.label]), s.font || 'default')}</label>
+          <label>${L('Taille du texte', 'Text size')}${sel('size', [['sm', L('Petite', 'Small')], ['md', L('Normale', 'Normal')], ['lg', L('Grande', 'Large')], ['xl', L('Très grande', 'Very large')]], st.size)}</label>
+        </div>
+        <div class="two">
+          <label>${L('Alignement général', 'Overall alignment')}${sel('align', [['left', L('À gauche', 'Left')], ['center', L('Centré', 'Centred')]], st.align)}</label>
+          <label>${L('Largeur', 'Width')}${sel('width', [['compact', L('Compacte', 'Compact')], ['normal', L('Normale', 'Normal')], ['wide', L('Large', 'Wide')], ['xl', L('Très large', 'Very wide')]], st.width)}</label>
+        </div>
+        <div class="two">
+          <label>${L('Marges intérieures', 'Inner spacing')}${sel('pad', [['tight', L('Serrées', 'Tight')], ['normal', L('Normales', 'Normal')], ['roomy', L('Aérées', 'Roomy')]], st.pad)}</label>
+          <label>${L('Arrondi des coins', 'Corner rounding')} <span class="rv" id="radV">${st.radius} px</span><input type="range" name="radius" min="0" max="40" value="${st.radius}"></label>
+        </div>
+        <label class="chk"><input type="checkbox" name="shadow" ${st.shadow ? 'checked' : ''}> ${L('Ombre portée', 'Drop shadow')}</label>
+      </section>
+
+      <section data-pane="image" hidden>
+        <label>${L('Image', 'Image')}
+          <div class="imgpick">
+            <input name="img" type="text" placeholder="https://… ${L('(ou importez un fichier)', '(or upload a file)')}" value="${esc(s.img || '')}">
+            <button class="btn ghost small" type="button" id="discImgPick">${L('Importer…', 'Upload…')}</button>
+            <button class="btn ghost small" type="button" id="discImgDel">${L('Retirer', 'Remove')}</button>
+            <input id="discImgFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
           </div>
-          <small class="muted">${L('Décochez pour garder la couleur de texte habituelle du site (adaptée au mode clair/sombre).', "Uncheck to keep the site's usual text colour (adapts to light/dark mode).")}</small>
+          <small class="muted">${L("Redimensionnée et compressée automatiquement à l'import.", 'Automatically resized and compressed on upload.')}</small>
         </label>
-      </div>
-      <label class="chk"><input type="checkbox" name="show_stats" ${s?.show_stats ? 'checked' : ''}> ${L('Afficher automatiquement les statistiques des dernières 24 h (nouvelles recettes, nouveaux auteurs)', 'Automatically show the last 24h stats (new recipes, new authors)')}</label>
-      <div class="two">
-        <label>${L('Réapparition', 'Reappearance')}<select name="frequency">
-          <option value="day" ${(!s?.frequency || s.frequency === 'day') ? 'selected' : ''}>${L('Une fois par jour et par visiteur', 'Once a day per visitor')}</option>
-          <option value="week" ${s?.frequency === 'week' ? 'selected' : ''}>${L('Une fois par semaine et par visiteur', 'Once a week per visitor')}</option>
-          <option value="always" ${s?.frequency === 'always' ? 'selected' : ''}>${L('À chaque visite', 'Every visit')}</option>
-        </select></label>
-        <label>${L('Désactivation automatique (facultatif)', 'Auto-disable (optional)')}<input name="expires_at" type="datetime-local" value="${esc(toLocalInput(s?.expires_at))}"></label>
-      </div>
-      <p class="muted" style="font-size:.84rem;margin:0">${L(
-        "Le rappel « revendiquez votre profil / liez votre Discord » s'affiche automatiquement en dessous : inutile de le répéter ici. Chaque enregistrement fait réapparaître le bandeau pour tout le monde, même déjà vu. Laissez la désactivation automatique vide pour que le bandeau reste actif tant que vous ne le désactivez pas vous-même.",
-        "The « claim your profile / link your Discord » reminder is added automatically below: no need to repeat it here. Every save makes the banner reappear for everyone, even if already seen. Leave auto-disable empty to keep the banner active until you turn it off yourself.")}</p>
+        <div class="two">
+          <label>${L("Position de l'image", 'Image position')}${sel('imgPos', [['top', L('En haut', 'On top')], ['side', L('À gauche du texte', 'Left of the text')], ['cover', L('En fond, derrière le texte', 'As background, behind the text')]], st.imgPos)}</label>
+          <label class="ifnotcover">${L('Cadrage', 'Framing')}${sel('imgFit', [['contain', L('Image entière', 'Whole image')], ['cover', L('Recadrée pour remplir', 'Cropped to fill')]], st.imgFit)}</label>
+          <label class="ifcover">${L('Assombrissement', 'Darkening')} <span class="rv" id="ovV">${st.overlay} %</span><input type="range" name="overlay" min="0" max="85" step="5" value="${st.overlay}"></label>
+        </div>
+        <p class="muted small ifcover">${L("En fond, le texte passe en blanc si aucune couleur de texte n'est choisie. Réglez l'assombrissement pour qu'il reste lisible.", 'As a background, text turns white unless a text colour is set. Adjust darkening to keep it readable.')}</p>
+      </section>
+
+      <section data-pane="buttons" hidden>
+        <h4>${L("Bouton d'action (facultatif)", 'Call-to-action button (optional)')}</h4>
+        <div class="two">
+          <label>${L('Texte — Français', 'Text — French')}<input name="cta_fr" type="text" maxlength="40" value="${esc(st.cta_fr)}" placeholder="${L('ex. Découvrir les news', 'e.g. Découvrir les news')}"></label>
+          <label>${L('Texte — Anglais', 'Text — English')}<input name="cta_en" type="text" maxlength="40" value="${esc(st.cta_en)}" placeholder="e.g. Read the news"></label>
+        </div>
+        <label>${L('Lien du bouton', 'Button link')}<input name="cta_url" type="text" value="${esc(st.cta_url)}" placeholder="https://…  ${L('ou un onglet du site, ex.', 'or a site tab, e.g.')} #eink"></label>
+        <h4>${L('Bouton de fermeture', 'Close button')}</h4>
+        <div class="two">
+          <label>${L('Texte — Français', 'Text — French')}<input name="btn_fr" type="text" maxlength="30" value="${esc(st.btn_fr)}" placeholder="Compris"></label>
+          <label>${L('Texte — Anglais', 'Text — English')}<input name="btn_en" type="text" maxlength="30" value="${esc(st.btn_en)}" placeholder="Got it"></label>
+        </div>
+        <h4>${L('Blocs automatiques', 'Automatic blocks')}</h4>
+        <label class="chk"><input type="checkbox" name="show_stats" ${s.show_stats ? 'checked' : ''}> ${L('Statistiques des dernières 24 h (nouvelles recettes, nouveaux auteurs)', 'Last 24h stats (new recipes, new authors)')}</label>
+        <label class="chk"><input type="checkbox" name="reminder" ${st.reminder ? 'checked' : ''}> ${L('Rappel « revendiquez votre profil / liez votre Discord »', 'Reminder "claim your profile / link your Discord"')}</label>
+      </section>
+
+      <section data-pane="when" hidden>
+        <div class="two">
+          <label>${L('Réapparition', 'Reappearance')}${sel('frequency', [['day', L('Une fois par jour et par visiteur', 'Once a day per visitor')], ['week', L('Une fois par semaine et par visiteur', 'Once a week per visitor')], ['always', L('À chaque visite', 'Every visit')]], s.frequency || 'day')}</label>
+          <label>${L('Désactivation automatique (facultatif)', 'Auto-disable (optional)')}<input name="expires_at" type="datetime-local" value="${esc(toLocalInput(s.expires_at))}"></label>
+        </div>
+        <p class="muted small">${L('Chaque enregistrement fait réapparaître le bandeau pour tout le monde, même déjà vu. Laissez la désactivation automatique vide pour que le bandeau reste actif tant que vous ne le désactivez pas vous-même.', 'Every save makes the banner reappear for everyone, even if already seen. Leave auto-disable empty to keep the banner active until you turn it off yourself.')}</p>
+      </section>
       <p class="err" hidden></p>
-      <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${L('Enregistrer', 'Save')}</button></div>
-    </form>`;
-  const f = m.$('form'), err = m.$('.err');
-  m.wrap.querySelectorAll('[data-close]').forEach(b => b.onclick = m.close);
-  const oldImg = s?.img || '';
-  const preview = m.$('#discImgPreview');
-  const renderPreview = () => { preview.innerHTML = f.img.value ? `<img src="${esc(imgURL(f.img.value))}" alt="">` : ''; };
-  renderPreview();
+    </form>
+
+    <div class="beprev">
+      <div class="bebar"><b>${L('Aperçu', 'Preview')}</b>
+        <div class="seg" role="group"><button type="button" data-plang="fr" aria-pressed="${!EN()}">FR</button><button type="button" data-plang="en" aria-pressed="${EN()}">EN</button></div>
+        <button type="button" class="btn ghost small" id="bFull">${L('Voir en vrai', 'Show for real')}</button></div>
+      <div class="bestage"><div class="box disc" id="bPrev"></div></div>
+      <p class="muted small">${L('Aperçu fidèle, avec le thème clair ou sombre que vous utilisez en ce moment.', 'Faithful preview, using the light or dark theme you are currently using.')}</p>
+    </div>
+    </div>
+    <div class="row befoot"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit" form="bForm">${L('Enregistrer et publier', 'Save and publish')}</button></div>`;
+
+  const f = m.$('#bForm'), err = m.$('.err'), box = m.$('.box');
+  box.querySelectorAll('[data-close]').forEach(b => b.onclick = () => { edFr.destroy(); edEn.destroy(); m.close(); });
+  let plang = EN() ? 'en' : 'fr';
+  const collect = () => {
+    const g = n => f.elements[n];
+    const col = n => { const a = f.querySelector(`[data-auto="${n}"]`); return a?.checked ? '' : g(n).value.toUpperCase(); };
+    return {
+      enabled: box.querySelector('[name=enabled]').checked, img: g('img').value.trim(), text_fr: edFr.get(), text_en: edEn.get(),
+      show_stats: g('show_stats').checked, frequency: g('frequency').value, expires_at: g('expires_at').value ? new Date(g('expires_at').value).toISOString() : null, font: g('font').value,
+      style: { bg: g('bg').value, bg1: g('bg1').value.toUpperCase(), bg2: g('bg2').value.toUpperCase(), angle: +g('angle').value, text: col('text'), accent: col('accent'), btnText: g('btnText').value.toUpperCase(), border: col('border'),
+        radius: +g('radius').value, width: g('width').value, pad: g('pad').value, size: g('size').value, align: g('align').value, imgPos: g('imgPos').value, imgFit: g('imgFit').value, overlay: +g('overlay').value,
+        shadow: g('shadow').checked, cta_fr: g('cta_fr').value.trim(), cta_en: g('cta_en').value.trim(), cta_url: g('cta_url').value.trim(), btn_fr: g('btn_fr').value.trim(), btn_en: g('btn_en').value.trim(), reminder: g('reminder').checked },
+    };
+  };
+  let prevT = 0;
+  const preview = () => { cancelAnimationFrame(prevT); prevT = requestAnimationFrame(async () => {
+    const d = collect(); await applyDiscFont(d.font);
+    const p = m.$('#bPrev'); p.innerHTML = bannerInner(d, plang === 'en', d.show_stats ? (disclaimerStats() || { newRecipes: 3, newAuthors: 1 }) : null);
+    p.setAttribute('style', bannerBoxCSS(d) + ';max-width:100%');
+    p.querySelectorAll('a,button').forEach(x => x.addEventListener('click', e => e.preventDefault()));
+    // Champs utiles seulement pour certains choix
+    const bg = f.elements.bg.value, pos = f.elements.imgPos.value;
+    f.querySelectorAll('.ifgrad').forEach(x => x.hidden = bg !== 'gradient');
+    f.querySelectorAll('.ifbg').forEach(x => x.hidden = bg === 'site');
+    f.querySelectorAll('.ifcover').forEach(x => x.hidden = pos !== 'cover');
+    f.querySelectorAll('.ifnotcover').forEach(x => x.hidden = pos === 'cover');
+    m.$('#angV').textContent = `${f.elements.angle.value}°`; m.$('#radV').textContent = `${f.elements.radius.value} px`; m.$('#ovV').textContent = `${f.elements.overlay.value} %`;
+  }); };
+  const edFr = richEditor(m.$('#rtFr'), s.text_fr, preview), edEn = richEditor(m.$('#rtEn'), s.text_en, preview);
+  // Onglets du formulaire
+  box.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
+    box.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b));
+    f.querySelectorAll('[data-pane]').forEach(p => p.hidden = p.dataset.pane !== b.dataset.tab);
+  });
+  // Langue éditée ; l'aperçu suit
+  box.querySelectorAll('[data-lang]').forEach(b => b.onclick = () => {
+    box.querySelectorAll('[data-lang]').forEach(x => x.setAttribute('aria-pressed', x === b));
+    m.$('#rtFr').hidden = b.dataset.lang !== 'fr'; m.$('#rtEn').hidden = b.dataset.lang !== 'en';
+    plang = b.dataset.lang; box.querySelectorAll('[data-plang]').forEach(x => x.setAttribute('aria-pressed', x.dataset.plang === plang)); preview();
+  });
+  box.querySelectorAll('[data-plang]').forEach(b => b.onclick = () => { plang = b.dataset.plang; box.querySelectorAll('[data-plang]').forEach(x => x.setAttribute('aria-pressed', x === b)); preview(); });
+  m.$('#bCopy').onclick = () => { if (edEn.get() && !confirm(L('Remplacer le texte anglais par une copie du français ?', 'Replace the English text with a copy of the French?'))) return; edEn.set(edFr.get()); toast(L('Copié : il ne reste qu\'à traduire.', 'Copied: just translate it now.')); };
+  // Couleurs : pastilles, case « Auto / Aucune »
+  f.querySelectorAll('.swatch[data-for]').forEach(b => b.onclick = () => { const n = b.dataset.for; f.elements[n].value = b.dataset.color; const a = f.querySelector(`[data-auto="${n}"]`); if (a) { a.checked = false; f.elements[n].disabled = false; } preview(); });
+  f.querySelectorAll('[data-auto]').forEach(a => a.onchange = () => { f.elements[a.dataset.auto].disabled = a.checked; preview(); });
+  // Thèmes
+  f.querySelectorAll('[data-theme]').forEach(b => b.onclick = () => {
+    const t = BANNER_THEMES().find(x => x.k === b.dataset.theme).st;
+    f.elements.bg.value = t.bg; if (t.bg1) f.elements.bg1.value = t.bg1; if (t.bg2) f.elements.bg2.value = t.bg2; if (t.angle) f.elements.angle.value = t.angle;
+    [['text', t.text], ['accent', t.accent], ['border', t.border]].forEach(([n, v]) => { const a = f.querySelector(`[data-auto="${n}"]`); a.checked = !v; f.elements[n].disabled = !v; if (v) f.elements[n].value = v; });
+    if (t.btnText) f.elements.btnText.value = t.btnText;
+    preview();
+  });
+  f.addEventListener('input', preview); f.addEventListener('change', preview); box.querySelector('[name=enabled]').onchange = preview;
+  // Image
+  const oldImg = s.img || '';
   m.$('#discImgPick').onclick = () => m.$('#discImgFile').click();
+  m.$('#discImgDel').onclick = () => { f.elements.img.value = ''; preview(); };
   m.$('#discImgFile').onchange = async () => {
     const file = m.$('#discImgFile').files[0]; if (!file) return;
-    const pick = m.$('#discImgPick'); pick.disabled = true; pick.textContent = '…';
-    err.hidden = true;
-    try {
-      const path = await api().uploadDisclaimerImage(file);
-      f.img.value = path; renderPreview();
-    } catch (x) { err.textContent = trErr(x.message); err.hidden = false; }
+    const pick = m.$('#discImgPick'); pick.disabled = true; pick.textContent = '…'; err.hidden = true;
+    try { f.elements.img.value = await api().uploadDisclaimerImage(file); preview(); }
+    catch (x) { err.textContent = trErr(x.message); err.hidden = false; }
     pick.disabled = false; pick.textContent = L('Importer…', 'Upload…'); m.$('#discImgFile').value = '';
   };
-  f.querySelectorAll('.swatch').forEach(b => b.onclick = () => { f.color.value = b.dataset.color; f.color_on.checked = true; });
+  // Voir le bandeau tel que les visiteurs le verront
+  m.$('#bFull').onclick = async () => {
+    const d = collect(); await applyDiscFont(d.font);
+    const pm = modal(bannerInner(d, plang === 'en', d.show_stats ? disclaimerStats() : null), 'disc');
+    pm.$('.box').setAttribute('style', bannerBoxCSS(d));
+    pm.$('.box').querySelectorAll('a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); pm.close(); }));
+  };
   f.onsubmit = async e => {
     e.preventDefault(); err.hidden = true;
-    const fields = { enabled: f.enabled.checked, img: f.img.value.trim(), text_fr: f.text_fr.value.trim(), text_en: f.text_en.value.trim(),
-      show_stats: f.show_stats.checked, frequency: f.frequency.value, expires_at: f.expires_at.value ? new Date(f.expires_at.value).toISOString() : null,
-      font: f.font.value, color: f.color_on.checked ? f.color.value : '' };
-    const btn = f.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = '…';
+    const d = collect();
+    if (d.style.cta_url && !/^(https?:\/\/|#)/.test(d.style.cta_url)) { err.textContent = L('Le lien du bouton doit commencer par https:// ou # (onglet du site).', 'The button link must start with https:// or # (site tab).'); err.hidden = false; box.querySelector('[data-tab=buttons]').click(); return; }
+    const btn = box.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = '…';
     try {
-      await api().setDisclaimer(fields);
-      if (oldImg && oldImg !== fields.img && !/^(https?:|data:)/.test(oldImg)) { try { await api().removeImages([oldImg]); } catch {} }
-      m.close(); track('bandeau-modifie', true);
-      toast(L('Bandeau enregistré.', 'Banner saved.'));
-    } catch (x) { err.textContent = trErr(x.message); err.hidden = false; btn.disabled = false; btn.textContent = L('Enregistrer', 'Save'); }
+      await api().setBanner(d);
+      if (oldImg && oldImg !== d.img && !/^(https?:|data:)/.test(oldImg)) { try { await api().removeImages([oldImg]); } catch {} }
+      edFr.destroy(); edEn.destroy(); m.close(); track('bandeau-modifie', true);
+      toast(L('Bandeau enregistré et publié.', 'Banner saved and published.'));
+    } catch (x) {
+      err.textContent = /set_banner|function|schema cache/i.test(x.message) ? L("Base pas encore prête : collez le fichier supabase/bandeau.sql dans l'éditeur SQL de Supabase.", 'Database not ready: paste supabase/bandeau.sql into the Supabase SQL editor.') : trErr(x.message);
+      err.hidden = false; btn.disabled = false; btn.textContent = L('Enregistrer et publier', 'Save and publish');
+    }
   };
+  preview();
 }
 function modal(html, cls = '') {
   const wrap = document.createElement('div'); wrap.className = 'modal';

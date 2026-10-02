@@ -622,7 +622,18 @@ function buildSparklines() {
 /* ================= Statistiques de visite (GoatCounter) ================= */
 /* Mesure d'audience maison (Supabase) : un numéro tiré au hasard, gardé 13 mois sur l'appareil, sans cookie ni adresse IP.
    Exemptée de consentement par la CNIL (statistiques anonymes uniquement, durée limitée, droit de refus en pied de page). */
-const NOCOUNT_KEY = 'trmnl-nocount', VID_KEY = 'trmnl-vid';
+const NOCOUNT_KEY = 'trmnl-nocount', VID_KEY = 'trmnl-vid', ADMIN_DEV_KEY = 'trmnl-admin-device';
+// Provenance transmise dans l'adresse : étiquette d'un lien de partage (?via=reddit) ou d'un lien publié (?via=discord, ?utm_source=…),
+// et site d'origine relayé par les pages de partage (?ref=…). Lue une fois, puis retirée de l'adresse affichée.
+const ENTRY = (() => {
+  const q = new URLSearchParams(location.search);
+  const e = { via: q.get('via') || q.get('utm_source') || null, ref: q.get('ref') || null };
+  if (['via', 'ref', 'utm_source', 'utm_medium', 'utm_campaign'].some(k => q.has(k))) {
+    ['via', 'ref', 'utm_source', 'utm_medium', 'utm_campaign'].forEach(k => q.delete(k));
+    try { history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); } catch {}
+  }
+  return e;
+})();
 const counted = () => store.get(NOCOUNT_KEY, '') !== '1';
 function visitorId() {
   const today = new Date().toISOString().slice(0, 10);
@@ -638,7 +649,23 @@ const sbRPC = (fn, body) => fetch(`${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/rp
   method: 'POST', keepalive: true,
   headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
   body: JSON.stringify(body) }).catch(() => {});
-const countOK = () => counted() && wipReady() && !navigator.webdriver && !/bot|crawl|spider|preview|headless|lighthouse/i.test(navigator.userAgent);
+// Robots qui font tourner la page (aperçus de liens, tests automatiques, aspirateurs) : écartés
+const looksAutomated = () => navigator.webdriver || /bot|crawl|spider|preview|headless|lighthouse|pagespeed|gtmetrix|pingdom|uptime|monitor|scrap|puppeteer|playwright|phantom/i.test(navigator.userAgent)
+  || !(navigator.languages && navigator.languages.length) || (outerWidth === 0 && outerHeight === 0);
+const countOK = () => counted() && store.get(ADMIN_DEV_KEY, '') !== '1' && wipReady() && !looksAutomated();
+// Une visite ne compte qu'une fois la page vue au moins 2 secondes, ou au premier geste (clic, touche, défilement)
+let human = false, humanTimer = null; const humanQueue = [];
+const confirmHuman = () => { if (human) return; human = true; clearTimeout(humanTimer); humanQueue.splice(0).forEach(f => f()); };
+const armHuman = () => { clearTimeout(humanTimer); if (!human && document.visibilityState === 'visible') humanTimer = setTimeout(confirmHuman, 2000); };
+['pointerdown', 'keydown', 'scroll', 'touchstart', 'wheel'].forEach(ev => addEventListener(ev, confirmHuman, { once: true, passive: true, capture: true }));
+document.addEventListener('visibilitychange', armHuman); armHuman();
+// L'appareil de l'administrateur n'est plus compté, et ses visites passées sont effacées une fois pour toutes
+function markAdminDevice() {
+  if (store.get(ADMIN_DEV_KEY, '') === '1') return;
+  store.set(ADMIN_DEV_KEY, '1');
+  let v = null; try { v = JSON.parse(store.get(VID_KEY, '') || 'null'); } catch {}
+  if (v?.id) api().forgetVisitor?.(v.id).catch(() => {});
+}
 // Navigateur, système et taille d'écran, en grandes familles seulement
 function deviceInfo() {
   const ua = navigator.userAgent;
@@ -656,12 +683,20 @@ function countVisit(path, kind = 'view') {
     if (!countOK()) return;
     const tab = kind === 'event' ? path : (path.split('#')[1] || 'accueil').toLowerCase();
     if (tab === 'stats') return;   // la page de statistiques ne se compte pas elle-même
-    let ref = null;
-    if (kind === 'view' && firstHit && document.referrer) { try { const h = new URL(document.referrer).hostname.replace(/^www\./, ''); if (h && h !== location.hostname) ref = h; } catch {} }
-    if (kind === 'view') firstHit = false;
-    const v = visitorId();
-    sbRPC('track_hit', { p_visitor: v.id, p_kind: kind, p_path: tab, p_new: v.isNew, p_ref: ref, p_lang: EN() ? 'en' : 'fr', p_mobile: matchMedia('(pointer:coarse)').matches, ...deviceInfo() });
-    startPing();
+    const send = () => {
+      if (!countOK()) return;
+      let ref = null, via = null;
+      if (kind === 'view' && firstHit) {
+        via = ENTRY.via;
+        const r = ENTRY.ref || document.referrer;
+        if (r) { try { const h = (r.includes('/') ? new URL(r).hostname : r).replace(/^www\./, ''); if (h && h !== location.hostname) ref = h; } catch {} }
+        firstHit = false;
+      }
+      const v = visitorId();
+      sbRPC('track_hit', { p_visitor: v.id, p_kind: kind, p_path: tab, p_new: v.isNew, p_ref: ref, p_via: via, p_lang: EN() ? 'en' : 'fr', p_mobile: matchMedia('(pointer:coarse)').matches, ...deviceInfo() });
+      startPing();
+    };
+    if (human) send(); else humanQueue.push(send);
   } catch {}
 }
 // Temps passé : un signal toutes les 30 secondes tant que la page est visible (4 heures au plus)
@@ -1406,6 +1441,7 @@ const realApi = {
   async report(target, reason) { const c = await client(); const r = await c.from('reports').insert({ ...target, reason }); if (r.error && !/duplicate|unique/i.test(r.error.message)) throw new Error(r.error.message); },
   async visitStats(days) { const c = await client(); return ok(await c.rpc('visit_stats', { p_days: days })); },
   async visitLive() { const c = await client(); return ok(await c.rpc('visit_live')); },
+  async forgetVisitor(id) { const c = await client(); return ok(await c.rpc('forget_visitor', { p_visitor: id })); },
   async reports() { const c = await client(); return ok(await c.from('reports').select('*').order('created_at', { ascending: false })); },
   async clearReport(id) { const c = await client(); ok(await c.from('reports').delete().eq('id', id)); },
   async ban(uid, value) { const c = await client(); ok(await c.rpc('set_banned', { target: uid, value })); },
@@ -1531,7 +1567,7 @@ function shippedOf(p) {
 const ago2 = iso => { const d = Math.floor((Date.now() - Date.parse(iso)) / DAY); return d <= 0 ? L("aujourd'hui", 'today') : d === 1 ? L('hier', 'yesterday') : L(`il y a ${d} jours`, `${d} days ago`); };
 const fdate = iso => new Date(iso).toLocaleDateString(LOC, { day: 'numeric', month: 'long', year: 'numeric' });
 const isOwner = p => wipMe && p.owner === wipMe.id;
-const isAdmin = () => !!wipProfile?.is_admin;
+const isAdmin = () => { const a = !!wipProfile?.is_admin; if (a) markAdminDevice(); return a; };
 const avatarHTML = pr => pr?.avatar ? `<img class="av" src="${esc(pr.avatar)}" alt="" width="22" height="22" loading="lazy">` : '<span class="av ph2">👤</span>';
 
 // Nom affiché : le nom revendiqué s'il existe, sinon le nom Discord ; lien vers le profil de créateur si on le connaît
@@ -1973,6 +2009,16 @@ const EVENT_LABELS = () => ({ 'actu-eink-lue': L('Article e-ink lu', 'E-ink arti
   'lien-recette-copie': L('Lien de recette copié', 'Recipe link copied'), 'profil-choisi': L('Profil choisi', 'Profile picked'), 'projet-ouvert': L('Projet ouvert', 'Project opened'), 'projet-publie': L('Projet publié', 'Project posted'),
   'projet-modifie': L('Projet modifié', 'Project edited'), 'pronostic': L('Pronostic', 'Prediction'), 'recette-partagee': L('Recette partagée', 'Recipe shared'), 'revendication-ouverte': L('Revendication ouverte', 'Claim opened'),
   'vignette-ouverte': L('Vignette ouverte', 'Card opened'), 'vignette-telechargee': L('Vignette téléchargée', 'Card downloaded'), 'langue-en': L('Site en anglais', 'Site in English'), 'langue-fr': L('Site en français', 'Site in French') });
+const VIA_LABELS = () => ({ discord: '💬 Discord', reddit: '🟠 Reddit', bluesky: '🦋 Bluesky', x: '✖️ X', mastodon: '🐘 Mastodon', linkedin: '💼 LinkedIn', facebook: '📘 Facebook',
+  whatsapp: '🟢 WhatsApp', lien: L('🔗 Lien copié', '🔗 Copied link'), partage: L('📤 Partage du téléphone', '📤 Phone share menu') });
+let statsTitles = null;   // titres des articles e-ink, pour nommer les articles les plus lus
+async function articleTitles() {
+  if (statsTitles) return statsTitles;
+  try { const d = await (await fetch('data/eink-news.json', { cache: 'no-cache' })).json(); statsTitles = Object.fromEntries((d.articles || []).map(a => [a.id, EN() ? a.title_en : a.title_fr])); }
+  catch { statsTitles = {}; }
+  return statsTitles;
+}
+const pathLabel = (p, T, A) => p.startsWith('article-') ? `📰 ${A[p.slice(8)] || L('Article retiré', 'Removed article')}` : (T[p] || p);
 const dur = s => { s = Math.round(s || 0); return s < 60 ? `${s} s` : s < 3600 ? `${Math.floor(s / 60)} min ${String(s % 60).padStart(2, '0')}` : `${Math.floor(s / 3600)} h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}`; };
 const pctOf = (a, b) => b ? Math.round(100 * a / b) : 0;
 const vrows = (list, label, val, max) => { const top = Math.max(1, ...list.map(val));
@@ -2010,7 +2056,7 @@ async function loadLive() {
     const V = await api().visitLive(); statsLiveAt = Date.now();
     $('#stNow').textContent = nf(V.now);
     $('#stLive').title = L(`${V.last5} sur les 5 dernières minutes`, `${V.last5} in the last 5 minutes`);
-    const P = PAL(), T = TAB_LABELS(), E = EVENT_LABELS();
+    const P = PAL(), T = TAB_LABELS(), E = EVENT_LABELS(), A = await articleTitles(), VL = VIA_LABELS();
     const mins = V.minutes || [];
     if ($('#chLive')) chart('chLive', { type: 'bar', data: { labels: mins.map(m => m.m === 29 ? L('maint.', 'now') : `-${29 - m.m}`), datasets: [{ label: L('Pages vues', 'Page views'), data: mins.map(m => m.views), backgroundColor: P[0], borderRadius: 3 }] },
       options: { animation: false, scales: { x: { grid: { display: false }, ticks: { autoSkip: true, maxRotation: 0 } }, y: { beginAtZero: true, ticks: { precision: 0 } } } } });
@@ -2018,9 +2064,9 @@ async function loadLive() {
     if (rec) rec.innerHTML = (V.recent || []).map(h => { const c = countryOf(h.tz);
       return `<tr class="${h.kind === 'event' ? 'ev' : ''}"><td>${new Date(h.at).toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
         <td><code>${esc(h.who)}</code>${h.is_new ? ` <span class="nw">${L('nouveau', 'new')}</span>` : ''}</td>
-        <td>${h.kind === 'event' ? '⚡ ' + esc(E[h.path] || h.path) : esc(T[h.path] || h.path)}</td>
+        <td>${h.kind === 'event' ? '⚡ ' + esc(E[h.path] || h.path) : esc(pathLabel(h.path, T, A))}</td>
         <td>${h.mobile ? '📱' : h.mobile === false ? '💻' : ''} ${esc([h.browser, h.os].filter(Boolean).join(' · '))}</td>
-        <td>${h.tz ? esc(c.label) : ''}</td><td>${esc(h.ref || '')}</td></tr>`; }).join('') || `<tr><td colspan="6" class="muted">—</td></tr>`;
+        <td>${h.tz ? esc(c.label) : ''}</td><td>${esc([h.via && (VL[h.via] || h.via), h.ref].filter(Boolean).join(' · '))}</td></tr>`; }).join('') || `<tr><td colspan="6" class="muted">—</td></tr>`;
   } catch (e) { const n = $('#stNow'); if (n) n.textContent = '?'; }
 }
 
@@ -2029,7 +2075,7 @@ async function loadStats() {
   let S;
   try { S = await api().visitStats(statsDays); }
   catch (e) { body.innerHTML = `<p class="err">${esc(/visit_stats|visit_live|function|schema cache/i.test(e.message) ? L("Base pas encore prête : collez la dernière version de supabase/visites.sql dans l'éditeur SQL de Supabase.", 'Database not ready: paste the latest supabase/visites.sql into the Supabase SQL editor.') : trErr(e.message))}</p>`; return; }
-  const P = PAL(), T = TAB_LABELS(), E = EVENT_LABELS(), ret = Math.max(0, S.unique - S.new);
+  const P = PAL(), T = TAB_LABELS(), E = EVENT_LABELS(), VL = VIA_LABELS(), A = await articleTitles(), ret = Math.max(0, S.unique - S.new);
   const daily = S.daily || [], one = statsDays === 1;
   const fmtDay = x => new Date(x + 'T12:00:00').toLocaleDateString(LOC, statsDays > 60 ? { day: 'numeric', month: 'short' } : { weekday: 'short', day: 'numeric' });
   const hh = h => `${String(h).padStart(2, '0')} h`;
@@ -2053,7 +2099,7 @@ async function loadStats() {
       <div><b>${nf(S.new)} <span class="muted">/</span> ${nf(ret)}</b>${L('nouveaux / déjà venus', 'new / returning')}</div>
       <div><b>${nf(S.views)}</b>${L('pages vues', 'page views')}<small>${S.visits ? (S.views / S.visits).toFixed(1).replace('.', EN() ? '.' : ',') : 0} ${L('par visite', 'per visit')}</small></div>
       <div><b>${dur(S.timed ? S.seconds / S.timed : 0)}</b>${L('temps moyen par visite', 'average time per visit')}</div>
-      <div><b>${pctOf(S.bounces, S.visits)} %</b>${L('de rebond', 'bounce rate')}<small>${L('une seule page vue', 'a single page viewed')}</small></div>
+      <div><b>${pctOf(S.engaged ?? (S.visits - S.bounces), S.visits)} %</b>${L('de visites engagées', 'engaged visits')}<small>${L('plus d\'une page, une action ou 30 s', 'more than one page, an action or 30 s')}</small></div>
       <div><b>${pctOf(S.mobile, S.visits)} %</b>${L('sur téléphone ou tablette', 'on phone or tablet')}</div>
     </div>
 
@@ -2066,6 +2112,8 @@ async function loadStats() {
       ${box(L('Onglets les plus vus', 'Most viewed tabs'), `<div class="chart" style="height:${Math.max(160, 30 * (S.pages || []).length + 50)}px"><canvas id="chPages"></canvas></div>`)}
       ${box(L("Pages d'arrivée", 'Landing tabs'), vrows(S.entries || [], x => esc(T[x.path] || x.path), x => x.visitors) + `<p class="note">${L('Le premier onglet vu par chaque visiteur dans la journée.', 'The first tab each visitor saw that day.')}</p>`)}
       ${box(L('Provenance', 'Where visitors come from'), vrows([{ ref: L('Accès direct ou inconnu', 'Direct or unknown'), visitors: S.direct, direct: 1 }, ...(S.refs || [])].sort((a, b) => b.visitors - a.visitors), x => x.direct ? `<em>${esc(x.ref)}</em>` : esc(x.ref), x => x.visitors))}
+      ${box(L('Liens partagés et publiés', 'Shared and posted links'), vrows(S.vias || [], x => esc(VL[x.via] || x.via), x => x.visitors) + `<p class="note">${L('Visiteurs arrivés par un bouton de partage du site, ou par un lien que vous avez publié avec <code>?via=…</code> (par exemple <code>?via=discord</code>).', 'Visitors who came through a share button, or a link you posted with <code>?via=…</code> (for example <code>?via=discord</code>).')}</p>`)}
+      ${box(L('Articles e-ink les plus lus', 'Most read e-ink articles'), vrows(S.articles || [], x => esc(A[x.id] || L('Article retiré', 'Removed article')), x => x.visitors) + `<p class="note">${L('Lecteurs différents par article.', 'Different readers per article.')}</p>`)}
       ${box(L('Pays', 'Countries'), vrows(ctry, x => esc(x.label), x => x.v) + `<p class="note">${L("Déduit du fuseau horaire de l'appareil, sans adresse IP.", "Guessed from the device's time zone, no IP address.")}</p>`)}
       ${box(L('Navigateurs', 'Browsers'), `<div class="chart short"><canvas id="chBrowsers"></canvas></div>`)}
       ${box(L("Systèmes d'exploitation", 'Operating systems'), `<div class="chart short"><canvas id="chOs"></canvas></div>`)}
@@ -2077,8 +2125,8 @@ async function loadStats() {
       ${box(L('Dernières visites', 'Latest visits'), `<div class="sttabw"><table class="sttab"><thead><tr><th>${L('Heure', 'Time')}</th><th>${L('Visiteur', 'Visitor')}</th><th>${L('Onglet ou action', 'Tab or action')}</th><th>${L('Appareil', 'Device')}</th><th>${L('Pays', 'Country')}</th><th>${L('Venu de', 'From')}</th></tr></thead><tbody id="stRecent"></tbody></table></div>
         <p class="note">${L('Le visiteur est désigné par les 4 premiers caractères de son numéro au hasard. Mis à jour toutes les 15 secondes.', 'Each visitor is shown by the first 4 characters of their random number. Refreshed every 15 seconds.')}</p>`, 'wide')}
     </div>
-    <p class="note">${L("Comptage maison, sans cookie. N'apparaissent pas : les visiteurs qui ont choisi « Ne plus être compté », ceux dont le navigateur bloque Supabase, et vos propres passages sur cette page. Une même personne sur deux appareils compte deux fois. Les données de plus de 13 mois sont effacées.",
-      'Home-made counting, no cookies. Not shown: visitors who chose "Stop counting me", those whose browser blocks Supabase, and your own visits to this page. The same person on two devices counts twice. Data older than 13 months is deleted.')}</p>`;
+    <p class="note">✔ ${L('Cet appareil est le vôtre : il n\'est pas compté.', 'This device is yours: it is not counted.')} ${L("Comptage maison, sans cookie. N'apparaissent pas : les visiteurs qui ont choisi « Ne plus être compté », ceux dont le navigateur bloque Supabase, les robots, les pages fermées en moins de 2 secondes, et vos propres visites sur les appareils où vous vous êtes connecté. Une même personne sur deux appareils compte deux fois. Les données de plus de 13 mois sont effacées.",
+      'Home-made counting, no cookies. Not shown: visitors who chose "Stop counting me", those whose browser blocks Supabase, bots, pages closed within 2 seconds, and your own visits on devices where you signed in. The same person on two devices counts twice. Data older than 13 months is deleted.')}</p>`;
 
   if (!one) chart('chDays', { type: 'bar', data: { labels: daily.map(x => fmtDay(x.day)), datasets: [
     { label: L('Visiteurs', 'Visitors'), data: daily.map(x => x.visitors), backgroundColor: P[0], borderRadius: 4, order: 2 },
@@ -2395,21 +2443,23 @@ const einkText = a => {
   return { title: EN() ? a.title_en : a.title_fr, lead: body ? ((EN() ? a.lead_en : a.lead_fr) || '') : '', body: body || `<p>${esc(sum)}</p>`, teaser: (EN() ? a.lead_en : a.lead_fr) || sum };
 };
 // Lien de partage : une page du site avec la vignette de l'article (balises d'aperçu), qui renvoie sur l'article ici
-const einkShareURL = a => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}a/${a.id}${EN() ? '-en' : ''}.html`;
+const einkShareURL = (a, via) => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}a/${a.id}${EN() ? '-en' : ''}.html${via ? `?via=${via}` : ''}`;
 function shareEink(a) {
-  const t = einkText(a), url = einkShareURL(a), u = encodeURIComponent(url), tt = encodeURIComponent(t.title);
-  const copy = async msg => {
-    try { await navigator.clipboard.writeText(url); toast(msg); } catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }
+  // Chaque réseau reçoit un lien étiqueté (?via=reddit…) : les statistiques savent ainsi d'où viennent les clics
+  const t = einkText(a), url = einkShareURL(a, 'lien'), tt = encodeURIComponent(t.title);
+  const U = k => encodeURIComponent(einkShareURL(a, k));
+  const copy = async (msg, link = url) => {
+    try { await navigator.clipboard.writeText(link); toast(msg); } catch { prompt(L('Copiez ce lien :', 'Copy this link:'), link); }
   };
   const nets = [
     ['discord', '💬 Discord', null],
-    ['reddit', '🟠 Reddit', `https://www.reddit.com/submit?url=${u}&title=${tt}`],
-    ['bluesky', '🦋 Bluesky', `https://bsky.app/intent/compose?text=${encodeURIComponent(`${t.title} ${url}`)}`],
-    ['x', '✖️ X', `https://x.com/intent/post?url=${u}&text=${tt}`],
-    ['mastodon', '🐘 Mastodon', `https://mastodonshare.com/?url=${u}&text=${tt}`],
-    ['linkedin', '💼 LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${u}`],
-    ['facebook', '📘 Facebook', `https://www.facebook.com/sharer/sharer.php?u=${u}`],
-    ['whatsapp', '🟢 WhatsApp', `https://wa.me/?text=${encodeURIComponent(`${t.title} ${url}`)}`],
+    ['reddit', '🟠 Reddit', `https://www.reddit.com/submit?url=${U('reddit')}&title=${tt}`],
+    ['bluesky', '🦋 Bluesky', `https://bsky.app/intent/compose?text=${encodeURIComponent(`${t.title} ${einkShareURL(a, 'bluesky')}`)}`],
+    ['x', '✖️ X', `https://x.com/intent/post?url=${U('x')}&text=${tt}`],
+    ['mastodon', '🐘 Mastodon', `https://mastodonshare.com/?url=${U('mastodon')}&text=${tt}`],
+    ['linkedin', '💼 LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${U('linkedin')}`],
+    ['facebook', '📘 Facebook', `https://www.facebook.com/sharer/sharer.php?u=${U('facebook')}`],
+    ['whatsapp', '🟢 WhatsApp', `https://wa.me/?text=${encodeURIComponent(`${t.title} ${einkShareURL(a, 'whatsapp')}`)}`],
   ];
   const m = modal(`<h3 style="margin:0">${L('Partager cet article', 'Share this article')}</h3>
     <div class="pv"><small>${L('Palmarès des créateurs TRMNL · Actu e-ink', 'TRMNL Creator Leaderboard · E-ink news')}</small>
@@ -2428,8 +2478,8 @@ function shareEink(a) {
   m.$('#eCopy').onclick = () => { copy(L('Lien copié', 'Link copied')); track('actu-eink-partagee', true); };
   m.wrap.querySelectorAll('[data-net]').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.net; track('actu-eink-partagee', true);
-    if (k === 'discord') copy(L('Lien copié : collez-le dans Discord', 'Link copied: paste it in Discord'));
-    else if (k === 'native') navigator.share({ title: t.title, text: t.teaser || '', url }).catch(() => {});
+    if (k === 'discord') copy(L('Lien copié : collez-le dans Discord', 'Link copied: paste it in Discord'), einkShareURL(a, 'discord'));
+    else if (k === 'native') navigator.share({ title: t.title, text: t.teaser || '', url: einkShareURL(a, 'partage') }).catch(() => {});
   }));
 }
 function openEink(a) {
@@ -2447,6 +2497,7 @@ function openEink(a) {
   m.$('#eShare').onclick = () => shareEink(a);
   m.$('.ehero')?.addEventListener('error', e => e.target.remove());
   track('actu-eink-lue', true);
+  countVisit('#article-' + a.id);   // chaque article ouvert compte comme une page vue
 }
 async function renderEink(openId) {
   const el = $('#tab-eink');

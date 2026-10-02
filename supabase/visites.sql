@@ -1,5 +1,5 @@
 -- =====================================================================
---  Mesure d'audience anonyme (sans cookie) : base de données Supabase — version 2
+--  Mesure d'audience anonyme (sans cookie) : base de données Supabase — version 3
 --  À coller en entier dans Supabase › SQL Editor › New query, puis « Run ».
 --  Peut être relancé sans risque : il ne supprime aucune donnée récente.
 --
@@ -26,6 +26,8 @@ create table if not exists public.visit_days (
 );
 alter table public.visit_days add column if not exists seconds   integer not null default 0;
 alter table public.visit_days add column if not exists last_seen timestamptz not null default now();
+alter table public.visit_days add column if not exists events    integer not null default 0;
+alter table public.visit_days add column if not exists via       text;
 create index if not exists visit_days_last_seen on public.visit_days (last_seen);
 
 -- ---------- Chaque page vue et chaque action, avec son heure
@@ -44,6 +46,7 @@ create table if not exists public.visit_hits (
   screen  text,
   tz      text
 );
+alter table public.visit_hits add column if not exists via text;
 create index if not exists visit_hits_at on public.visit_hits (at);
 create index if not exists visit_hits_visitor on public.visit_hits (visitor, at);
 
@@ -67,10 +70,13 @@ create or replace function public.vclean(t text, n integer, pat text default '[^
 language sql immutable as $$ select nullif(left(regexp_replace(coalesce(t, ''), pat, '', 'g'), n), '') $$;
 
 -- ---------- Comptage d'une page vue ou d'une action (appelé par le site, sans connexion)
+-- p_via : l'étiquette d'un lien de partage (discord, reddit…) ou d'un lien publié avec ?via=…
+drop function if exists public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text);
 create or replace function public.track_hit(
   p_visitor uuid, p_kind text, p_path text, p_new boolean default false,
   p_ref text default null, p_lang text default null, p_mobile boolean default null,
-  p_browser text default null, p_os text default null, p_screen text default null, p_tz text default null
+  p_browser text default null, p_os text default null, p_screen text default null, p_tz text default null,
+  p_via text default null
 ) returns void
 language plpgsql security definer set search_path = public as $$
 declare d date := (now() at time zone 'Europe/Paris')::date; k text := case when p_kind = 'event' then 'event' else 'view' end;
@@ -79,20 +85,24 @@ begin
   p_path := coalesce(vclean(lower(p_path), 40, '[^a-z0-9_-]'), 'accueil');
   p_ref  := lower(vclean(p_ref, 80, '[^A-Za-z0-9.-]'));
   p_lang := case when p_lang in ('fr', 'en') then p_lang end;
+  p_via  := lower(vclean(p_via, 30, '[^A-Za-z0-9_-]'));
 
   -- Garde-fou : pas plus de 600 enregistrements par visiteur et par jour
   if (select views from visit_days where day = d and visitor = p_visitor) >= 600 then return; end if;
 
-  insert into visit_days (day, visitor, views, is_new, ref, lang, mobile, last_seen)
-  values (d, p_visitor, case when k = 'view' then 1 else 0 end, coalesce(p_new, false), p_ref, p_lang, p_mobile, now())
+  insert into visit_days (day, visitor, views, events, is_new, ref, via, lang, mobile, last_seen)
+  values (d, p_visitor, case when k = 'view' then 1 else 0 end, case when k = 'event' then 1 else 0 end,
+          coalesce(p_new, false), p_ref, p_via, p_lang, p_mobile, now())
   on conflict (day, visitor) do update
     set views     = visit_days.views + case when k = 'view' then 1 else 0 end,
+        events    = visit_days.events + case when k = 'event' then 1 else 0 end,
         is_new    = visit_days.is_new or excluded.is_new,
         ref       = coalesce(visit_days.ref, excluded.ref),
+        via       = coalesce(visit_days.via, excluded.via),
         last_seen = now();
 
-  insert into visit_hits (visitor, kind, path, is_new, ref, lang, mobile, browser, os, screen, tz)
-  values (p_visitor, k, p_path, coalesce(p_new, false), p_ref, p_lang, p_mobile,
+  insert into visit_hits (visitor, kind, path, is_new, ref, via, lang, mobile, browser, os, screen, tz)
+  values (p_visitor, k, p_path, coalesce(p_new, false), p_ref, p_via, p_lang, p_mobile,
           vclean(p_browser, 20), vclean(p_os, 20), vclean(p_screen, 12), vclean(p_tz, 40));
 
   if random() < 0.02 then
@@ -116,10 +126,24 @@ create or replace function public.track_visit(
 ) returns void
 language sql security definer set search_path = public as $$ select public.track_hit(p_visitor, 'view', p_path, p_new, p_ref, p_lang, p_mobile) $$;
 
-revoke all on function public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text) from public;
+revoke all on function public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text, text) from public;
 revoke all on function public.track_ping(uuid, integer) from public;
 revoke all on function public.track_visit(uuid, text, boolean, text, text, boolean) from public;
-grant execute on function public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text) to anon, authenticated;
+grant execute on function public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text, text) to anon, authenticated;
+
+-- ---------- Effacer les visites d'un appareil de l'administrateur (appelé une fois, quand il se connecte)
+create or replace function public.forget_visitor(p_visitor uuid) returns integer
+language plpgsql security definer set search_path = public as $$
+declare n integer;
+begin
+  if not public.is_admin() then raise exception 'Admins only.'; end if;
+  delete from visit_hits where visitor = p_visitor;
+  delete from visit_days where visitor = p_visitor;
+  get diagnostics n = row_count;
+  return n;
+end $$;
+revoke all on function public.forget_visitor(uuid) from public;
+grant execute on function public.forget_visitor(uuid) to authenticated;
 grant execute on function public.track_ping(uuid, integer) to anon, authenticated;
 grant execute on function public.track_visit(uuid, text, boolean, text, text, boolean) to anon, authenticated;
 
@@ -149,6 +173,7 @@ begin
     'views',      (select coalesce(sum(views), 0) from vd),
     'visits',     (select count(*) from vd),
     'bounces',    (select count(*) from vd where views <= 1),
+    'engaged',    (select count(*) from vd where views > 1 or seconds >= 30 or events > 0),
     'seconds',    (select coalesce(sum(seconds), 0) from vd),
     'timed',      (select count(*) from vd where seconds > 0),
     'mobile',     (select count(*) filter (where mobile) from vd),
@@ -169,10 +194,14 @@ begin
         select extract(isodow from lt)::int as dow, extract(hour from lt)::int as hour, count(*) as views
         from hv group by 1, 2) x),
     'pages', (select coalesce(json_agg(x), '[]') from (
-        select path, count(*) as views, count(distinct visitor) as visitors from hv group by path order by 2 desc limit 20) x),
+        select path, count(*) as views, count(distinct visitor) as visitors from hv where path not like 'article-%' group by path order by 2 desc limit 20) x),
+    'articles', (select coalesce(json_agg(x), '[]') from (
+        select substr(path, 9) as id, count(*) as views, count(distinct visitor) as visitors from hv where path like 'article-%' group by path order by 2 desc limit 25) x),
+    'vias', (select coalesce(json_agg(x), '[]') from (
+        select via, count(distinct visitor) as visitors from vd where via is not null group by via order by 2 desc limit 15) x),
     'entries', (select coalesce(json_agg(x), '[]') from (
         select path, count(*) as visitors from (
-          select distinct on (visitor, lt::date) path from hv order by visitor, lt::date, at) f
+          select distinct on (visitor, lt::date) path from hv where path not like 'article-%' order by visitor, lt::date, at) f
         group by path order by 2 desc limit 10) x),
     'refs', (select coalesce(json_agg(x), '[]') from (
         select ref, count(distinct visitor) as visitors from vd where ref is not null group by ref order by 2 desc limit 15) x),
@@ -216,7 +245,7 @@ begin
           and floor(extract(epoch from (now() - h.at)) / 60) = 29 - g
         group by g) x),
     'recent',  (select coalesce(json_agg(x), '[]') from (
-        select at, kind, path, is_new, ref, lang, mobile, browser, os, tz, left(visitor::text, 4) as who
+        select at, kind, path, is_new, ref, via, lang, mobile, browser, os, tz, left(visitor::text, 4) as who
         from visit_hits order by at desc limit 40) x)
   ) into res;
   return res;

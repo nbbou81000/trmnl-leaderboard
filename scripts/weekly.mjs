@@ -1,5 +1,5 @@
-// « La semaine en bref » : résumé automatique des 7 derniers jours, à partir des relevés déjà collectés.
-// - weekly.json : la semaine glissante (recalculée à chaque passage) + les éditions figées chaque lundi ;
+// « La semaine en bref » : bilans hebdomadaires du lundi au dimanche, à partir des relevés déjà collectés.
+// - weekly.json : la semaine en cours (du lundi à maintenant) + toutes les semaines passées, du lundi au dimanche ;
 // - feed.xml (français) et feed-en.xml (anglais) : un article RSS par édition hebdomadaire.
 // Aucun appel externe, aucune IA : tout vient de latest.json et daily.json.
 // Usage : SITE_URL=https://…/ node scripts/weekly.mjs public
@@ -25,40 +25,44 @@ function isoWeek(ms) {
   return `${y}-W${String(w).padStart(2, '0')}`;
 }
 
-function summarize(latest, daily, names) {
-  const now = Date.parse(latest.generated_at);
-  const target = now - 7 * DAY;
-  // Relevé quotidien le plus proche d'il y a 7 jours (au plus 36 h d'écart)
-  let snap = null, best = Infinity;
-  for (const s of daily?.snaps || []) { const gap = Math.abs(Date.parse(s.t) - target); if (gap < best) { best = gap; snap = s; } }
-  if (!snap || best > 1.5 * DAY) return null;
-  const pos = new Map((daily.idx || []).map(([id], k) => [id, k]));
-  const connThen = id => { const k = pos.get(id); if (k == null || snap.i[k] == null) return null; return snap.i[k] + (snap.f[k] || 0); };
-  const from = Date.parse(snap.t);
+// Lundi 00:00 UTC de la semaine qui contient ms (les relevés quotidiens sont pris à 00:00 UTC : les semaines tombent pile dessus)
+function mondayOf(ms) { const d = new Date(ms); d.setUTCHours(0, 0, 0, 0); return d.getTime() - ((d.getUTCDay() + 6) % 7) * DAY; }
 
+// Bilan d'une semaine calendaire (lundi → dimanche) entre deux relevés.
+// connAt(id) : connexions au relevé de début ; connEnd(r) : connexions au relevé de fin (ou maintenant pour la semaine en cours).
+function summarize({ from, to, live }, latest, daily, names) {
+  const pos = new Map((daily.idx || []).map(([id], k) => [id, k]));
+  const snapAt = ms => { let best = null, gap = Infinity; for (const s of daily.snaps) { const g = Math.abs(Date.parse(s.t) - ms); if (g < gap) { gap = g; best = s; } } return gap <= 1.5 * DAY ? best : null; };
+  const s0 = snapAt(from); if (!s0) return null;
+  const s1 = live ? null : snapAt(to); if (!live && !s1) return null;
+  const conn = (snap, id) => { const k = pos.get(id); if (k == null || snap.i[k] == null) return null; return snap.i[k] + (snap.f?.[k] || 0); };
+  const t0 = Date.parse(s0.t), t1 = live ? Date.parse(latest.generated_at) : Date.parse(s1.t);
   const nameOf = u => names?.[u] || null;
-  const milestones = [], gains = [];
+  const born = r => r.p ? Date.parse(r.p) : null;
+  const milestones = [], gains = [], fresh = [];
   for (const r of latest.recipes) {
-    // Même base que la colonne « +7 j » du site quand elle existe, sinon le relevé quotidien
-    const old = r.d7 != null ? r.s - r.d7 : connThen(r.id);
-    const before = old ?? (r.p && Date.parse(r.p) > from ? 0 : null);
-    if (before == null) continue;
-    const top = MILESTONES.filter(T => before < T && T <= r.s).pop();
-    if (top) milestones.push({ id: r.id, n: r.n, u: r.u, T: top, s: r.s });
-    if (r.s - before > 0) gains.push({ id: r.id, n: r.n, u: r.u, g: r.s - before });
+    const b = born(r);
+    if (b && b >= t1) continue;                                   // publiée après la semaine
+    const end = live ? r.s : conn(s1, r.id);
+    if (end == null) continue;
+    const start = conn(s0, r.id) ?? (b && b >= t0 ? 0 : null);
+    if (start == null) continue;
+    const top = MILESTONES.filter(T => start < T && T <= end).pop();
+    if (top) milestones.push({ id: r.id, n: r.n, u: r.u, T: top, s: end });
+    if (end - start > 0) gains.push({ id: r.id, n: r.n, u: r.u, g: end - start });
+    if (b && b >= t0) fresh.push({ id: r.id, n: r.n, u: r.u, s: end });
   }
   milestones.sort((a, b) => b.T - a.T || b.s - a.s);
   gains.sort((a, b) => b.g - a.g);
-  const newRecipes = latest.recipes.filter(r => r.p && Date.parse(r.p) > from);
-  const newCreators = latest.creators.filter(c => c.first && Date.parse(c.first) > from);
-
+  fresh.sort((a, b) => b.s - a.s);
+  const newCreators = latest.creators.filter(c => c.first && Date.parse(c.first) >= t0 && Date.parse(c.first) < t1).length;
   return {
-    from: new Date(from).toISOString(), to: latest.generated_at, week: isoWeek(now),
-    new_recipes: newRecipes.length, new_creators: newCreators.length,
-    new_list: newRecipes.sort((a, b) => b.s - a.s).slice(0, 5).map(r => ({ id: r.id, n: r.n, u: r.u, un: nameOf(r.u), s: r.s })),
-    milestones: milestones.slice(0, 12).map(m => ({ ...m, un: nameOf(m.u) })),
-    top: gains.slice(0, 5).map(g => ({ ...g, un: nameOf(g.u) })),
-    totals: latest.totals || null,
+    from: new Date(from).toISOString(), to: new Date(live ? t1 : to).toISOString(), week: isoWeek(from + 3 * DAY), live: !!live,
+    new_recipes: fresh.length, new_creators: newCreators, gained: gains.reduce((n, g) => n + g.g, 0),
+    new_list: fresh.slice(0, 8).map(r => ({ ...r, un: nameOf(r.u) })),
+    milestones: milestones.slice(0, 15).map(m => ({ ...m, un: nameOf(m.u) })),
+    top: gains.slice(0, 10).map(g => ({ ...g, un: nameOf(g.u) })),
+    totals: live ? latest.totals || null : null,
   };
 }
 
@@ -96,28 +100,27 @@ ${items}
 async function main() {
   const latest = await readJSON(path.join(DATA, 'latest.json'), null);
   const daily = await readJSON(path.join(DATA, 'daily.json'), null);
-  if (!latest || !daily) { log('Données manquantes : semaine en bref ignorée pour ce passage.'); return; }
+  if (!latest || !daily?.snaps?.length) { log('Données manquantes : semaine en bref ignorée pour ce passage.'); return; }
   const names = await readJSON(path.join(ROOT, 'names.json'), {});
-  const store = await readJSON(path.join(DATA, 'weekly.json'), { v: 1, current: null, issues: [] });
+  const now = Date.parse(latest.generated_at);
 
-  const cur = summarize(latest, daily, names);
-  if (!cur) { log("Pas encore 7 jours d'historique quotidien."); return; }
-  store.current = cur;
-
-  // Une édition figée par semaine : le lundi (UTC), ou tout de suite s'il n'y en a encore aucune
-  const isMonday = new Date(Date.parse(latest.generated_at)).getUTCDay() === 1;
-  if (!store.issues.length || (isMonday && store.issues[0].week !== cur.week)) {
-    store.issues.unshift(cur);
-    store.issues = store.issues.slice(0, KEEP_ISSUES);
-    log(`Nouvelle édition figée : ${cur.week}.`);
+  // Toutes les semaines complètes depuis le premier relevé quotidien, recalculées à chaque passage (les noms suivent les revendications)
+  const first = mondayOf(Date.parse(daily.snaps[0].t) + DAY - 1);   // premier lundi couvert par un relevé
+  const thisMonday = mondayOf(now);
+  const weeks = [];
+  for (let m = first; m < thisMonday; m += 7 * DAY) {
+    const w = summarize({ from: m, to: m + 7 * DAY }, latest, daily, names);
+    if (w) weeks.unshift(w);
   }
+  const current = summarize({ from: thisMonday, to: now, live: true }, latest, daily, names);
 
+  const store = { v: 2, current, weeks: weeks.slice(0, KEEP_ISSUES * 2), issues: weeks.slice(0, KEEP_ISSUES) };
   await fs.writeFile(path.join(DATA, 'weekly.json'), JSON.stringify(store));
   if (SITE !== '/') {
     await fs.writeFile(path.join(ROOT, 'feed.xml'), feed(store.issues, false));
     await fs.writeFile(path.join(ROOT, 'feed-en.xml'), feed(store.issues, true));
   }
-  log(`${cur.new_recipes} nouvelles recettes, ${cur.milestones.length} paliers, ${store.issues.length} édition(s) dans le flux RSS.`);
+  log(`Semaine en cours : ${current ? current.new_recipes + ' nouvelles recettes' : 'pas encore de relevé'} ; ${weeks.length} semaine(s) archivée(s).`);
 }
 
 try { await main(); } catch (e) { log(`${e.message} (ignoré, le reste du workflow continue).`); }

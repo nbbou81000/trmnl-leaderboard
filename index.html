@@ -357,7 +357,12 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .modal .box.reader .ebody{font-size:1rem;line-height:1.65}
 .modal .box.reader .ebody h2{font-size:1.1rem;margin:18px 0 6px}
 .modal .box.reader .ebody p{margin:0 0 12px}
-.wk-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}
+.wk-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 16px;flex-wrap:wrap}
+.wk-nav .wk-sel{display:grid;justify-items:center;gap:4px;text-align:center;flex:1;min-width:200px}
+.wk-nav select{font:inherit;font-weight:700;font-size:1.05rem;color:var(--ink);background:var(--sheet);border:1px solid var(--rule2);border-radius:8px;padding:6px 10px}
+.wk-nav .btn[disabled]{opacity:.35;cursor:default}
+@media(max-width:520px){.wk-nav .btn span{display:none}}
+.wk-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:0 0 14px}
 .wk-kpis div{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px;text-align:center}
 .wk-kpis b{display:block;font-size:1.6rem;font-weight:800}
 .wk-kpis span{font-size:.82rem;color:var(--ink2)}
@@ -372,6 +377,21 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .pr-pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .pr-pick input{flex:1;min-width:200px;background:var(--sheet);color:var(--ink);border:1px solid var(--rule2);border-radius:8px;padding:7px 9px}
 .pr-pick input::placeholder{color:var(--ink2);opacity:1}
+.pr-pick .acwrap{position:relative;flex:1;min-width:200px;display:flex}
+.pr-pick .acwrap input{width:100%}
+.acbox{position:absolute;z-index:20;top:calc(100% + 4px);left:0;right:0;background:var(--sheet);border:1px solid var(--rule2);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.18);max-height:min(320px,50vh);overflow-y:auto;padding:4px}
+.acopt{display:grid;gap:1px;padding:9px 10px;border-radius:7px;cursor:pointer;color:var(--ink)}
+.acopt small{color:var(--ink2);font-size:.8rem}
+.acopt:hover,.acopt[aria-selected=true]{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.acnone{padding:10px;color:var(--ink2);font-size:.9rem}
+.launch{margin-bottom:16px}
+.launch .pr-pick{margin:4px 0 14px}
+.ln-head{margin-bottom:6px}
+.ln-verdict{background:color-mix(in srgb,var(--accent) 9%,var(--sheet));border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 12px;margin:8px 0 12px}
+.ln-tab{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:12px}
+.ln-tab th,.ln-tab td{padding:6px 8px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+.ln-tab th:first-child,.ln-tab td:first-child{text-align:left}
+.ln-tab small{display:block;color:var(--ink2);font-size:.74rem;font-weight:400}
 .pr-bar{height:6px;background:var(--rule);border-radius:3px;overflow:hidden;margin-top:8px}
 .pr-bar i{display:block;height:100%;background:var(--accent)}
 .enews .etop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
@@ -534,6 +554,8 @@ footer p{margin:0 0 12px;max-width:80ch}
 .bebar .btn{margin-left:auto}
 .bestage{background:repeating-conic-gradient(color-mix(in srgb,var(--ink) 6%,transparent) 0 25%,transparent 0 50%) 0 0/18px 18px,rgba(0,0,0,.45);border-radius:12px;padding:22px 14px;display:flex;justify-content:center;max-height:70vh;overflow:auto}
 .bestage .box.disc{background:var(--paper);max-height:none;overflow:visible}
+.befoot .renew{margin-right:auto;max-width:560px;font-size:.84rem;line-height:1.35;align-items:flex-start}
+.befoot .renew input{margin-top:3px}
 .befoot{justify-content:flex-end;margin-top:14px;position:sticky;bottom:-18px;background:var(--paper);padding:10px 0 4px;border-top:1px solid var(--rule)}
 .loading{padding:60px 0;text-align:center;color:var(--ink2)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:.9rem;z-index:50}
@@ -1009,7 +1031,7 @@ function route() {
   const cur = document.querySelector('nav.tabs a[aria-current="page"]'), bar = $('#tabsIn');
   if (cur && bar && bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: cur.offsetLeft - (bar.clientWidth - cur.offsetWidth) / 2, behavior: 'smooth' });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: renderWeek, analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos, stats: renderStats })[t]();
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: () => renderWeek(arg), analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos, stats: renderStats })[t]();
   window.scrollTo({ top: 0 });
 }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -1813,6 +1835,31 @@ function cleanBanner(html) {
   walk(root);
   return root.innerHTML.trim();
 }
+// Adresses tapées en clair (https://…) : transformées en liens cliquables.
+// Une adresse de ce site (…/trmnl-leaderboard/#pronos) devient un lien interne, qui ouvre l'onglet sans quitter la page.
+function linkifyBanner(html) {
+  const doc = new DOMParser().parseFromString(`<div>${html || ''}</div>`, 'text/html'), root = doc.body.firstChild;
+  const here = location.origin + location.pathname.replace(/index\.html$/, '');
+  const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT), nodes = [];
+  while (walker.nextNode()) if (!walker.currentNode.parentElement.closest('a') && /https?:\/\/|www\./i.test(walker.currentNode.data)) nodes.push(walker.currentNode);
+  for (const n of nodes) {
+    const frag = doc.createDocumentFragment(), re = /(https?:\/\/|www\.)[^\s<>"]+/gi;
+    let last = 0, mm;
+    while ((mm = re.exec(n.data))) {
+      let url = mm[0].replace(/[.,;:!?)\]]+$/, '');   // ponctuation de fin de phrase : hors du lien
+      frag.append(n.data.slice(last, mm.index));
+      const a = doc.createElement('a'); a.textContent = url;
+      let href = /^www\./i.test(url) ? 'https://' + url : url;
+      const hash = href.indexOf('#');
+      if (hash > 0 && (href.slice(0, hash).replace(/index\.html$/, '').replace(/\?.*$/, '') === here || href.slice(0, hash).replace(/\/?$/, '/') === here)) href = href.slice(hash);
+      a.setAttribute('href', href);
+      if (!href.startsWith('#')) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+      frag.append(a); last = mm.index + url.length;
+    }
+    frag.append(n.data.slice(last)); n.replaceWith(frag);
+  }
+  return root.innerHTML;
+}
 // Ancien texte brut : les lignes vides séparent les paragraphes
 const toRich = t => !t ? '' : /<[a-z][\s\S]*>/i.test(t) ? t : t.split(/\n{2,}/).map(p => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`).join('');
 const isEmptyRich = h => !String(h || '').replace(/<br\s*\/?>|<\/?(p|div|span)[^>]*>|&nbsp;|\s/gi, '');
@@ -1840,7 +1887,7 @@ function bannerBoxCSS(s) {
 // Contenu du bandeau, identique dans l'aperçu de l'éditeur et chez les visiteurs
 function bannerInner(s, en, stats) {
   const st = bannerStyleOf(s), t = (fr, e) => en ? e : fr;
-  const body = cleanBanner(toRich(en ? (s.text_en || s.text_fr) : (s.text_fr || s.text_en)));
+  const body = linkifyBanner(cleanBanner(toRich(en ? (s.text_en || s.text_fr) : (s.text_fr || s.text_en))));
   const img = s.img ? imgURL(s.img) : '';
   const statsHTML = stats ? `<p class="discstats">${[
     t(`🆕 ${nf(stats.newRecipes)} nouvelle${stats.newRecipes > 1 ? 's' : ''} recette${stats.newRecipes > 1 ? 's' : ''} (24 h)`, `🆕 ${nf(stats.newRecipes)} new recipe${stats.newRecipes > 1 ? 's' : ''} (24h)`),
@@ -1865,9 +1912,10 @@ async function showDisclaimer() {
   if (s.expires_at && Date.parse(s.expires_at) < Date.now()) return;   // durée d'affichage écoulée
   const stats = s.show_stats ? disclaimerStats() : null;
   if (isEmptyRich(s.text_fr) && isEmptyRich(s.text_en) && !s.img && !stats) return;
-  const freq = ['day', 'week', 'always'].includes(s.frequency) ? s.frequency : 'day';
+  const freq = ['once', 'day', 'week', 'always'].includes(s.frequency) ? s.frequency : 'day';
   if (freq !== 'always') {
-    const period = freq === 'week' ? 'w' + Math.floor(Date.now() / (7 * DAY)) : 'd' + new Date().toISOString().slice(0, 10);
+    // « once » : une seule fois par version du bandeau ; une simple correction garde la version, donc ne réapparaît pas
+    const period = freq === 'once' ? 'once' : freq === 'week' ? 'w' + Math.floor(Date.now() / (7 * DAY)) : 'd' + new Date().toISOString().slice(0, 10);
     const key = 'trmnl-disclaimer-seen';
     const sig = `${s.version}|${period}`;
     if (store.get(key) === sig) return;   // déjà vu sur cette période (même version) : on ne réaffiche pas
@@ -1876,6 +1924,7 @@ async function showDisclaimer() {
   await applyDiscFont(s.font);
   const m = modal(bannerInner(s, EN(), stats), 'disc');
   m.$('.box').setAttribute('style', bannerBoxCSS(s));
+  m.$('.box').querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', () => m.close()));   // lien vers un onglet : on ferme le bandeau
 }
 // ---------- Polices proposées pour le texte du bandeau (chargées seulement si utilisées)
 const DISC_FONTS = {
@@ -1965,7 +2014,9 @@ function richEditor(host, html, onChange) {
   host.querySelector('[data-link]').onclick = () => {
     save(); const url = prompt(L('Adresse du lien (https://… ou #onglet) — laissez vide pour retirer le lien :', 'Link address (https://… or #tab) — leave empty to remove the link:'), 'https://');
     if (url === null) return;
-    if (!url.trim() || url.trim() === 'https://') exec('unlink'); else if (/^(https?:|mailto:|#)/i.test(url.trim())) exec('createLink', url.trim());
+    let u = url.trim(); const here = location.origin + location.pathname.replace(/index\.html$/, ''), h = u.indexOf('#');
+    if (h > 0 && u.slice(0, h).replace(/\/?$/, '/') === here) u = u.slice(h);   // lien vers un onglet de ce site
+    if (!u || u === 'https://') exec('unlink'); else if (/^(https?:|mailto:|#)/i.test(u)) exec('createLink', u);
   };
   host.querySelectorAll('[data-pop]').forEach(b => b.onclick = () => {
     const kind = b.dataset.pop; save();
@@ -2110,10 +2161,10 @@ async function wipDisclaimerForm() {
 
       <section data-pane="when" hidden>
         <div class="two">
-          <label>${L('Réapparition', 'Reappearance')}${sel('frequency', [['day', L('Une fois par jour et par visiteur', 'Once a day per visitor')], ['week', L('Une fois par semaine et par visiteur', 'Once a week per visitor')], ['always', L('À chaque visite', 'Every visit')]], s.frequency || 'day')}</label>
+          <label>${L('Affichage', 'Display')}${sel('frequency', [['once', L('Une seule fois par visiteur (recommandé)', 'Only once per visitor (recommended)')], ['day', L('Une fois par jour et par visiteur', 'Once a day per visitor')], ['week', L('Une fois par semaine et par visiteur', 'Once a week per visitor')], ['always', L('À chaque visite', 'Every visit')]], s.frequency || 'once')}</label>
           <label>${L('Désactivation automatique (facultatif)', 'Auto-disable (optional)')}<input name="expires_at" type="datetime-local" value="${esc(toLocalInput(s.expires_at))}"></label>
         </div>
-        <p class="muted small">${L('Chaque enregistrement fait réapparaître le bandeau pour tout le monde, même déjà vu. Laissez la désactivation automatique vide pour que le bandeau reste actif tant que vous ne le désactivez pas vous-même.', 'Every save makes the banner reappear for everyone, even if already seen. Leave auto-disable empty to keep the banner active until you turn it off yourself.')}</p>
+        <p class="muted small">${L('« Une seule fois » : chaque visiteur voit l\'annonce une fois, puis plus jamais, jusqu\'à la prochaine nouvelle annonce. Laissez la désactivation automatique vide pour que le bandeau reste actif tant que vous ne le désactivez pas vous-même.', '"Only once": each visitor sees the announcement once, then never again until the next new announcement. Leave auto-disable empty to keep the banner active until you turn it off yourself.')}</p>
       </section>
       <p class="err" hidden></p>
     </form>
@@ -2126,7 +2177,8 @@ async function wipDisclaimerForm() {
       <p class="muted small">${L('Aperçu fidèle, avec le thème clair ou sombre que vous utilisez en ce moment.', 'Faithful preview, using the light or dark theme you are currently using.')}</p>
     </div>
     </div>
-    <div class="row befoot"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit" form="bForm">${L('Enregistrer et publier', 'Save and publish')}</button></div>`;
+    <div class="row befoot"><label class="chk inline renew"><input type="checkbox" id="bRenew" form="bForm"> <span>${L('<b>Nouvelle annonce</b> : la remontrer à tout le monde, même à ceux qui ont déjà vu le bandeau', '<b>New announcement</b>: show it again to everyone, even those who already saw the banner')}</span></label>
+      <button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit" form="bForm">${L('Enregistrer', 'Save')}</button></div>`;
 
   const f = m.$('#bForm'), err = m.$('.err'), box = m.$('.box');
   box.querySelectorAll('[data-close]').forEach(b => b.onclick = () => { edFr.destroy(); edEn.destroy(); m.close(); });
@@ -2156,7 +2208,11 @@ async function wipDisclaimerForm() {
     f.querySelectorAll('.ifnotcover').forEach(x => x.hidden = pos === 'cover');
     m.$('#angV').textContent = `${f.elements.angle.value}°`; m.$('#radV').textContent = `${f.elements.radius.value} px`; m.$('#ovV').textContent = `${f.elements.overlay.value} %`;
   }); };
-  const edFr = richEditor(m.$('#rtFr'), s.text_fr, preview), edEn = richEditor(m.$('#rtEn'), s.text_en, preview);
+  // Case « nouvelle annonce » : cochée d'office dès que le texte change, décochable pour une simple correction
+  let renewTouched = false;
+  const onText = () => { if (!renewTouched) m.$('#bRenew').checked = true; preview(); };
+  const edFr = richEditor(m.$('#rtFr'), s.text_fr, onText), edEn = richEditor(m.$('#rtEn'), s.text_en, onText);
+  m.$('#bRenew').addEventListener('change', () => { renewTouched = true; });
   // Onglets du formulaire
   box.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
     box.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b));
@@ -2206,16 +2262,47 @@ async function wipDisclaimerForm() {
     if (d.style.cta_url && !/^(https?:\/\/|#)/.test(d.style.cta_url)) { err.textContent = L('Le lien du bouton doit commencer par https:// ou # (onglet du site).', 'The button link must start with https:// or # (site tab).'); err.hidden = false; box.querySelector('[data-tab=buttons]').click(); return; }
     const btn = box.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = '…';
     try {
+      d.silent = !m.$('#bRenew').checked;
       await api().setBanner(d);
       if (oldImg && oldImg !== d.img && !/^(https?:|data:)/.test(oldImg)) { try { await api().removeImages([oldImg]); } catch {} }
       edFr.destroy(); edEn.destroy(); m.close(); track('bandeau-modifie', true);
-      toast(L('Bandeau enregistré et publié.', 'Banner saved and published.'));
+      toast(d.silent ? L('Correction enregistrée, sans remontrer le bandeau.', 'Correction saved, without showing the banner again.') : L('Nouvelle annonce publiée : chacun la verra une fois.', 'New announcement published: everyone will see it once.'));
     } catch (x) {
       err.textContent = /set_banner|function|schema cache/i.test(x.message) ? L("Base pas encore prête : collez le fichier supabase/bandeau.sql dans l'éditeur SQL de Supabase.", 'Database not ready: paste supabase/bandeau.sql into the Supabase SQL editor.') : trErr(x.message);
       err.hidden = false; btn.disabled = false; btn.textContent = L('Enregistrer et publier', 'Save and publish');
     }
   };
   preview();
+}
+// Liste de suggestions faite maison (la liste native <datalist> s'affiche mal ou pas du tout sur mobile)
+const fold = t => String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+function autoPick(input, box, items, max = 8, empty = null) {
+  let shown = [], cur = -1;
+  const close = () => { box.hidden = true; input.setAttribute('aria-expanded', 'false'); cur = -1; };
+  const pick = it => { input.value = it.label; close(); input.dispatchEvent(new Event('change')); };
+  const paint = () => box.querySelectorAll('[role=option]').forEach((o, i) => o.setAttribute('aria-selected', i === cur));
+  const update = () => {
+    const q = fold(input.value.trim());
+    if (!q) { close(); return; }
+    const words = q.split(/\s+/);
+    shown = items.filter(it => { const n = fold(it.label); return words.every(w => n.includes(w)); })
+      .sort((a, b) => fold(a.name).indexOf(words[0]) - fold(b.name).indexOf(words[0])).slice(0, max);
+    box.innerHTML = shown.length ? shown.map((it, i) => `<div class="acopt" role="option" data-i="${i}" aria-selected="false"><b>${esc(it.name)}</b>${it.sub ? `<small>${esc(it.sub)}</small>` : ''}</div>`).join('')
+      : `<div class="acnone">${empty || L('Aucune recette éligible ne correspond', 'No eligible recipe matches')}</div>`;
+    box.hidden = false; input.setAttribute('aria-expanded', 'true'); cur = -1;
+  };
+  input.addEventListener('input', update);
+  input.addEventListener('focus', () => { if (input.value.trim() && !/#\d+\s*$/.test(input.value)) update(); });
+  input.addEventListener('keydown', e => {
+    if (box.hidden || !shown.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); cur = (cur + 1) % shown.length; paint(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); cur = (cur - 1 + shown.length) % shown.length; paint(); }
+    else if (e.key === 'Enter' && cur >= 0) { e.preventDefault(); pick(shown[cur]); }
+    else if (e.key === 'Escape') close();
+  });
+  // pointerdown plutôt que click : le choix est pris avant que le champ perde le focus (indispensable au doigt)
+  box.addEventListener('pointerdown', e => { const o = e.target.closest('[data-i]'); if (o) { e.preventDefault(); pick(shown[+o.dataset.i]); } });
+  input.addEventListener('blur', () => setTimeout(close, 150));
 }
 function modal(html, cls = '') {
   const wrap = document.createElement('div'); wrap.className = 'modal';
@@ -2656,19 +2743,25 @@ document.addEventListener('click', e => {
 
 /* ================= Cette semaine (La semaine en bref) ================= */
 let weekData = null;
-async function renderWeek() {
+async function renderWeek(sel) {
   const el = $('#tab-semaine');
   if (!weekData) weekData = await getJSON('data/weekly.json').catch(() => ({}));
-  const cur = weekData?.current, issues = weekData?.issues || [];
+  const cur = weekData?.current;
+  // Semaines du lundi au dimanche : celle en cours, puis toutes les semaines passées (v2) ; ancienne version : les éditions figées
+  const past = (weekData?.weeks || weekData?.issues || []).filter(w => !cur || w.week !== cur.week);
+  const all = [...(cur ? [cur] : []), ...past];
   const head = `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
       <h2 style="margin:0">📅 ${L('La semaine en bref', 'The week in brief')}</h2>
       <a class="rss" href="${EN() ? 'feed-en.xml' : 'feed.xml'}" target="_blank" rel="noopener">📡 ${L('Flux RSS', 'RSS feed')}</a></div>
-    <p class="lead">${L("Les 7 derniers jours du catalogue, recalculés chaque heure. Chaque lundi, l'édition est archivée et publiée dans le flux RSS, pour suivre le palmarès sans venir sur le site.",
-      'The last 7 days of the catalog, recomputed every hour. Every Monday the edition is archived and published in the RSS feed, so you can follow the leaderboard without visiting the site.')}</p>`;
-  if (!cur) { el.innerHTML = head + `<p class="notice">${L('La première édition arrive au prochain passage de mise à jour.', 'The first edition arrives with the next update run.')}</p>`; return; }
+    <p class="lead">${L("Chaque semaine du lundi au dimanche : nouveautés, paliers franchis et plus fortes hausses. Remontez le temps avec les flèches pour revoir les semaines passées.",
+      'Every week from Monday to Sunday: newcomers, milestones and biggest gains. Go back in time with the arrows to see past weeks.')}</p>`;
+  if (!all.length) { el.innerHTML = head + `<p class="notice">${L('La première édition arrive au prochain passage de mise à jour.', 'The first edition arrives with the next update run.')}</p>`; return; }
+  let i = Math.max(0, all.findIndex(w => w.week === sel));
+  const w = all[i];
   const rec = x => `<a href="https://trmnl.com/recipes/${x.id}" target="_blank" rel="noopener">${esc(x.n)}</a><a class="sub" href="${hr('createur', x.u)}">${esc(nameOf(x.u))}</a>`;
   const block = w => `
     <div class="wk-kpis"><div><b>${nf(w.new_recipes)}</b><span>${L('nouvelles recettes', 'new recipes')}</span></div>
+      ${w.gained != null ? `<div><b>+${nf(w.gained)}</b><span>${L('connexions gagnées', 'connections gained')}</span></div>` : ''}
       <div><b>${nf(w.new_creators)}</b><span>${L('nouveaux créateurs', 'new creators')}</span></div>
       <div><b>${nf(w.milestones.length)}</b><span>${L('paliers franchis', 'milestones')}</span></div></div>
     <div class="grid g2">
@@ -2680,12 +2773,20 @@ async function renderWeek() {
       ${w.new_list?.length ? `<div class="sheet"><h3>🆕 ${L('Nouveautés les plus adoptées', 'Most adopted newcomers')}</h3>
         <ul class="wk-list">${w.new_list.map(r => `<li><span>${rec(r)}</span><span class="muted">${nf(r.s)} ${L('connexions', 'connections')}</span></li>`).join('')}</ul></div>` : ''}
     </div>`;
-  const past = issues.filter(w => w.week !== cur.week);
-  el.innerHTML = head + `<p class="muted" style="margin:-6px 0 12px">${dfmt(cur.from)} → ${dfmt(cur.to)}</p>` + block(cur)
-    + (past.length ? `<h2 style="margin-top:30px">${L('Éditions précédentes', 'Previous editions')}</h2>` + past.map(w =>
-      `<details class="sheet" style="margin-bottom:10px"><summary style="cursor:pointer;font-weight:700">${dfmt(w.from)} → ${dfmt(w.to)}</summary><div style="margin-top:12px">${block(w)}</div></details>`).join('') : '')
+  const day = iso => new Date(iso).toLocaleDateString(LOC, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+  const sunday = new Date(Date.parse(w.from) + 6 * DAY).toISOString();
+  const range = w.live ? L(`Du ${day(w.from)} à aujourd'hui · semaine en cours`, `From ${day(w.from)} to today · current week`) : L(`Du ${day(w.from)} au ${day(sunday)}`, `From ${day(w.from)} to ${day(sunday)}`);
+  const nav = `<div class="wk-nav">
+      <button class="btn ghost" type="button" data-wk="${esc(all[i + 1]?.week || '')}" ${all[i + 1] ? '' : 'disabled'} aria-label="${L('Semaine précédente', 'Previous week')}">← <span>${L('Précédente', 'Previous')}</span></button>
+      <div class="wk-sel"><select id="wkPick" aria-label="${L('Choisir une semaine', 'Pick a week')}">${all.map((x, k) => `<option value="${esc(x.week)}" ${k === i ? 'selected' : ''}>${x.live ? L('Cette semaine', 'This week') : L(`Semaine du ${day(x.from)}`, `Week of ${day(x.from)}`)}</option>`).join('')}</select>
+        <span class="muted">${range}</span></div>
+      <button class="btn ghost" type="button" data-wk="${esc(all[i - 1]?.week || '')}" ${i > 0 ? '' : 'disabled'} aria-label="${L('Semaine suivante', 'Next week')}"><span>${L('Suivante', 'Next')}</span> →</button></div>`;
+  el.innerHTML = head + nav + block(w)
     + rssBlock()
-    + `<p class="note">${L('Connexions = installs + forks. Mêmes chiffres que la colonne « +7 j » du site.', 'Connections = installs + forks. Same figures as the site\'s "+7 d" column.')}</p>`;
+    + `<p class="note">${L('Connexions = installs + forks. Les semaines passées sont reconstruites à partir des relevés quotidiens du site (depuis le 16 août 2026).', 'Connections = installs + forks. Past weeks are rebuilt from the site\'s daily snapshots (since 16 August 2026).')}</p>`;
+  const go_ = k => { if (k) location.hash = hr('semaine', k === all[0].week ? undefined : k); };
+  el.querySelectorAll('[data-wk]').forEach(b => b.onclick = () => go_(b.dataset.wk));
+  $('#wkPick').onchange = e => go_(e.target.value);
 }
 
 /* ================= Pronostics ================= */
@@ -2749,8 +2850,7 @@ async function renderPronos() {
     const eligible = D.recipes.filter(r => r.s <= PRONO_MAX).sort((a, b) => a.n.localeCompare(b.n));
     me_ = `<div class="sheet pr-card"><h3>${L('Mon pronostic de la semaine', 'My prediction this week')}</h3>
       <p class="muted" style="margin-top:0">${L(`Choisis une recette parmi les ${nf(eligible.length)} éligibles (${PRONO_MAX} connexions au plus).`, `Pick one of the ${nf(eligible.length)} eligible recipes (at most ${PRONO_MAX} connections).`)}</p>
-      <div class="pr-pick"><input id="prQ" list="prList" placeholder="${L('Nom de la recette', 'Recipe name')}" autocomplete="off">
-        <datalist id="prList">${eligible.map(r => `<option value="${esc(r.n)} · #${r.id}">`).join('')}</datalist>
+      <div class="pr-pick"><div class="acwrap"><input id="prQ" type="search" placeholder="${L('Tapez le nom de la recette…', 'Type the recipe name…')}" autocomplete="off" autocapitalize="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="prAc"><div class="acbox" id="prAc" role="listbox" hidden></div></div>
         <button class="btn" type="button" id="prGo">${L('Parier', 'Bet')}</button></div>
       <p class="err" id="prErr" hidden></p></div>`;
   }
@@ -2781,6 +2881,7 @@ async function renderPronos() {
 
   el.querySelectorAll('[data-pp]').forEach(b => b.onclick = () => { pronoPeriod = b.dataset.pp; renderPronos(); });
   $('#prIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', hr('pronos')); track('connexion-discord', true); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
+  if ($('#prQ')) autoPick($('#prQ'), $('#prAc'), D.recipes.filter(r => r.s <= PRONO_MAX).map(r => ({ label: `${r.n} · #${r.id}`, name: r.n, sub: `${nameOf(r.u)} · ${plural(r.s, L('connexion', 'connection'))}` })));
   $('#prGo')?.addEventListener('click', async () => {
     const err = $('#prErr'); err.hidden = true;
     const id = ($('#prQ').value.match(/#(\d+)\s*$/) || [])[1];
@@ -3186,9 +3287,53 @@ function renderRecipes() {
 
 /* ================= Tendances ================= */
 let trendWin = null;
+// Périodes calendaires de Tendances : depuis minuit (heure de Paris), depuis lundi, depuis le 1er du mois.
+// Calculées à partir des relevés horaires (aujourd'hui) et quotidiens (semaine, mois) déjà publiés par le site.
+let HOURLY = null; const calReady = {};
+const CAL = { cT: 1, cW: 1, cM: 1 };
+function parisMidnight(ms = Date.now()) {
+  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(ms);
+  const utc = Date.parse(day + 'T00:00:00Z'), d = new Date(utc);
+  const off = Date.parse(d.toLocaleString('en-US', { timeZone: 'Europe/Paris' })) - Date.parse(d.toLocaleString('en-US', { timeZone: 'UTC' }));
+  return utc - off;
+}
+function calStart(k) {
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(Date.now());
+  const noon = Date.parse(today + 'T12:00:00Z');
+  if (k === 'cT') return parisMidnight();
+  if (k === 'cW') return parisMidnight(noon - ((new Date(noon).getUTCDay() + 6) % 7) * DAY);   // lundi 00:00, heure de Paris
+  return parisMidnight(Date.parse(today.slice(0, 8) + '01T12:00:00Z'));                     // le 1er à 00:00, heure de Paris
+}
+async function prepareCal(k) {
+  if (k === 'cT' && !HOURLY) HOURLY = await getJSON('data/hourly.json').catch(() => null);
+  const src = k === 'cT' ? HOURLY : DAILY, start = calStart(k);
+  // Relevé le plus proche du début de la période (les relevés quotidiens tombent vers minuit, parfois juste avant)
+  let snap = null, gap = Infinity;
+  for (const x of src?.snaps || []) { const g = Math.abs(Date.parse(x.t) - start); if (g < gap) { gap = g; snap = x; } }
+  if (gap > (k === 'cT' ? 2 * 3600e3 : 18 * 3600e3)) snap = null;
+  D.recipes.forEach(r => { r[k] = null; }); D.creators.forEach(c => { c[k] = null; });
+  if (snap) {
+    const pos = new Map(src.idx.map(([id], i) => [id, i]));
+    const t0 = Date.parse(snap.t), sum = new Map();
+    for (const r of D.recipes) {
+      const i = pos.get(r.id), base = i != null && snap.i[i] != null ? snap.i[i] + (snap.f?.[i] || 0) : (r.p && Date.parse(r.p) >= t0 ? 0 : null);
+      if (base == null) continue;
+      r[k] = Math.max(0, r.s - base);
+      sum.set(r.u, (sum.get(r.u) || 0) + r[k]);
+    }
+    D.creators.forEach(c => { if (sum.has(c.u)) c[k] = sum.get(c.u); });
+  }
+  calReady[k] = { at: Date.now(), from: snap ? Date.parse(snap.t) : null };
+}
 function renderTrends() {
   const el = $('#tab-tendances');
-  const W = [['d1', L('1 heure', '1 hour')], ['d24', L('24 heures', '24 hours')], ['d7', L('7 jours', '7 days')], ['d30', L('30 jours', '30 days')]];
+  const W = [['d1', L('1 heure', '1 hour')], ['d24', L('24 heures', '24 hours')], ['d7', L('7 jours', '7 days')], ['d30', L('30 jours', '30 days')],
+    ['cT', L("Aujourd'hui", 'Today')], ['cW', L('Cette semaine', 'This week')], ['cM', L('Ce mois-ci', 'This month')]];
+  if (DAILY?.snaps?.length) Object.keys(CAL).forEach(k => { D.history.windows[k] ||= true; });
+  if (CAL[trendWin] && (!calReady[trendWin] || Date.now() - calReady[trendWin].at > 10 * 60e3)) {
+    el.innerHTML = `<h2>${L('Tendances', 'Trends')}</h2><p class="muted">${L('Calcul de la période…', 'Computing the period…')}</p>`;
+    prepareCal(trendWin).then(renderTrends); return;
+  }
   const avail = W.filter(([k]) => D.history.windows[k]);
   if (!trendWin || !D.history.windows[trendWin]) trendWin = (avail.find(([k]) => k === 'd24') || avail.at(-1) || [null])[0];
   const week = Date.now() - 7 * DAY;
@@ -3227,8 +3372,92 @@ function renderTrends() {
     });
   } else body = freshBlock;
   el.innerHTML = `<h2>${L('Tendances', 'Trends')}</h2><p class="lead">${L('Ce qui gagne des installations et des forks en ce moment.', 'What is gaining installs and forks right now.')}</p>${historyNotice()}
-    <div class="tools"><div class="seg" role="group">${W.map(([k, l]) => `<button type="button" data-w="${k}" aria-pressed="${k === trendWin}" ${D.history.windows[k] ? '' : 'disabled'}>${l}</button>`).join('')}</div></div>${body}`;
+    <div class="tools"><div class="seg" role="group">${W.filter(([k]) => !CAL[k]).map(([k, l]) => `<button type="button" data-w="${k}" aria-pressed="${k === trendWin}" ${D.history.windows[k] ? '' : 'disabled'}>${l}</button>`).join('')}</div>
+      <div class="seg" role="group" aria-label="${L('Périodes calendaires', 'Calendar periods')}">${W.filter(([k]) => CAL[k]).map(([k, l]) => `<button type="button" data-w="${k}" aria-pressed="${k === trendWin}" ${D.history.windows[k] ? '' : 'disabled'}>${l}</button>`).join('')}</div></div>${CAL[trendWin] && calReady[trendWin]?.from ? `<p class="muted" style="margin:-4px 0 14px">${L('Depuis le relevé du', 'Since the snapshot of')} ${new Date(calReady[trendWin].from).toLocaleString(LOC, { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</p>` : ''}${body}`;
   el.querySelectorAll('[data-w]').forEach(b => b.onclick = () => { trendWin = b.dataset.w; renderTrends(); });
+}
+
+/* ================= Démarrage d'une recette (comparée aux autres au même âge) ================= */
+// Pour chaque recette publiée depuis le premier relevé quotidien : ses connexions à J+1, J+2… depuis sa sortie.
+let LAUNCH = null;
+function launchCohort() {
+  if (LAUNCH || !DAILY?.snaps?.length) return LAUNCH;
+  const pos = new Map(DAILY.idx.map(([id], k) => [id, k]));
+  const snaps = DAILY.snaps.map(x => ({ t: Date.parse(x.t), i: x.i, f: x.f }));
+  const t0 = snaps[0].t, curves = new Map();
+  for (const r of D.recipes) {
+    const p = r.p ? Date.parse(r.p) : null, k = pos.get(r.id);
+    if (!p || p < t0 - DAY || k == null) continue;            // publiée avant le début des relevés : pas de courbe complète
+    const c = [];
+    for (const s of snaps) {
+      const age = (s.t - p) / DAY, d = Math.round(age);
+      if (d < 1 || Math.abs(age - d) > .5 || c[d] != null || s.i[k] == null) continue;
+      c[d] = s.i[k] + (s.f?.[k] || 0);
+    }
+    const ageNow = (Date.now() - p) / DAY;
+    if (ageNow >= 1) { const d = Math.floor(ageNow); if (c[d] == null) c[d] = r.s; }   // aujourd'hui : le chiffre actuel
+    if (c.length > 1) curves.set(r.id, c);
+  }
+  const stats = [];
+  for (let d = 1; d <= 120; d++) {
+    const v = [...curves.values()].map(c => c[d]).filter(x => x != null).sort((a, b) => a - b);
+    if (v.length < 5) break;
+    const q = f => v[Math.min(v.length - 1, Math.floor(f * (v.length - 1)))];
+    stats[d] = { n: v.length, med: q(.5), p75: q(.75), p90: q(.9), v };
+  }
+  LAUNCH = { curves, stats, since: t0 };
+  return LAUNCH;
+}
+function launchSection(host) {
+  const C = launchCohort();
+  const box = document.createElement('div'); box.className = 'sheet launch'; box.id = 'launchBox';
+  const since = C ? new Date(C.since).toLocaleDateString(LOC, { day: 'numeric', month: 'long' }) : '';
+  box.innerHTML = `<h3>🚀 ${L("Démarrage d'une recette", 'How a recipe takes off')}</h3>
+    <p class="muted">${L(`Après sa sortie, une recette démarre-t-elle bien ? Sa courbe de connexions est comparée, jour par jour, à toutes les recettes publiées depuis le ${since} au même âge.`, `After release, is a recipe off to a good start? Its connections are compared, day by day, with every recipe published since ${since} at the same age.`)}</p>
+    <div class="pr-pick"><div class="acwrap"><input id="lnQ" type="search" placeholder="${L('Tapez le nom d\'une recette…', 'Type a recipe name…')}" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="lnAc"><div class="acbox" id="lnAc" role="listbox" hidden></div></div></div>
+    <div id="lnOut"></div>`;
+  host.prepend(box);
+  if (!C || !C.stats.length) { box.querySelector('#lnOut').innerHTML = `<p class="notice">${L('Pas encore assez de relevés pour comparer.', 'Not enough snapshots yet to compare.')}</p>`; return; }
+  const cand = D.recipes.filter(r => C.curves.has(r.id));
+  autoPick(box.querySelector('#lnQ'), box.querySelector('#lnAc'), cand.map(r => ({ label: `${r.n} · #${r.id}`, name: r.n, sub: `${nameOf(r.u)} · ${L('publiée le', 'released')} ${dfmt(r.p)}` })), 8, L(`Aucune recette publiée depuis le ${since} ne correspond`, `No recipe released since ${since} matches`));
+  box.querySelector('#lnQ').addEventListener('change', e => { const id = (e.target.value.match(/#(\d+)\s*$/) || [])[1]; if (id) showLaunch(byR.get(id)); });
+  // Par défaut : la dernière recette de « mon profil », sinon la dernière sortie qui a au moins une semaine
+  const newest = list => list.sort((a, b) => Date.parse(b.p) - Date.parse(a.p))[0];
+  const pick = newest(cand.filter(r => isMe(r.u))) || newest(cand.filter(r => Date.now() - Date.parse(r.p) >= 7 * DAY)) || newest(cand.slice());
+  if (pick) showLaunch(pick);
+}
+function showLaunch(r) {
+  const C = launchCohort(), out = $('#lnOut'); if (!r || !out) return;
+  const c = C.curves.get(r.id);
+  if (!c) { out.innerHTML = `<p class="notice">${L('Cette recette est sortie avant le début des relevés quotidiens : sa courbe de démarrage n\'est pas connue.', 'This recipe was released before daily snapshots began: its launch curve is unknown.')}</p>`; return; }
+  $('#lnQ').value = `${r.n} · #${r.id}`;
+  const maxD = Math.min(C.stats.length - 1, Math.max(14, c.length - 1 + 3));
+  const days = Array.from({ length: maxD }, (_, k) => k + 1);
+  const pct = (d, x) => { const st = C.stats[d]; if (!st || x == null) return null; return Math.round(100 * st.v.filter(v => v < x).length / st.n); };
+  const last = c.length - 1, lastV = c[last], lastP = pct(last, lastV), st = C.stats[last];
+  const verdict = lastP == null ? '' : lastP >= 90 ? L('un démarrage exceptionnel', 'an exceptional start') : lastP >= 75 ? L('un très bon démarrage', 'a very good start') : lastP >= 50 ? L('un démarrage au-dessus de la moyenne', 'an above-average start') : lastP >= 25 ? L('un démarrage un peu en dessous de la moyenne', 'a slightly below-average start') : L('un démarrage discret, pour l\'instant', 'a quiet start, for now');
+  const mark = [1, 3, 7, 14, 30, 60].filter(d => d <= maxD);
+  out.innerHTML = `
+    <div class="ln-head"><div><a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener"><b>${esc(r.n)}</b></a> <span class="muted">· <a href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a> · ${L('publiée le', 'released')} ${dfmt(r.p)}</span></div></div>
+    ${st ? `<p class="ln-verdict">${L(`À <b>J+${last}</b> : <b>${nf(lastV)}</b> connexions, ${verdict}. C'est mieux que <b>${lastP} %</b> des ${nf(st.n)} recettes au même âge (médiane : ${nf(st.med)}, top 10 % : ${nf(st.p90)}).`,
+      `At <b>day ${last}</b>: <b>${nf(lastV)}</b> connections, ${verdict}. Better than <b>${lastP}%</b> of the ${nf(st.n)} recipes at the same age (median: ${nf(st.med)}, top 10%: ${nf(st.p90)}).`)}</p>` : ''}
+    <div class="chart"><canvas id="chLaunch"></canvas></div>
+    <div class="tablewrap"><table class="ln-tab"><thead><tr><th></th>${mark.map(d => `<th>J+${d}</th>`).join('')}</tr></thead><tbody>
+      <tr><td><b>${L('Cette recette', 'This recipe')}</b></td>${mark.map(d => `<td><b>${c[d] != null ? nf(c[d]) : '–'}</b>${c[d] != null && pct(d, c[d]) != null ? `<small>${L('mieux que', 'beats')} ${pct(d, c[d])} %</small>` : ''}</td>`).join('')}</tr>
+      <tr><td>${L('Médiane', 'Median')}</td>${mark.map(d => `<td>${C.stats[d] ? nf(C.stats[d].med) : '–'}</td>`).join('')}</tr>
+      <tr><td>${L('Top 25 %', 'Top 25%')}</td>${mark.map(d => `<td>${C.stats[d] ? nf(C.stats[d].p75) : '–'}</td>`).join('')}</tr>
+      <tr><td>${L('Top 10 %', 'Top 10%')}</td>${mark.map(d => `<td>${C.stats[d] ? nf(C.stats[d].p90) : '–'}</td>`).join('')}</tr>
+      <tr><td class="muted">${L('Recettes comparées', 'Recipes compared')}</td>${mark.map(d => `<td class="muted">${C.stats[d] ? nf(C.stats[d].n) : '–'}</td>`).join('')}</tr>
+    </tbody></table></div>
+    <p class="note">${L('Connexions = installs + forks, relevées chaque jour. La comparaison devient plus solide au fil des semaines, à mesure que de nouvelles recettes vieillissent.', 'Connections = installs + forks, recorded daily. The comparison gets more robust over the weeks, as more recipes age.')}</p>`;
+  const P = PAL();
+  chart('chLaunch', { type: 'line', data: { labels: days.map(d => `J+${d}`), datasets: [
+    { label: r.n.length > 28 ? r.n.slice(0, 27) + '…' : r.n, data: days.map(d => c[d] ?? null), borderColor: P[0], backgroundColor: P[0], borderWidth: 3, pointRadius: 2.5, tension: .25, spanGaps: true, order: 0 },
+    { label: L('Top 10 %', 'Top 10%'), data: days.map(d => C.stats[d]?.p90 ?? null), borderColor: P[1], borderDash: [6, 4], borderWidth: 2, pointRadius: 0, tension: .25, order: 1 },
+    { label: L('Top 25 %', 'Top 25%'), data: days.map(d => C.stats[d]?.p75 ?? null), borderColor: P[3], borderDash: [3, 3], borderWidth: 1.5, pointRadius: 0, tension: .25, order: 2 },
+    { label: L('Médiane', 'Median'), data: days.map(d => C.stats[d]?.med ?? null), borderColor: css('--ink2'), backgroundColor: ctx => fade(ctx, css('--ink2')), fill: 'origin', borderWidth: 2, pointRadius: 0, tension: .25, order: 3 }] },
+    options: { interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: true, position: 'bottom' } },
+      scales: { x: { ticks: { maxTicksLimit: 10, maxRotation: 0 } }, y: { beginAtZero: true, ticks: { precision: 0 } } } } });
 }
 
 /* ================= Analyses ================= */
@@ -3351,6 +3580,7 @@ async function renderAnalyses() {
                 y: { type: 'logarithmic', title: { display: true, text: 'Points' }, ticks: { callback: v => [1, 10, 100, 1000, 10000].includes(v) ? NF.format(v) : '' } } } } },
     (e0, ch) => go(hr('createur', ch.data.datasets[e0.datasetIndex].data[e0.index].u)));
 
+  launchSection(el);
   const [h, hh] = await Promise.all([loadHist('daily'), loadHist('hourly')]);
   const src = h && h.snaps.length >= 3 ? h : hh;
   const note = $('#aGrowthNote'); if (!note) return;

@@ -392,6 +392,16 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .ln-tab th,.ln-tab td{padding:6px 8px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
 .ln-tab th:first-child,.ln-tab td:first-child{text-align:left}
 .ln-tab small{display:block;color:var(--ink2);font-size:.74rem;font-weight:400}
+.launch{min-width:0;max-width:100%}
+.launch .tablewrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+.launch .chart{max-width:100%}
+@media(max-width:600px){
+  .ln-tab{font-size:.8rem;table-layout:fixed}
+  .ln-tab th:first-child,.ln-tab td:first-child{width:27%}
+  .ln-tab th,.ln-tab td{padding:6px 4px}
+  .ln-tab td:first-child{white-space:normal;max-width:84px}
+  .ln-tab small{font-size:.68rem;white-space:normal;line-height:1.2}
+}
 .pr-bar{height:6px;background:var(--rule);border-radius:3px;overflow:hidden;margin-top:8px}
 .pr-bar i{display:block;height:100%;background:var(--accent)}
 .enews .etop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}

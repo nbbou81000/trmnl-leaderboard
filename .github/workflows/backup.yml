@@ -1,0 +1,77 @@
+# Sauvegarde quotidienne du site : code, données publiées (branche gh-pages) et contenu Supabase.
+# Le résultat est une archive .7z chiffrée, téléchargeable 30 jours dans l'onglet Actions (une par nuit).
+#
+# À régler une seule fois (Settings › Secrets and variables › Actions › onglet Secrets › New repository secret) :
+#   SUPABASE_SERVICE_KEY : Supabase › Project Settings › API Keys › clé secrète (« secret » ou « service_role »)
+#   BACKUP_PASSWORD      : un mot de passe de votre choix, long, à garder précieusement (sans lui, l'archive est illisible)
+# Pour ouvrir l'archive : 7-Zip (gratuit, 7-zip.org), clic droit › 7-Zip › Extraire, puis le mot de passe.
+name: Sauvegarde
+
+on:
+  schedule:
+    - cron: '35 2 * * *'     # chaque nuit vers 4 h 35, heure de Paris
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Vérifier les réglages
+        env:
+          PW: ${{ secrets.BACKUP_PASSWORD }}
+          KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          [ -n "$PW" ] || { echo "::error::Secret BACKUP_PASSWORD manquant (voir le mode d'emploi en tête du fichier backup.yml)."; exit 1; }
+          [ -n "$KEY" ] || echo "::warning::Secret SUPABASE_SERVICE_KEY manquant : la sauvegarde contiendra le code et les données du site, mais pas Supabase."
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Code du site
+        run: |
+          mkdir -p backup
+          git archive --format=zip -o backup/code.zip HEAD
+
+      - name: Données publiées (branche gh-pages)
+        run: |
+          if git fetch -q --depth=1 origin gh-pages:refs/remotes/origin/gh-pages; then
+            git archive --format=zip -o backup/site-publie.zip origin/gh-pages
+            echo "Branche gh-pages archivée."
+          else
+            echo "::warning::Branche gh-pages introuvable."
+          fi
+
+      - name: Contenu Supabase
+        if: ${{ vars.SUPABASE_URL != '' }}
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ -n "$SUPABASE_SERVICE_KEY" ]; then node scripts/backup-supabase.mjs backup/supabase; fi
+
+      - name: Chiffrer l'archive
+        env:
+          PW: ${{ secrets.BACKUP_PASSWORD }}
+        run: |
+          command -v 7z >/dev/null || { sudo apt-get update -q && sudo apt-get install -y -q p7zip-full; }
+          NAME="sauvegarde-trmnl-$(date -u +%Y-%m-%d).7z"
+          echo "NAME=$NAME" >> "$GITHUB_ENV"
+          cd backup && 7z a -bso0 -bsp0 -t7z -mhe=on -mx=7 "-p$PW" "../$NAME" . && cd ..
+          ls -lh "$NAME"
+          echo "### 💾 Sauvegarde prête : \`$NAME\` ($(du -h "$NAME" | cut -f1))" >> "$GITHUB_STEP_SUMMARY"
+          echo "Téléchargez-la en bas de cette page, rubrique **Artifacts**. Ouvrez-la avec 7-Zip et votre mot de passe BACKUP_PASSWORD." >> "$GITHUB_STEP_SUMMARY"
+          [ -f backup/supabase/resume.json ] && { echo '```json'; cat backup/supabase/resume.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY" || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}
+          path: ${{ env.NAME }}
+          retention-days: 30
+          compression-level: 0

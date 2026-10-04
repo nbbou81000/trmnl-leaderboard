@@ -336,6 +336,20 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .eshr .pv{border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:8px;background:var(--sheet);padding:10px 12px;margin:10px 0 12px}
 .eshr .pv small{color:var(--ink2);font-size:.75rem}
 .eshr .pv b{display:block;margin:2px 0 4px;line-height:1.3}
+.eshr .pv .pvby{display:block;font-style:normal;font-size:.84rem;color:var(--ink2);margin:-2px 0 6px}
+.reacts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 10px}
+.rchip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--rule2);background:var(--sheet);color:var(--ink);border-radius:99px;padding:3px 10px;font:inherit;font-size:.92rem;cursor:pointer;line-height:1.4}
+.rchip b{font-weight:700;font-size:.82rem;font-variant-numeric:tabular-nums}
+.rchip.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--sheet))}
+.rchip:hover{border-color:var(--accent)}
+.rchip.radd{color:var(--ink2);padding:3px 8px;filter:grayscale(.6)}
+.rchip.radd span{font-weight:800;font-size:.85rem}
+.rpick{display:inline-flex;flex-wrap:wrap;gap:2px;background:var(--sheet);border:1px solid var(--rule2);border-radius:99px;padding:2px 6px}
+.rpick[hidden]{display:none}
+.rpick button{border:0;background:none;font-size:1.15rem;padding:3px 5px;cursor:pointer;border-radius:8px;line-height:1}
+.rpick button:hover,.rpick button.on{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+.coms .reacts{margin:4px 0 2px}
+.coms .rchip{font-size:.84rem;padding:2px 8px}
 .eshr .pv p{margin:0 0 8px;font-size:.86rem;color:var(--ink2)}
 .eshr .pv img{width:100%;aspect-ratio:1.91/1;object-fit:cover;border-radius:6px;display:block;background:var(--rule)}
 .eshr .nets{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
@@ -1533,7 +1547,16 @@ const realApi = {
       c.from('updates').select('*').eq('project_id', id).order('created_at', { ascending: false }).then(ok),
       c.from('comments').select('*, profiles(name,avatar)').eq('project_id', id).order('created_at').then(ok),
     ]);
-    return { updates, comments };
+    // Réactions en émojis : facultatives (tant que reactions.sql n'est pas installé, la fiche s'affiche sans elles)
+    const reactions = await c.from('reactions').select('comment_id,user_id,emoji').eq('project_id', id).then(r => r.error ? [] : r.data || []);
+    return { updates, comments, reactions };
+  },
+  async react(projectId, commentId, emoji, on) {
+    const c = await client();
+    if (on) return ok(await c.from('reactions').insert({ project_id: projectId, comment_id: commentId || null, emoji }));
+    let q = c.from('reactions').delete().eq('project_id', projectId).eq('user_id', wipMe.id).eq('emoji', emoji);
+    q = commentId ? q.eq('comment_id', commentId) : q.is('comment_id', null);
+    return ok(await q);
   },
   async saveProject(fields, id) { const c = await client(); return ok(id ? await c.from('projects').update(fields).eq('id', id).select().single() : await c.from('projects').insert(fields).select().single()); },
   async deleteProject(p) { const c = await client(); const ups = ok(await c.from('updates').select('images').eq('project_id', p.id)); await this.removeImages([...(p.images || []), ...ups.flatMap(u => u.images || [])]); ok(await c.from('projects').delete().eq('id', p.id)); },
@@ -2390,6 +2413,17 @@ function wipForm(p = null) {
   };
 }
 
+// ---------- Réactions en émojis (projet et commentaires)
+const REACTS = ['👍', '❤️', '🔥', '😂', '😮', '🎉', '🚀', '👀'];
+function reactBar(list, cid) {
+  const mine = new Set(list.filter(x => wipMe && x.user_id === wipMe.id).map(x => x.emoji));
+  const counts = REACTS.map(e => [e, list.filter(x => x.emoji === e).length]).filter(([, n]) => n);
+  const key = cid || 'p';
+  return `<div class="reacts" data-rk="${key}">${counts.map(([e, n]) => `<button type="button" class="rchip${mine.has(e) ? ' on' : ''}" data-react="${e}" data-cid="${cid || ''}" title="${mine.has(e) ? L('Retirer ma réaction', 'Remove my reaction') : L('Réagir', 'React')}">${e} <b>${n}</b></button>`).join('')}
+    <button type="button" class="rchip radd" data-rpick="${key}" title="${L('Ajouter une réaction', 'Add a reaction')}" aria-label="${L('Ajouter une réaction', 'Add a reaction')}">😊<span>+</span></button>
+    <span class="rpick" hidden>${REACTS.map(e => `<button type="button" data-react="${e}" data-cid="${cid || ''}" class="${mine.has(e) ? 'on' : ''}">${e}</button>`).join('')}</span></div>`;
+}
+
 // ---------- Fiche détaillée : infos, journal de bord, commentaires
 async function wipDetail(p) {
   if (!p) return;
@@ -2406,6 +2440,7 @@ async function wipDetail(p) {
       <h3>${esc(p.name)}</h3>
       <p class="muted" style="margin:0 0 10px">${avatarHTML(p.profiles)} ${who} · ${p.category ? esc(p.category) + ' · ' : ''}${L('partagé le', 'shared on')} ${fdate(p.created_at)}${p.eta && !ship ? ` · ${L('prévue', 'expected')} ${esc(p.eta)}` : ''}</p>
       ${p.description ? `<p>${esc(p.description)}</p>` : ''}
+      ${p.hidden ? '' : reactBar((d.reactions || []).filter(x => !x.comment_id))}
       <div class="tools-row">${r ? `<a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>` : ''}
         ${p.hidden ? '' : `<button class="btn ghost" type="button" data-act="share">📤 ${L('Partager', 'Share')}</button>`}
         ${p.link ? `<a class="btn ghost" href="${esc(p.link)}" target="_blank" rel="noopener nofollow ugc">${L('Suivre le projet', 'Follow the project')} ↗</a>` : ''}
@@ -2425,7 +2460,7 @@ async function wipDetail(p) {
 
       <h4 style="margin:22px 0 8px">${L('Commentaires et questions', 'Comments and questions')}${d.comments.length ? ` (${d.comments.length})` : ''}</h4>
       <ul class="coms">${d.comments.map(c => `<li class="${c.hidden ? 'hid' : ''}"><div class="ch">${avatarHTML(c.profiles)} <b>${esc(c.profiles?.name || '')}</b>${c.author === p.owner ? ` <span class="badge">${L('auteur', 'author')}</span>` : ''} <time>${fdate(c.created_at)}</time>${c.hidden ? ` <span class="badge">${L('masqué', 'hidden')}</span>` : ''}</div>
-        <p>${esc(c.body)}</p><div class="cacts">
+        <p>${esc(c.body)}</p>${reactBar((d.reactions || []).filter(x => x.comment_id === c.id), c.id)}<div class="cacts">
         ${wipMe && c.author === wipMe.id || adm ? `<button class="linkbtn" data-act="delcom" data-id="${c.id}">${L('supprimer', 'delete')}</button>` : ''}
         ${adm ? `<button class="linkbtn" data-act="hidecom" data-id="${c.id}" data-h="${c.hidden ? 0 : 1}">${c.hidden ? L('afficher', 'unhide') : L('masquer', 'hide')}</button>${c.author !== wipMe?.id ? `<button class="linkbtn" data-act="ban" data-uid="${c.author}">${L('bloquer', 'block')}</button>` : ''}` : ''}
         ${wipMe && c.author !== wipMe.id ? `<button class="linkbtn" data-act="reportc" data-id="${c.id}">${L('signaler', 'report')}</button>` : ''}</div></li>`).join('') || `<li class="muted" style="font-size:.9rem">${L('Aucun commentaire. Posez la première question !', 'No comment yet. Ask the first question!')}</li>`}</ul>
@@ -2447,6 +2482,18 @@ async function wipDetail(p) {
       try { const body = cf.body.value.trim(); if (!body) throw new Error(L('Le commentaire est vide.', 'The comment is empty.'));
         await api().addComment(p.id, body); track('commentaire-publie', true); await draw(); wipRefresh();
       } catch (x) { er.textContent = trErr(x.message); er.hidden = false; b.disabled = false; } }; }
+    m.wrap.querySelectorAll('[data-rpick]').forEach(b => b.onclick = () => { const pk = b.parentElement.querySelector('.rpick'); pk.hidden = !pk.hidden; });
+    let reacting = false;
+    m.wrap.querySelectorAll('[data-react]').forEach(b => b.onclick = async () => {
+      if (!wipMe) { toast(L('Connectez-vous avec Discord pour réagir.', 'Sign in with Discord to react.')); return; }
+      if (wipProfile?.banned || reacting) return;
+      const e = b.dataset.react, cid = b.dataset.cid ? +b.dataset.cid : null;
+      const on = !(d.reactions || []).some(x => x.user_id === wipMe.id && x.emoji === e && (x.comment_id || null) === cid);
+      reacting = true;
+      try { await api().react(p.id, cid, e, on); if (on) track('reaction', true); await draw(); }
+      catch (x) { toast(/reactions/i.test(x.message) ? L("Les réactions arrivent bientôt.", 'Reactions are coming soon.') : trErr(x.message)); }
+      reacting = false;
+    });
     m.wrap.querySelectorAll('[data-act]').forEach(b => b.onclick = async () => {
       const act = b.dataset.act, id = +b.dataset.id;
       try {
@@ -2486,7 +2533,7 @@ const countryOf = tz => { const cc = TZ_CC[tz]; let name = tz || '?';
 const EVENT_LABELS = () => ({ 'actu-eink-lue': L('Article e-ink lu', 'E-ink article read'), 'actu-eink-partagee': L('Article e-ink partagé', 'E-ink article shared'), 'avancee-publiee': L('Avancée publiée', 'Update posted'),
   'bandeau-modifie': L("Bandeau d'accueil modifié", 'Home banner edited'), 'commentaire-publie': L('Commentaire publié', 'Comment posted'), 'connexion-discord': L('Connexion Discord', 'Discord sign-in'),
   'liaison-demandee': L('Liaison de profil demandée', 'Profile link requested'), 'lien-pied-de-page': L('Lien du pied de page', 'Footer link'), 'lien-profil-copie': L('Lien de profil copié', 'Profile link copied'),
-  'lien-recette-copie': L('Lien de recette copié', 'Recipe link copied'), 'profil-choisi': L('Profil choisi', 'Profile picked'), 'projet-ouvert': L('Projet ouvert', 'Project opened'), 'projet-partage': L('Projet partagé', 'Project shared'), 'projet-publie': L('Projet publié', 'Project posted'),
+  'lien-recette-copie': L('Lien de recette copié', 'Recipe link copied'), 'profil-choisi': L('Profil choisi', 'Profile picked'), 'projet-ouvert': L('Projet ouvert', 'Project opened'), 'projet-partage': L('Projet partagé', 'Project shared'), 'reaction': L('Réaction (émoji)', 'Reaction (emoji)'), 'projet-publie': L('Projet publié', 'Project posted'),
   'projet-modifie': L('Projet modifié', 'Project edited'), 'pronostic': L('Pronostic', 'Prediction'), 'recette-partagee': L('Recette partagée', 'Recipe shared'), 'revendication-ouverte': L('Revendication ouverte', 'Claim opened'),
   'vignette-ouverte': L('Vignette ouverte', 'Card opened'), 'vignette-telechargee': L('Vignette téléchargée', 'Card downloaded'), 'langue-en': L('Site en anglais', 'Site in English'), 'langue-fr': L('Site en français', 'Site in French') });
 const VIA_LABELS = () => ({ discord: '💬 Discord', reddit: '🟠 Reddit', bluesky: '🦋 Bluesky', x: '✖️ X', mastodon: '🐘 Mastodon', linkedin: '💼 LinkedIn', facebook: '📘 Facebook',
@@ -2958,7 +3005,7 @@ function sharePanel(o) {
   ];
   const m = modal(`<h3 style="margin:0">${o.heading}</h3>
     <div class="pv"><small>${o.label}</small>
-      <b>${esc(o.title)}</b>${o.teaser ? `<p>${esc(o.teaser)}</p>` : ''}
+      <b>${esc(o.title)}</b>${o.by ? `<em class="pvby">${L('par', 'by')} ${esc(o.by)}</em>` : ''}${o.teaser ? `<p>${esc(o.teaser)}</p>` : ''}
       <img src="${esc(o.img || 'og.png')}" alt="" referrerpolicy="no-referrer"></div>
     <div class="nets">${nets.map(([k, lb, href]) => href
       ? `<a class="btn ghost" data-net="${k}" href="${esc(href)}" target="_blank" rel="noopener">${lb}</a>`
@@ -2986,7 +3033,7 @@ function shareEink(a) {
 // Projets en élaboration : page de partage p/<id>.html (vignette), qui renvoie sur la fiche du projet dans le site
 const wipShareURL = (p, via) => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}p/${p.id}${EN() ? '-en' : ''}.html${via ? `?via=${via}` : ''}`;
 function shareWip(p) {
-  sharePanel({ title: p.name, teaser: p.description, img: p.images?.[0] ? imgURL(p.images[0]) : '', event: 'projet-partage', link: via => wipShareURL(p, via),
+  sharePanel({ title: p.name, by: p.profiles?.name || '', teaser: p.description, img: p.images?.[0] ? imgURL(p.images[0]) : '', event: 'projet-partage', link: via => wipShareURL(p, via),
     heading: L('Partager ce projet', 'Share this project'), label: L('Palmarès des créateurs TRMNL · En élaboration', 'TRMNL Creator Leaderboard · In the making'),
     note: L("Le lien ouvre directement la fiche du projet sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", "The link opens the project's page on this site directly, and shows up with its thumbnail on Discord, Reddit and social networks.") });
 }

@@ -209,7 +209,7 @@ const projectPage = (p, en) => {
   const who = p.profiles?.name || '';
   const st = p.shipped_recipe ? t('🎉 Disponible', '🎉 Now available') : (STATUS[p.status] || STATUS.building)[en ? 1 : 0];
   const title = `${p.name}${who ? ' · ' + who : ''}`;
-  const desc = `${st} · ${p.description || t('Une recette TRMNL en cours d\'élaboration.', 'A TRMNL recipe in the making.')}`;
+  const desc = `${who ? t('par ', 'by ') + who + ' · ' : ''}${st} · ${p.description || t('Une recette TRMNL en cours d\'élaboration.', 'A TRMNL recipe in the making.')}`;
   const site = t('Palmarès des créateurs TRMNL · En élaboration', 'TRMNL Creator Leaderboard · In the making');
   return `<!DOCTYPE html>
 <html lang="${en ? 'en' : 'fr'}">

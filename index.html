@@ -337,6 +337,21 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .eshr .pv small{color:var(--ink2);font-size:.75rem}
 .eshr .pv b{display:block;margin:2px 0 4px;line-height:1.3}
 .eshr .pv .pvby{display:block;font-style:normal;font-size:.84rem;color:var(--ink2);margin:-2px 0 6px}
+.modal .box.cfbox{width:min(440px,94vw);z-index:2}
+.cfword{display:grid;gap:6px;font-size:.9rem;margin:0 0 12px}
+.cfword input{font:inherit;font-size:1rem;padding:8px 10px;border:1.5px solid var(--rule2);border-radius:8px;background:var(--sheet);color:var(--ink);letter-spacing:.06em}
+.btn.danger{background:#C62828;border-color:#C62828;color:#fff}
+.btn.danger:disabled{opacity:.4;cursor:not-allowed}
+.linkbtn.danger{color:#C62828}
+html[data-theme=dark] .linkbtn.danger{color:#FF8A80}
+@media(prefers-color-scheme:dark){html:not([data-theme=light]) .linkbtn.danger{color:#FF8A80}}
+.modmenu{display:inline-block;position:relative}
+.modmenu>summary{list-style:none;cursor:pointer;font-size:.84rem;font-weight:600;color:var(--ink2);border:1px solid var(--rule2);border-radius:8px;padding:5px 10px;user-select:none}
+.modmenu>summary::-webkit-details-marker{display:none}
+.modmenu[open]>summary{border-color:var(--accent);color:var(--ink)}
+.modmenu>div{position:absolute;z-index:5;left:0;top:calc(100% + 4px);white-space:nowrap;display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--rule2);border-radius:10px;background:var(--sheet);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+.modmenu.small>summary{border:0;padding:0 6px;font-size:1rem;letter-spacing:.1em}
+.modmenu.small>div{top:100%}
 .reacts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 10px}
 .rchip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--rule2);background:var(--sheet);color:var(--ink);border-radius:99px;padding:3px 10px;font:inherit;font-size:.92rem;cursor:pointer;line-height:1.4}
 .rchip b{font-weight:700;font-size:.82rem;font-variant-numeric:tabular-nums}
@@ -1781,7 +1796,7 @@ async function renderWip(openId) {
   $('#wipPrivacy')?.addEventListener('click', e => { e.preventDefault(); wipPrivacy(); });
   $('#wipDelete')?.addEventListener('click', async e => {
     e.preventDefault();
-    if (!confirm(L('Supprimer définitivement votre compte, vos projets, vos avancées, vos commentaires et vos images ?', 'Permanently delete your account, projects, updates, comments and images?'))) return;
+    if (!await confirmBox({ title: L('Supprimer votre compte ?', 'Delete your account?'), text: L('Votre compte, vos projets, vos avancées, vos commentaires, vos réactions et vos images seront effacés définitivement.', 'Your account, projects, updates, comments, reactions and images will be permanently erased.'), ok: L('Supprimer mon compte', 'Delete my account'), word: L('SUPPRIMER', 'DELETE') })) return;
     try { await api().deleteAccount(); wipMe = wipProfile = null; store.set('trmnl-wip-session', ''); await wipRefresh(); toast(L('Compte supprimé.', 'Account deleted.')); } catch (err) { toast(trErr(err.message)); }
   });
 }
@@ -2413,6 +2428,29 @@ function wipForm(p = null) {
   };
 }
 
+// ---------- Confirmation des actions sensibles (supprimer, masquer, bloquer)
+// Bouton « Annuler » sélectionné par défaut, bouton de confirmation rouge activé seulement après un court délai,
+// et pour les actions irréversibles, un mot à taper.
+function confirmBox({ title, text, ok, word = '', danger = true }) {
+  return new Promise(resolve => {
+    const m = modal(`<h3 style="margin:0 0 8px">${danger ? '⚠️ ' : ''}${esc(title)}</h3><p style="margin:0 0 12px">${esc(text)}</p>
+      ${word ? `<label class="cfword"><span>${L(`Pour confirmer, tapez <b>${esc(word)}</b> :`, `To confirm, type <b>${esc(word)}</b>:`)}</span><input type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>` : ''}
+      <div class="row"><button class="btn ghost" type="button" data-no>${L('Annuler', 'Cancel')}</button>
+        <button class="btn ${danger ? 'danger' : ''}" type="button" data-yes disabled>${esc(ok)}</button></div>`, 'cfbox');
+    let done = false;
+    const finish = v => { if (done) return; done = true; m.close(); resolve(v); };
+    const yes = m.$('[data-yes]'), inp = m.$('.cfword input');
+    let armed = false;
+    const update = () => { yes.disabled = !armed || (word && inp.value.trim().toUpperCase() !== word.toUpperCase()); };
+    setTimeout(() => { armed = true; update(); }, 700);   // évite la double touche qui confirmerait par accident
+    if (inp) { inp.addEventListener('input', update); setTimeout(() => inp.focus(), 50); } else setTimeout(() => m.$('[data-no]').focus(), 50);
+    m.$('[data-no]').onclick = () => finish(false);
+    yes.onclick = () => { if (!yes.disabled) finish(true); };
+    // fermeture par la croix, Échap ou un clic à côté : vaut annulation
+    new MutationObserver((_, o) => { if (!document.body.contains(m.wrap)) { o.disconnect(); finish(false); } }).observe(document.body, { childList: true, subtree: true });
+  });
+}
+
 // ---------- Réactions en émojis (projet et commentaires)
 const REACTS = ['👍', '❤️', '🔥', '😂', '😮', '🎉', '🚀', '👀'];
 function reactBar(list, cid) {
@@ -2444,8 +2482,11 @@ async function wipDetail(p) {
       <div class="tools-row">${r ? `<a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>` : ''}
         ${p.hidden ? '' : `<button class="btn ghost" type="button" data-act="share">📤 ${L('Partager', 'Share')}</button>`}
         ${p.link ? `<a class="btn ghost" href="${esc(p.link)}" target="_blank" rel="noopener nofollow ugc">${L('Suivre le projet', 'Follow the project')} ↗</a>` : ''}
-        ${own ? `<button class="btn ghost small" data-act="edit">${L('Modifier', 'Edit')}</button><button class="btn ghost small" data-act="del">${L('Supprimer', 'Delete')}</button>` : ''}
-        ${adm && !own ? `<button class="btn ghost small" data-act="hide">${p.hidden ? L('Afficher', 'Unhide') : L('Masquer', 'Hide')}</button><button class="btn ghost small" data-act="del">${L('Supprimer', 'Delete')}</button><button class="btn ghost small" data-act="ban" data-uid="${p.owner}">${L("Bloquer l'auteur", 'Block author')}</button>` : ''}
+        ${own ? `<button class="btn ghost small" data-act="edit">${L('Modifier', 'Edit')}</button>` : ''}
+        ${own || adm ? `<details class="modmenu"><summary>⚙️ ${L('Gérer', 'Manage')}</summary><div>
+          ${adm ? `<button class="linkbtn" data-act="hide">${p.hidden ? L('Afficher le projet', 'Unhide project') : L('Masquer le projet', 'Hide project')}</button>` : ''}
+          <button class="linkbtn danger" data-act="del">${L('Supprimer le projet', 'Delete project')}</button>
+          ${adm && !own ? `<button class="linkbtn danger" data-act="ban" data-uid="${p.owner}">${L("Bloquer l'auteur", 'Block author')}</button>` : ''}</div></details>` : ''}
         ${wipMe && !own ? `<button class="btn ghost small" data-act="reportp">${L('Signaler', 'Report')}</button>` : ''}</div>
 
       <h4 style="margin:20px 0 0">${L('Avancées', 'Progress updates')}${d.updates.length ? ` (${d.updates.length})` : ''}</h4>
@@ -2455,14 +2496,15 @@ async function wipDetail(p) {
         <input type="file" accept="image/*" multiple hidden class="picker-input">
         <p class="err" hidden></p><div class="row"><button class="btn small" type="submit">${L('Publier cette avancée', 'Post update')}</button></div></form>` : ''}
       ${d.updates.length ? `<ol class="tl">${d.updates.map(u => `<li><time>${fdate(u.created_at)}</time>${u.body ? `<p>${esc(u.body)}</p>` : ''}${u.images?.length ? galleryHTML(u.images, p.name) : ''}
-        ${own || adm ? `<button class="linkbtn" data-act="delupd" data-id="${u.id}">${L('supprimer', 'delete')}</button>` : ''}</li>`).join('')}</ol>`
+        ${own || adm ? `<details class="modmenu small"><summary aria-label="${L('Gérer cette avancée', 'Manage this update')}">⋯</summary><div><button class="linkbtn danger" data-act="delupd" data-id="${u.id}">${L('supprimer', 'delete')}</button></div></details>` : ''}</li>`).join('')}</ol>`
         : `<p class="muted" style="font-size:.9rem">${L("Pas encore d'avancée publiée.", 'No update yet.')}</p>`}
 
       <h4 style="margin:22px 0 8px">${L('Commentaires et questions', 'Comments and questions')}${d.comments.length ? ` (${d.comments.length})` : ''}</h4>
       <ul class="coms">${d.comments.map(c => `<li class="${c.hidden ? 'hid' : ''}"><div class="ch">${avatarHTML(c.profiles)} <b>${esc(c.profiles?.name || '')}</b>${c.author === p.owner ? ` <span class="badge">${L('auteur', 'author')}</span>` : ''} <time>${fdate(c.created_at)}</time>${c.hidden ? ` <span class="badge">${L('masqué', 'hidden')}</span>` : ''}</div>
         <p>${esc(c.body)}</p>${reactBar((d.reactions || []).filter(x => x.comment_id === c.id), c.id)}<div class="cacts">
-        ${wipMe && c.author === wipMe.id || adm ? `<button class="linkbtn" data-act="delcom" data-id="${c.id}">${L('supprimer', 'delete')}</button>` : ''}
-        ${adm ? `<button class="linkbtn" data-act="hidecom" data-id="${c.id}" data-h="${c.hidden ? 0 : 1}">${c.hidden ? L('afficher', 'unhide') : L('masquer', 'hide')}</button>${c.author !== wipMe?.id ? `<button class="linkbtn" data-act="ban" data-uid="${c.author}">${L('bloquer', 'block')}</button>` : ''}` : ''}
+        ${wipMe && c.author === wipMe.id || adm ? `<details class="modmenu small"><summary aria-label="${L('Gérer ce commentaire', 'Manage this comment')}">⋯</summary><div>
+        <button class="linkbtn danger" data-act="delcom" data-id="${c.id}">${L('supprimer', 'delete')}</button>
+        ${adm ? `<button class="linkbtn" data-act="hidecom" data-id="${c.id}" data-h="${c.hidden ? 0 : 1}">${c.hidden ? L('afficher', 'unhide') : L('masquer', 'hide')}</button>${c.author !== wipMe?.id ? `<button class="linkbtn danger" data-act="ban" data-uid="${c.author}">${L('bloquer', 'block')}</button>` : ''}` : ''}</div></details>` : ''}
         ${wipMe && c.author !== wipMe.id ? `<button class="linkbtn" data-act="reportc" data-id="${c.id}">${L('signaler', 'report')}</button>` : ''}</div></li>`).join('') || `<li class="muted" style="font-size:.9rem">${L('Aucun commentaire. Posez la première question !', 'No comment yet. Ask the first question!')}</li>`}</ul>
       ${wipMe ? (wipProfile?.banned ? '' : `<form class="wform com-form"><textarea name="body" rows="2" maxlength="${COM_MAX}" placeholder="${L('Un commentaire, une question…', 'A comment, a question…')}"></textarea>
           <p class="err" hidden></p><div class="row" style="justify-content:space-between"><small class="muted" id="cc"></small><button class="btn small" type="submit">${L('Envoyer', 'Send')}</button></div></form>`)
@@ -2500,12 +2542,12 @@ async function wipDetail(p) {
         if (act === 'edit') { m.close(); return wipForm(p); }
         if (act === 'share') return shareWip(p);
         if (act === 'signin') { store.set('trmnl-wip-return', hr('elaboration')); return api().signIn(); }
-        if (act === 'del') { if (!confirm(L('Supprimer ce projet, ses avancées et ses commentaires ?', 'Delete this project, its updates and comments?'))) return; await api().deleteProject(p); m.close(); return wipRefresh(); }
-        if (act === 'hide') { await api().setHidden(p.id, !p.hidden); p.hidden = !p.hidden; await draw(); return wipRefresh(); }
-        if (act === 'ban') { if (!confirm(L('Bloquer cette personne ? Elle ne pourra plus publier ni commenter.', 'Block this person? They will no longer be able to post or comment.'))) return; await api().ban(b.dataset.uid, true); return toast(L('Personne bloquée', 'User blocked')); }
-        if (act === 'delupd') { if (!confirm(L('Supprimer cette avancée ?', 'Delete this update?'))) return; await api().deleteUpdate(d.updates.find(u => u.id === id)); await draw(); return wipRefresh(); }
-        if (act === 'delcom') { if (!confirm(L('Supprimer ce commentaire ?', 'Delete this comment?'))) return; await api().deleteComment(id); await draw(); return wipRefresh(); }
-        if (act === 'hidecom') { await api().hideComment(id, b.dataset.h === '1'); return draw(); }
+        if (act === 'del') { if (!await confirmBox({ title: L('Supprimer ce projet ?', 'Delete this project?'), text: L(`« ${p.name} », ses avancées, ses commentaires et ses images seront effacés définitivement.`, `"${p.name}", its updates, comments and images will be permanently erased.`), ok: L('Supprimer définitivement', 'Delete permanently'), word: L('SUPPRIMER', 'DELETE') })) return; await api().deleteProject(p); m.close(); return wipRefresh(); }
+        if (act === 'hide') { if (!p.hidden && !await confirmBox({ title: L('Masquer ce projet ?', 'Hide this project?'), text: L('Il disparaîtra pour les visiteurs (vous pourrez le réafficher).', 'It will disappear for visitors (you can unhide it later).'), ok: L('Masquer', 'Hide') })) return; await api().setHidden(p.id, !p.hidden); p.hidden = !p.hidden; await draw(); return wipRefresh(); }
+        if (act === 'ban') { if (!await confirmBox({ title: L('Bloquer cette personne ?', 'Block this person?'), text: L('Elle ne pourra plus publier, commenter ni réagir.', 'They will no longer be able to post, comment or react.'), ok: L('Bloquer', 'Block'), word: L('BLOQUER', 'BLOCK') })) return; await api().ban(b.dataset.uid, true); return toast(L('Personne bloquée', 'User blocked')); }
+        if (act === 'delupd') { if (!await confirmBox({ title: L('Supprimer cette avancée ?', 'Delete this update?'), text: L('Son texte et ses captures seront effacés définitivement.', 'Its text and screenshots will be permanently erased.'), ok: L('Supprimer', 'Delete') })) return; await api().deleteUpdate(d.updates.find(u => u.id === id)); await draw(); return wipRefresh(); }
+        if (act === 'delcom') { if (!await confirmBox({ title: L('Supprimer ce commentaire ?', 'Delete this comment?'), text: L('Il sera effacé définitivement, avec ses réactions.', 'It will be permanently erased, with its reactions.'), ok: L('Supprimer', 'Delete') })) return; await api().deleteComment(id); await draw(); return wipRefresh(); }
+        if (act === 'hidecom') { if (b.dataset.h === '1' && !await confirmBox({ title: L('Masquer ce commentaire ?', 'Hide this comment?'), text: L('Il disparaîtra pour les visiteurs (vous pourrez le réafficher).', 'It will disappear for visitors (you can unhide it later).'), ok: L('Masquer', 'Hide') })) return; await api().hideComment(id, b.dataset.h === '1'); return draw(); }
         if (act === 'reportc' || act === 'reportp') {
           const reason = prompt(L('Pourquoi signalez-vous ce contenu ? (facultatif)', 'Why are you reporting this? (optional)')) ?? null; if (reason === null) return;
           await api().report(act === 'reportc' ? { comment_id: id } : { project_id: p.id }, reason.slice(0, 200)); return toast(L('Merci, signalement transmis.', 'Thanks, report sent.'));

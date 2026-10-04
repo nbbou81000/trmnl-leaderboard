@@ -186,3 +186,86 @@ for (const a of news.articles || []) {
   na++;
 }
 console.log(`${na} article(s) e-ink : pages de partage écrites dans a/ (français et anglais).`);
+
+// ─── Pages de partage des projets « En élaboration » (public/p/<id>.html et <id>-en.html) ───
+// Lues dans Supabase avec la clé publique (seuls les projets visibles), au moment de la publication du site.
+const SB_URL = (process.env.SUPABASE_URL || '').replace(/\/$/, ''), SB_KEY = process.env.SUPABASE_ANON_KEY || '';
+const pdir = path.join(OUT, 'p');
+await fs.rm(pdir, { recursive: true, force: true });
+await fs.mkdir(pdir, { recursive: true });
+const STATUS = { idea: ['💡 Idée', '💡 Idea'], building: ['🔨 En construction', '🔨 Building'], testing: ['🧪 En test', '🧪 Testing'], submitted: ['📬 Soumise', '📬 Submitted'] };
+let projects = [];
+if (/^https:\/\/[\w-]+\.supabase\.co$/.test(SB_URL) && SB_KEY.length > 30) {
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/projects?select=id,name,description,status,images,created_at,shipped_recipe,profiles(name)&hidden=eq.false&order=id`, {
+      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Accept-Encoding': 'identity' } });
+    if (r.ok) projects = await r.json(); else console.log(`Projets : réponse ${r.status}, pages de partage ignorées.`);
+  } catch (e) { console.log(`Projets indisponibles (${e.message}), pages de partage ignorées.`); }
+}
+const projectPage = (p, en) => {
+  const t = (fr, e) => en ? e : fr;
+  const self = `${SITE}p/${p.id}${en ? '-en' : ''}.html`, target = `${SITE}${en ? '?lang=en' : '?lang=fr'}#elaboration/${p.id}`;
+  const img = p.images?.[0] ? (/^https?:/.test(p.images[0]) ? p.images[0] : `${SB_URL}/storage/v1/object/public/wip/${p.images[0]}`) : `${SITE}og.png`;
+  const who = p.profiles?.name || '';
+  const st = p.shipped_recipe ? t('🎉 Disponible', '🎉 Now available') : (STATUS[p.status] || STATUS.building)[en ? 1 : 0];
+  const title = `${p.name}${who ? ' · ' + who : ''}`;
+  const desc = `${st} · ${p.description || t('Une recette TRMNL en cours d\'élaboration.', 'A TRMNL recipe in the making.')}`;
+  const site = t('Palmarès des créateurs TRMNL · En élaboration', 'TRMNL Creator Leaderboard · In the making');
+  return `<!DOCTYPE html>
+<html lang="${en ? 'en' : 'fr'}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${esc(title)} · ${esc(site)}</title>
+<meta name="description" content="${esc(desc)}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="${esc(site)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${esc(self)}">
+<meta property="og:image" content="${esc(img)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(desc)}">
+<meta name="twitter:image" content="${esc(img)}">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="${esc(SITE)}icon-192.png">
+<link rel="canonical" href="${esc(self)}">
+<script>
+(function () {
+  var t = ${JSON.stringify(target)}, i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>body{margin:0;font:16px/1.6 system-ui,sans-serif;background:#f2f0ed;color:#1d1d1b;border-top:4px solid #f8654b}main{max-width:700px;margin:0 auto;padding:28px 18px}a{color:#c0412a}img{max-width:100%;border-radius:12px}</style>
+</head>
+<body><main>
+  ${p.images?.[0] ? `<img src="${esc(img)}" alt="">` : ''}
+  <p>${esc(st)}${who ? ' · ' + esc(who) : ''}</p>
+  <h1>${esc(p.name)}</h1>
+  <p>${esc(p.description || '')}</p>
+  <p><a href="${esc(target)}">${t('Voir le projet sur le Palmarès TRMNL', 'See the project on the TRMNL Leaderboard')} →</a></p>
+</main></body>
+</html>`;
+};
+for (const p of projects) {
+  await fs.writeFile(path.join(pdir, `${p.id}.html`), projectPage(p, false));
+  await fs.writeFile(path.join(pdir, `${p.id}-en.html`), projectPage(p, true));
+}
+console.log(`${projects.length} projet(s) : pages de partage écrites dans p/.`);
+
+// ─── Page « introuvable » de GitHub Pages : un lien de partage pas encore généré (projet ou article tout neuf) renvoie quand même au bon endroit
+await fs.writeFile(path.join(OUT, '404.html'), `<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palmarès des créateurs TRMNL</title>
+<script>
+(function () {
+  var site = ${JSON.stringify(SITE)}, path = location.pathname, m, dest = site;
+  if ((m = path.match(/\\/p\\/(\\d+)(-en)?\\.html$/))) dest = site + (m[2] ? '?lang=en' : '') + '#elaboration/' + m[1];
+  else if ((m = path.match(/\\/a\\/([0-9a-f]+)(-en)?\\.html$/))) dest = site + (m[2] ? '?lang=en' : '') + '#eink/' + m[1];
+  else if ((m = path.match(/\\/r\\/(\\d+)\\.html$/))) dest = site;
+  location.replace(dest);
+})();
+</script></head><body><p><a href="${esc(SITE)}">Palmarès des créateurs TRMNL</a></p></body></html>`);

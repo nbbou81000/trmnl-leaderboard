@@ -1,5 +1,5 @@
 -- =====================================================================
---  Mesure d'audience anonyme (sans cookie) : base de données Supabase — version 3
+--  Mesure d'audience anonyme (sans cookie) : base de données Supabase — version 4
 --  À coller en entier dans Supabase › SQL Editor › New query, puis « Run ».
 --  Peut être relancé sans risque : il ne supprime aucune donnée récente.
 --
@@ -47,6 +47,8 @@ create table if not exists public.visit_hits (
   tz      text
 );
 alter table public.visit_hits add column if not exists via text;
+-- Cible d'une action (recipe:123, creator:40325, project:9, article:…, link:ko-fi.com), avec le réseau éventuel (@reddit)
+alter table public.visit_hits add column if not exists target text;
 create index if not exists visit_hits_at on public.visit_hits (at);
 create index if not exists visit_hits_visitor on public.visit_hits (visitor, at);
 
@@ -72,11 +74,12 @@ language sql immutable as $$ select nullif(left(regexp_replace(coalesce(t, ''), 
 -- ---------- Comptage d'une page vue ou d'une action (appelé par le site, sans connexion)
 -- p_via : l'étiquette d'un lien de partage (discord, reddit…) ou d'un lien publié avec ?via=…
 drop function if exists public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text);
+drop function if exists public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text, text);
 create or replace function public.track_hit(
   p_visitor uuid, p_kind text, p_path text, p_new boolean default false,
   p_ref text default null, p_lang text default null, p_mobile boolean default null,
   p_browser text default null, p_os text default null, p_screen text default null, p_tz text default null,
-  p_via text default null
+  p_via text default null, p_target text default null
 ) returns void
 language plpgsql security definer set search_path = public as $$
 declare d date := (now() at time zone 'Europe/Paris')::date; k text := case when p_kind = 'event' then 'event' else 'view' end;
@@ -86,6 +89,7 @@ begin
   p_ref  := lower(vclean(p_ref, 80, '[^A-Za-z0-9.-]'));
   p_lang := case when p_lang in ('fr', 'en') then p_lang end;
   p_via  := lower(vclean(p_via, 30, '[^A-Za-z0-9_-]'));
+  p_target := vclean(p_target, 80, '[^A-Za-z0-9:@._-]');
 
   -- Garde-fou : pas plus de 600 enregistrements par visiteur et par jour
   if (select views from visit_days where day = d and visitor = p_visitor) >= 600 then return; end if;
@@ -101,9 +105,9 @@ begin
         via       = coalesce(visit_days.via, excluded.via),
         last_seen = now();
 
-  insert into visit_hits (visitor, kind, path, is_new, ref, via, lang, mobile, browser, os, screen, tz)
+  insert into visit_hits (visitor, kind, path, is_new, ref, via, lang, mobile, browser, os, screen, tz, target)
   values (p_visitor, k, p_path, coalesce(p_new, false), p_ref, p_via, p_lang, p_mobile,
-          vclean(p_browser, 20), vclean(p_os, 20), vclean(p_screen, 12), vclean(p_tz, 40));
+          vclean(p_browser, 20), vclean(p_os, 20), vclean(p_screen, 12), vclean(p_tz, 40), case when k = 'event' then p_target end);
 
   if random() < 0.02 then
     delete from visit_days where day < d - 395;
@@ -126,10 +130,10 @@ create or replace function public.track_visit(
 ) returns void
 language sql security definer set search_path = public as $$ select public.track_hit(p_visitor, 'view', p_path, p_new, p_ref, p_lang, p_mobile) $$;
 
-revoke all on function public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text, text) from public;
+revoke all on function public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text, text, text) from public;
 revoke all on function public.track_ping(uuid, integer) from public;
 revoke all on function public.track_visit(uuid, text, boolean, text, text, boolean) from public;
-grant execute on function public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text, text) to anon, authenticated;
+grant execute on function public.track_hit(uuid, text, text, boolean, text, text, boolean, text, text, text, text, text, text) to anon, authenticated;
 
 -- ---------- Effacer les visites d'un appareil de l'administrateur (appelé une fois, quand il se connecte)
 create or replace function public.forget_visitor(p_visitor uuid) returns integer
@@ -218,6 +222,9 @@ begin
         select coalesce(tz, '?') as k, count(distinct visitor) as v from hv group by 1 order by 2 desc limit 40) x),
     'events', (select coalesce(json_agg(x), '[]') from (
         select path, count(*) as n, count(distinct visitor) as visitors from h where kind = 'event' group by path order by 2 desc limit 25) x),
+    'targets', (select coalesce(json_agg(x), '[]') from (
+        select path, target, count(*) as n, count(distinct visitor) as visitors from h
+        where kind = 'event' and target is not null group by path, target order by 3 desc limit 30) x),
     'loyalty', (select coalesce(json_agg(x order by x.b), '[]') from (
         select case when c = 1 then 1 when c <= 3 then 2 when c <= 7 then 3 else 4 end as b, count(*) as visitors
         from (select visitor, count(*) as c from vd group by visitor) q group by 1) x),
@@ -245,7 +252,7 @@ begin
           and floor(extract(epoch from (now() - h.at)) / 60) = 29 - g
         group by g) x),
     'recent',  (select coalesce(json_agg(x), '[]') from (
-        select at, kind, path, is_new, ref, via, lang, mobile, browser, os, tz, left(visitor::text, 4) as who
+        select at, kind, path, target, is_new, ref, via, lang, mobile, browser, os, tz, left(visitor::text, 4) as who
         from visit_hits order by at desc limit 40) x)
   ) into res;
   return res;

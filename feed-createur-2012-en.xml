@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/"><channel>
+<title>TRMNL Leaderboard: Creator #2012's stats</title>
+<link>https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#creator/2012</link>
+<description>Every hour something moves: the connections (installs + forks) of each of Creator #2012's recipes, the total, gains and losses, and the overall ranking.</description>
+<language>en</language>
+<atom:link href="https://nbbou81000.github.io/trmnl-leaderboard/feed-createur-2012-en.xml" rel="self" type="application/rss+xml"/>
+<item><title>📊 159 connections · 65th overall (starting point)</title><link>https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#creator/2012</link><guid isPermaLink="false">stats-2012-2026-09-29T12:07:24.223Z-en</guid><pubDate>Tue, 29 Sep 2026 12:07:24 GMT</pubDate><description><![CDATA[First snapshot: the next items will show gains and losses.]]></description><content:encoded><![CDATA[<p><strong>Total : 159 connections</strong> (159 installs + 0 forks) · = over 24 h</p>
+        <p>Ranking : <strong>65th overall</strong> out of 399 creators</p>
+        <table><tr><th align="left">Recipe</th><th align="right">Connections (installs + forks)</th><th align="right">Change</th></tr><tr><td><a href="https://trmnl.com/recipes/13890">Coinbase BTC Price</a></td><td align="right"><strong>159</strong> <small>(159 + 0)</small></td><td align="right">new</td></tr></table>
+        ]]></content:encoded></item>
+</channel></rss>

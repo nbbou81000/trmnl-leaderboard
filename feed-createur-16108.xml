@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/"><channel>
+<title>Palmarès TRMNL : les statistiques de Créateur #16108</title>
+<link>https://nbbou81000.github.io/trmnl-leaderboard/#createur/16108</link>
+<description>Chaque heure où quelque chose bouge : les connexions (installs + forks) de chaque recette de Créateur #16108, le total, les gains et les pertes, et le classement général.</description>
+<language>fr</language>
+<atom:link href="https://nbbou81000.github.io/trmnl-leaderboard/feed-createur-16108.xml" rel="self" type="application/rss+xml"/>
+<item><title>📊 249 connexions (=) · 47e au général (▲ 1 place)</title><link>https://nbbou81000.github.io/trmnl-leaderboard/#createur/16108</link><guid isPermaLink="false">stats-16108-2026-10-04T03:07:23.533Z</guid><pubDate>Sun, 04 Oct 2026 03:07:23 GMT</pubDate><description><![CDATA[Changement de classement uniquement.]]></description><content:encoded><![CDATA[<p><strong>Total : 249 connexions</strong> (240 installs + 9 forks) · <strong>=</strong> depuis le relevé précédent · = sur 24 h</p>
+        <p>Classement : <strong>47e au général</strong> sur 406 créateurs · ▲ 1 place</p>
+        <table><tr><th align="left">Recette</th><th align="right">Connexions (installs + forks)</th><th align="right">Évolution</th></tr><tr><td><a href="https://trmnl.com/recipes/115891">Daily Pokémon</a></td><td align="right"><strong>225</strong> <small>(216 + 9)</small></td><td align="right">=</td></tr><tr><td><a href="https://trmnl.com/recipes/119118">Rain Radar NL</a></td><td align="right"><strong>24</strong> <small>(24 + 0)</small></td><td align="right">=</td></tr></table>
+        <p><small>Évolution depuis le relevé du 4 oct., 04:07.</small></p>]]></content:encoded></item>
+<item><title>📊 249 connexions · 48e au général (point de départ)</title><link>https://nbbou81000.github.io/trmnl-leaderboard/#createur/16108</link><guid isPermaLink="false">stats-16108-2026-09-29T12:07:24.223Z</guid><pubDate>Tue, 29 Sep 2026 12:07:24 GMT</pubDate><description><![CDATA[Premier relevé : les prochains articles indiqueront les gains et les pertes.]]></description><content:encoded><![CDATA[<p><strong>Total : 249 connexions</strong> (240 installs + 9 forks) · −1 sur 24 h</p>
+        <p>Classement : <strong>48e au général</strong> sur 399 créateurs</p>
+        <table><tr><th align="left">Recette</th><th align="right">Connexions (installs + forks)</th><th align="right">Évolution</th></tr><tr><td><a href="https://trmnl.com/recipes/115891">Daily Pokémon</a></td><td align="right"><strong>225</strong> <small>(216 + 9)</small></td><td align="right">nouvelle</td></tr><tr><td><a href="https://trmnl.com/recipes/119118">Rain Radar NL</a></td><td align="right"><strong>24</strong> <small>(24 + 0)</small></td><td align="right">nouvelle</td></tr></table>
+        ]]></content:encoded></item>
+</channel></rss>

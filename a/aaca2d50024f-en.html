@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FxTwitter: A Free API to Read X Without an Account or API Key · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A free public API lets you fetch public X posts in JSON without an account or paid API key, including videos, translations, and RSS feeds.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="FxTwitter: A Free API to Read X Without an Account or API Key">
+<meta property="og:description" content="A free public API lets you fetch public X posts in JSON without an account or paid API key, including videos, translations, and RSS feeds.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/aaca2d50024f-en.html">
+<meta property="og:image" content="https://korben.info/api-fxtwitter-lire-x-sans-compte/api-fxtwitter-lire-x-sans-compte-1.jpg">
+<meta property="article:published_time" content="2026-09-25T09:34:54.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FxTwitter: A Free API to Read X Without an Account or API Key">
+<meta name="twitter:description" content="A free public API lets you fetch public X posts in JSON without an account or paid API key, including videos, translations, and RSS feeds.">
+<meta name="twitter:image" content="https://korben.info/api-fxtwitter-lire-x-sans-compte/api-fxtwitter-lire-x-sans-compte-1.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/aaca2d50024f-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/aaca2d50024f.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/aaca2d50024f", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://korben.info/api-fxtwitter-lire-x-sans-compte/api-fxtwitter-lire-x-sans-compte-1.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · September 25, 2026 · source : Korben</p>
+  <h1>FxTwitter: A Free API to Read X Without an Account or API Key</h1>
+  <p class="lead">A free public API lets you fetch public X posts in JSON without an account or paid API key, including videos, translations, and RSS feeds.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/aaca2d50024f">Read the article on the TRMNL Leaderboard →</a>
+  <p><strong>FxTwitter</strong>, through its public API <strong>api.fxtwitter.com</strong>, lets users access public X posts in JSON without requiring an account or paid API key. Unlike browsing x.com directly, this tool offers features not available natively: downloading videos in MP4, automatic post translation, and RSS feeds for accounts (up to 100 posts). The API is rate-limited to 1,000 requests per minute per IP address.</p> <p>To fetch a post, use its ID (e.g., 20 for @jack’s first tweet) in the URL: api.fxtwitter.com/2/status/20. The response is a JSON file containing the post text, author, metrics (likes, reposts, replies), and date. To extract only the text, use a curl command combined with jq (a JSON processing tool): curl -s "https://api.fxtwitter.com/2/status/20" | jq -r '.status.text'.</p> <p>Automatic translation is available by adding the ?lang=fr parameter to the URL. The API uses X’s translation services (like Grok) or a third-party service if needed. For a full profile, the /2/profile/ endpoint (e.g., api.fxtwitter.com/2/profile/jack) returns the bio, follower count, and registration date.</p> <h2>Downloading videos and creating RSS feeds</h2> <p>Videos can be downloaded directly as MP4 by prefixing the URL with d.fxtwitter.com (e.g., curl -L -o video.mp4 "https://d.fxtwitter.com/NASA/status/2102748685792596449"). The post’s JSON includes different resolutions to select the desired quality.</p> <p>Each public account has an RSS feed accessible via fxtwitter.com/[username]/feed.xml. The feed displays up to 100 posts by default, with options to filter media (media.xml) or include replies (?with_replies=1).</p> <h2>Limitations and caution</h2> <p>The API relies on real X accounts to distribute requests, a method similar to Nitter’s, which could attract legal action. The source code is available under the MIT license, allowing self-hosting if the service is blocked. Official domains to use are <strong>fxtwitter.com</strong>, <strong>twittpr.com</strong>, <strong>fixupx.com</strong>, <strong>xfixup.com</strong>, and <strong>fxbsky.app</strong> for Bluesky. Fraudulent domains (e.g., <strong>fxtwiter.com</strong>) have already been reported.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

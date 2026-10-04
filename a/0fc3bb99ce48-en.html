@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Disposable Windows 11 ARM64 VM on Apple Silicon Macs via tart Fork · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A developer releases a tart fork enabling Windows 11 ARM64 installation on Apple Silicon Macs without Parallels or UTM, with notable limitations.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Disposable Windows 11 ARM64 VM on Apple Silicon Macs via tart Fork">
+<meta property="og:description" content="A developer releases a tart fork enabling Windows 11 ARM64 installation on Apple Silicon Macs without Parallels or UTM, with notable limitations.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/0fc3bb99ce48-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-02T12:02:53.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Disposable Windows 11 ARM64 VM on Apple Silicon Macs via tart Fork">
+<meta name="twitter:description" content="A developer releases a tart fork enabling Windows 11 ARM64 installation on Apple Silicon Macs without Parallels or UTM, with notable limitations.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0fc3bb99ce48-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0fc3bb99ce48.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/0fc3bb99ce48", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · October 2, 2026 · source : Korben</p>
+  <h1>Disposable Windows 11 ARM64 VM on Apple Silicon Macs via tart Fork</h1>
+  <p class="lead">A developer releases a tart fork enabling Windows 11 ARM64 installation on Apple Silicon Macs without Parallels or UTM, with notable limitations.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/0fc3bb99ce48">Read the article on the TRMNL Leaderboard →</a>
+  <p>Developer Mustafa Akin has released an experimental <strong>tart fork</strong> enabling the installation of a Windows 11 ARM64 virtual machine on Apple Silicon Macs. Unlike existing solutions such as Parallels or UTM, this method relies on <strong>undocumented private Apple settings</strong>, making it susceptible to being disabled by a future macOS update. As such, it is not suitable for production use.</p> <p>The generated VM lacks sound, graphics acceleration, TPM module, and suspend functionality. However, it allows for instant cloning of instances to test software or automate tasks under Windows 11. Installation, tested on a Mac Studio M4 Max, took 26 minutes with a French ISO of Windows 11 ARM64. The interface remains in French, but the keyboard defaults to QWERTY.</p> <p>The process requires an Apple Silicon Mac running macOS 26.6 or 27, along with Xcode to compile the fork. Users must also obtain a Windows 11 ARM64 ISO and handle licensing manually. The fork automatically injects virtio-win and WinFsp drivers, but components like the <strong>viosock driver</strong> (for communication between the VM and Mac) must be installed manually via a shared folder. The <strong>tart-guest-agent</strong> must then be configured as a startup task to enable clipboard and desktop functionality.</p> <p>Once the VM is operational, it can be cloned instantly using the tart clone command to create disposable environments. The VM can be launched in headless mode with --no-graphics to run background commands.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

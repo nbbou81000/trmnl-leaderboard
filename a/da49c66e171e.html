@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Connecter une balance Withings à Home Assistant via ESP32 · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un utilisateur contourne le cloud Withings pour envoyer les données de sa balance directement à Home Assistant avec un ESP32.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Connecter une balance Withings à Home Assistant via ESP32">
+<meta property="og:description" content="Un utilisateur contourne le cloud Withings pour envoyer les données de sa balance directement à Home Assistant avec un ESP32.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/da49c66e171e.html">
+<meta property="og:image" content="https://didac.dev/blog/i-made-my-withings-scale-sync-to-home-assistant-without-the-cloud/opengraph-image">
+<meta property="article:published_time" content="2026-09-03T14:33:01Z">
+<meta property="article:section" content="Dashboards &amp; domotique">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Connecter une balance Withings à Home Assistant via ESP32">
+<meta name="twitter:description" content="Un utilisateur contourne le cloud Withings pour envoyer les données de sa balance directement à Home Assistant avec un ESP32.">
+<meta name="twitter:image" content="https://didac.dev/blog/i-made-my-withings-scale-sync-to-home-assistant-without-the-cloud/opengraph-image">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/da49c66e171e.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/da49c66e171e-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/da49c66e171e", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://didac.dev/blog/i-made-my-withings-scale-sync-to-home-assistant-without-the-cloud/opengraph-image" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; domotique · 3 septembre 2026 · source : Hacker News</p>
+  <h1>Connecter une balance Withings à Home Assistant via ESP32</h1>
+  <p class="lead">Un utilisateur contourne le cloud Withings pour envoyer les données de sa balance directement à Home Assistant avec un ESP32.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/da49c66e171e">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un passionné d’automatisation a connecté sa balance <strong>Withings Body+</strong> à <strong>Home Assistant</strong> sans passer par le service cloud du fabricant. Pour cela, il a utilisé un microcontrôleur <strong>ESP32</strong> en Bluetooth classique, évitant ainsi toute dépendance aux serveurs externes.</p><p>La balance envoie ses mesures (poids, composition corporelle) à l’ESP32 via Bluetooth après chaque pesée. Le microcontrôleur transmet ensuite les données à Home Assistant en Wi-Fi grâce au firmware <strong>ESPHome</strong>. L’utilisateur a désactivé le réseau Wi-Fi de la balance pour l’empêcher d’envoyer ses données vers le cloud Withings. Le système identifie automatiquement l’utilisateur grâce à un identifiant intégré dans les mesures, permettant de distinguer les profils.</p><p>La mise en place a nécessité l’analyse du protocole Bluetooth de la balance, non documenté. L’auteur a utilisé un modèle original d’<strong>ESP32</strong> (et non les versions ESP32-C3 ou ESP32-S3, incompatibles avec le Bluetooth Classic). Le développement a été facilité par l’outil <strong>OpenCode</strong>, qui a analysé des extraits de code Android et reconstruit un composant ESPHome adapté. Les premières tentatives ont échoué, mais après plusieurs itérations, la connexion a été établie avec succès.</p><p>Dans Home Assistant, les capteurs sont exposés comme des entités standard. Pour éviter la perte des dernières données en cas de redémarrage, l’utilisateur a ajouté des capteurs templates maintenant la dernière mesure disponible. La balance fonctionne normalement, mais les données sont désormais accessibles localement sans intermédiaire.</p><p>Cette solution reste spécifique au modèle <strong>Withings Body+</strong> et à l’ESP32 original. Le code n’est pas encore publié, mais l’auteur prévoit de le partager ultérieurement.
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

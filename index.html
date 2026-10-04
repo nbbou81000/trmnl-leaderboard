@@ -295,6 +295,8 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .sttab th{color:var(--ink2);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--rule)}
 .sttab td{padding:5px 8px;border-bottom:1px solid var(--rule);white-space:nowrap}
 .sttab tr.ev td{color:var(--ink2)}
+.sttab .tgt{display:block;font-size:.78rem;color:var(--ink);opacity:.85;white-space:normal;max-width:280px}
+.sttab td.tgtcell{white-space:normal}
 .sttab .nw{font-size:.7rem;background:color-mix(in srgb,var(--sage) 22%,transparent);color:var(--sage);border-radius:99px;padding:1px 6px;font-weight:700}
 /* Vignette partageable */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:60}
@@ -812,7 +814,7 @@ function deviceInfo() {
   let tz = null; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch {}
   return { p_browser: browser, p_os: os, p_screen: scr, p_tz: tz };
 }
-function countVisit(path, kind = 'view') {
+function countVisit(path, kind = 'view', target = null) {
   try {
     if (!countOK()) return;
     const tab = kind === 'event' ? path : (path.split('#')[1] || 'accueil').toLowerCase();
@@ -827,7 +829,7 @@ function countVisit(path, kind = 'view') {
         firstHit = false;
       }
       const v = visitorId();
-      sbRPC('track_hit', { p_visitor: v.id, p_kind: kind, p_path: tab, p_new: v.isNew, p_ref: ref, p_via: via, p_lang: EN() ? 'en' : 'fr', p_mobile: matchMedia('(pointer:coarse)').matches, ...deviceInfo() });
+      sbRPC('track_hit', { p_visitor: v.id, p_kind: kind, p_path: tab, p_new: v.isNew, p_ref: ref, p_via: via, ...(target ? { p_target: String(target).slice(0, 80) } : {}), p_lang: EN() ? 'en' : 'fr', p_mobile: matchMedia('(pointer:coarse)').matches, ...deviceInfo() });
       startPing();
     };
     if (human) send(); else humanQueue.push(send);
@@ -854,8 +856,9 @@ function startPing() {
     pingLast = now;
   });
 }
-function track(path, event = false) {
-  if (location.hash.split('/')[0] !== '#stats') countVisit(path, event ? 'event' : 'view');
+// target : ce sur quoi porte l'action (recipe:123, creator:40325, project:9, article:…, link:ko-fi.com), éventuellement suivi de @réseau
+function track(path, event = false, target = null) {
+  if (location.hash.split('/')[0] !== '#stats') countVisit(path, event ? 'event' : 'view', target);
   if (!GOATCOUNTER || !window.goatcounter?.count) return;
   window.goatcounter.count({ path, title: event ? path : document.title, event });
 }
@@ -1052,7 +1055,9 @@ async function init() {
   setInterval(() => { $('#updated').textContent = L(`Mis à jour ${ago(D.generated_at)}`, `Updated ${ago(D.generated_at)}`); }, 60000);
   window.addEventListener('hashchange', () => { route(); track(currentPath()); });
   wipBoot();
-  document.addEventListener('click', e => { const a = e.target.closest('footer a'); if (a) track('lien-pied-de-page', true); });
+  document.addEventListener('click', e => { const a = e.target.closest('footer a'); if (!a) return;
+    let t = ''; try { const u = new URL(a.href, location.href); t = u.hostname === location.hostname ? (a.id || a.textContent.trim().slice(0, 30)) : u.hostname.replace(/^www\./, ''); } catch {}
+    track('lien-pied-de-page', true, t ? 'link:' + t.replace(/[^A-Za-z0-9._-]+/g, '-') : null); });
   route();
 }
 
@@ -1401,7 +1406,7 @@ function renderProfile(u) {
   $('#share').onclick = async () => {
     const url = `${location.origin}${location.pathname}${EN() ? '?lang=en' : ''}${hr('createur', c.u)}`;
     try { await navigator.clipboard.writeText(url); toast(L('Lien copié', 'Link copied')); } catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }
-    track('lien-profil-copie', true);
+    track('lien-profil-copie', true, 'creator:' + c.u);
   };
   $('#goalIn').onchange = e => { goal = Math.max(1, +e.target.value || DEFAULT_GOAL); store.set('trmnl-goal', goal); refresh(); };
   el.querySelectorAll('tbody tr[data-ri]').forEach(tr => tr.onclick = e => { if (!e.target.closest('a')) openRecipe(recs[+tr.dataset.ri]); });
@@ -2468,7 +2473,7 @@ async function wipDetail(p) {
   const ship = shippedOf(p), st = WSTAT[p.status] || WSTAT.building, r = ship?.r;
   const who = wipWho(p);
   const m = modal(`<div class="wipbody"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`, 'wipd');
-  track('projet-ouvert', true);
+  track('projet-ouvert', true, 'project:' + p.id);
   const draw = async () => {
     let d; try { d = await api().detail(p.id); } catch (e) { m.$('.wipbody').innerHTML = `<p class="err">${esc(trErr(e.message))}</p>`; return; }
     const own = isOwner(p), adm = isAdmin();
@@ -2517,12 +2522,12 @@ async function wipDetail(p) {
       e.preventDefault(); const er = uf.querySelector('.err'); er.hidden = true; const b = uf.querySelector('[type=submit]'); b.disabled = true;
       try { const body = uf.body.value.trim(); const files = upicker.added(); if (!body && !files.length) throw new Error(L('Écrivez quelques mots ou ajoutez une capture.', 'Write a few words or add a screenshot.'));
         const images = await Promise.all(files.map(file => api().upload(file)));
-        await api().addUpdate(p.id, body, images); track('avancee-publiee', true); p.updated_at = new Date().toISOString(); await draw(); wipRefresh();
+        await api().addUpdate(p.id, body, images); track('avancee-publiee', true, 'project:' + p.id); p.updated_at = new Date().toISOString(); await draw(); wipRefresh();
       } catch (x) { er.textContent = trErr(x.message); er.hidden = false; b.disabled = false; } }; }
     if (cf) { counter(cf.body, m.$('#cc'), COM_MAX); cf.onsubmit = async e => {
       e.preventDefault(); const er = cf.querySelector('.err'); er.hidden = true; const b = cf.querySelector('[type=submit]'); b.disabled = true;
       try { const body = cf.body.value.trim(); if (!body) throw new Error(L('Le commentaire est vide.', 'The comment is empty.'));
-        await api().addComment(p.id, body); track('commentaire-publie', true); await draw(); wipRefresh();
+        await api().addComment(p.id, body); track('commentaire-publie', true, 'project:' + p.id); await draw(); wipRefresh();
       } catch (x) { er.textContent = trErr(x.message); er.hidden = false; b.disabled = false; } }; }
     m.wrap.querySelectorAll('[data-rpick]').forEach(b => b.onclick = () => { const pk = b.parentElement.querySelector('.rpick'); pk.hidden = !pk.hidden; });
     let reacting = false;
@@ -2532,7 +2537,7 @@ async function wipDetail(p) {
       const e = b.dataset.react, cid = b.dataset.cid ? +b.dataset.cid : null;
       const on = !(d.reactions || []).some(x => x.user_id === wipMe.id && x.emoji === e && (x.comment_id || null) === cid);
       reacting = true;
-      try { await api().react(p.id, cid, e, on); if (on) track('reaction', true); await draw(); }
+      try { await api().react(p.id, cid, e, on); if (on) track('reaction', true, 'project:' + p.id + (cid ? '.c' + cid : '') + '@' + ({ '👍': 'pouce', '❤️': 'coeur', '🔥': 'feu', '😂': 'rire', '😮': 'surprise', '🎉': 'fete', '🚀': 'fusee', '👀': 'yeux' }[e] || 'emoji')); await draw(); }
       catch (x) { toast(/reactions/i.test(x.message) ? L("Les réactions arrivent bientôt.", 'Reactions are coming soon.') : trErr(x.message)); }
       reacting = false;
     });
@@ -2587,6 +2592,20 @@ async function articleTitles() {
   catch { statsTitles = {}; }
   return statsTitles;
 }
+// Nom lisible de la cible d'une action (recette, profil, projet, article, lien) et du réseau de partage
+const REACT_NAMES = { pouce: '👍', coeur: '❤️', feu: '🔥', rire: '😂', surprise: '😮', fete: '🎉', fusee: '🚀', yeux: '👀' };
+function targetLabel(t, A) {
+  if (!t) return '';
+  const [main, net] = String(t).split('@'), [kind, raw] = main.split(/:(.*)/s), id = (raw || '').split('.')[0];
+  let lb = raw || main;
+  if (kind === 'recipe') lb = (D?.recipes || []).find(r => String(r.id) === id)?.n || L(`Recette #${id}`, `Recipe #${id}`);
+  else if (kind === 'creator') lb = `${L('Profil', 'Profile')} ${nameOf(id)}`;
+  else if (kind === 'project') lb = (wipList || []).find(x => String(x.id) === id)?.name || L(`Projet #${id}`, `Project #${id}`);
+  else if (kind === 'article') lb = A?.[id] || L('Article retiré', 'Removed article');
+  else if (kind === 'link') lb = raw;
+  const via = net ? (REACT_NAMES[net] || VIA_LABELS()[net] || net) : '';
+  return lb + (via ? ` · ${via}` : '');
+}
 const pathLabel = (p, T, A) => p.startsWith('article-') ? `📰 ${A[p.slice(8)] || L('Article retiré', 'Removed article')}` : (T[p] || p);
 const dur = s => { s = Math.round(s || 0); return s < 60 ? `${s} s` : s < 3600 ? `${Math.floor(s / 60)} min ${String(s % 60).padStart(2, '0')}` : `${Math.floor(s / 3600)} h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}`; };
 const pctOf = (a, b) => b ? Math.round(100 * a / b) : 0;
@@ -2633,7 +2652,7 @@ async function loadLive() {
     if (rec) rec.innerHTML = (V.recent || []).map(h => { const c = countryOf(h.tz);
       return `<tr class="${h.kind === 'event' ? 'ev' : ''}"><td>${new Date(h.at).toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
         <td><code>${esc(h.who)}</code>${h.is_new ? ` <span class="nw">${L('nouveau', 'new')}</span>` : ''}</td>
-        <td>${h.kind === 'event' ? '⚡ ' + esc(E[h.path] || h.path) : esc(pathLabel(h.path, T, A))}</td>
+        <td>${h.kind === 'event' ? '⚡ ' + esc(E[h.path] || h.path) + (h.target ? `<small class="tgt">${esc(targetLabel(h.target, A))}</small>` : '') : esc(pathLabel(h.path, T, A))}</td>
         <td>${h.mobile ? '📱' : h.mobile === false ? '💻' : ''} ${esc([h.browser, h.os].filter(Boolean).join(' · '))}</td>
         <td>${h.tz ? esc(c.label) : ''}</td><td>${esc([h.via && (VL[h.via] || h.via), h.ref].filter(Boolean).join(' · '))}</td></tr>`; }).join('') || `<tr><td colspan="6" class="muted">—</td></tr>`;
   } catch (e) { const n = $('#stNow'); if (n) n.textContent = '?'; }
@@ -2642,6 +2661,7 @@ async function loadLive() {
 async function loadStats() {
   const body = $('#stBody'); if (!body) return;
   let S;
+  if (!wipList) { try { wipList = await api().list(); } catch {} }   // pour nommer les projets dans les actions
   try { S = await api().visitStats(statsDays); }
   catch (e) { body.innerHTML = `<p class="err">${esc(/visit_stats|visit_live|function|schema cache/i.test(e.message) ? L("Base pas encore prête : collez la dernière version de supabase/visites.sql dans l'éditeur SQL de Supabase.", 'Database not ready: paste the latest supabase/visites.sql into the Supabase SQL editor.') : trErr(e.message))}</p>`; return; }
   const P = PAL(), T = TAB_LABELS(), E = EVENT_LABELS(), VL = VIA_LABELS(), A = await articleTitles(), ret = Math.max(0, S.unique - S.new);
@@ -2690,6 +2710,7 @@ async function loadStats() {
       ${box(L('Langue du site', 'Site language'), vrows(S.langs || [], x => x.k === 'fr' ? '🇫🇷 Français' : x.k === 'en' ? '🇬🇧 English' : L('Inconnue', 'Unknown'), x => x.v))}
       ${box(L('Fidélité', 'Loyalty'), `<div class="chart short"><canvas id="chLoyal"></canvas></div><p class="note">${L('Nombre de jours différents où chaque visiteur est venu sur la période.', 'Number of different days each visitor came during the period.')}</p>`)}
       ${box(L('Durée des visites', 'Visit length'), `<div class="chart short"><canvas id="chDur"></canvas></div>`)}
+      ${box(L('Ce qui a été partagé, copié ou consulté', 'What was shared, copied or viewed'), (S.targets || []).length ? `<table class="sttab"><thead><tr><th>${L('Action', 'Action')}</th><th>${L('Sur quoi', 'On what')}</th><th>${L('Fois', 'Times')}</th><th>${L('Visiteurs', 'Visitors')}</th></tr></thead><tbody>${S.targets.map(x => `<tr><td>${esc(E[x.path] || x.path)}</td><td class="tgtcell">${esc(targetLabel(x.target, A))}</td><td>${nf(x.n)}</td><td>${nf(x.visitors)}</td></tr>`).join('')}</tbody></table>` : `<p class="muted">${L('Rien encore : les cibles des actions sont enregistrées à partir de maintenant.', 'Nothing yet: action targets are recorded from now on.')}</p>`, 'wide')}
       ${box(L('Actions des visiteurs', 'Visitor actions'), (S.events || []).length ? `<table class="sttab"><thead><tr><th>${L('Action', 'Action')}</th><th>${L('Fois', 'Times')}</th><th>${L('Visiteurs', 'Visitors')}</th></tr></thead><tbody>${S.events.map(x => `<tr><td>${esc(E[x.path] || x.path)}</td><td>${nf(x.n)}</td><td>${nf(x.visitors)}</td></tr>`).join('')}</tbody></table>` : `<p class="muted">—</p>`, 'wide')}
       ${box(L('Dernières visites', 'Latest visits'), `<div class="sttabw"><table class="sttab"><thead><tr><th>${L('Heure', 'Time')}</th><th>${L('Visiteur', 'Visitor')}</th><th>${L('Onglet ou action', 'Tab or action')}</th><th>${L('Appareil', 'Device')}</th><th>${L('Pays', 'Country')}</th><th>${L('Venu de', 'From')}</th></tr></thead><tbody id="stRecent"></tbody></table></div>
         <p class="note">${L('Le visiteur est désigné par les 4 premiers caractères de son numéro au hasard. Mis à jour toutes les 15 secondes.', 'Each visitor is shown by the first 4 characters of their random number. Refreshed every 15 seconds.')}</p>`, 'wide')}
@@ -2759,7 +2780,7 @@ function wipPrivacy() {
 /* ================= Vignette partageable ================= */
 async function shareCard(r) {
   if (!r) return;
-  track('vignette-ouverte', true);
+  track('vignette-ouverte', true, 'recipe:' + r.id);
   const W = 1200, H = 630;
   const wrap = document.createElement('div');
   wrap.className = 'modal';
@@ -2816,17 +2837,17 @@ async function shareCard(r) {
   const name = `trmnl-${r.n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.png`;
   $('#cardDl', wrap).onclick = () => cv.toBlob(b => {
     const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 4000); track('vignette-telechargee', true);
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000); track('vignette-telechargee', true, 'recipe:' + r.id);
   }, 'image/png');
   const url = shareURL(r);
   $('#cardLink', wrap).onclick = async () => {
     try { await navigator.clipboard.writeText(url); toast(L('Lien copié', 'Link copied')); }
     catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }
-    track('lien-recette-copie', true);
+    track('lien-recette-copie', true, 'recipe:' + r.id);
   };
   if (navigator.share) {
     const bt = $('#cardShare', wrap); bt.hidden = false;
-    bt.onclick = () => navigator.share({ title: r.n, text: r.d || '', url }).then(() => track('recette-partagee', true)).catch(() => {});
+    bt.onclick = () => navigator.share({ title: r.n, text: r.d || '', url }).then(() => track('recette-partagee', true, 'recipe:' + r.id)).catch(() => {});
   }
 }
 
@@ -2999,7 +3020,7 @@ async function renderPronos() {
     if (!r || r.s > PRONO_MAX) { err.textContent = L('Choisis une recette dans la liste proposée.', 'Pick a recipe from the suggested list.'); err.hidden = false; return; }
     if (!confirm(L(`Parier sur « ${r.n} » ? Ce pari est définitif pour la semaine.`, `Bet on "${r.n}"? This bet is final for the week.`))) return;
     const btn = $('#prGo'); btn.disabled = true;
-    try { await api().predict(r.id); pronoList = null; track('pronostic', true); toast(L('Pari enregistré !', 'Bet saved!')); renderPronos(); }
+    try { await api().predict(r.id); pronoList = null; track('pronostic', true, 'recipe:' + r.id); toast(L('Pari enregistré !', 'Bet saved!')); renderPronos(); }
     catch (e) { err.textContent = /duplicate|unique/i.test(e.message) ? L('Tu as déjà parié cette semaine.', 'You already bet this week.') : trErr(e.message); err.hidden = false; btn.disabled = false; }
   });
 }
@@ -3059,23 +3080,23 @@ function sharePanel(o) {
       <button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`, 'eshr');
   m.$('.pv img')?.addEventListener('error', e => { e.target.src = 'og.png'; }, { once: true });
   m.$('input').onclick = e => e.target.select();
-  m.$('#eCopy').onclick = () => { copy(L('Lien copié', 'Link copied')); track(o.event, true); };
+  m.$('#eCopy').onclick = () => { copy(L('Lien copié', 'Link copied')); track(o.event, true, o.target + '@lien'); };
   m.wrap.querySelectorAll('[data-net]').forEach(b => b.addEventListener('click', () => {
-    const k = b.dataset.net; track(o.event, true);
+    const k = b.dataset.net; track(o.event, true, o.target + '@' + k);
     if (k === 'discord') copy(L('Lien copié : collez-le dans Discord', 'Link copied: paste it in Discord'), o.link('discord'));
     else if (k === 'native') navigator.share({ title: o.title, text: o.teaser || '', url: o.link('partage') }).catch(() => {});
   }));
 }
 function shareEink(a) {
   const t = einkText(a);
-  sharePanel({ title: t.title, teaser: t.teaser, img: a.img, event: 'actu-eink-partagee', link: via => einkShareURL(a, via),
+  sharePanel({ title: t.title, teaser: t.teaser, img: a.img, event: 'actu-eink-partagee', target: 'article:' + a.id, link: via => einkShareURL(a, via),
     heading: L('Partager cet article', 'Share this article'), label: L('Palmarès des créateurs TRMNL · Actu e-ink', 'TRMNL Creator Leaderboard · E-ink news'),
     note: L("Le lien mène à l'article sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", 'The link leads to the article on this site, and shows up with its thumbnail on Discord, Reddit and social networks.') });
 }
 // Projets en élaboration : page de partage p/<id>.html (vignette), qui renvoie sur la fiche du projet dans le site
 const wipShareURL = (p, via) => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}p/${p.id}${EN() ? '-en' : ''}.html${via ? `?via=${via}` : ''}`;
 function shareWip(p) {
-  sharePanel({ title: p.name, by: p.profiles?.name || '', teaser: p.description, img: p.images?.[0] ? imgURL(p.images[0]) : '', event: 'projet-partage', link: via => wipShareURL(p, via),
+  sharePanel({ title: p.name, by: p.profiles?.name || '', teaser: p.description, img: p.images?.[0] ? imgURL(p.images[0]) : '', event: 'projet-partage', target: 'project:' + p.id, link: via => wipShareURL(p, via),
     heading: L('Partager ce projet', 'Share this project'), label: L('Palmarès des créateurs TRMNL · En élaboration', 'TRMNL Creator Leaderboard · In the making'),
     note: L("Le lien ouvre directement la fiche du projet sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", "The link opens the project's page on this site directly, and shows up with its thumbnail on Discord, Reddit and social networks.") });
 }
@@ -3093,7 +3114,7 @@ function openEink(a) {
       <button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`, 'reader');
   m.$('#eShare').onclick = () => shareEink(a);
   m.$('.ehero')?.addEventListener('error', e => e.target.remove());
-  track('actu-eink-lue', true);
+  track('actu-eink-lue', true, 'article:' + a.id);
   countVisit('#article-' + a.id);   // chaque article ouvert compte comme une page vue
 }
 async function renderEink(openId) {

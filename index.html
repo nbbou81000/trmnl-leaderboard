@@ -361,9 +361,9 @@ html[data-theme=dark] .linkbtn.danger{color:#FF8A80}
 .rchip:hover{border-color:var(--accent)}
 .rchip.radd{color:var(--ink2);padding:3px 8px;filter:grayscale(.6)}
 .rchip.radd span{font-weight:800;font-size:.85rem}
-.rpick{display:inline-flex;flex-wrap:wrap;gap:2px;background:var(--sheet);border:1px solid var(--rule2);border-radius:99px;padding:2px 6px}
+.rpick{flex:0 0 100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:2px;background:var(--sheet);border:1px solid var(--rule2);border-radius:12px;padding:6px;box-shadow:0 6px 18px rgba(0,0,0,.12)}
 .rpick[hidden]{display:none}
-.rpick button{border:0;background:none;font-size:1.15rem;padding:3px 5px;cursor:pointer;border-radius:8px;line-height:1}
+.rpick button{border:0;background:none;font-size:1.3rem;padding:6px 0;cursor:pointer;border-radius:8px;line-height:1}
 .rpick button:hover,.rpick button.on{background:color-mix(in srgb,var(--accent) 16%,transparent)}
 .coms .reacts{margin:4px 0 2px}
 .coms .rchip{font-size:.84rem;padding:2px 8px}
@@ -2457,7 +2457,8 @@ function confirmBox({ title, text, ok, word = '', danger = true }) {
 }
 
 // ---------- Réactions en émojis (projet et commentaires)
-const REACTS = ['👍', '❤️', '🔥', '😂', '😮', '🎉', '🚀', '👀'];
+const REACTS = ['👍', '👎', '❤️', '🔥', '😂', '🤣', '😍', '🥰', '😮', '🤯', '😢', '😡', '🎉', '🚀', '👀', '👏', '🙌', '💯', '✨', '⭐', '🏆', '💡', '🤔', '🙏', '😎', '🤩', '😅', '🤖', '💪', '🛠️', '🐛', '☕'];   // même liste que dans supabase/reactions.sql
+const emojiCode = e => [...e].map(c => c.codePointAt(0).toString(16)).filter(h => h !== 'fe0f').join('-');
 function reactBar(list, cid) {
   const mine = new Set(list.filter(x => wipMe && x.user_id === wipMe.id).map(x => x.emoji));
   const counts = REACTS.map(e => [e, list.filter(x => x.emoji === e).length]).filter(([, n]) => n);
@@ -2537,7 +2538,7 @@ async function wipDetail(p) {
       const e = b.dataset.react, cid = b.dataset.cid ? +b.dataset.cid : null;
       const on = !(d.reactions || []).some(x => x.user_id === wipMe.id && x.emoji === e && (x.comment_id || null) === cid);
       reacting = true;
-      try { await api().react(p.id, cid, e, on); if (on) track('reaction', true, 'project:' + p.id + (cid ? '.c' + cid : '') + '@' + ({ '👍': 'pouce', '❤️': 'coeur', '🔥': 'feu', '😂': 'rire', '😮': 'surprise', '🎉': 'fete', '🚀': 'fusee', '👀': 'yeux' }[e] || 'emoji')); await draw(); }
+      try { await api().react(p.id, cid, e, on); if (on) track('reaction', true, 'project:' + p.id + (cid ? '.c' + cid : '') + '@' + emojiCode(e)); await draw(); }
       catch (x) { toast(/reactions/i.test(x.message) ? L("Les réactions arrivent bientôt.", 'Reactions are coming soon.') : trErr(x.message)); }
       reacting = false;
     });
@@ -2603,7 +2604,8 @@ function targetLabel(t, A) {
   else if (kind === 'project') lb = (wipList || []).find(x => String(x.id) === id)?.name || L(`Projet #${id}`, `Project #${id}`);
   else if (kind === 'article') lb = A?.[id] || L('Article retiré', 'Removed article');
   else if (kind === 'link') lb = raw;
-  const via = net ? (REACT_NAMES[net] || VIA_LABELS()[net] || net) : '';
+  const fromCode = /^[0-9a-f]{4,6}(-[0-9a-f]{4,6})*$/.test(net || '') ? net.split('-').map(h => String.fromCodePoint(parseInt(h, 16))).join('') : '';
+  const via = net ? (REACT_NAMES[net] || VIA_LABELS()[net] || fromCode || net) : '';
   return lb + (via ? ` · ${via}` : '');
 }
 const pathLabel = (p, T, A) => p.startsWith('article-') ? `📰 ${A[p.slice(8)] || L('Article retiré', 'Removed article')}` : (T[p] || p);

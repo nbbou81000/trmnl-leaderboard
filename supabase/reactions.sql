@@ -1,5 +1,5 @@
 -- =====================================================================
---  Réactions en émojis (👍 ❤️ 🔥 😂 😮 🎉 🚀 👀) sur les projets « En élaboration » et sur leurs commentaires
+--  Réactions en émojis (32 au choix) sur les projets « En élaboration » et sur leurs commentaires
 --  À coller en entier dans Supabase › SQL Editor › New query, puis « Run ».
 --  Peut être relancé sans risque. Nécessite schema4.sql (projets et commentaires) déjà installé.
 --  Il faut être connecté avec Discord pour réagir (comme pour commenter) ; tout le monde voit les compteurs.
@@ -10,12 +10,16 @@ create table if not exists public.reactions (
   project_id bigint not null references public.projects(id) on delete cascade,
   comment_id bigint references public.comments(id) on delete cascade,   -- vide = réaction au projet lui-même
   user_id    uuid not null default auth.uid() references public.profiles(id) on delete cascade,
-  emoji      text not null check (emoji in ('👍', '❤️', '🔥', '😂', '😮', '🎉', '🚀', '👀')),
+  emoji      text not null,
   created_at timestamptz not null default now()
 );
 -- Une même personne ne peut mettre qu'une fois le même émoji au même endroit
 create unique index if not exists reactions_once on public.reactions (project_id, coalesce(comment_id, 0), user_id, emoji);
 create index if not exists reactions_project on public.reactions (project_id);
+
+-- Liste des émojis autorisés (remplacée à chaque exécution : on peut en ajouter sans perdre les réactions existantes)
+alter table public.reactions drop constraint if exists reactions_emoji_check;
+alter table public.reactions add constraint reactions_emoji_check check (emoji in ('👍', '👎', '❤️', '🔥', '😂', '🤣', '😍', '🥰', '😮', '🤯', '😢', '😡', '🎉', '🚀', '👀', '👏', '🙌', '💯', '✨', '⭐', '🏆', '💡', '🤔', '🙏', '😎', '🤩', '😅', '🤖', '💪', '🛠️', '🐛', '☕'));
 
 alter table public.reactions enable row level security;
 drop policy if exists "visible reactions" on public.reactions;

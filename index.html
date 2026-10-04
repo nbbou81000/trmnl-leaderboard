@@ -1044,7 +1044,7 @@ function route() {
   const cur = document.querySelector('nav.tabs a[aria-current="page"]'), bar = $('#tabsIn');
   if (cur && bar && bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: cur.offsetLeft - (bar.clientWidth - cur.offsetWidth) / 2, behavior: 'smooth' });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: renderWip, classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: () => renderWeek(arg), analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos, stats: renderStats })[t]();
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: () => renderWip(arg), classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: () => renderWeek(arg), analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos, stats: renderStats })[t]();
   window.scrollTo({ top: 0 });
 }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -1699,7 +1699,7 @@ function wipCard(p, ship) {
     </div></article>`;
 }
 
-async function renderWip() {
+async function renderWip(openId) {
   const el = $('#tab-elaboration');
   const head = `<h2>${L("Recettes en cours d'élaboration", 'Recipes in the making')}</h2>
     <p class="lead">${L("Les recettes que la communauté construit en ce moment. Partagez la vôtre, suivez celles que vous attendez, posez vos questions, et voyez-les arriver le jour de leur publication.",
@@ -1746,6 +1746,12 @@ async function renderWip() {
   $('#wipReports')?.addEventListener('click', wipReportsView);
   $('#wipVisits')?.addEventListener('click', () => go('#stats'));
   $('#wipLinks')?.addEventListener('click', wipLinksView);
+  // Lien direct vers un projet (…#elaboration/<numéro>, utilisé par les liens de partage) : on ouvre sa fiche
+  if (openId) {
+    const target = wipList.find(x => String(x.id) === String(openId));
+    try { history.replaceState(null, '', location.pathname + location.search + hr('elaboration')); } catch {}
+    if (target) wipDetail(target); else toast(L('Ce projet n\'est plus disponible.', 'This project is no longer available.'));
+  }
   $('#wipDisclaimer')?.addEventListener('click', wipDisclaimerForm);
   $('#wipLink')?.addEventListener('click', wipLinkForm);
   $('#wipUnlink')?.addEventListener('click', async () => { try { await api().requestLink(null); await wipReload(); } catch (x) { toast(trErr(x.message)); } });
@@ -2401,6 +2407,7 @@ async function wipDetail(p) {
       <p class="muted" style="margin:0 0 10px">${avatarHTML(p.profiles)} ${who} · ${p.category ? esc(p.category) + ' · ' : ''}${L('partagé le', 'shared on')} ${fdate(p.created_at)}${p.eta && !ship ? ` · ${L('prévue', 'expected')} ${esc(p.eta)}` : ''}</p>
       ${p.description ? `<p>${esc(p.description)}</p>` : ''}
       <div class="tools-row">${r ? `<a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>` : ''}
+        ${p.hidden ? '' : `<button class="btn ghost" type="button" data-act="share">📤 ${L('Partager', 'Share')}</button>`}
         ${p.link ? `<a class="btn ghost" href="${esc(p.link)}" target="_blank" rel="noopener nofollow ugc">${L('Suivre le projet', 'Follow the project')} ↗</a>` : ''}
         ${own ? `<button class="btn ghost small" data-act="edit">${L('Modifier', 'Edit')}</button><button class="btn ghost small" data-act="del">${L('Supprimer', 'Delete')}</button>` : ''}
         ${adm && !own ? `<button class="btn ghost small" data-act="hide">${p.hidden ? L('Afficher', 'Unhide') : L('Masquer', 'Hide')}</button><button class="btn ghost small" data-act="del">${L('Supprimer', 'Delete')}</button><button class="btn ghost small" data-act="ban" data-uid="${p.owner}">${L("Bloquer l'auteur", 'Block author')}</button>` : ''}
@@ -2444,6 +2451,7 @@ async function wipDetail(p) {
       const act = b.dataset.act, id = +b.dataset.id;
       try {
         if (act === 'edit') { m.close(); return wipForm(p); }
+        if (act === 'share') return shareWip(p);
         if (act === 'signin') { store.set('trmnl-wip-return', hr('elaboration')); return api().signIn(); }
         if (act === 'del') { if (!confirm(L('Supprimer ce projet, ses avancées et ses commentaires ?', 'Delete this project, its updates and comments?'))) return; await api().deleteProject(p); m.close(); return wipRefresh(); }
         if (act === 'hide') { await api().setHidden(p.id, !p.hidden); p.hidden = !p.hidden; await draw(); return wipRefresh(); }
@@ -2478,7 +2486,7 @@ const countryOf = tz => { const cc = TZ_CC[tz]; let name = tz || '?';
 const EVENT_LABELS = () => ({ 'actu-eink-lue': L('Article e-ink lu', 'E-ink article read'), 'actu-eink-partagee': L('Article e-ink partagé', 'E-ink article shared'), 'avancee-publiee': L('Avancée publiée', 'Update posted'),
   'bandeau-modifie': L("Bandeau d'accueil modifié", 'Home banner edited'), 'commentaire-publie': L('Commentaire publié', 'Comment posted'), 'connexion-discord': L('Connexion Discord', 'Discord sign-in'),
   'liaison-demandee': L('Liaison de profil demandée', 'Profile link requested'), 'lien-pied-de-page': L('Lien du pied de page', 'Footer link'), 'lien-profil-copie': L('Lien de profil copié', 'Profile link copied'),
-  'lien-recette-copie': L('Lien de recette copié', 'Recipe link copied'), 'profil-choisi': L('Profil choisi', 'Profile picked'), 'projet-ouvert': L('Projet ouvert', 'Project opened'), 'projet-publie': L('Projet publié', 'Project posted'),
+  'lien-recette-copie': L('Lien de recette copié', 'Recipe link copied'), 'profil-choisi': L('Profil choisi', 'Profile picked'), 'projet-ouvert': L('Projet ouvert', 'Project opened'), 'projet-partage': L('Projet partagé', 'Project shared'), 'projet-publie': L('Projet publié', 'Project posted'),
   'projet-modifie': L('Projet modifié', 'Project edited'), 'pronostic': L('Pronostic', 'Prediction'), 'recette-partagee': L('Recette partagée', 'Recipe shared'), 'revendication-ouverte': L('Revendication ouverte', 'Claim opened'),
   'vignette-ouverte': L('Vignette ouverte', 'Card opened'), 'vignette-telechargee': L('Vignette téléchargée', 'Card downloaded'), 'langue-en': L('Site en anglais', 'Site in English'), 'langue-fr': L('Site en français', 'Site in French') });
 const VIA_LABELS = () => ({ discord: '💬 Discord', reddit: '🟠 Reddit', bluesky: '🦋 Bluesky', x: '✖️ X', mastodon: '🐘 Mastodon', linkedin: '💼 LinkedIn', facebook: '📘 Facebook',
@@ -2930,43 +2938,57 @@ const einkText = a => {
 };
 // Lien de partage : une page du site avec la vignette de l'article (balises d'aperçu), qui renvoie sur l'article ici
 const einkShareURL = (a, via) => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}a/${a.id}${EN() ? '-en' : ''}.html${via ? `?via=${via}` : ''}`;
-function shareEink(a) {
+// Fenêtre de partage commune (articles e-ink, projets en élaboration).
+// o = { title, teaser, img, label, note, heading, link: via => adresse, event }
+function sharePanel(o) {
   // Chaque réseau reçoit un lien étiqueté (?via=reddit…) : les statistiques savent ainsi d'où viennent les clics
-  const t = einkText(a), url = einkShareURL(a, 'lien'), tt = encodeURIComponent(t.title);
-  const U = k => encodeURIComponent(einkShareURL(a, k));
+  const url = o.link('lien'), tt = encodeURIComponent(o.title), U = k => encodeURIComponent(o.link(k));
   const copy = async (msg, link = url) => {
     try { await navigator.clipboard.writeText(link); toast(msg); } catch { prompt(L('Copiez ce lien :', 'Copy this link:'), link); }
   };
   const nets = [
     ['discord', '💬 Discord', null],
     ['reddit', '🟠 Reddit', `https://www.reddit.com/submit?url=${U('reddit')}&title=${tt}`],
-    ['bluesky', '🦋 Bluesky', `https://bsky.app/intent/compose?text=${encodeURIComponent(`${t.title} ${einkShareURL(a, 'bluesky')}`)}`],
+    ['bluesky', '🦋 Bluesky', `https://bsky.app/intent/compose?text=${encodeURIComponent(`${o.title} ${o.link('bluesky')}`)}`],
     ['x', '✖️ X', `https://x.com/intent/post?url=${U('x')}&text=${tt}`],
     ['mastodon', '🐘 Mastodon', `https://mastodonshare.com/?url=${U('mastodon')}&text=${tt}`],
     ['linkedin', '💼 LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${U('linkedin')}`],
     ['facebook', '📘 Facebook', `https://www.facebook.com/sharer/sharer.php?u=${U('facebook')}`],
-    ['whatsapp', '🟢 WhatsApp', `https://wa.me/?text=${encodeURIComponent(`${t.title} ${einkShareURL(a, 'whatsapp')}`)}`],
+    ['whatsapp', '🟢 WhatsApp', `https://wa.me/?text=${encodeURIComponent(`${o.title} ${o.link('whatsapp')}`)}`],
   ];
-  const m = modal(`<h3 style="margin:0">${L('Partager cet article', 'Share this article')}</h3>
-    <div class="pv"><small>${L('Palmarès des créateurs TRMNL · Actu e-ink', 'TRMNL Creator Leaderboard · E-ink news')}</small>
-      <b>${esc(t.title)}</b>${t.teaser ? `<p>${esc(t.teaser)}</p>` : ''}
-      <img src="${esc(a.img || 'og.png')}" alt="" referrerpolicy="no-referrer"></div>
+  const m = modal(`<h3 style="margin:0">${o.heading}</h3>
+    <div class="pv"><small>${o.label}</small>
+      <b>${esc(o.title)}</b>${o.teaser ? `<p>${esc(o.teaser)}</p>` : ''}
+      <img src="${esc(o.img || 'og.png')}" alt="" referrerpolicy="no-referrer"></div>
     <div class="nets">${nets.map(([k, lb, href]) => href
       ? `<a class="btn ghost" data-net="${k}" href="${esc(href)}" target="_blank" rel="noopener">${lb}</a>`
       : `<button class="btn ghost" type="button" data-net="${k}">${lb}</button>`).join('')}
       ${navigator.share ? `<button class="btn ghost" type="button" data-net="native">📤 ${L('Autre…', 'More…')}</button>` : ''}</div>
     <input type="text" readonly value="${esc(url)}" aria-label="${L('Lien de partage', 'Share link')}">
-    <p class="note">${L("Le lien mène à l'article sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", 'The link leads to the article on this site, and shows up with its thumbnail on Discord, Reddit and social networks.')}</p>
+    <p class="note">${o.note}</p>
     <div class="row"><button class="btn" type="button" id="eCopy">🔗 ${L('Copier le lien', 'Copy link')}</button>
       <button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`, 'eshr');
   m.$('.pv img')?.addEventListener('error', e => { e.target.src = 'og.png'; }, { once: true });
   m.$('input').onclick = e => e.target.select();
-  m.$('#eCopy').onclick = () => { copy(L('Lien copié', 'Link copied')); track('actu-eink-partagee', true); };
+  m.$('#eCopy').onclick = () => { copy(L('Lien copié', 'Link copied')); track(o.event, true); };
   m.wrap.querySelectorAll('[data-net]').forEach(b => b.addEventListener('click', () => {
-    const k = b.dataset.net; track('actu-eink-partagee', true);
-    if (k === 'discord') copy(L('Lien copié : collez-le dans Discord', 'Link copied: paste it in Discord'), einkShareURL(a, 'discord'));
-    else if (k === 'native') navigator.share({ title: t.title, text: t.teaser || '', url: einkShareURL(a, 'partage') }).catch(() => {});
+    const k = b.dataset.net; track(o.event, true);
+    if (k === 'discord') copy(L('Lien copié : collez-le dans Discord', 'Link copied: paste it in Discord'), o.link('discord'));
+    else if (k === 'native') navigator.share({ title: o.title, text: o.teaser || '', url: o.link('partage') }).catch(() => {});
   }));
+}
+function shareEink(a) {
+  const t = einkText(a);
+  sharePanel({ title: t.title, teaser: t.teaser, img: a.img, event: 'actu-eink-partagee', link: via => einkShareURL(a, via),
+    heading: L('Partager cet article', 'Share this article'), label: L('Palmarès des créateurs TRMNL · Actu e-ink', 'TRMNL Creator Leaderboard · E-ink news'),
+    note: L("Le lien mène à l'article sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", 'The link leads to the article on this site, and shows up with its thumbnail on Discord, Reddit and social networks.') });
+}
+// Projets en élaboration : page de partage p/<id>.html (vignette), qui renvoie sur la fiche du projet dans le site
+const wipShareURL = (p, via) => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}p/${p.id}${EN() ? '-en' : ''}.html${via ? `?via=${via}` : ''}`;
+function shareWip(p) {
+  sharePanel({ title: p.name, teaser: p.description, img: p.images?.[0] ? imgURL(p.images[0]) : '', event: 'projet-partage', link: via => wipShareURL(p, via),
+    heading: L('Partager ce projet', 'Share this project'), label: L('Palmarès des créateurs TRMNL · En élaboration', 'TRMNL Creator Leaderboard · In the making'),
+    note: L("Le lien ouvre directement la fiche du projet sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", "The link opens the project's page on this site directly, and shows up with its thumbnail on Discord, Reddit and social networks.") });
 }
 function openEink(a) {
   const t = einkText(a), cats = Object.fromEntries(EINK_CATS());

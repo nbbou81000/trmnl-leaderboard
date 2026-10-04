@@ -92,6 +92,33 @@ create or replace function public.trmnl_flag(tz text) returns text language sql 
   ) t(z, cc) where z = tz), '🌐')
 $$;
 
+-- ---------- Libellés des actions et de leurs cibles (écrans « Dernières visites » et « Actions » du plugin)
+create or replace function public.trmnl_event_label(p text) returns text language sql immutable as $$
+  select case p
+    when 'pronostic' then 'Pronostic' when 'connexion-discord' then 'Connexion Discord'
+    when 'actu-eink-lue' then 'Article e-ink lu' when 'actu-eink-partagee' then 'Article partagé'
+    when 'recette-partagee' then 'Recette partagée' when 'commentaire-publie' then 'Commentaire publié'
+    when 'projet-publie' then 'Projet publié' when 'projet-modifie' then 'Projet modifié' when 'projet-ouvert' then 'Projet ouvert'
+    when 'projet-partage' then 'Projet partagé' when 'avancee-publiee' then 'Avancée publiée' when 'reaction' then 'Réaction'
+    when 'lien-recette-copie' then 'Lien de recette copié' when 'lien-profil-copie' then 'Lien de profil copié'
+    when 'vignette-ouverte' then 'Vignette ouverte' when 'vignette-telechargee' then 'Vignette téléchargée'
+    when 'lien-pied-de-page' then 'Lien du pied de page' when 'liaison-demandee' then 'Liaison demandée'
+    when 'revendication-ouverte' then 'Revendication ouverte' when 'profil-choisi' then 'Profil choisi'
+    when 'bandeau-modifie' then 'Bandeau modifié' when 'langue-en' then 'Site en anglais' when 'langue-fr' then 'Site en français'
+    else initcap(replace(p, '-', ' ')) end
+$$;
+create or replace function public.trmnl_target_label(t text) returns text language sql stable security definer set search_path = public as $$
+  select case
+    when t is null then null
+    when split_part(t, '@', 1) like 'project:%' then coalesce((select name from projects where id::text = split_part(split_part(split_part(t, '@', 1), ':', 2), '.', 1)), 'projet')
+    when t like 'recipe:%' then 'recette #' || split_part(split_part(t, ':', 2), '@', 1)
+    when t like 'creator:%' then 'profil #' || split_part(split_part(t, ':', 2), '@', 1)
+    when t like 'article:%' then 'article e-ink'
+    when t like 'link:%' then split_part(split_part(t, ':', 2), '@', 1)
+    else t end
+    || case when position('@' in t) > 0 and split_part(t, '@', 2) !~ '^[0-9a-f-]+$' then ' · ' || split_part(t, '@', 2) else '' end
+$$;
+
 -- ---------- Encodage d'adresse web (pour fabriquer les adresses des graphiques QuickChart)
 create or replace function public.trmnl_urlencode(t text) returns text language plpgsql immutable as $$
 declare r text := ''; c text; i int;
@@ -187,6 +214,77 @@ begin
         select trmnl_country(tz) as name, count(distinct visitor) as visitors
         from visit_hits where kind = 'view' and at >= w0 group by 1 order by 2 desc limit 6) x)
   ) into res;
+  -- Écrans « Activité », « Dernières visites » et « Actions » du plugin
+  res := (res::jsonb || jsonb_build_object(
+    'slot5', (floor(extract(epoch from now()) / 300)::bigint % 5),
+    -- grille jours × heures (4 dernières semaines), niveau 0 à 3 pour les 4 gris de l'OG
+    'heat', (select jsonb_agg(row_to_json(r)::jsonb order by r.dw) from (
+        select g.dw, (array['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'])[g.dw + 1] as day,
+               jsonb_agg(jsonb_build_object('h', g.h, 'n', coalesce(z.n, 0),
+                 'lvl', case when coalesce(z.n, 0) = 0 then 0 when z.n::numeric / greatest(1, mx.m) <= .34 then 1 when z.n::numeric / greatest(1, mx.m) <= .67 then 2 else 3 end) order by g.h) as cells
+        from (select dw, h from generate_series(0, 6) dw, generate_series(0, 23) h) g
+        left join (select extract(isodow from at at time zone tzn)::int - 1 dw, extract(hour from at at time zone tzn)::int h, count(*) n
+                   from visit_hits where kind = 'view' and at >= now() - interval '28 days' group by 1, 2) z on z.dw = g.dw and z.h = g.h
+        cross join (select max(n) m from (select count(*) n from visit_hits where kind = 'view' and at >= now() - interval '28 days'
+                    group by extract(isodow from at at time zone tzn), extract(hour from at at time zone tzn)) q) mx
+        group by g.dw) r),
+    'durations', (select jsonb_agg(jsonb_build_object('label', l, 'n', coalesce(n, 0)) order by b) from (values (1, 'moins de 30 s'), (2, '30 s à 2 min'), (3, '2 à 10 min'), (4, '10 à 30 min'), (5, 'plus de 30 min')) v(b, l)
+        left join (select case when seconds < 30 then 1 when seconds < 120 then 2 when seconds < 600 then 3 when seconds < 1800 then 4 else 5 end bb, count(*) n
+                   from visit_days where day > (now() at time zone tzn)::date - 7 group by 1) q on q.bb = v.b),
+    'loyalty', (select jsonb_agg(jsonb_build_object('label', l, 'n', coalesce(n, 0)) order by b) from (values (1, '1 jour'), (2, '2 à 3 jours'), (3, '4 à 7 jours'), (4, '8 jours et +')) v(b, l)
+        left join (select case when c = 1 then 1 when c <= 3 then 2 when c <= 7 then 3 else 4 end bb, count(*) n
+                   from (select visitor, count(*) c from visit_days where day > (now() at time zone tzn)::date - 30 group by visitor) x group by 1) q on q.bb = v.b),
+    'targets_7', (select coalesce(jsonb_agg(x), '[]') from (
+        select trmnl_event_label(path) as action, trmnl_target_label(target) as what, count(*) as n, count(distinct visitor) as visitors
+        from visit_hits where kind = 'event' and target is not null and at >= w0 group by path, target order by 3 desc, 4 desc limit 8) x),
+    'events_7', (select coalesce(jsonb_agg(x), '[]') from (
+        select trmnl_event_label(path) as action, count(*) as n, count(distinct visitor) as visitors
+        from visit_hits where kind = 'event' and at >= w0 group by path order by 2 desc limit 8) x),
+    'tabs_all', (select coalesce(jsonb_agg(x), '[]') from (
+        select trmnl_tab_label(path) as name, count(*) as views, count(distinct visitor) as visitors
+        from visit_hits where kind = 'view' and at >= w0 group by 1 order by 2 desc limit 12) x),
+    'recent_rows', (select coalesce(jsonb_agg(x order by x.at desc), '[]') from (
+        select h.at, to_char(h.at at time zone tzn, 'HH24:MI:SS') as time, left(h.visitor::text, 4) as who, h.is_new as new, h.kind = 'event' as event,
+               case when h.kind = 'event' then trmnl_event_label(h.path) else trmnl_tab_label(h.path) end as what,
+               trmnl_target_label(h.target) as target,
+               case when h.mobile then 'Mobile' when h.mobile is false then 'PC' else '' end as device,
+               concat_ws(' · ', h.browser, h.os) as agent, trmnl_country(h.tz) as country,
+               case when h.via is not null or h.ref is not null then trmnl_source_label(h.via, h.ref) else '' end as source
+        from visit_hits h order by h.at desc limit 13) x)
+  ))::json;
+
+  -- Analyse automatique : quelques constats en français, de plus en plus fins à mesure que les données s'accumulent
+  res := (res::jsonb || jsonb_build_object('insights', (
+    with h28 as (select *, at at time zone tzn as lt from visit_hits where kind = 'view' and at >= now() - interval '28 days'),
+         vd28 as (select * from visit_days where day > (now() at time zone tzn)::date - 28),
+         ndays as (select count(distinct day) n from vd28),
+         slot as (select (array['le lundi','le mardi','le mercredi','le jeudi','le vendredi','le samedi','le dimanche'])[extract(isodow from lt)::int] dname,
+                         (floor(extract(hour from lt) / 3) * 3)::int b, count(*) n
+                  from h28 group by 1, 2 order by 3 desc limit 1),
+         dev as (select round(100.0 * count(*) filter (where mobile and (extract(hour from lt) >= 19 or extract(hour from lt) < 2)) / nullif(count(*) filter (where extract(hour from lt) >= 19 or extract(hour from lt) < 2), 0) ) evep,
+                        round(100.0 * count(*) filter (where mobile and extract(hour from lt) between 8 and 18) / nullif(count(*) filter (where extract(hour from lt) between 8 and 18), 0)) dayp
+                 from h28),
+         tm as (select round(avg(seconds) filter (where mobile and seconds > 0)) m, round(avg(seconds) filter (where mobile is false and seconds > 0)) p from vd28),
+         wk2 as (select count(distinct visitor) filter (where day > (now() at time zone tzn)::date - 7) a,
+                        count(distinct visitor) filter (where day <= (now() at time zone tzn)::date - 7 and day > (now() at time zone tzn)::date - 14) b from visit_days),
+         src as (select trmnl_source_label(via, ref) s, count(distinct visitor) n from vd28 where via is not null or ref is not null group by 1 order by 2 desc limit 1),
+         ctry as (select string_agg(c, ', ') c from (select trmnl_country(tz) c from h28 where tz is not null group by 1 order by count(distinct visitor) desc limit 2) x),
+         tab as (select trmnl_tab_label(path) t from h28 where path not like 'article-%' group by 1 order by count(*) desc limit 1)
+    select coalesce(jsonb_agg(line) filter (where line is not null), '[]') from (values
+      ((select 'Créneau le plus actif : ' || dname || ' entre ' || b || ' h et ' || case when b + 3 = 24 then 'minuit' else (b + 3) || ' h' end || '.' from slot where n >= 3)),
+      ((select case when evep is not null and dayp is not null and abs(evep - dayp) >= 15
+                    then 'Le soir, ' || evep || ' % des visites se font sur mobile, contre ' || dayp || ' % en journée.'
+                    when evep is not null and dayp is not null then 'Mobile : ' || round((evep + dayp) / 2) || ' % des visites, le soir comme en journée.' end from dev)),
+      ((select case when m is not null and p is not null then 'Durée moyenne : ' || replace(round(p / 60.0, 1)::text, '.', ',') || ' min sur ordinateur, ' || replace(round(m / 60.0, 1)::text, '.', ',') || ' min sur mobile.' end from tm)),
+      ((select case when (res->>'today')::int > 0 then (res->>'today_return') || ' visiteur(s) sur ' || (res->>'today') || ' aujourd''hui étaient déjà venus.' end)),
+      ((select case when (select n from ndays) >= 14 and b > 0 then 'Cette semaine : ' || case when a >= b then '+' else '' end || round(100.0 * (a - b) / b) || ' % de visiteurs par rapport à la précédente.'
+                    when (select n from ndays) < 14 then 'Comparaison d''une semaine à l''autre possible dans ' || (14 - (select n from ndays)) || ' jour(s).' end from wk2)),
+      ((select 'Première source identifiée : ' || s || ' (' || n || ' visiteur' || case when n > 1 then 's' else '' end || ').' from src)),
+      ((select 'Pays en tête : ' || c || '.' from ctry where c is not null)),
+      ((select 'Onglet préféré : ' || t || '.' from tab))
+    ) v(line)
+  )))::json;
+
   -- Mini-graphiques en caractères (▁▂▃▄▅▆▇█) : visiteurs par heure aujourd'hui, et par jour sur 14 jours
   res := (res::jsonb || jsonb_build_object(
     'spark_hours', (select string_agg(case when (h->>'today') is null then '·'
@@ -224,7 +322,12 @@ begin
             when 'pronostic' then 'Pronostic' when 'connexion-discord' then 'Connexion Discord'
             when 'actu-eink-partagee' then 'Article partagé' when 'actu-eink-lue' then 'Article lu'
             when 'recette-partagee' then 'Recette partagée' when 'commentaire-publie' then 'Commentaire'
-            when 'projet-publie' then 'Projet publié' when 'lien-recette-copie' then 'Lien copié'
+            when 'projet-publie' then 'Projet publié' when 'lien-recette-copie' then 'Lien de recette copié'
+            when 'liaison-demandee' then 'Demande de liaison' when 'lien-profil-copie' then 'Lien de profil copié'
+            when 'projet-ouvert' then 'Projet ouvert' when 'projet-partage' then 'Projet partagé' when 'reaction' then 'Réaction'
+            when 'avancee-publiee' then 'Avancée publiée' when 'vignette-ouverte' then 'Vignette ouverte'
+            when 'vignette-telechargee' then 'Vignette téléchargée' when 'lien-pied-de-page' then 'Lien du pied de page'
+            when 'revendication-ouverte' then 'Revendication ouverte' when 'profil-choisi' then 'Profil choisi'
             else initcap(replace(path, '-', ' ')) end || '[/c]'
           else trmnl_tab_label(path) end,
         case when is_new and kind = 'view' then '  [c=#5BD68C]nouveau[/c]' else '' end),

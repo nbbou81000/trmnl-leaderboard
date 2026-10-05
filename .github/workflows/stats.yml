@@ -36,12 +36,19 @@ jobs:
         run: |
           mkdir -p public/data
           if git fetch --depth=1 origin gh-pages 2>/dev/null; then
-            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json; do
+            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json; do
               git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
             done
           else
             echo "Premier lancement : pas encore d'historique."
           fi
+
+      # Règles de l'espace #admin (retraits du palmarès, recette du jour imposée, actu e-ink) : lues dans Supabase
+      - name: Règles de l'administrateur
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+        run: node scripts/admin-rules.mjs fetch public/data
 
       - name: Collecter les recettes et calculer les classements
         env:
@@ -64,7 +71,9 @@ jobs:
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           EINK_FORCE: ${{ inputs.eink }}
-        run: node scripts/eink-news.mjs public/data
+        run: |
+          node scripts/eink-news.mjs public/data
+          node scripts/admin-rules.mjs eink public/data
 
       - name: Visites du jour (GoatCounter)
         run: node scripts/goatcounter-today.mjs public/data

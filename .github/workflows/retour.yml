@@ -1,0 +1,79 @@
+name: Revenir à une ancienne version
+
+# Remet le site (la page index.html et ses images, et si on le demande les scripts) dans l'état
+# d'une version précédente, puis le republie.
+# Le numéro de version se copie dans l'espace d'administration du site (#admin › Versions).
+# Ne touche jamais : les statistiques, la base Supabase (membres, projets, commentaires),
+# names.json (noms des créateurs), les fichiers SQL et les workflows. Aucun fichier n'est supprimé.
+# Rien n'est effacé de l'historique : le retour est une nouvelle version, qu'on peut elle-même annuler.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Numéro de la version à remettre en ligne (7 caractères, copié depuis #admin › Versions)'
+        required: true
+        type: string
+      quoi:
+        description: 'Que remettre ?'
+        type: choice
+        options:
+          - La page du site seulement
+          - La page du site et les scripts
+        default: La page du site seulement
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: retour-version
+  cancel-in-progress: false
+
+jobs:
+  retour:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remettre la version demandée
+        env:
+          VERSION: ${{ inputs.version }}
+          QUOI: ${{ inputs.quoi }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          V="$(printf '%s' "$VERSION" | tr -cd '0-9a-fA-F')"
+          if [ "${#V}" -lt 7 ]; then echo "::error::Numéro de version invalide : « $VERSION ». Copiez-le depuis #admin › Versions."; exit 1; fi
+          if ! FULL="$(git rev-parse --verify --quiet "$V^{commit}")"; then echo "::error::Version « $V » introuvable dans le dépôt."; exit 1; fi
+          if ! git merge-base --is-ancestor "$FULL" HEAD; then echo "::error::La version « $V » ne fait pas partie de l'historique de la branche $BRANCH."; exit 1; fi
+          if [ "$FULL" = "$(git rev-parse HEAD)" ]; then echo "Cette version est déjà en ligne : rien à faire."; exit 0; fi
+
+          # La page et ses fichiers : remis tels qu'ils étaient dans cette version
+          for f in index.html sw.js manifest.webmanifest og.png icon-192.png icon-512.png icon-maskable-512.png apple-touch-icon.png; do
+            if git cat-file -e "$FULL:$f" 2>/dev/null; then git checkout "$FULL" -- "$f"; fi
+          done
+          # Les scripts : les anciennes versions remplacent les actuelles, mais aucun script n'est supprimé
+          # (les workflows actuels, qui ne reculent pas, en ont besoin)
+          if [ "$QUOI" = "La page du site et les scripts" ] && git cat-file -e "$FULL:scripts" 2>/dev/null; then
+            git checkout "$FULL" -- scripts
+          fi
+          if git diff --cached --quiet; then echo "Aucune différence avec la version actuelle : rien à faire."; exit 0; fi
+
+          echo "Fichiers remis dans leur état du $(git log -1 --format='%cd' --date=format:'%d/%m/%Y à %H:%M' "$FULL") :"
+          git diff --cached --stat
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "Retour à la version ${FULL:0:7} du $(git log -1 --format='%cd' --date=format:'%d/%m/%Y %H:%M' "$FULL")"
+          git push -q origin "HEAD:$BRANCH"
+          echo "republish=yes" >> "$GITHUB_ENV"
+
+      - name: Republier le site
+        if: env.republish == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          gh workflow run stats.yml --repo "$GITHUB_REPOSITORY" --ref "$BRANCH" -f collect=false
+          echo "Le site sera republié d'ici 1 à 2 minutes (workflow « Mise à jour des stats TRMNL »)."

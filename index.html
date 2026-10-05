@@ -617,6 +617,27 @@ footer p{margin:0 0 12px;max-width:80ch}
   @keyframes ink{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
 }.spark{display:block;overflow:visible}
 .spark polyline{fill:none;stroke:var(--accent);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;filter:url(#sparkglow)}
+/* Espace d'administration (#admin) */
+.adm-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:0 0 16px}
+#tab-admin .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.adm-tiles>div.warn{border-color:var(--accent)}.adm-tiles>div.warn b{color:var(--accent-ink)}
+.adm-bar{height:7px;border-radius:99px;background:var(--rule);overflow:hidden;margin-top:7px}
+.adm-bar i{display:block;height:100%;background:var(--sage);border-radius:99px}.adm-bar.warn i{background:var(--accent)}
+.adm-sw{display:grid;gap:8px}
+.adm-sw label{display:flex!important;gap:12px;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);cursor:pointer}
+.adm-sw label>span:first-child{flex:1;font-size:.95rem}.adm-sw label small{display:block;color:var(--ink2);font-weight:400;font-size:.8rem}
+.adm-sw input[type=checkbox]{width:22px;height:22px;accent-color:var(--sage);flex:none}
+.adm-sw .st{font-weight:700;font-size:.8rem;white-space:nowrap}.adm-sw .on{color:var(--sage)}.adm-sw .off{color:var(--accent-ink)}
+.adm-list{list-style:none;margin:8px 0 0;padding:0}
+.adm-list li{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--rule);font-size:.88rem}
+.adm-list li:last-child{border-bottom:0}
+.adm-list .meta,#tab-admin .meta{color:var(--ink2);font-size:.78rem}
+.adm-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.adm-form select,.adm-in{font:inherit;color:var(--ink);background:var(--sheet);border:1px solid var(--rule2);border-radius:8px;padding:6px 10px;max-width:100%}
+.adm-in{min-width:min(260px,100%)}
+.adm-sha{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:2px 6px}
+.adm-steps{margin:0 0 12px;padding-left:20px;font-size:.9rem}.adm-steps li{margin:4px 0}
+#tab-admin .sttab td .av{vertical-align:middle}
 </style>
 </head>
 <body>
@@ -647,6 +668,7 @@ footer p{margin:0 0 12px;max-width:80ch}
   <section id="tab-jour" hidden></section>
   <section id="tab-pronos" hidden></section>
   <section id="tab-stats" hidden></section>
+  <section id="tab-admin" hidden></section>
 </main>
 
 <footer id="footer"></footer>
@@ -829,7 +851,7 @@ function countVisit(path, kind = 'view', target = null) {
   try {
     if (!countOK()) return;
     const tab = kind === 'event' ? path : (path.split('#')[1] || 'accueil').toLowerCase();
-    if (tab === 'stats') return;   // la page de statistiques ne se compte pas elle-même
+    if (tab === 'stats' || tab === 'admin') return;   // les pages d'administration ne se comptent pas elles-mêmes
     const send = () => {
       if (!countOK()) return;
       let ref = null, via = null;
@@ -869,7 +891,7 @@ function startPing() {
 }
 // target : ce sur quoi porte l'action (recipe:123, creator:40325, project:9, article:…, link:ko-fi.com), éventuellement suivi de @réseau
 function track(path, event = false, target = null) {
-  if (location.hash.split('/')[0] !== '#stats') countVisit(path, event ? 'event' : 'view', target);
+  if (!['#stats', '#admin'].includes(location.hash.split('/')[0])) countVisit(path, event ? 'event' : 'view', target);
   if (!GOATCOUNTER || !window.goatcounter?.count) return;
   window.goatcounter.count({ path, title: event ? path : document.title, event });
 }
@@ -1078,7 +1100,7 @@ function route() {
   if (!D) return;
   const [raw, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');
   const tab = FROM_SLUG[raw] || raw || 'accueil';
-  const t = tab === 'createur' ? 'moi' : tab === 'stats' ? 'stats' : (TABS.includes(tab) ? tab : 'accueil');
+  const t = tab === 'createur' ? 'moi' : tab === 'stats' || tab === 'admin' ? tab : (TABS.includes(tab) ? tab : 'accueil');
   if (t !== 'stats') stopStats();
   document.querySelectorAll('nav.tabs a').forEach(a => {
     const on = a.dataset.tab === t && !(tab === 'createur' && !isMe(arg));
@@ -1089,7 +1111,7 @@ function route() {
   const cur = document.querySelector('nav.tabs a[aria-current="page"]'), bar = $('#tabsIn');
   if (cur && bar && bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: cur.offsetLeft - (bar.clientWidth - cur.offsetWidth) / 2, behavior: 'smooth' });
   document.querySelectorAll('main > section').forEach(s => { s.hidden = s.id !== 'tab-' + t; });
-  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: () => renderWip(arg), classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: () => renderWeek(arg), analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos, stats: renderStats })[t]();
+  ({ accueil: renderHome, moi: () => renderProfile(tab === 'createur' ? arg : me), galerie: renderGallery, elaboration: () => renderWip(arg), classements: renderBoards, createurs: renderCreators, recettes: renderRecipes, tendances: renderTrends, semaine: () => renderWeek(arg), analyses: renderAnalyses, trmnl: renderTrmnl, eink: () => renderEink(arg), jour: renderSpotlightTab, pronos: renderPronos, stats: renderStats, admin: () => renderAdmin(arg) })[t]();
   window.scrollTo({ top: 0 });
 }
 function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -1530,6 +1552,7 @@ const WSTAT = {
 let wipFilter = '', wipList = null, wipMe = null, wipProfile = null, wipErr = '', wipPending = 0;
 // Messages de la base traduits pour l'interface
 const ERRS = [
+  [/paused by the site admin/i, "Fonction momentanément en pause par l'administrateur du site. Réessayez plus tard.", 'Temporarily paused by the site admin. Please try again later.'],
   [/wait a few seconds/i, 'Patientez quelques secondes avant de commenter à nouveau.', 'Please wait a few seconds before commenting again.'],
   [/daily comment limit/i, 'Limite quotidienne de commentaires atteinte. À demain !', 'Daily comment limit reached. See you tomorrow!'],
   [/blocked/i, 'Votre compte est bloqué.', 'Your account is blocked.'],
@@ -1598,6 +1621,14 @@ const realApi = {
   async deleteComment(id) { const c = await client(); ok(await c.from('comments').delete().eq('id', id)); },
   async hideComment(id, hidden) { const c = await client(); ok(await c.from('comments').update({ hidden }).eq('id', id)); },
   async report(target, reason) { const c = await client(); const r = await c.from('reports').insert({ ...target, reason }); if (r.error && !/duplicate|unique/i.test(r.error.message)) throw new Error(r.error.message); },
+  async switches() { const c = await client(); return ok(await c.from('site_switches').select('*').eq('id', 1).maybeSingle()) || {}; },
+  async setSwitches(p) { const c = await client(); ok(await c.rpc('set_switches', { p })); },
+  async rulesList() { const c = await client(); return ok(await c.rpc('rules_list')) || []; },
+  async ruleAdd(kind, target, day, note) { const c = await client(); ok(await c.rpc('rule_add', { p_kind: kind, p_target: String(target), p_day: day || null, p_note: note || '' })); },
+  async ruleRemove(id) { const c = await client(); ok(await c.rpc('rule_remove', { p_id: id })); },
+  async adminLog(n = 500) { const c = await client(); return ok(await c.rpc('admin_log_list', { p_limit: n })) || []; },
+  async members() { const c = await client(); return ok(await c.rpc('admin_members')) || []; },
+  async health() { const c = await client(); return ok(await c.rpc('admin_health')); },
   async visitStats(days) { const c = await client(); return ok(await c.rpc('visit_stats', { p_days: days })); },
   async visitLive() { const c = await client(); return ok(await c.rpc('visit_live')); },
   async forgetVisitor(id) { const c = await client(); return ok(await c.rpc('forget_visitor', { p_visitor: id })); },
@@ -1615,6 +1646,7 @@ const realApi = {
     return path;
   },
   async upload(file) {
+    if (SWITCH?.uploads === false && !isAdmin()) throw new Error('Paused by the site admin');
     const c = await client();
     const [big, small] = await Promise.all([shrink(file, 1000, 0.82), shrink(file, 420, 0.75)]);
     const path = `${wipMe.id}/${Date.now().toString(36)}.webp`;
@@ -1761,7 +1793,7 @@ async function renderWip(openId) {
   if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L('Cette section ouvre très bientôt.', 'This section opens very soon.')}</p>`; return; }
   if (!wipList) {
     el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
-    try { await wipLoadSession(); wipList = await api().list(); wipErr = ''; }
+    try { await wipLoadSession(); [wipList] = await Promise.all([api().list(), loadSwitches(true)]); wipErr = ''; }
     catch (e) { wipErr = trErr(e.message); wipList = []; }
   }
   const items = wipList.map(p => ({ p, ship: shippedOf(p) }));
@@ -1775,11 +1807,11 @@ async function renderWip(openId) {
     ? `<div class="tools-row"><span class="who2">${avatarHTML(wipProfile)} <b>${esc(wipProfile?.name || '')}</b>${isAdmin() ? ` <span class="badge">admin</span>` : ''}</span>
         ${linkChip()}
         ${wipProfile?.banned ? `<span class="down">${L('Compte bloqué', 'Account blocked')}</span>` : `<button class="btn" type="button" id="wipNew">+ ${L('Partager mon projet', "Share what you're building")}</button>`}
-        ${isAdmin() ? `<button class="btn ghost small" type="button" id="wipVisits">📈 ${L('Visites', 'Visits')}</button><button class="btn ghost small" type="button" id="wipReports">${L('Signalements', 'Reports')}</button><button class="btn ghost small" type="button" id="wipLinks">${L('Liaisons à valider', 'Links to review')}${wipPending ? ` (${wipPending})` : ''}</button><button class="btn ghost small" type="button" id="wipDisclaimer">${L("Bandeau d'accueil", 'Home banner')}</button>` : ''}
+        ${isAdmin() ? `<button class="btn ghost small" type="button" id="wipAdmin">🛠️ ${L('Administration', 'Administration')}</button><button class="btn ghost small" type="button" id="wipVisits">📈 ${L('Visites', 'Visits')}</button><button class="btn ghost small" type="button" id="wipReports">${L('Signalements', 'Reports')}</button><button class="btn ghost small" type="button" id="wipLinks">${L('Liaisons à valider', 'Links to review')}${wipPending ? ` (${wipPending})` : ''}</button><button class="btn ghost small" type="button" id="wipDisclaimer">${L("Bandeau d'accueil", 'Home banner')}</button>` : ''}
         <button class="btn ghost small" type="button" id="wipOut">${L('Se déconnecter', 'Sign out')}</button></div>`
     : `<div class="tools-row"><button class="btn" type="button" id="wipIn"><span aria-hidden="true">🎮</span> ${L('Se connecter avec Discord', 'Sign in with Discord')}</button>
         <span class="muted" style="font-size:.86rem">${L('pour partager un projet ou commenter. La lecture est libre.', 'to share a project or comment. Reading is open to everyone.')}</span></div>`;
-  el.innerHTML = head + account + (wipErr ? `<p class="notice">${esc(wipErr)}</p>` : '') + `
+  el.innerHTML = head + pausedNotice(['comments', 'projects', 'uploads', 'reactions']) + account + (wipErr ? `<p class="notice">${esc(wipErr)}</p>` : '') + `
     ${justShipped.length ? `<h3 style="margin-top:8px">🎉 ${L('Tout juste publiées', 'Just shipped')}</h3><div class="cards" style="margin-bottom:26px">${justShipped.map(x => wipCard(x.p, x.ship)).join('')}</div>` : ''}
     ${active.length ? `<div class="tools"><div class="seg" role="group">
         <button type="button" data-wf="" aria-pressed="${!wipFilter}">${L('Toutes', 'All')} (${active.length})</button>
@@ -1799,6 +1831,7 @@ async function renderWip(openId) {
   $('#wipNew')?.addEventListener('click', () => wipForm());
   $('#wipReports')?.addEventListener('click', wipReportsView);
   $('#wipVisits')?.addEventListener('click', () => go('#stats'));
+  $('#wipAdmin')?.addEventListener('click', () => go('#admin'));
   $('#wipLinks')?.addEventListener('click', wipLinksView);
   // Lien direct vers un projet (…#elaboration/<numéro>, utilisé par les liens de partage) : on ouvre sa fiche
   if (openId) {
@@ -2575,6 +2608,293 @@ async function wipDetail(p) {
   draw();
 }
 
+/* ================= Espace d'administration (adresse #admin), réservé aux administrateurs =================
+   Santé du site, interrupteurs d'urgence, règles de contenu, membres, journal de modération, versions.
+   Nécessite supabase/admin.sql (à coller une fois dans l'éditeur SQL de Supabase). */
+const ADM_PANES = () => [['sante', L('🩺 Santé', '🩺 Health')], ['inter', L('🚦 Interrupteurs', '🚦 Switches')], ['contenus', L('🧹 Contenus', '🧹 Content')],
+  ['membres', L('👥 Membres', '👥 Members')], ['journal', L('📜 Journal', '📜 Log')], ['versions', L('⏪ Versions', '⏪ Versions')]];
+const ADM_SW = () => [
+  ['comments', L('💬 Commentaires', '💬 Comments'), L('Nouveaux commentaires sur les projets « En élaboration ».', 'New comments on "In the making" projects.')],
+  ['projects', L('🛠️ Projets et avancées', '🛠️ Projects and updates'), L('Nouveaux projets et nouvelles avancées.', 'New projects and new updates.')],
+  ['uploads', L("🖼️ Envoi d'images", '🖼️ Image uploads'), L("Captures d'écran jointes aux projets et avancées.", 'Screenshots attached to projects and updates.')],
+  ['reactions', L('😀 Réactions', '😀 Reactions'), L('Réactions en émojis sur les projets et commentaires.', 'Emoji reactions on projects and comments.')],
+  ['predictions', L('🔮 Pronostics', '🔮 Predictions'), L('Nouveaux paris de la semaine.', 'New weekly bets.')]];
+let admPane = 'sante', admGhCache = {}, admMemberQ = '', admLogQ = '';
+const admErr = e => /admin_|rules_|rule_|set_switches|public_rules|site_switches|content_rules|schema cache|does not exist|Could not find/i.test(e?.message || '')
+  ? L("Base pas encore prête : collez la dernière version de supabase/admin.sql dans l'éditeur SQL de Supabase (SQL Editor › New query › Run), puis rechargez la page.",
+    'Database not ready: paste the latest supabase/admin.sql into the Supabase SQL editor (SQL Editor › New query › Run), then reload the page.')
+  : trErr(e?.message || e);
+const fmtBytes = b => { b = +b || 0; const u = EN() ? ['B', 'KB', 'MB', 'GB'] : ['o', 'Ko', 'Mo', 'Go'], d = x => EN() ? x : x.replace('.', ',');
+  return b < 1024 ? `${b} ${u[0]}` : b < 1048576 ? `${(b / 1024).toFixed(0)} ${u[1]}` : b < 1073741824 ? `${d((b / 1048576).toFixed(1))} ${u[2]}` : `${d((b / 1073741824).toFixed(2))} ${u[3]}`; };
+const creatorLabel = u => NAMES[u] ? `${nameOf(u)} · #${u}` : nameOf(u);
+const fdt = iso => iso ? new Date(iso).toLocaleString(LOC, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+const todayUTC = () => new Date().toISOString().slice(0, 10);
+const recipeLabel = id => { const r = (D?.recipes || []).find(x => String(x.id) === String(id)); return r ? `${r.n} · #${r.id}` : L(`Recette #${id} (hors palmarès)`, `Recipe #${id} (not in rankings)`); };
+const pickId = v => (String(v).match(/#(\d{1,12})\s*$/) || String(v).trim().match(/^(\d{1,12})$/) || [])[1] || '';
+
+// Interrupteurs : lus par les onglets publics pour prévenir les visiteurs
+let SWITCH = null;
+async function loadSwitches(force) {
+  if (SWITCH && !force) return SWITCH;
+  try { SWITCH = (api().switches ? await api().switches() : {}) || {}; } catch { SWITCH = {}; }
+  return SWITCH;
+}
+function pausedNotice(keys) {
+  if (!SWITCH) return '';
+  const off = ADM_SW().filter(([k]) => keys.includes(k) && SWITCH[k] === false);
+  if (!off.length) return '';
+  const note = (EN() ? SWITCH.note_en : SWITCH.note_fr) || SWITCH.note_fr || '';
+  return `<p class="notice">⏸️ ${L('Momentanément en pause : ', 'Temporarily paused: ')}${off.map(([, lb]) => esc(lb.replace(/^\S+\s/, ''))).join(', ')}.${note ? ` ${esc(/[.!?…]$/.test(note) ? note : note + '.')}` : ''} ${L('La lecture reste ouverte.', 'Reading stays open.')}</p>`;
+}
+// Règles publiques (articles masqués, sources bloquées) : appliquées tout de suite par le site
+let PUBRULES = null;
+async function publicRules() {
+  if (PUBRULES) return PUBRULES;
+  PUBRULES = [];
+  if (!wipReady()) return PUBRULES;
+  try {
+    const r = await fetch(`${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/rpc/public_rules`, { method: 'POST', body: '{}',
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' } });
+    if (r.ok) PUBRULES = (await r.json()) || [];
+  } catch {}
+  return PUBRULES;
+}
+
+async function admGh(path) {
+  if (!REPO || REPO.includes('__')) throw new Error(L('Dépôt GitHub inconnu sur cette copie du site.', 'GitHub repository unknown on this copy of the site.'));
+  const c = admGhCache[path];
+  if (c && Date.now() - c.at < 60e3) return c.data;
+  const r = await fetch(`https://api.github.com/repos/${REPO}/${path}`, { headers: { Accept: 'application/vnd.github+json' } });
+  if (!r.ok) throw new Error(r.status === 403 ? L('GitHub limite les consultations : réessayez dans une heure.', 'GitHub is rate-limiting requests: try again in an hour.') : `GitHub : ${r.status}`);
+  const data = await r.json();
+  admGhCache[path] = { at: Date.now(), data };
+  return data;
+}
+
+async function renderAdmin(arg) {
+  const el = $('#tab-admin');
+  const head = `<h2>🛠️ ${L('Administration du site', 'Site administration')}</h2>`;
+  if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L("Supabase n'est pas configuré sur ce site.", 'Supabase is not set up on this site.')}</p>`; return; }
+  if (!wipMe) { el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
+    try { const ss = await api().session(); wipMe = ss.user; wipProfile = ss.profile; } catch {} }
+  if (!isAdmin()) {
+    el.innerHTML = head + `<p class="notice">${L("Cette page est réservée à l'administrateur du site.", 'This page is for the site administrator only.')}</p>
+      ${wipMe ? '' : `<button class="btn" type="button" id="admIn">${L('Se connecter avec Discord', 'Sign in with Discord')}</button>`}`;
+    $('#admIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', '#admin'); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
+    return;
+  }
+  if (arg && ADM_PANES().some(([k]) => k === arg)) admPane = arg;
+  el.innerHTML = `${head}<div class="adm-tools"><div class="seg" role="group">${ADM_PANES().map(([k, lb]) => `<button type="button" data-ap="${k}" aria-pressed="${k === admPane}">${lb}</button>`).join('')}</div>
+      <span><button class="btn ghost small" type="button" id="admVisits">📈 ${L('Visites', 'Visits')}</button> <button class="btn ghost small" type="button" id="admWip">${L('Signalements et liaisons', 'Reports and links')}</button></span></div>
+    <div id="admBody"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`;
+  el.querySelectorAll('[data-ap]').forEach(b => b.onclick = () => go(`#admin/${b.dataset.ap}`));
+  $('#admVisits').onclick = () => go('#stats');
+  $('#admWip').onclick = () => go(hr('elaboration'));
+  const body = $('#admBody');
+  try { await ({ sante: admHealth, inter: admSwitches, contenus: admContent, membres: admMembers, journal: admLog, versions: admVersions })[admPane](body); }
+  catch (e) { body.innerHTML = `<p class="err">${esc(admErr(e))}</p>`; }
+}
+
+// ---------- Santé
+async function admHealth(body) {
+  const [H, runs] = await Promise.all([api().health(), admGh('actions/runs?per_page=60').catch(e => ({ error: e.message }))]);
+  const pct = (a, b) => Math.min(100, Math.round(100 * (+a || 0) / b));
+  const ageH = (Date.now() - Date.parse(D.generated_at)) / 36e5;
+  const dDays = D.history?.daily_from ? Math.floor((Date.now() - Date.parse(D.history.daily_from)) / DAY) : 0;
+  const hDays = D.history?.hourly_from ? Math.min(8, (Date.now() - Date.parse(D.history.hourly_from)) / DAY) : 0;
+  const DB = 500 * 1048576, ST = 1024 * 1048576;
+  const bar = (p, warn) => `<div class="adm-bar ${warn ? 'warn' : ''}"><i style="width:${Math.max(2, p)}%"></i></div>`;
+  const tile = (big, label, extra = '', warn = false) => `<div class="${warn ? 'warn' : ''}"><b>${big}</b>${label}${extra}</div>`;
+  const st = H.storage || { bytes: 0, files: 0 };
+  // Dernier passage de chaque workflow
+  let wf = '';
+  if (runs.error) wf = `<p class="err">${esc(runs.error)}</p>`;
+  else {
+    const by = new Map();
+    for (const r of runs.workflow_runs || []) { if (!by.has(r.name)) by.set(r.name, { last: r, fails: 0 }); const o = by.get(r.name); if (r.conclusion === 'failure' && Date.now() - Date.parse(r.created_at) < DAY) o.fails++; }
+    const icon = r => r.status !== 'completed' ? ['⏳', L('en cours', 'running')] : ({ success: ['✅', L('réussi', 'success')], failure: ['❌', L('échec', 'failed')], cancelled: ['⚪', L('annulé', 'cancelled')], skipped: ['⏭️', L('ignoré', 'skipped')] }[r.conclusion] || ['❔', r.conclusion || '?']);
+    wf = by.size ? `<div class="sttabw"><table class="sttab"><thead><tr><th>${L('Workflow', 'Workflow')}</th><th>${L('Dernier passage', 'Last run')}</th><th>${L('Résultat', 'Result')}</th><th>${L('Échecs 24 h', 'Failures 24 h')}</th></tr></thead><tbody>
+      ${[...by.entries()].map(([n, o]) => { const [ic, lb] = icon(o.last); return `<tr><td><a href="${esc(o.last.html_url)}" target="_blank" rel="noopener">${esc(n)}</a></td><td>${esc(ago(o.last.created_at))}</td><td>${ic} ${esc(lb)}</td><td>${o.fails ? `<b class="down">${o.fails}</b>` : '0'}</td></tr>`; }).join('')}</tbody></table></div>
+      <p class="note">${L('Touchez un nom pour ouvrir son journal sur GitHub.', 'Tap a name to open its log on GitHub.')}</p>` : `<p class="muted">—</p>`;
+  }
+  body.innerHTML = `<div class="sttiles adm-tiles">
+      ${tile(esc(ago(D.generated_at)), L('dernière mise à jour des stats', 'last stats update'), `<small>${fdt(D.generated_at)}</small>`, ageH > 3)}
+      ${tile(`${fmtBytes(H.db_bytes)}`, L('base Supabase (gratuit : 500 Mo)', 'Supabase database (free: 500 MB)'), bar(pct(H.db_bytes, DB), pct(H.db_bytes, DB) > 80), pct(H.db_bytes, DB) > 80)}
+      ${tile(`${fmtBytes(st.bytes)}`, L(`images stockées (${nf(st.files)} fichiers, gratuit : 1 Go)`, `stored images (${nf(st.files)} files, free: 1 GB)`), bar(pct(st.bytes, ST), pct(st.bytes, ST) > 80), pct(st.bytes, ST) > 80)}
+      ${tile(nf(H.members), L('membres connectés via Discord', 'Discord members'), `<small>${L(`${nf(H.banned)} bloqué(s) · ${nf(H.pending_links)} liaison(s) à valider`, `${nf(H.banned)} blocked · ${nf(H.pending_links)} link(s) to review`)}</small>`, H.pending_links > 0)}
+      ${tile(nf(H.reports), L('signalements en attente', 'pending reports'), '', H.reports > 0)}
+      ${tile(nf(H.projects), L('projets en élaboration', 'projects in the making'), `<small>${L(`${nf(H.hidden_projects)} masqué(s) · ${nf(H.updates)} avancées`, `${nf(H.hidden_projects)} hidden · ${nf(H.updates)} updates`)}</small>`)}
+      ${tile(nf(H.comments), L('commentaires', 'comments'), `<small>${L(`${nf(H.hidden_comments)} masqué(s)`, `${nf(H.hidden_comments)} hidden`)}</small>`)}
+      ${tile(nf(H.predictions), L('pronostics', 'predictions'))}
+      ${tile(`${nf(dDays)} / 400 ${L('j', 'd')}`, L('historique quotidien conservé', 'daily history kept'), bar(pct(dDays, 400), false))}
+      ${tile(`${hDays.toFixed(1).replace('.', EN() ? '.' : ',')} / 8 ${L('j', 'd')}`, L('historique horaire conservé', 'hourly history kept'), bar(pct(hDays, 8), false))}
+      ${H.visit_rows != null ? tile(nf(H.visit_rows), L('visites enregistrées (395 j)', 'stored visits (395 d)')) : ''}
+    </div>
+    <div class="stgrid">
+      <div class="sheet wide"><h3>⚙️ ${L('Workflows GitHub', 'GitHub workflows')}</h3>${wf}</div>
+      <div class="sheet"><h3>🗄️ ${L('Tables les plus lourdes', 'Largest tables')}</h3><ul class="adm-list">${(H.tables || []).map(x => `<li><span>${esc(x.name)}</span><b>${fmtBytes(x.bytes)}</b></li>`).join('')}</ul></div>
+      <div class="sheet"><h3>📏 ${L('Limites des offres gratuites', 'Free-tier limits')}</h3><ul class="adm-list">
+        <li><span>${L('Base Supabase', 'Supabase database')}</span><b>${L('500 Mo', '500 MB')}</b></li><li><span>${L('Fichiers Supabase', 'Supabase files')}</span><b>${L('1 Go', '1 GB')}</b></li>
+        <li><span>${L('Pause Supabase sans activité', 'Supabase pause when idle')}</span><b>7 ${L('jours', 'days')}</b></li><li><span>${L('Site GitHub Pages', 'GitHub Pages site')}</span><b>${L('1 Go', '1 GB')}</b></li></ul>
+        <p class="note">${L('La mise à jour horaire réveille Supabase à chaque passage.', 'The hourly update wakes Supabase up on every run.')}</p></div>
+    </div>
+    <p class="note">${L(`Dernière action de modération : ${H.log_last ? fdt(H.log_last) : 'aucune'}.`, `Last moderation action: ${H.log_last ? fdt(H.log_last) : 'none'}.`)}</p>`;
+}
+
+// ---------- Interrupteurs d'urgence
+async function admSwitches(body) {
+  const S = await api().switches();
+  if (!S || S.comments === undefined) throw new Error('site_switches does not exist');
+  body.innerHTML = `<div class="sheet" style="max-width:720px"><h3>🚦 ${L("Interrupteurs d'urgence", 'Emergency switches')}</h3>
+    <p class="note" style="margin-top:0">${L("En cas de vague de spam ou de souci, coupez une fonction d'un clic. L'effet est immédiat, y compris pour quelqu'un qui contournerait le site. La lecture reste toujours ouverte, et vous, administrateur, n'êtes jamais bloqué.",
+      'If spam or trouble hits, turn a feature off in one click. It takes effect immediately, even for someone bypassing the site. Reading always stays open, and you, as admin, are never blocked.')}</p>
+    <form class="wform" id="swForm" novalidate><div class="adm-sw">
+      ${ADM_SW().map(([k, lb, d]) => `<label><span><b>${lb}</b><small>${d}</small></span><span class="st ${S[k] ? 'on' : 'off'}" data-st="${k}">${S[k] ? L('Ouvert', 'On') : L('Coupé', 'Off')}</span><input type="checkbox" name="${k}" ${S[k] ? 'checked' : ''}></label>`).join('')}</div>
+      <label>${L('Message aux visiteurs (français), facultatif', 'Message to visitors (French), optional')}<input name="note_fr" maxlength="200" value="${esc(S.note_fr || '')}" placeholder="${esc(L('ex. Les commentaires reviennent ce soir.', 'e.g. Comments are back tonight.'))}"></label>
+      <label>${L('Message aux visiteurs (anglais), facultatif', 'Message to visitors (English), optional')}<input name="note_en" maxlength="200" value="${esc(S.note_en || '')}"></label>
+      <div class="row left"><button class="btn" type="submit">${L('Enregistrer', 'Save')}</button><span class="muted" style="font-size:.84rem">${S.updated_at ? L(`Modifié ${ago(S.updated_at)}`, `Changed ${ago(S.updated_at)}`) : ''}</span></div>
+    </form></div>`;
+  const f = $('#swForm');
+  f.querySelectorAll('input[type=checkbox]').forEach(c => c.onchange = () => { const s = f.querySelector(`[data-st="${c.name}"]`); s.className = `st ${c.checked ? 'on' : 'off'}`; s.textContent = c.checked ? L('Ouvert', 'On') : L('Coupé', 'Off'); });
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const p = Object.fromEntries(ADM_SW().map(([k]) => [k, f.elements[k].checked]));
+    p.note_fr = f.elements.note_fr.value.trim(); p.note_en = f.elements.note_en.value.trim();
+    try { await api().setSwitches(p); SWITCH = null; toast(L('Interrupteurs enregistrés.', 'Switches saved.')); renderAdmin(); } catch (x) { toast(admErr(x)); }
+  };
+}
+
+// ---------- Contenus : recette du jour imposée, retraits du palmarès, actu e-ink
+async function admContent(body) {
+  const [R, E] = await Promise.all([api().rulesList(), getJSON('data/eink-news.json').catch(() => ({}))]);
+  const of = k => R.filter(r => r.kind === k);
+  const pins = of('spotlight'), exR = of('recipe'), exU = of('creator'), hidA = of('article'), blS = of('source');
+  const hidden = new Set(hidA.map(r => r.target)), blocked = new Set(blS.map(r => r.target));
+  const arts = (E.articles || []).slice(0, 40);
+  const sources = [...new Set([...(E.sources || []).map(s => String(s.s || '').replace(/\s*\(.*\)$/, '')), ...(E.articles || []).map(a => a.src)].filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const recipeOpts = (D.recipes || []).map(r => `<option value="${esc(`${r.n} · #${r.id}`)}">`).join('');
+  const creatorOpts = (D.creators || []).map(c => `<option value="${esc(`${nameOf(c.u)} · #${c.u}`)}">`).join('');   // toujours avec le numéro, pour le retrouver
+  const note = r => r.note ? `<span class="meta"> · ${esc(r.note)}</span>` : '';
+  const rm = r => `<button class="linkbtn danger" type="button" data-rm="${r.id}">${L('retirer', 'remove')}</button>`;
+  const list = (rows, label, empty) => rows.length ? `<ul class="adm-list">${rows.map(r => `<li><span>${label(r)}${note(r)}</span>${rm(r)}</li>`).join('')}</ul>` : `<p class="muted" style="margin:6px 0 0">${empty}</p>`;
+  const NEXT = L('Pris en compte au prochain passage horaire de la mise à jour.', 'Applied at the next hourly update run.');
+  body.innerHTML = `<datalist id="admRecipes">${recipeOpts}</datalist><datalist id="admCreators">${creatorOpts}</datalist>
+  <div class="stgrid">
+    <div class="sheet"><h3>⭐ ${L('Imposer la recette du jour', 'Pick the recipe of the day')}</h3>
+      <form class="wform" id="pinForm" novalidate>
+        <div class="two"><label>${L('Jour', 'Day')}<input type="date" name="day" min="${todayUTC()}" value="${todayUTC()}" required></label>
+        <label>${L('Recette', 'Recipe')}<input name="r" list="admRecipes" placeholder="${esc(L('Nom ou numéro', 'Name or number'))}" required></label></div>
+        <div class="row left"><button class="btn small" type="submit">${L('Imposer', 'Pick')}</button></div></form>
+      <p class="note">${L("Remplace le choix automatique de ce jour-là, même s'il a déjà été fait. ", 'Replaces the automatic pick for that day, even if already made. ') + NEXT}</p>
+      ${list(pins, r => `<b>${esc(new Date(r.day + 'T12:00:00Z').toLocaleDateString(LOC, { weekday: 'short', day: 'numeric', month: 'short' }))}</b> · ${esc(recipeLabel(r.target))}`, L('Aucune recette imposée : rotation automatique.', 'No pick: automatic rotation.'))}</div>
+
+    <div class="sheet"><h3>🚫 ${L('Retirer du palmarès', 'Remove from the rankings')}</h3>
+      <form class="wform" id="exForm" novalidate>
+        <div class="seg" role="group" style="justify-self:start"><button type="button" data-ex="recipe" aria-pressed="true">${L('Une recette', 'A recipe')}</button><button type="button" data-ex="creator" aria-pressed="false">${L('Un créateur', 'A creator')}</button></div>
+        <label><span id="exLb">${L('Recette', 'Recipe')}</span><input name="t" list="admRecipes" placeholder="${esc(L('Nom ou numéro', 'Name or number'))}" required></label>
+        <label>${L('Note privée (raison), facultative', 'Private note (reason), optional')}<input name="note" maxlength="200"></label>
+        <div class="row left"><button class="btn small" type="submit">${L('Retirer', 'Remove')}</button></div></form>
+      <p class="note">${L("Pour les chiffres gonflés artificiellement ou les recettes de test. Disparaît des classements, des tendances et des fiches ; l'historique reste relevé et revient si vous annulez. ", 'For artificially inflated numbers or test recipes. Gone from rankings, trends and pages; history keeps being recorded and comes back if you undo. ') + NEXT}</p>
+      ${list([...exR, ...exU], r => r.kind === 'recipe' ? `📦 ${esc(recipeLabel(r.target))}` : `👤 ${esc(creatorLabel(r.target))}`, L('Aucun retrait.', 'Nothing removed.'))}</div>
+
+    <div class="sheet"><h3>🛑 ${L('Sources bloquées (actu e-ink)', 'Blocked sources (e-ink news)')}</h3>
+      <form class="adm-form" id="srcForm" novalidate><select name="s">${sources.filter(s => !blocked.has(s)).map(s => `<option>${esc(s)}</option>`).join('')}</select>
+        <button class="btn small" type="submit">${L('Bloquer', 'Block')}</button></form>
+      <p class="note">${L('Ses articles disparaissent tout de suite du site, et elle ne sera plus consultée.', 'Its articles vanish from the site right away, and it will no longer be checked.')}</p>
+      ${list(blS, r => `🛑 ${esc(r.target)}`, L('Aucune source bloquée.', 'No blocked source.'))}</div>
+
+    <div class="sheet wide"><h3>📰 ${L('Articles e-ink', 'E-ink articles')}</h3>
+      <p class="note" style="margin-top:0">${L('Masquer un article le retire tout de suite du site, et il ne sera jamais réécrit.', 'Hiding an article removes it from the site right away, and it will never be rewritten.')}</p>
+      <ul class="adm-list">${arts.map(a => { const r = hidA.find(x => x.target === a.id); const off = hidden.has(a.id) || blocked.has(a.src);
+        return `<li${off ? ' style="opacity:.55"' : ''}><span>${esc(EN() ? a.title_en || a.title_fr : a.title_fr || a.title_en)}<span class="meta"> · ${esc(a.src || '')} · ${esc(ago2(a.added || a.d))}</span></span>
+          ${r ? rm(r) : blocked.has(a.src) ? `<span class="meta">${L('source bloquée', 'blocked source')}</span>` : `<button class="linkbtn" type="button" data-hide="${esc(a.id)}">${L('masquer', 'hide')}</button>`}</li>`; }).join('') || `<li class="muted">—</li>`}</ul>
+      ${hidA.filter(r => !arts.some(a => a.id === r.target)).length ? `<p class="note">${L('Autres articles masqués', 'Other hidden articles')} :</p>${list(hidA.filter(r => !arts.some(a => a.id === r.target)), r => `#${esc(r.target)}`, '')}` : ''}</div>
+  </div>`;
+  const add = async (kind, target, day, note2) => {
+    try { await api().ruleAdd(kind, target, day, note2); PUBRULES = null; einkData = null; toast(L('Règle enregistrée.', 'Rule saved.')); admContent(body); } catch (x) { toast(admErr(x)); }
+  };
+  body.querySelectorAll('[data-rm]').forEach(b => b.onclick = async () => { try { await api().ruleRemove(+b.dataset.rm); PUBRULES = null; einkData = null; toast(L('Règle retirée.', 'Rule removed.')); admContent(body); } catch (x) { toast(admErr(x)); } });
+  body.querySelectorAll('[data-hide]').forEach(b => b.onclick = () => add('article', b.dataset.hide, null, ''));
+  $('#pinForm').onsubmit = e => { e.preventDefault(); const f = e.target, id = pickId(f.elements.r.value);
+    if (!id) return toast(L('Choisissez une recette dans la liste.', 'Pick a recipe from the list.'));
+    if (!f.elements.day.value) return toast(L('Choisissez un jour.', 'Pick a day.'));
+    add('spotlight', id, f.elements.day.value, ''); };
+  let exKind = 'recipe';
+  body.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { exKind = b.dataset.ex;
+    body.querySelectorAll('[data-ex]').forEach(x => x.setAttribute('aria-pressed', x === b));
+    const inp = $('#exForm').elements.t; inp.value = ''; inp.setAttribute('list', exKind === 'recipe' ? 'admRecipes' : 'admCreators');
+    $('#exLb').textContent = exKind === 'recipe' ? L('Recette', 'Recipe') : L('Créateur', 'Creator'); });
+  $('#exForm').onsubmit = async e => { e.preventDefault(); const f = e.target, id = pickId(f.elements.t.value);
+    if (!id) return toast(L('Choisissez dans la liste, ou tapez un numéro.', 'Pick from the list, or type a number.'));
+    const what = exKind === 'recipe' ? recipeLabel(id) : creatorLabel(id);
+    if (!(await confirmBox({ title: L('Retirer du palmarès ?', 'Remove from the rankings?'), text: what, ok: L('Retirer', 'Remove') }))) return;
+    add(exKind, id, null, f.elements.note.value.trim()); };
+  $('#srcForm').onsubmit = e => { e.preventDefault(); const s = e.target.elements.s.value; if (s) add('source', s, null, ''); };
+}
+
+// ---------- Membres
+async function admMembers(body) {
+  const M = await api().members();
+  const draw = () => {
+    const q = admMemberQ.trim().toLowerCase();
+    const list = q ? M.filter(m => `${m.name} ${m.creator_id || ''}`.toLowerCase().includes(q)) : M;
+    const status = m => [m.is_admin ? `<span class="badge">admin</span>` : '', m.banned ? `<span class="down">${L('bloqué', 'blocked')}</span>` : '',
+      m.creator_id ? `<span class="meta">#${esc(m.creator_id)} ${m.creator_status === 'verified' ? '✔' : m.creator_status === 'pending' ? L('(à valider)', '(pending)') : ''}</span>` : ''].filter(Boolean).join(' ');
+    $('#memRows').innerHTML = list.map(m => `<tr><td class="tgtcell">${avatarHTML(m)} <b>${esc(m.name || '—')}</b> ${status(m)}</td>
+        <td>${fdate(m.created_at)}</td><td>${m.last_seen ? esc(ago(m.last_seen)) : '—'}</td><td>${m.last_action ? esc(ago(m.last_action)) : '—'}</td>
+        <td>${nf(m.projects)} · ${nf(m.comments)} · ${nf(m.predictions)}</td>
+        <td>${m.is_admin ? '' : `<button class="linkbtn ${m.banned ? '' : 'danger'}" type="button" data-ban="${m.id}" data-v="${m.banned ? 0 : 1}">${m.banned ? L('débloquer', 'unblock') : L('bloquer', 'block')}</button>`}</td></tr>`).join('')
+      || `<tr><td colspan="6" class="muted">${L('Aucun membre trouvé.', 'No member found.')}</td></tr>`;
+    $('#memRows').querySelectorAll('[data-ban]').forEach(b => b.onclick = async () => {
+      const m = M.find(x => x.id === b.dataset.ban), v = b.dataset.v === '1';
+      if (v && !(await confirmBox({ title: L('Bloquer ce membre ?', 'Block this member?'), text: L(`${m.name} ne pourra plus rien publier, commenter ni parier. Ses contenus restent visibles ; vous pouvez le débloquer à tout moment.`, `${m.name} will no longer be able to post, comment or bet. Their content stays visible; you can unblock them at any time.`), ok: L('Bloquer', 'Block') }))) return;
+      try { await api().ban(m.id, v); m.banned = v; toast(v ? L('Membre bloqué.', 'Member blocked.') : L('Membre débloqué.', 'Member unblocked.')); draw(); } catch (x) { toast(admErr(x)); }
+    });
+  };
+  body.innerHTML = `<div class="sheet"><div class="adm-tools" style="margin-bottom:10px"><h3 style="margin:0">👥 ${L(`${nf(M.length)} membres`, `${nf(M.length)} members`)}</h3>
+      <input type="search" id="memQ" class="adm-in" placeholder="${esc(L('Rechercher un nom ou un numéro', 'Search a name or number'))}" value="${esc(admMemberQ)}"></div>
+    <div class="sttabw"><table class="sttab"><thead><tr><th>${L('Membre', 'Member')}</th><th>${L('Inscrit le', 'Joined')}</th><th>${L('Dernière connexion', 'Last sign-in')}</th><th>${L('Dernière publication', 'Last post')}</th><th>${L('Projets · comm. · paris', 'Projects · comm. · bets')}</th><th></th></tr></thead><tbody id="memRows"></tbody></table></div>
+    <p class="note">${L("Les membres sont triés par dernière connexion. Bloquer empêche de publier, commenter et parier, sans rien effacer. L'adresse e-mail n'est jamais affichée.", 'Members are sorted by last sign-in. Blocking prevents posting, commenting and betting, without deleting anything. Email addresses are never shown.')}</p></div>`;
+  $('#memQ').oninput = e => { admMemberQ = e.target.value; draw(); };
+  draw();
+}
+
+// ---------- Journal de modération
+async function admLog(body) {
+  const rows = await api().adminLog(500);
+  const draw = () => {
+    const q = admLogQ.trim().toLowerCase();
+    const list = q ? rows.filter(r => `${r.action} ${r.target} ${r.detail} ${r.actor_name}`.toLowerCase().includes(q)) : rows;
+    $('#logRows').innerHTML = list.map(r => `<tr><td>${fdt(r.at)}</td><td>${esc(r.actor_name || '—')}</td><td><b>${esc(r.action)}</b></td><td class="tgtcell">${esc(r.target)}${r.detail ? `<span class="tgt">${esc(r.detail)}</span>` : ''}</td></tr>`).join('')
+      || `<tr><td colspan="4" class="muted">${L('Aucune action pour le moment.', 'No action yet.')}</td></tr>`;
+  };
+  body.innerHTML = `<div class="sheet"><div class="adm-tools" style="margin-bottom:10px"><h3 style="margin:0">📜 ${L('Journal de modération', 'Moderation log')}</h3>
+      <input type="search" id="logQ" class="adm-in" placeholder="${esc(L('Filtrer', 'Filter'))}" value="${esc(admLogQ)}"></div>
+    <div class="sttabw"><table class="sttab"><thead><tr><th>${L('Quand', 'When')}</th><th>${L('Qui', 'Who')}</th><th>${L('Action', 'Action')}</th><th>${L('Sur quoi', 'On what')}</th></tr></thead><tbody id="logRows"></tbody></table></div>
+    <p class="note">${L("Rempli automatiquement à chaque action d'un administrateur : blocages, contenus masqués ou supprimés, signalements classés, liaisons, bandeau, interrupteurs et règles. Conservé un an.", 'Filled in automatically for every admin action: blocks, hidden or deleted content, closed reports, links, banner, switches and rules. Kept for one year.')}</p></div>`;
+  $('#logQ').oninput = e => { admLogQ = e.target.value; draw(); };
+  draw();
+}
+
+// ---------- Versions : retour en arrière en un clic
+async function admVersions(body) {
+  const C = await admGh('commits?per_page=25');
+  const WF = `https://github.com/${REPO}/actions/workflows/retour.yml`;
+  body.innerHTML = `<div class="sheet"><h3>⏪ ${L('Revenir à une ancienne version', 'Go back to an earlier version')}</h3>
+    <ol class="adm-steps"><li>${L('Touchez <b>Copier</b> à côté de la version qui marchait.', 'Tap <b>Copy</b> next to the version that worked.')}</li>
+      <li>${L(`Ouvrez <a href="${WF}" target="_blank" rel="noopener">Revenir à une ancienne version</a> sur GitHub, puis <b>Run workflow</b>.`, `Open <a href="${WF}" target="_blank" rel="noopener">Revenir à une ancienne version</a> on GitHub, then <b>Run workflow</b>.`)}</li>
+      <li>${L('Collez le numéro, choisissez quoi remettre, puis <b>Run workflow</b>. Le site est republié en 2 à 3 minutes.', 'Paste the number, choose what to restore, then <b>Run workflow</b>. The site is republished within 2 to 3 minutes.')}</li></ol>
+    <ul class="adm-list">${C.map((c, k) => { const sha = c.sha.slice(0, 7), msg = String(c.commit?.message || '').split('\n')[0];
+      return `<li><span><b>${esc(fdt(c.commit?.author?.date))}</b>${k === 0 ? ` <span class="badge">${L('en ligne', 'live')}</span>` : ''}<span class="meta"> · ${esc(msg)}</span></span>
+        <span style="white-space:nowrap"><code class="adm-sha">${sha}</code> <button class="btn ghost small" type="button" data-sha="${sha}">${L('Copier', 'Copy')}</button> <a class="linkbtn" href="${esc(c.html_url)}" target="_blank" rel="noopener">${L('détail', 'details')}</a></span></li>`; }).join('')}</ul>
+    <p class="note">${L("Ne sont jamais touchés : les statistiques, la base Supabase (membres, projets, commentaires), les noms des créateurs, les fichiers SQL et les workflows. Le retour est lui-même une nouvelle version : pour l'annuler, refaites la même chose avec la version d'avant. Attention : une version antérieure à cet espace d'administration ne contient pas cette page ; le workflow reste alors utilisable directement depuis GitHub.",
+      'Never touched: statistics, the Supabase database (members, projects, comments), creator names, SQL files and workflows. Going back is itself a new version: to undo it, do the same with the version before. Note: a version older than this admin area does not contain this page; the workflow can then still be run straight from GitHub.')}</p></div>`;
+  body.querySelectorAll('[data-sha]').forEach(b => b.onclick = async () => {
+    try { await navigator.clipboard.writeText(b.dataset.sha); toast(L(`Numéro ${b.dataset.sha} copié.`, `Number ${b.dataset.sha} copied.`)); }
+    catch { prompt(L('Copiez ce numéro :', 'Copy this number:'), b.dataset.sha); }
+  });
+}
+
 // ---------- Statistiques de visite : page pleine, réservée aux administrateurs (adresse #stats)
 let statsDays = 30, statsTimers = [], statsLiveAt = 0;
 const stopStats = () => { statsTimers.forEach(clearInterval); statsTimers = []; };
@@ -2985,7 +3305,7 @@ async function renderPronos() {
   if (!pronoList) {
     el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
     try { if (!wipMe && store.get('trmnl-wip-session', '') === '1') { const ss = await api().session(); wipMe = ss.user; wipProfile = ss.profile; } } catch {}
-    try { pronoList = await api().predictions(); } catch (e) { el.innerHTML = head + `<p class="notice">${esc(trErr(e.message))}</p>`; return; }
+    try { [pronoList] = await Promise.all([api().predictions(), loadSwitches(true)]); } catch (e) { el.innerHTML = head + `<p class="notice">${esc(trErr(e.message))}</p>`; return; }
   }
   const week = isoWeekKey(Date.now());
   const mine = wipMe ? pronoList.filter(b => b.user_id === wipMe.id) : [];
@@ -3074,7 +3394,7 @@ async function renderPronos() {
   }
 
   const open = pronoList.filter(b => b.week === week).length;
-  el.innerHTML = head + `<div class="grid g2">${me_}${boardHTML}</div>${weekHTML}${pastHTML}
+  el.innerHTML = head + pausedNotice(['predictions']) + `<div class="grid g2">${me_}${boardHTML}</div>${weekHTML}${pastHTML}
     <p class="note">${L(`${open} pari${open > 1 ? 's' : ''} posé${open > 1 ? 's' : ''} cette semaine. Les paris d'une semaine sont jugés ensemble sur la semaine suivante, à partir des relevés quotidiens du site.`, `${open} bet${open > 1 ? 's' : ''} placed this week. A week's bets are judged together over the following week, from the site's daily snapshots.`)}</p>`;
 
   el.querySelectorAll('[data-pp]').forEach(b => b.onclick = () => { pronoPeriod = b.dataset.pp; renderPronos(); });
@@ -3187,7 +3507,11 @@ function openEink(a) {
 }
 async function renderEink(openId) {
   const el = $('#tab-eink');
-  if (!einkData) einkData = await getJSON('data/eink-news.json').catch(() => ({}));
+  if (!einkData) {
+    const [d, R] = await Promise.all([getJSON('data/eink-news.json').catch(() => ({})), publicRules()]);
+    const hid = new Set(R.filter(r => r.kind === 'article').map(r => r.target)), blk = new Set(R.filter(r => r.kind === 'source').map(r => r.target));
+    einkData = { ...d, articles: (d.articles || []).filter(a => !hid.has(a.id) && !blk.has(a.src)) };   // masqués par l'administrateur (#admin)
+  }
   const all = (einkData?.articles || []).map(a => a.cat === 'screens' ? { ...a, cat: 'displays' } : a);
   const list = einkCat === 'all' ? all : all.filter(a => a.cat === einkCat);
   const cats = Object.fromEntries(EINK_CATS());

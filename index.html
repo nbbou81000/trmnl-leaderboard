@@ -636,6 +636,7 @@ footer p{margin:0 0 12px;max-width:80ch}
 .adm-form select,.adm-in{font:inherit;color:var(--ink);background:var(--sheet);border:1px solid var(--rule2);border-radius:8px;padding:6px 10px;max-width:100%}
 .adm-in{min-width:min(260px,100%)}
 .adm-sha{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:2px 6px}
+.adm-lim li{display:block}.adm-limh{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.adm-limh b{white-space:nowrap}.adm-lim small{display:block;color:var(--ink2);font-size:.78rem;margin-top:4px}
 .adm-steps{margin:0 0 12px;padding-left:20px;font-size:.9rem}.adm-steps li{margin:4px 0}
 #tab-admin .sttab td .av{vertical-align:middle}
 </style>
@@ -2697,7 +2698,8 @@ async function renderAdmin(arg) {
 
 // ---------- Santé
 async function admHealth(body) {
-  const [H, runs] = await Promise.all([api().health(), admGh('actions/runs?per_page=60').catch(e => ({ error: e.message }))]);
+  const [H, runs, G, V] = await Promise.all([api().health(), admGh('actions/runs?per_page=60').catch(e => ({ error: e.message })),
+    getJSON('data/github.json').catch(() => null), api().visitStats(30).catch(() => null)]);
   const pct = (a, b) => Math.min(100, Math.round(100 * (+a || 0) / b));
   const ageH = (Date.now() - Date.parse(D.generated_at)) / 36e5;
   const dDays = D.history?.daily_from ? Math.floor((Date.now() - Date.parse(D.history.daily_from)) / DAY) : 0;
@@ -2732,6 +2734,7 @@ async function admHealth(body) {
     </div>
     <div class="stgrid">
       <div class="sheet wide"><h3>⚙️ ${L('Workflows GitHub', 'GitHub workflows')}</h3>${wf}</div>
+      <div class="sheet wide"><h3>🐙 ${L('Limites GitHub', 'GitHub limits')}</h3>${admGhLimits(G, V)}</div>
       <div class="sheet"><h3>🗄️ ${L('Tables les plus lourdes', 'Largest tables')}</h3><ul class="adm-list">${(H.tables || []).map(x => `<li><span>${esc(x.name)}</span><b>${fmtBytes(x.bytes)}</b></li>`).join('')}</ul></div>
       <div class="sheet"><h3>📏 ${L('Limites des offres gratuites', 'Free-tier limits')}</h3><ul class="adm-list">
         <li><span>${L('Base Supabase', 'Supabase database')}</span><b>${L('500 Mo', '500 MB')}</b></li><li><span>${L('Fichiers Supabase', 'Supabase files')}</span><b>${L('1 Go', '1 GB')}</b></li>
@@ -2739,6 +2742,32 @@ async function admHealth(body) {
         <p class="note">${L('La mise à jour horaire réveille Supabase à chaque passage.', 'The hourly update wakes Supabase up on every run.')}</p></div>
     </div>
     <p class="note">${L(`Dernière action de modération : ${H.log_last ? fdt(H.log_last) : 'aucune'}.`, `Last moderation action: ${H.log_last ? fdt(H.log_last) : 'none'}.`)}</p>`;
+}
+
+// Limites GitHub : mesurées par la mise à jour horaire (scripts/github-limits.mjs → data/github.json)
+function admGhLimits(G, V) {
+  if (!G?.site) return `<p class="muted">${L('Les mesures apparaîtront après le prochain passage de la mise à jour horaire.', 'Measurements will appear after the next hourly update run.')}</p>`;
+  const GB = 1073741824, MB = 1048576;
+  const row = (label, value, used, max, warnAt, note = '') => {
+    const p = max ? Math.min(100, Math.round(100 * used / max)) : null, warn = warnAt != null && used >= warnAt;
+    return `<li><div class="adm-limh"><span>${label}</span><b${warn ? ' class="down"' : ''}>${value}</b></div>${p != null ? `<div class="adm-bar ${warn ? 'warn' : ''}"><i style="width:${Math.max(1, p)}%"></i></div>` : ''}${note ? `<small>${note}</small>` : ''}</li>`;
+  };
+  const s = G.site, a = G.actions, bw = V?.visits != null && s.first_visit_bytes ? V.visits * s.first_visit_bytes : null;
+  const of = (x, max) => `${fmtBytes(x)} / ${max}`;
+  return `<ul class="adm-list adm-lim">
+    ${row(L('Site publié', 'Published site'), of(s.bytes, L('1 Go', '1 GB')), s.bytes, GB, 0.7 * GB, L(`${nf(s.files)} fichiers`, `${nf(s.files)} files`))}
+    ${row(L('Plus gros fichier', 'Largest file'), of(s.largest.bytes, L('100 Mo', '100 MB')), s.largest.bytes, 100 * MB, 50 * MB, `${esc(s.largest.path)} · ${L('GitHub prévient dès 50 Mo et refuse au-delà de 100 Mo.', 'GitHub warns from 50 MB and refuses above 100 MB.')}`)}
+    ${G.repo ? row(L('Dépôt complet', 'Whole repository'), of(G.repo.kb * 1024, L('1 Go conseillé', '1 GB advised')), G.repo.kb * 1024, GB, 0.8 * GB, L('Tout le code et son historique. Au-delà de 5 Go, GitHub peut demander de l\'alléger.', 'All code and its history. Above 5 GB, GitHub may ask you to slim it down.')) : ''}
+    ${row(L('Bande passante, 30 derniers jours (estimation)', 'Bandwidth, last 30 days (estimate)'), bw != null ? of(bw, L('100 Go', '100 GB')) : '—', bw || 0, 100 * GB, 70 * GB,
+      bw != null ? L(`${nf(V.visits)} visites × ${fmtBytes(s.first_visit_bytes)} par visite. C'est un minimum : flux RSS et appareils TRMNL non comptés, et GitHub ne publie pas le vrai chiffre.`, `${nf(V.visits)} visits × ${fmtBytes(s.first_visit_bytes)} per visit. A minimum: RSS feeds and TRMNL devices aren't counted, and GitHub doesn't publish the real figure.`)
+        : L('Nécessite les statistiques de visite.', 'Needs visitor statistics.'))}
+    ${a ? row(L('Republications du site, dernière heure', 'Site republishes, last hour'), `${nf(a.pages_builds_1h)} / 10`, a.pages_builds_1h, 10, 8, L('Limite souple de GitHub Pages.', 'GitHub Pages soft limit.')) : ''}
+    ${a ? row(L('GitHub Actions, dernières 24 h', 'GitHub Actions, last 24 h'), L(`${nf(a.runs_24h)} passages · ${nf(a.minutes_24h)} min`, `${nf(a.runs_24h)} runs · ${nf(a.minutes_24h)} min`), 0, 0, null,
+      (a.failures_24h ? `<span class="down">${L(`${a.failures_24h} échec(s)`, `${a.failures_24h} failure(s)`)}</span> · ` : '') + L('Minutes illimitées et gratuites : le dépôt est public.', 'Unlimited free minutes: the repository is public.')) : ''}
+    ${G.artifacts ? row(L('Sauvegardes stockées', 'Stored backups'), `${fmtBytes(G.artifacts.bytes)}`, 0, 0, null, L(`${nf(G.artifacts.count)} sauvegarde(s), effacées au bout de 30 jours. Stockage gratuit pour un dépôt public.`, `${nf(G.artifacts.count)} backup(s), deleted after 30 days. Free storage for a public repository.`)) : ''}
+    ${G.caches ? row(L('Caches des workflows', 'Workflow caches'), of(G.caches.bytes, L('10 Go', '10 GB')), G.caches.bytes, 10 * GB, 8 * GB) : ''}
+    ${G.api?.limit ? row(L("Quota d'API des workflows", 'Workflow API quota'), L(`${nf(G.api.limit - G.api.remaining)} utilisées / ${nf(G.api.limit)} par heure`, `${nf(G.api.limit - G.api.remaining)} used / ${nf(G.api.limit)} per hour`), G.api.limit - G.api.remaining, G.api.limit, 0.8 * G.api.limit) : ''}
+  </ul><p class="note">${L(`Mesuré ${ago(G.measured_at)}, à chaque mise à jour horaire.`, `Measured ${ago(G.measured_at)}, at every hourly update.`)}</p>`;
 }
 
 // ---------- Interrupteurs d'urgence

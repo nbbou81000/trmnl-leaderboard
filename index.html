@@ -433,6 +433,17 @@ html[data-theme=dark] .linkbtn.danger{color:#FF8A80}
   .ln-tab td:first-child{white-space:normal;max-width:84px}
   .ln-tab small{font-size:.68rem;white-space:normal;line-height:1.2}
 }
+.pr-tab{width:100%;border-collapse:collapse;font-size:.92rem}
+.pr-tab th,.pr-tab td{padding:8px 6px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.pr-tab th{font-size:.8rem;color:var(--ink2);font-weight:600}
+.pr-tab .num{text-align:right;white-space:nowrap}
+.pr-tab tr.me td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+.pr-tab tr.void td{opacity:.55}
+.pr-tab .sub{display:block;font-size:.76rem;color:var(--ink2)}
+.pr-wsel{font:inherit;font-size:.88rem;padding:5px 8px;border:1px solid var(--rule2);border-radius:8px;background:var(--sheet);color:var(--ink)}
+.pr-win{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--accent) 10%,var(--sheet));border-left:4px solid var(--accent)}
+.pr-tab .sub.mb{display:none}
+@media(max-width:600px){.pr-tab{font-size:.86rem}.pr-tab th,.pr-tab td{padding:8px 4px}.pr-tab .dk{display:none}.pr-tab .sub.mb{display:block}}
 .pr-bar{height:6px;background:var(--rule);border-radius:3px;overflow:hidden;margin-top:8px}
 .pr-bar i{display:block;height:100%;background:var(--accent)}
 .enews .etop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
@@ -2924,7 +2935,7 @@ async function renderWeek(sel) {
 
 /* ================= Pronostics ================= */
 const PRONO_MAX = 150;
-let pronoList = null, pronoPeriod = 'month', dailyPos = null;
+let pronoList = null, pronoPeriod = 'month', dailyPos = null, pronoWeek = null;
 function isoWeekKey(ms) {
   const d = new Date(ms); d.setUTCHours(0, 0, 0, 0);
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -2940,21 +2951,36 @@ function connAfter(id, ms) {
   const k = dailyPos.get(id);
   return k == null || snap.i[k] == null ? 0 : snap.i[k] + (snap.f[k] || 0);
 }
-// Score d'un pari : connexions gagnées entre le premier relevé après le pari et le premier relevé 7 jours plus tard
+// Règle depuis la semaine du 5 octobre 2026 : tous les paris d'une semaine sont jugés ensemble sur la semaine suivante
+// (du lundi 0 h au lundi suivant 0 h, heure de Paris). Avant : 7 jours à partir du moment du pari.
+const PRONO_NEW_RULE = '2026-W41';
+function weekMonday(w) {   // lundi 0 h (heure de Paris) de la semaine ISO « 2026-W41 »
+  const [y, n] = w.split('-W').map(Number), jan4 = Date.UTC(y, 0, 4);
+  const mon = jan4 - ((new Date(jan4).getUTCDay() + 6) % 7) * DAY + (n - 1) * 7 * DAY;
+  return parisMidnight(mon + 12 * 3600e3);
+}
+// Fenêtre de jugement d'un pari : [début, fin]
+function betWindow(b) {
+  if (b.week >= PRONO_NEW_RULE) { const s0 = weekMonday(b.week) + 7 * DAY; return [s0, weekMonday(b.week) + 14 * DAY]; }
+  const t0 = Date.parse(b.created_at); return [t0, t0 + 7 * DAY];
+}
+// Score d'un pari : connexions gagnées entre le relevé du début de sa fenêtre et celui de la fin
 function scoreBet(b) {
-  const t0 = Date.parse(b.created_at), r = byR.get(b.recipe_id);
-  const start = connAfter(b.recipe_id, t0);
-  const end = connAfter(b.recipe_id, t0 + 7 * DAY);
+  const r = byR.get(b.recipe_id), [w0, w1] = betWindow(b);
+  const started = Date.now() >= w0;
+  const start = connAfter(b.recipe_id, w0);
+  const end = connAfter(b.recipe_id, w1);
   const done = end != null;
-  const base = start ?? r?.s ?? 0;
-  const gain = done ? end - base : (r?.s ?? base) - base;
-  return { r, start: base, gain: Math.max(0, gain), done, valid: base <= PRONO_MAX, verdict: t0 + 7 * DAY };
+  const atBet = connAfter(b.recipe_id, Date.parse(b.created_at)) ?? r?.s ?? 0;   // éligibilité jugée au moment du pari
+  const base = start ?? (started ? r?.s ?? 0 : r?.s ?? 0);
+  const gain = !started ? 0 : done ? end - base : (r?.s ?? base) - base;
+  return { r, start: base, gain: Math.max(0, gain), done, started, valid: atBet <= PRONO_MAX, verdict: w1, from: w0 };
 }
 async function renderPronos() {
   const el = $('#tab-pronos');
   const head = `<h2>🔮 ${L('Pronostics', 'Predictions')}</h2>
-    <p class="lead">${L(`Chaque semaine, parie sur la recette qui va le plus progresser. Un seul pari par semaine (du lundi au dimanche), définitif, sur une recette de ${PRONO_MAX} connexions au plus. Ton score : les connexions qu'elle gagne pendant les 7 jours suivants.`,
-      `Every week, bet on the recipe that will grow the most. One bet per week (Monday to Sunday), final, on a recipe with at most ${PRONO_MAX} connections. Your score: the connections it gains over the next 7 days.`)}</p>`;
+    <p class="lead">${L(`Chaque semaine, parie sur la recette qui va le plus progresser. Un seul pari par semaine (du lundi au dimanche), définitif, sur une recette de ${PRONO_MAX} connexions au plus. Tous les paris de la semaine sont jugés ensemble sur la semaine suivante (du lundi au dimanche) : ton score, ce sont les connexions qu'elle gagne pendant cette semaine-là.`,
+      `Every week, bet on the recipe that will grow the most. One bet per week (Monday to Sunday), final, on a recipe with at most ${PRONO_MAX} connections. All of the week's bets are judged together over the following week (Monday to Sunday): your score is the connections the recipe gains during that week.`)}</p>`;
   if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L('Les pronostics ne sont pas encore activés sur ce site.', 'Predictions are not enabled on this site yet.')}</p>`; return; }
   if (!pronoList) {
     el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
@@ -2973,11 +2999,13 @@ async function renderPronos() {
       <button class="btn" type="button" id="prIn">${L('Se connecter avec Discord', 'Sign in with Discord')}</button></div>`;
   } else if (current) {
     const sc = scoreBet(current);
-    const day = Math.min(7, Math.max(0, Math.floor((Date.now() - Date.parse(current.created_at)) / DAY)));
+    const day = Math.min(7, Math.max(0, Math.floor((Date.now() - sc.from) / DAY)));
+    const dshort = ms => new Date(ms).toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' });
     me_ = `<div class="sheet pr-card"><h3>${L('Mon pronostic de la semaine', 'My prediction this week')}</h3>
       <p style="margin:0 0 4px;font-size:1.1rem;font-weight:700">${recLink(sc.r)}</p>
-      <p class="muted" style="margin:0">${L(`Posé le ${dfmt(current.created_at)} · départ : ${nf(sc.start)} connexions`, `Placed on ${dfmt(current.created_at)} · start: ${nf(sc.start)} connections`)}</p>
-      <p style="margin:10px 0 0;display:flex;justify-content:space-between"><span class="muted">${L(`Verdict le ${dfmt(new Date(sc.verdict).toISOString())}`, `Verdict on ${dfmt(new Date(sc.verdict).toISOString())}`)}</span><span>${L('depuis', 'so far')} : <b class="up">+${nf(sc.gain)}</b></span></p>
+      <p class="muted" style="margin:0">${sc.started ? L(`Posé le ${dfmt(current.created_at)} · départ : ${nf(sc.start)} connexions`, `Placed on ${dfmt(current.created_at)} · start: ${nf(sc.start)} connections`)
+        : L(`Posé le ${dfmt(current.created_at)} · la course démarre ${dshort(sc.from)}, pour tous les joueurs en même temps`, `Placed on ${dfmt(current.created_at)} · the race starts ${dshort(sc.from)}, for every player at once`)}</p>
+      <p style="margin:10px 0 0;display:flex;justify-content:space-between"><span class="muted">${L(`Verdict ${dshort(sc.verdict)}`, `Verdict ${dshort(sc.verdict)}`)}</span><span>${sc.started ? `${L('depuis', 'so far')} : <b class="up">+${nf(sc.gain)}</b>` : `<span class="muted">${L('pas encore commencé', 'not started yet')}</span>`}</span></p>
       <div class="pr-bar"><i style="width:${Math.round(100 * day / 7)}%"></i></div></div>`;
   } else {
     const eligible = D.recipes.filter(r => r.s <= PRONO_MAX).sort((a, b) => a.n.localeCompare(b.n));
@@ -3003,16 +3031,54 @@ async function renderPronos() {
       <div class="seg" role="group"><button type="button" data-pp="month" aria-pressed="${pronoPeriod === 'month'}">${L('Ce mois-ci', 'This month')}</button><button type="button" data-pp="all" aria-pressed="${pronoPeriod === 'all'}">${L('Depuis le début', 'All time')}</button></div></div>
     ${board.length ? `<ul class="wk-list">${board.map(([uid, o], i) => `<li><span><b>${medal(i)} ${esc(o.name)}</b>${wipMe && uid === wipMe.id ? ` <span class="badge">${L('toi', 'you')}</span>` : ''}
         <span class="sub">${o.n} ${L(o.n > 1 ? 'pronostics' : 'pronostic', o.n > 1 ? 'predictions' : 'prediction')} · ${L('meilleur coup', 'best call')} : ${esc(o.best.r?.n || '—')} (+${nf(o.best.gain)})</span></span><span class="up">+${nf(o.total)}</span></li>`).join('')}</ul>`
-      : `<p class="muted">${L("Pas encore de verdict sur cette période : le classement se remplit 7 jours après les premiers paris.", 'No verdict yet for this period: the ranking fills up 7 days after the first bets.')}</p>`}</div>`;
+      : `<p class="muted">${L("Pas encore de verdict sur cette période : le classement se remplit à chaque verdict de semaine, le lundi.", 'No verdict yet for this period: the ranking fills up with each weekly verdict, on Mondays.')}</p>`}</div>`;
 
   const pastMine = mine.filter(b => b !== current).map(b => ({ b, ...scoreBet(b) }));
-  const pastHTML = pastMine.length ? `<div class="sheet" style="margin-top:14px"><h3>${L('Mes pronostics passés', 'My past predictions')}</h3><ul class="wk-list">${pastMine.map(x => `<li><span>${recLink(x.r)}<span class="sub">${dfmt(x.b.created_at)} → ${dfmt(new Date(x.verdict).toISOString())}${x.done ? '' : ' · ' + L('en cours', 'ongoing')}${x.valid ? '' : ' · ' + L('hors règle', 'not eligible')}</span></span><span class="up">+${nf(x.gain)}</span></li>`).join('')}</ul></div>` : '';
+  const pastHTML = pastMine.length ? `<div class="sheet" style="margin-top:14px"><h3>${L('Mes pronostics passés', 'My past predictions')}</h3><ul class="wk-list">${pastMine.map(x => `<li><span>${recLink(x.r)}<span class="sub">${dfmt(new Date(x.from).toISOString())} → ${dfmt(new Date(x.verdict - 60e3).toISOString())}${x.done ? '' : ' · ' + (x.started ? L('en cours', 'ongoing') : L('pas encore commencé', 'not started yet'))}${x.valid ? '' : ' · ' + L('hors règle', 'not eligible')}</span></span><span class="up">+${nf(x.gain)}</span></li>`).join('')}</ul></div>` : '';
+
+  // Paris de chaque semaine : classement détaillé (provisoire tant que les 7 jours ne sont pas écoulés, définitif ensuite)
+  const weeks = [...new Set(pronoList.map(b => b.week))].sort().reverse();
+  if (!pronoWeek || !weeks.includes(pronoWeek)) pronoWeek = weeks.find(w => w !== week) || weeks[0] || null;
+  let weekHTML = '';
+  if (pronoWeek) {
+    const bets = pronoList.filter(b => b.week === pronoWeek).map(b => ({ b, ...scoreBet(b) })).sort((a, b) => b.gain - a.gain || Date.parse(a.b.created_at) - Date.parse(b.b.created_at));
+    const isCurrent = pronoWeek === week, iBet = !!current;
+    const hide = isCurrent && !iBet;   // semaine en cours : les choix des autres restent cachés tant qu'on n'a pas parié soi-même
+    const allDone = bets.every(x => x.done);
+    const lastVerdict = Math.max(...bets.map(x => x.verdict));
+    const wkLabel = w => { const [y, n] = w.split('-W').map(Number); const jan4 = new Date(Date.UTC(y, 0, 4)); const mon = new Date(jan4.getTime() - ((jan4.getUTCDay() + 6) % 7) * DAY + (n - 1) * 7 * DAY);
+      return L(`Semaine du ${mon.toLocaleDateString(LOC, { day: 'numeric', month: 'long', timeZone: 'UTC' })}`, `Week of ${mon.toLocaleDateString(LOC, { day: 'numeric', month: 'long', timeZone: 'UTC' })}`); };
+    const notStarted = bets.length && bets.every(x => !x.started);
+    const status = notStarted ? `<span class="muted">${L(`Paris ouverts jusqu'à dimanche. La course démarre ${new Date(bets[0].from).toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' })} pour tous les paris en même temps.`, `Bets open until Sunday. The race starts ${new Date(bets[0].from).toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' })} for every bet at once.`)}</span>`
+      : allDone ? `<span class="badge">${L('Résultats définitifs', 'Final results')}</span>`
+      : `<span class="muted">${L(`Classement provisoire · verdict final le ${new Date(lastVerdict).toLocaleString(LOC, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' })} (au relevé suivant)`, `Provisional ranking · final verdict on ${new Date(lastVerdict).toLocaleString(LOC, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' })} (at the next snapshot)`)}</span>`;
+    weekHTML = `<div class="sheet" style="margin-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <h3 style="margin:0">🎯 ${L('Les paris de la semaine', 'This week’s bets')}</h3>
+        ${weeks.length > 1 ? `<select id="prWeek" class="pr-wsel" aria-label="${L('Choisir une semaine', 'Pick a week')}">${weeks.map(w => `<option value="${w}" ${w === pronoWeek ? 'selected' : ''}>${w === week ? L('Cette semaine', 'This week') : wkLabel(w)}</option>`).join('')}</select>` : `<span class="muted">${pronoWeek === week ? L('Cette semaine', 'This week') : wkLabel(pronoWeek)}</span>`}
+      </div>
+      <p style="margin:0 0 10px">${status}</p>
+      ${hide ? `<p class="notice" style="margin:0 0 10px">🔒 ${L('Les choix des autres joueurs se dévoilent dès que tu as posé ton propre pari de la semaine.', 'Other players’ picks are revealed as soon as you place your own bet for the week.')}</p>` : ''}
+      <div class="tablewrap"><table class="pr-tab"><thead><tr><th>#</th><th>${L('Joueur', 'Player')}</th><th>${L('Recette', 'Recipe')}</th><th class="num dk">${L('Départ', 'Start')}</th><th class="num">${L('Gain', 'Gain')}</th><th class="dk">${L('Fin', 'Ends')}</th></tr></thead><tbody>
+      ${bets.map((x, i) => { const me = wipMe && x.b.user_id === wipMe.id, secret = hide && !me;
+        return `<tr class="${me ? 'me' : ''}${x.valid ? '' : ' void'}"><td>${allDone ? medal(i) : i + 1}</td>
+          <td><b>${esc(x.b.profiles?.name || 'Anonymous')}</b>${me ? ` <span class="badge">${L('toi', 'you')}</span>` : ''}</td>
+          <td>${secret ? '🔒' : recLink(x.r)}${!x.valid ? `<span class="sub">${L('hors règle (plus de 150 au départ)', 'invalid (over 150 at start)')}</span>` : ''}
+            <span class="sub mb">${secret ? '' : !x.started ? L(`départ mesuré le ${new Date(x.from).toLocaleDateString(LOC, { day: 'numeric', month: 'short', timeZone: 'Europe/Paris' })} · `, `start measured on ${new Date(x.from).toLocaleDateString(LOC, { day: 'numeric', month: 'short', timeZone: 'Europe/Paris' })} · `) : L(`départ ${nf(x.start)} · `, `start ${nf(x.start)} · `)}${x.done ? L('final', 'final') : L(`fin le ${new Date(x.verdict - 60e3).toLocaleDateString(LOC, { day: 'numeric', month: 'short', timeZone: 'Europe/Paris' })}`, `ends ${new Date(x.verdict - 60e3).toLocaleDateString(LOC, { day: 'numeric', month: 'short', timeZone: 'Europe/Paris' })}`)}</span></td>
+          <td class="num dk">${secret || !x.started ? '—' : nf(x.start)}</td>
+          <td class="num"><b class="up">${secret ? '?' : '+' + nf(x.gain)}</b></td>
+          <td class="dk">${x.done ? `<span class="badge">${L('final', 'final')}</span>` : `<span class="sub">${new Date(x.verdict - 60e3).toLocaleDateString(LOC, { day: 'numeric', month: 'short', timeZone: 'Europe/Paris' })}</span>`}</td></tr>`; }).join('')}
+      </tbody></table></div>
+      ${allDone && bets.length && bets[0].gain > 0 && !hide ? `<p class="pr-win">🏆 ${L(`Bravo à <b>${esc(bets[0].b.profiles?.name || 'Anonymous')}</b> : son pari sur ${esc(bets[0].r?.n || '—')} a gagné +${nf(bets[0].gain)} connexions !`, `Congratulations to <b>${esc(bets[0].b.profiles?.name || 'Anonymous')}</b>: their bet on ${esc(bets[0].r?.n || '—')} gained +${nf(bets[0].gain)} connections!`)}</p>` : ''}
+    </div>`;
+  }
 
   const open = pronoList.filter(b => b.week === week).length;
-  el.innerHTML = head + `<div class="grid g2">${me_}${boardHTML}</div>${pastHTML}
-    <p class="note">${L(`${open} pari${open > 1 ? 's' : ''} posé${open > 1 ? 's' : ''} cette semaine. Les scores sont calculés à partir des relevés quotidiens du site, 7 jours après chaque pari.`, `${open} bet${open > 1 ? 's' : ''} placed this week. Scores are computed from the site's daily snapshots, 7 days after each bet.`)}</p>`;
+  el.innerHTML = head + `<div class="grid g2">${me_}${boardHTML}</div>${weekHTML}${pastHTML}
+    <p class="note">${L(`${open} pari${open > 1 ? 's' : ''} posé${open > 1 ? 's' : ''} cette semaine. Les paris d'une semaine sont jugés ensemble sur la semaine suivante, à partir des relevés quotidiens du site.`, `${open} bet${open > 1 ? 's' : ''} placed this week. A week's bets are judged together over the following week, from the site's daily snapshots.`)}</p>`;
 
   el.querySelectorAll('[data-pp]').forEach(b => b.onclick = () => { pronoPeriod = b.dataset.pp; renderPronos(); });
+  $('#prWeek')?.addEventListener('change', e => { pronoWeek = e.target.value; renderPronos(); });
   $('#prIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', hr('pronos')); track('connexion-discord', true); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
   if ($('#prQ')) autoPick($('#prQ'), $('#prAc'), D.recipes.filter(r => r.s <= PRONO_MAX).map(r => ({ label: `${r.n} · #${r.id}`, name: r.n, sub: `${nameOf(r.u)} · ${plural(r.s, L('connexion', 'connection'))}` })));
   $('#prGo')?.addEventListener('click', async () => {

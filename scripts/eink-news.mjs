@@ -186,7 +186,10 @@ async function fromHN(src, windowDays) {
 
 async function collect(known, windowDays, diag) {
   const out = [], urls = new Set(), perName = {};
+  // Sources bloquées par l'administrateur (#admin › Contenus) : on ne les interroge plus du tout
+  const blocked = new Set(((await readJSON(path.join(OUT, 'rules.json'), {})).rules || []).filter(r => r.kind === 'source').map(r => r.target));
   for (const src of SOURCES) {
+    if (blocked.has(src.name)) { diag.push({ s: src.name + (src.query ? ` (${src.query})` : ''), ok: false, err: 'bloquée par l\'administrateur' }); continue; }
     let res;
     try { res = src.type === 'hn' ? await fromHN(src, windowDays) : await fromRSS(src); }
     catch (e) { diag.push({ s: src.name + (src.query ? ` (${src.query})` : ''), ok: false, err: e.message }); log(`${src.name} indisponible (${e.message}), ignoré.`); continue; }

@@ -165,6 +165,18 @@ for (const r of recipes) {
   }
 }
 
+// --- Retraits du palmarès décidés par l'administrateur (#admin › Contenus, voir admin-rules.mjs).
+// L'historique continue d'être relevé : si le retrait est annulé, la recette revient avec toutes ses données.
+const RULES = (await readJSON(path.join(OUT, 'rules.json'), {})).rules || [];
+const exR = new Set(RULES.filter(x => x.kind === 'recipe').map(x => String(x.target)));
+const exU = new Set(RULES.filter(x => x.kind === 'creator').map(x => String(x.target)));
+const excluded = r => exR.has(r.id) || exU.has(r.u);
+if (exR.size || exU.size) {
+  const before = recipes.length;
+  recipes.splice(0, recipes.length, ...recipes.filter(r => !excluded(r)));
+  console.log(`Retraits de l'administrateur : ${before - recipes.length} recette(s) écartée(s) des classements.`);
+}
+
 // --- Rangs des recettes
 const recipeRank = rankMap(recipes.map(r => [r.id, r.s, r.i]));
 recipes.forEach(r => { r.r = recipeRank.get(r.id); });
@@ -191,7 +203,7 @@ for (const [key, label] of [['d24', 'r24'], ['d7', 'r7']]) {
   const P = past[key];
   if (!P) { creators.forEach(c => { c[label] = null; }); continue; }
   const tot = new Map();
-  for (const [id, s] of P.scores) { const u = userOf.get(id); tot.set(u, (tot.get(u) || 0) + s); }
+  for (const [id, s] of P.scores) { const u = userOf.get(id); if (exR.has(id) || exU.has(u)) continue; tot.set(u, (tot.get(u) || 0) + s); }
   const rk = rankMap([...tot.entries()].map(([u, s]) => [u, s, 0]));
   creators.forEach(c => { c[label] = rk.get(c.u) ?? null; });
 }

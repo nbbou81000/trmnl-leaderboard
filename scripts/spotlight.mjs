@@ -100,6 +100,17 @@ async function mistralText(r, settings, lang) {
 async function runSpotlight(latest) {
   const hist = await readJSON(path.join(OUT, 'spotlight-history.json'), { v: 1, cycle: 1, shown: [] });
 
+  // Recette du jour imposée par l'administrateur (#admin › Contenus) : elle remplace le choix automatique de ce jour-là.
+  const pin = ((await readJSON(path.join(OUT, 'rules.json'), {})).rules || []).find(x => x.kind === 'spotlight' && x.day === today);
+  const pinned = pin && latest.recipes.find(r => r.id === String(pin.target));
+  if (pin && !pinned) console.log(`Recette du jour imposée #${pin.target} introuvable (supprimée ou retirée du palmarès) : choix automatique.`);
+  if (pinned) {
+    if (hist.shown.some(x => x.date === today && x.id === pinned.id)) { console.log('Recette du jour imposée déjà en place.'); return; }
+    hist.shown = hist.shown.filter(x => x.date !== today);
+    console.log(`Recette du jour imposée par l'administrateur : #${pinned.id} « ${pinned.n} ».`);
+    return publishSpotlight(hist, pinned, true);
+  }
+
   // Déjà traité aujourd'hui (le workflow tourne toutes les heures) : on ne fait rien de plus.
   if (hist.shown.some(x => x.date === today)) { console.log('Recette du jour déjà choisie aujourd\'hui.'); return; }
 
@@ -123,8 +134,10 @@ async function runSpotlight(latest) {
 
   // Rotation équitable : priorité à la recette publiée depuis le plus longtemps sans être passée.
   pool.sort((a, b) => (a.p ? Date.parse(a.p) : Infinity) - (b.p ? Date.parse(b.p) : Infinity));
-  const picked = pool[0];
+  return publishSpotlight(hist, pool[0], false);
+}
 
+async function publishSpotlight(hist, picked, imposed) {
   const settings = await scrapeRecipePage(picked.id);
   const text_fr = await mistralText(picked, settings, 'fr');
   const text_en = await mistralText(picked, settings, 'en');
@@ -136,7 +149,7 @@ async function runSpotlight(latest) {
   };
   await fs.writeFile(path.join(OUT, 'spotlight.json'), JSON.stringify(spotlight));
 
-  hist.shown.push({ id: picked.id, u: picked.u, n: picked.n, date: today, cycle: hist.cycle });
+  hist.shown.push({ id: picked.id, u: picked.u, n: picked.n, date: today, cycle: hist.cycle, ...(imposed ? { imposed: true } : {}) });
   await fs.writeFile(path.join(OUT, 'spotlight-history.json'), JSON.stringify(hist));
 
   console.log(`Recette du jour : #${picked.id} « ${picked.n} » (${picked.s}/${THRESHOLD} connexions, cycle ${hist.cycle}).`);

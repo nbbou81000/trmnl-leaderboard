@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: read      # mesure des limites GitHub (#admin › Santé)
 
 concurrency:
   group: trmnl-stats
@@ -91,6 +92,7 @@ jobs:
         env:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cp index.html public/
           [ -f names.json ] && cp names.json public/ || echo '{}' > public/names.json
@@ -103,6 +105,7 @@ jobs:
           SITE_URL="$SITE" node scripts/build-pages.mjs public
           SITE_URL="$SITE" node scripts/weekly.mjs public
           SITE_URL="$SITE" node scripts/feeds.mjs public
+          node scripts/github-limits.mjs public || true
           touch public/.nojekyll
           cd public
           git init -q -b gh-pages

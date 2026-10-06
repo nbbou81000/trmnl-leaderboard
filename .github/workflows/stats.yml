@@ -13,6 +13,10 @@ on:
         description: 'Chercher tout de suite de nouveaux articles pour « Actu e-ink » (sans attendre le délai de 6 h)'
         type: boolean
         default: false
+      cartonner:
+        description: 'Refaire tout de suite la sélection « Ça va cartonner » du jour'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -66,6 +70,17 @@ jobs:
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
         run: node scripts/spotlight.mjs public/data
+
+      # 3 ou 4 recettes par jour (un appel Mistral, captures comprises) ; coulisses et suivi détaillé dans Supabase (admin seul)
+      - name: Ça va cartonner
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+          BREAKOUT_AI_TOKEN: ${{ secrets.BREAKOUT_AI_TOKEN }}
+          CARTONNER_FORCE: ${{ inputs.cartonner }}
+        run: |
+          node scripts/cartonner.mjs public/data || echo "Sélection en échec, sans gravité : le site est publié quand même."
 
       # Automatiquement : un passage toutes les 6 h au plus (4 par jour). À la main : tout de suite si la case « eink » est cochée.
       - name: Actu e-ink & dashboards (Mistral)

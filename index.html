@@ -506,6 +506,7 @@ td .sub{display:block;font-size:.78rem;color:var(--ink2)}
 .chart.tall{height:340px}
 .note{font-size:.86rem;color:var(--ink2);margin:8px 0 0}
 .hint{font-size:.8rem;color:var(--accent-ink);margin:6px 0 0}
+.cart-adm ol li{margin:0 0 12px;font-size:.92rem}.cart-adm summary{cursor:pointer}.cart-adm td:first-child{text-align:left}
 .notice{border:1.5px dashed var(--grey);padding:12px 14px;border-radius:8px;color:var(--ink2);margin:0 0 16px;max-width:72ch}
 .boardhead{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:0 0 12px}
 .boardhead select{background:var(--sheet);border:2px solid var(--ink);border-radius:8px;padding:8px 10px;font-weight:650;max-width:100%}
@@ -736,7 +737,7 @@ const ord = n => { const t = ordTxt(n); const m = t.match(/^(\d+)(\D+)$/); retur
 const CO = () => L(' : ', ': ');
 const plural = (n, fr, en) => { const w = EN() ? (en ?? fr) : fr; return `${nf(n)} ${w}${Math.abs(n) > 1 ? 's' : ''}`; };
 const DAY = 864e5;
-const BREAKOUT_VERIFY_DAYS_JS = 7; // doit rester égal à BREAKOUT_VERIFY_DAYS dans scripts/spotlight.mjs
+const BREAKOUT_VERIFY_DAYS_JS = 7; // doit rester égal à VERIFY_DAYS dans scripts/cartonner.mjs
 const ageDays = iso => iso ? Math.max(1, (Date.now() - Date.parse(iso)) / DAY) : null;
 function ago(iso) {
   const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
@@ -1187,10 +1188,10 @@ function renderSpotlightTab() {
 
   const picks = (SPOT_BREAK?.picks || []).slice();
   const todayISO = new Date().toISOString().slice(0, 10);
-  const bToday = picks.filter(x => x.date === todayISO).at(-1);
-  const bPast = picks.filter(x => x !== bToday).reverse();
+  const bTodays = picks.filter(x => x.date === todayISO);
+  const bPast = picks.filter(x => x.date !== todayISO).reverse();
   const isHit = x => x.result && x.result.i_now != null && x.result.gain >= (x.s ?? x.i) && x.result.gain >= 20;
-  const bTodayHTML = bToday ? `<div class="cards"><article class="card">
+  const bCard = bToday => `<article class="card">
       <div class="shot">${bToday.sc ? `<img src="${esc(bToday.sc)}" alt="${esc(bToday.n)}" loading="lazy">` : ''}</div>
       <div class="body">
         <h4><a href="https://trmnl.com/recipes/${bToday.id}" target="_blank" rel="noopener">${esc(bToday.n)}</a></h4>
@@ -1198,12 +1199,13 @@ function renderSpotlightTab() {
         ${bToday.d ? `<p class="desc full">${esc(bToday.d)}</p>` : ''}
         <p class="meta"><span><b>${nf(bToday.s ?? bToday.i)}</b> ${bToday.s != null ? L('connexions', 'connections') : 'installs'}</span><span><b>${sg(bToday.d24)}</b> ${L('sur 24 h', 'in 24 h')}</span></p>
         ${bToday.pred ? `<p class="meta"><span>${L('Prévision', 'Forecast')} 24h : <b>${nf(bToday.pred.h24)}</b></span><span>48h : <b>${nf(bToday.pred.h48)}</b></span><span>${L('7j', '7d')} : <b>${nf(bToday.pred.d7)}</b></span></p>` : ''}
-        <p class="note">${L(`Verdict le ${dfmt(new Date(Date.parse(bToday.date) + BREAKOUT_VERIFY_DAYS_JS * DAY).toISOString())} : on regardera si l'accélération s'est confirmée.`,
-          `Verdict on ${dfmt(new Date(Date.parse(bToday.date) + BREAKOUT_VERIFY_DAYS_JS * DAY).toISOString())}: we'll see if the acceleration held up.`)}</p>
         <div class="acts"><a class="btn" href="https://trmnl.com/recipes/${bToday.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>
       </div>
-    </article></div>`
-    : `<p class="notice">${L("Aucune recette ne montre un signal d'accélération suffisant aujourd'hui : pas de pari.", 'No recipe shows a strong enough acceleration signal today: no bet.')}</p>`;
+    </article>`;
+  const verdictDay = bTodays.length ? dfmt(new Date(Date.parse(bTodays[0].date) + BREAKOUT_VERIFY_DAYS_JS * DAY).toISOString()) : '';
+  const bTodayHTML = bTodays.length ? `<div class="cards">${bTodays.map(bCard).join('')}</div>
+    <p class="note">${L(`Verdict le ${verdictDay} : on regardera lesquelles ont vraiment décollé.`, `Verdict on ${verdictDay}: we'll see which ones really took off.`)}</p>`
+    : `<p class="notice">${L("Pas de sélection pour l'instant aujourd'hui : elle arrive au prochain relevé.", 'No selection yet today: it will arrive with the next update.')}</p>`;
   const checkpoints = x => {
     const parts = [];
     if (x.check_h24) parts.push(`24h : ${nf(x.check_h24.i)}${x.pred ? ` (${L('prévu', 'pred.')} ${nf(x.pred.h24)})` : ''}`);
@@ -1226,10 +1228,65 @@ function renderSpotlightTab() {
     ${today}
     ${archive}
     <h2 style="margin-top:34px">🚀 ${L('Ça va cartonner', "It's about to take off")} <span class="badge">${L('Expérimental', 'Experimental')}</span></h2>
-    <p class="lead">${L("Chaque jour, un pari sur la recette du catalogue qui accélère le plus par rapport à son propre rythme habituel, parmi celles qui n'ont pas encore une grosse base d'installations — pas la plus installée, mais celle dont la courbe change de forme.",
-      "Every day, a bet on the catalog recipe accelerating the most relative to its own usual pace, among those that don't already have a large install base — not the most installed, but the one whose curve is changing shape.")}</p>
+    <p class="lead">${L("Chaque jour, 3 ou 4 recettes du catalogue repérées pour leur potentiel, parmi celles qui n'ont pas encore une grosse base d'installations : pas les plus installées, mais celles qui pourraient décoller dans les prochains jours.",
+      "Every day, 3 or 4 catalog recipes spotted for their potential, among those that don't already have a large install base: not the most installed, but the ones that could take off in the coming days.")}</p>
     ${bTodayHTML}
+    <div id="cartAdm"></div>
     ${bArchive}`;
+  renderCartonnerAdmin();
+}
+
+/* Coulisses de « Ça va cartonner » : réservées à l'administrateur (table Supabase breakout_ai, illisible pour les autres) */
+async function renderCartonnerAdmin() {
+  if (!wipReady() && !window.__WIP_MOCK) return;
+  if (!wipMe && store.get('trmnl-wip-session', '') === '1') { try { const ss = await api().session(); wipMe = ss.user; wipProfile = ss.profile; } catch {} }
+  const box = $('#cartAdm'); if (!box || !isAdmin()) return;
+  box.innerHTML = `<details class="sheet cart-adm" style="margin-top:18px"><summary><b>🔎 ${L('Coulisses (visible par toi seul)', 'Behind the scenes (only you)')}</b></summary><div id="cartAdmIn"><p class="muted">${L('Chargement…', 'Loading…')}</p></div></details>`;
+  box.querySelector('details').addEventListener('toggle', async e => {
+    if (!e.target.open || e.target.dataset.done) return; e.target.dataset.done = '1';
+    const inn = $('#cartAdmIn');
+    let rows, mode = true;
+    try { [rows, mode] = await Promise.all([api().breakoutAi(), api().cartonnerMode().catch(() => true)]); } catch (err) { inn.innerHTML = `<p class="notice">${/breakout_ai|schema cache|does not exist|Could not find/i.test(err.message) ? "Pas encore installé : collez supabase/cartonner.sql dans l'éditeur SQL de Supabase, puis ajoutez le secret BREAKOUT_AI_TOKEN dans GitHub." : esc(trErr(err.message))}</p>`; return; }
+    const withTok = rows.slice(0, 7).filter(r => r.data.tokens), avgTok = withTok.length ? Math.round(withTok.reduce((t, r) => t + r.data.tokens, 0) / withTok.length) : null;
+    const ctl = `<div class="tools-row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 4px">
+        <span class="badge">${mode !== false ? '🟢 Nouvelle formule active' : "⚪ Ancienne formule (Mistral coupé)"}</span>
+        <button class="btn ghost small" type="button" id="cartMode">${mode !== false ? "Couper : revenir à l'ancienne formule" : 'Réactiver la nouvelle formule'}</button></div>
+      <p class="note" style="margin-top:0">${avgTok ? `Consommation : environ ${nf(avgTok)} jetons par jour, soit au plus ${(avgTok * 2 / 1e6).toLocaleString('fr-FR', { style: 'currency', currency: 'USD', maximumFractionDigits: 3 })} par jour au tarif de mistral-medium.` : 'Consommation : affichée après la première sélection.'}
+        Le changement s'applique à la prochaine sélection (cette nuit), ou tout de suite via GitHub › Actions › Run workflow en cochant « cartonner ».</p>`;
+    const bindMode = () => $('#cartMode')?.addEventListener('click', async ev => {
+      ev.target.disabled = true;
+      try { await api().setCartonnerMode(mode === false); toast(mode === false ? 'Nouvelle formule réactivée.' : "Retour à l'ancienne formule enregistré."); const d = box.querySelector('details'); delete d.dataset.done; d.dispatchEvent(new Event('toggle')); }
+      catch (err) { ev.target.disabled = false; toast(/cartonner_mode|schema cache|Could not find/i.test(err.message) ? "Collez d'abord la dernière version de supabase/cartonner.sql dans Supabase." : trErr(err.message)); }
+    });
+    if (!rows.length) { inn.innerHTML = ctl + `<p class="note">Aucune sélection enregistrée pour l'instant.</p>`; bindMode(); return; }
+    const spark = (pts, s0) => { if (!pts?.length) return ''; const w = 120, h = 30, xs = pts.map(p => p[0]), ys = pts.map(p => p[1]); const x0 = 0, x1 = Math.max(168, ...xs), y0 = Math.min(s0, ...ys), y1 = Math.max(y0 + 1, ...ys);
+      return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="vertical-align:middle" aria-hidden="true"><polyline fill="none" stroke="var(--accent)" stroke-width="1.6" points="${pts.map(p => `${(w * (p[0] - x0) / (x1 - x0)).toFixed(1)},${(h - 2 - (h - 4) * (p[1] - y0) / (y1 - y0)).toFixed(1)}`).join(' ')}"/></svg>`; };
+    const lastV = pts => pts?.length ? pts[pts.length - 1][1] : null;
+    const done = rows.filter(r => r.data.results);
+    const agg = k => { const a = done.map(r => r.data.results[k]).filter(x => x && x.n); const n = a.reduce((t, x) => t + x.n, 0);
+      return n ? { n, avg: Math.round(10 * a.reduce((t, x) => t + (x.avg_gain || 0) * x.n, 0) / n) / 10, hits: a.reduce((t, x) => t + x.hits, 0) } : null; };
+    const S = agg('selection'), F = agg('formula'), O = agg('others');
+    const line = (lb, x) => x ? `<tr><td>${lb}</td><td><b>${String(x.avg).replace('.', ',')}</b></td><td>${x.hits} / ${x.n} (${Math.round(100 * x.hits / x.n)} %)</td></tr>` : `<tr><td>${lb}</td><td colspan="2" class="muted">—</td></tr>`;
+    const board = `<h4 style="margin:10px 0 4px">🏆 Sélection contre formule</h4>
+      <p class="note" style="margin-top:0">${done.length ? `Sur ${done.length} jour(s) déjà jugés. « Décollé » = au moins doublé en 7 jours, et au moins +10.` : 'Premier bilan 7 jours après la première sélection. Il faudra 3 à 4 semaines pour que la comparaison veuille vraiment dire quelque chose.'}</p>
+      <div style="overflow-x:auto"><table class="sttab"><thead><tr><th></th><th>Gain moyen en 7 j</th><th>Ont décollé</th></tr></thead><tbody>
+      ${line('Sélection du jour', S)}${line("Choix qu'aurait fait la formule", F)}${line('Autres candidates', O)}</tbody></table></div>`;
+    const day = r => { const d = r.data, res = d.results, gain = id => res?.all?.find(x => x.id === id)?.gain;
+      const pk = (d.picks || []).map(p => { const pts = d.curves?.[p.id], v = lastV(pts), g = res ? gain(p.id) : (v != null ? v - p.s0 : null);
+        return `<li><b>${esc(p.n)}</b> <span class="muted">· ${esc(p.by || '')}${p.conviction ? ` · conviction ${p.conviction}/5` : ''}${p.attendu_7j ? ` · attendu ${esc(p.attendu_7j)}` : ''}</span><br>
+          ${spark(pts, p.s0)} <span class="muted">${nf(p.s0)} → ${v != null ? nf(v) : '…'}${g != null ? ` (${sg(g)})` : ''} · ${L('prévu à 7 j', '7-day forecast')} ${nf(p.pred?.d7)}</span>
+          ${p.pourquoi ? `<br>${esc(p.pourquoi)}` : ''}${p.atouts?.length ? `<br><span class="muted">➕ ${p.atouts.map(esc).join(' · ')}</span>` : ''}${p.risques?.length ? `<br><span class="muted">➖ ${p.risques.map(esc).join(' · ')}</span>` : ''}</li>`; }).join('');
+      const fm = (d.formula || []).map(f => `${esc(f.n)}${res ? ` (${sg(gain(f.id))})` : ''}`).join(', ');
+      const rj = (d.rejected || []).map(x => `<li>${esc(x.n)} : ${esc(x.raison)}</li>`).join('');
+      return `<details style="margin:8px 0"${r === rows[0] ? ' open' : ''}><summary><b>${dfmt(r.day)}</b> <span class="muted">· ${esc({ 'ia+captures': 'IA avec captures', ia: 'IA, texte seul', formule: 'repli sur la formule' }[d.mode] || d.mode)}${res ? ` · sélection ${sg(res.selection?.avg_gain)} en moyenne, formule ${sg(res.formula?.avg_gain)}, autres ${sg(res.others?.avg_gain)}` : ' · suivi en cours'}</span></summary>
+        ${d.reading ? `<p>${esc(d.reading)}</p>` : ''}${d.note ? `<p class="note">⚠️ ${esc(d.note)}</p>` : ''}
+        <ol>${pk}</ol>
+        <p class="note">Formule : ${fm || '—'}</p>
+        ${rj ? `<p class="note" style="margin-bottom:2px">Écartées :</p><ul class="note" style="margin-top:0">${rj}</ul>` : ''}
+        <p class="note">${(d.shortlist || []).length} candidates étudiées${d.tokens ? ` · ${nf(d.tokens)} jetons` : ''}${d.model ? ` · ${esc(d.model)}` : ''}</p></details>`; };
+    inn.innerHTML = ctl + board + `<h4 style="margin:16px 0 4px">📅 Jour par jour</h4>` + rows.map(day).join('');
+    bindMode();
+  });
 }
 function renderHome() {
   const el = $('#tab-accueil');
@@ -1624,6 +1681,9 @@ const realApi = {
   async report(target, reason) { const c = await client(); const r = await c.from('reports').insert({ ...target, reason }); if (r.error && !/duplicate|unique/i.test(r.error.message)) throw new Error(r.error.message); },
   async switches() { const c = await client(); return ok(await c.from('site_switches').select('*').eq('id', 1).maybeSingle()) || {}; },
   async setSwitches(p) { const c = await client(); ok(await c.rpc('set_switches', { p })); },
+  async cartonnerMode() { const c = await client(); return ok(await c.rpc('cartonner_mode_get')); },
+  async setCartonnerMode(on) { const c = await client(); ok(await c.rpc('cartonner_mode_set', { p_on: !!on })); },
+  async breakoutAi(n = 40) { const c = await client(); return ok(await c.from('breakout_ai').select('day,data').order('day', { ascending: false }).limit(n)) || []; },
   async rulesList() { const c = await client(); return ok(await c.rpc('rules_list')) || []; },
   async ruleAdd(kind, target, day, note) { const c = await client(); ok(await c.rpc('rule_add', { p_kind: kind, p_target: String(target), p_day: day || null, p_note: note || '' })); },
   async ruleRemove(id) { const c = await client(); ok(await c.rpc('rule_remove', { p_id: id })); },

@@ -155,87 +155,12 @@ async function publishSpotlight(hist, picked, imposed) {
   console.log(`Recette du jour : #${picked.id} « ${picked.n} » (${picked.s}/${THRESHOLD} connexions, cycle ${hist.cycle}).`);
 }
 
-// ================= Pari du jour : "Ça va cartonner" =================
-// Repéré parmi TOUTES les recettes du catalogue (pas seulement celles sous le seuil), sur un signal
-// d'accélération : la vitesse des dernières 24h comparée au rythme moyen de la recette depuis sa
-// publication. Un pari par jour, jamais le même que ceux des derniers jours ; chaque pari reste en
-// mémoire pour être confronté aux chiffres réels BREAKOUT_VERIFY_DAYS plus tard.
-const BREAKOUT_VERIFY_DAYS = 7;   // délai avant de vérifier si le pari était bon (voir note dans la réponse)
-const BREAKOUT_MIN_D24 = 3;       // mouvement minimum sur 24h pour écarter le simple bruit
-const BREAKOUT_MAX_CONNECTIONS = 150; // connexions = installs + forks (comme trmnl.com) ; au-delà, la recette a déjà fait ses preuves
-const BREAKOUT_COOLDOWN_DAYS = 3; // on évite de reproposer une recette déjà pariée récemment
-
-function ageDaysOf(p) { return p ? Math.max(1, (Date.now() - Date.parse(p)) / DAY) : null; }
-function breakoutScore(r) {
-  if (r.s > BREAKOUT_MAX_CONNECTIONS) return null;
-  if (r.d24 == null || r.d24 < BREAKOUT_MIN_D24) return null;
-  const age = ageDaysOf(r.p);
-  if (!age) return null;
-  const ipd = r.s / age;                                  // rythme moyen historique (connexions/jour) : d24 est lui aussi en installs + forks
-  const accel = ipd > 0 ? r.d24 / ipd : r.d24;             // vitesse d'aujourd'hui vs ce rythme
-  return accel * Math.log(1 + r.d24);                      // pondère par un volume minimum réel
-}
-
-// Prévision à 24h/48h/7j : le rythme de fond (moyenne historique) continue, et le sursaut du jour
-// (l'écart entre la vitesse des dernières 24h et ce rythme de fond) se dissipe par demi-vie plutôt
-// que de rester constant — une extrapolation en ligne droite surestimerait très largement un pic ponctuel.
-const BREAKOUT_HALF_LIFE_DAYS = 3;
-function predictInstalls(r) {
-  const age = ageDaysOf(r.p);
-  const base = r.s / age;
-  const boost = Math.max(0, (r.d24 ?? 0) - base);
-  const hl = BREAKOUT_HALF_LIFE_DAYS;
-  const at = H => Math.round(r.s + base * H + boost * (hl / Math.LN2) * (1 - Math.pow(0.5, H / hl)));
-  return { h24: at(1), h48: at(2), d7: at(7) };
-}
-
-async function runBreakout(latest) {
-  const hist = await readJSON(path.join(OUT, 'breakout.json'), { v: 1, picks: [] });
-  if (hist.picks.some(x => x.date === today)) { console.log('Pari du jour déjà choisi.'); return; }
-
-  // On confronte aux prévisions les chiffres réels, à chacune des trois échéances.
-  const byId = new Map(latest.recipes.map(r => [r.id, r]));
-  for (const p of hist.picks) {
-    const ageP = (Date.now() - Date.parse(p.date)) / DAY;
-    const now = byId.get(p.id);
-    // Les paris récents (champ s) sont suivis en connexions (installs + forks) ; les anciens restent suivis en installs.
-    const cur = now ? (p.s != null ? now.s : now.i) : null;
-    const snap = () => ({ i: cur, checked_at: new Date().toISOString() });
-    if (!p.check_h24 && ageP >= 1) p.check_h24 = snap();
-    if (!p.check_h48 && ageP >= 2) p.check_h48 = snap();
-    if (!p.result && ageP >= BREAKOUT_VERIFY_DAYS) {
-      p.result = now
-        ? { i_now: cur, gain: cur - (p.s != null ? p.s : p.i), checked_at: new Date().toISOString() }
-        : { i_now: null, gain: null, checked_at: new Date().toISOString() }; // recette disparue de l'API
-    }
-  }
-
-  const recentIds = new Set(hist.picks.filter(x => Date.now() - Date.parse(x.date) < BREAKOUT_COOLDOWN_DAYS * DAY).map(x => x.id));
-  let best = null, bestScore = -Infinity;
-  for (const r of latest.recipes) {
-    if (recentIds.has(r.id)) continue;
-    const s = breakoutScore(r);
-    if (s != null && s > bestScore) { bestScore = s; best = r; }
-  }
-
-  if (best) {
-    hist.picks.push({
-      id: best.id, u: best.u, n: best.n, c: best.c, ic: best.ic, sc: best.sc, d: best.d,
-      i: best.i, s: best.s, d24: best.d24, score: Math.round(bestScore * 100) / 100, date: today,
-      pred: predictInstalls(best), check_h24: null, check_h48: null, result: null,
-    });
-    console.log(`Pari du jour : #${best.id} « ${best.n} » (score ${bestScore.toFixed(2)}, +${best.d24} sur 24 h).`);
-  } else {
-    console.log("Aucune recette ne montre un signal d'accélération suffisant aujourd'hui : pas de pari.");
-  }
-  await fs.writeFile(path.join(OUT, 'breakout.json'), JSON.stringify(hist));
-}
+// « Ça va cartonner » : voir scripts/cartonner.mjs (lancé juste après ce script par le workflow).
 
 async function main() {
   const latest = await readJSON(path.join(OUT, 'latest.json'), null);
   if (!latest) { console.log('Pas encore de latest.json : recette du jour ignorée pour cette passe.'); return; }
   try { await runSpotlight(latest); } catch (e) { console.log(`Recette du jour : ${e.message}`); }
-  try { await runBreakout(latest); } catch (e) { console.log(`Pari « ça va cartonner » : ${e.message}`); }
 }
 
 try { await main(); } catch (e) { console.log(`Recette du jour : ${e.message} (ignoré, le reste du workflow continue).`); }

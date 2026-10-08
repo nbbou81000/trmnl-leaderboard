@@ -105,7 +105,8 @@ function detectMilestones(latest, state, now) {
   for (const r of latest.recipes) {
     const prev = state.lastS[r.id];
     // Recette jamais vue : on part de 0 seulement si elle vient d'être publiée, sinon on prend son niveau actuel comme base
-    const base = prev ?? (r.p && now - Date.parse(r.p) < 2 * DAY ? 0 : r.s);
+    // (au-delà de 5 connexions dès la première apparition : installations de sa phase privée, prises comme base)
+    const base = prev ?? (r.p && now - Date.parse(r.p) < 2 * DAY && r.s <= 5 ? 0 : r.s);
     const T = MILESTONES.filter(m => base < m && m <= r.s).pop();
     if (T && !first) events.push({ id: r.id, n: r.n, u: r.u, T, s: r.s, d: new Date(now).toISOString() });
     state.lastS[r.id] = Math.max(prev ?? 0, r.s);

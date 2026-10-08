@@ -143,6 +143,25 @@ addSnapshot(daily, now, recipes, (a, b) => a.slice(0, 10) === b.slice(0, 10));
 hourly.snaps = hourly.snaps.filter(s => nowMs - Date.parse(s.t) <= HOURLY_KEEP_H * H);
 daily.snaps = daily.snaps.filter(s => nowMs - Date.parse(s.t) <= DAILY_KEEP_D * D);
 
+// --- Première apparition de chaque recette dans l'historique horaire
+// Une recette créée en privé puis rendue publique arrive avec les installations de sa phase privée.
+// Si elle apparaît d'un relevé horaire au suivant (moins de 2 h d'écart, donc rien de manqué) avec déjà plus de
+// FIRST_SEEN_MAX connexions, ce stock sert de point de départ et n'est pas compté comme un gain.
+const FIRST_SEEN_MAX = 5;
+const firstSeen = new Map();
+{
+  const ids = hourly.idx.map(([id]) => id);
+  let prevT = null;
+  for (const snap of hourly.snaps) {
+    const t = Date.parse(snap.t), contiguous = prevT != null && t - prevT <= 2 * H;
+    ids.forEach((id, k) => {
+      const i = snap.i[k]; if (i == null || firstSeen.has(id)) return;
+      firstSeen.set(id, { t, v: i + (snap.f[k] || 0), jump: contiguous });
+    });
+    prevT = t;
+  }
+}
+
 // --- Variations
 const windows = { d1: [hourly, H], d24: [hourly, D], d7: [hourly, 7 * D], d30: [daily, 30 * D] };
 const past = {};   // clé -> { at, scores } ou null
@@ -160,7 +179,10 @@ for (const r of recipes) {
     if (!P) { r[key] = null; continue; }
     const old = P.scores.get(r.id);
     if (old != null) r[key] = r.s - old;
-    else if (r.p && Date.parse(r.p) > P.from) r[key] = r.s;   // publiée pendant la fenêtre
+    else if (r.p && Date.parse(r.p) > P.from) {   // publiée pendant la fenêtre
+      const fs = firstSeen.get(r.id);
+      r[key] = fs && fs.jump && fs.v > FIRST_SEEN_MAX ? r.s - fs.v : r.s;   // stock d'avant la publication : non compté
+    }
     else r[key] = null;
   }
 }

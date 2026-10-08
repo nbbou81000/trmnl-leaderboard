@@ -39,29 +39,60 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<script>/* Affichage choisi par le visiteur : appliqué avant le premier rendu */
+(function () { try {
+  var d = document.documentElement, ls = localStorage, p = ls.getItem('trmnl-palette'), old = ls.getItem('trmnl-theme');
+  if (!p && old) p = old === 'dark' ? 'ardoise' : 'papier';
+  var DARK = { ardoise: 1, nuit: 1 };
+  if (p && p !== 'auto') { d.dataset.palette = p; d.dataset.theme = DARK[p] ? 'dark' : 'light'; }
+  var f = ls.getItem('trmnl-font'); if (f && f !== 'site') d.dataset.font = f;
+  var z = ls.getItem('trmnl-size'); if (z && z !== 'm') d.dataset.size = z;
+} catch (e) {} })();</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
-  --paper:#f2f0ed; --sheet:#fbfaf8; --ink:#1d1d1b; --ink2:#5d5c58; --rule:#dcdbd9; --rule2:#c9c7c3;
-  --grey:#a3a19c; --accent:#f8654b; --accent2:#ff9280; --accent-soft:#ffe4d7; --accent-ink:#c7432b; --on-accent:#fff;
+  --paper:#f3efe6; --sheet:#fbf8f1; --ink:#2b2722; --ink2:#6f675c; --rule:#e2dbcd; --rule2:#d0c8b8;
+  --grey:#a59d90; --accent:#f0603f; --accent2:#ff9280; --accent-soft:#fbe0d3; --accent-ink:#c2442a; --on-accent:#fff;
   --sage:#4b876f; --indigo:#5463b8; --mustard:#d6a228; --sky:#3f86b5; --plum:#9a4f86; --clay:#874b4b;
   --font:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#1a1a1a; --sheet:#242423; --ink:#ecebe8; --ink2:#a9a8a3; --rule:#363634; --rule2:#474744;
-  --grey:#76756f; --accent:#ff7c66; --accent2:#ff9280; --accent-soft:#3a2622; --accent-ink:#ff9d8a; --on-accent:#1a1a1a;
+  --paper:#1f2328; --sheet:#282d33; --ink:#dfe3e8; --ink2:#9aa3ad; --rule:#363c44; --rule2:#465059;
+  --grey:#77818b; --accent:#f07a5a; --accent2:#ff9280; --accent-soft:#3b2a26; --accent-ink:#ff9d85; --on-accent:#1f2328;
   --sage:#699b87; --indigo:#7f8ce0; --mustard:#e4b545; --sky:#63a6d4; --plum:#c27bb0; --clay:#b07a7a;
 }}
 :root[data-theme="dark"]{
-  --paper:#1a1a1a; --sheet:#242423; --ink:#ecebe8; --ink2:#a9a8a3; --rule:#363634; --rule2:#474744;
-  --grey:#76756f; --accent:#ff7c66; --accent2:#ff9280; --accent-soft:#3a2622; --accent-ink:#ff9d8a; --on-accent:#1a1a1a;
+  --paper:#1f2328; --sheet:#282d33; --ink:#dfe3e8; --ink2:#9aa3ad; --rule:#363c44; --rule2:#465059;
+  --grey:#77818b; --accent:#f07a5a; --accent2:#ff9280; --accent-soft:#3b2a26; --accent-ink:#ff9d85; --on-accent:#1f2328;
   --sage:#699b87; --indigo:#7f8ce0; --mustard:#e4b545; --sky:#63a6d4; --plum:#c27bb0; --clay:#b07a7a;
 }
+/* Thèmes choisis dans « Affichage » (data-palette) ; les clairs gardent data-theme=light, les sombres data-theme=dark */
+:root[data-palette="lin"]{--paper:#ece8df;--sheet:#f5f2ec;--ink:#33302b;--ink2:#76716a;--rule:#dcd6cb;--rule2:#cbc4b7;--grey:#a19b91;--accent:#d4613f;--accent-soft:#f3dccf;--accent-ink:#b0472b;--on-accent:#fff}
+:root[data-palette="sepia"]{--paper:#efe2c8;--sheet:#f6ecd8;--ink:#3d2f1e;--ink2:#7a6448;--rule:#e0cfae;--rule2:#d0bc96;--grey:#a8916f;--accent:#b8552c;--accent-soft:#f1d6bd;--accent-ink:#9a4422;--on-accent:#fff}
+:root[data-palette="encre"]{--paper:#eeeeec;--sheet:#fafaf9;--ink:#1d1d1d;--ink2:#636363;--rule:#d6d6d4;--rule2:#c4c4c2;--grey:#9a9a98;--accent:#2b2b2b;--accent2:#6a6a6a;--accent-soft:#dededc;--accent-ink:#1d1d1d;--on-accent:#fff}
+:root[data-palette="nuit"]{--paper:#211d1a;--sheet:#2b2622;--ink:#ece3d7;--ink2:#a89c8d;--rule:#3a332d;--rule2:#4a423a;--grey:#857a6d;--accent:#ee8059;--accent-soft:#3d2b22;--accent-ink:#ffa07e;--on-accent:#211d1a}
+/* Polices choisies par le visiteur (chargées seulement à la demande) */
+:root[data-font="inter"]{--font:'Inter',system-ui,sans-serif}
+:root[data-font="plex"]{--font:'IBM Plex Sans',system-ui,sans-serif}
+:root[data-font="lexend"]{--font:'Lexend',system-ui,sans-serif}
+:root[data-font="literata"]{--font:'Literata',Georgia,serif}
+:root[data-font="sourceserif"]{--font:'Source Serif 4',Georgia,serif}
+:root[data-font="newsreader"]{--font:'Newsreader',Georgia,serif}
+:root[data-font="fraunces"]{--font:'Fraunces',Georgia,serif}
+:root[data-font="atkinson"]{--font:'Atkinson Hyperlegible',system-ui,sans-serif}
+:root[data-font="system"]{--font:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+:root[data-size="s"]{font-size:15px}:root[data-size="l"]{font-size:17.5px}:root[data-size="xl"]{font-size:19px}
+.disp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:6px 0 14px}
+.disp-opt{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--rule2);border-radius:8px;background:var(--sheet);cursor:pointer;text-align:left;font-size:.92rem}
+.disp-opt[aria-pressed="true"]{border:2px solid var(--accent);padding:8px 9px}
+.disp-sw{flex:none;width:20px;height:20px;border-radius:50%;border:1px solid rgba(0,0,0,.2)}
+.disp-seg{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+.box.disp h3{margin:4px 0 2px;font-size:1rem}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.45;
   font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;border-top:4px solid var(--accent)}
 a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:2px}
 button,input,select{font:inherit;color:inherit}
@@ -649,7 +680,7 @@ footer p{margin:0 0 12px;max-width:80ch}
     <span><b id="brandTitle">Palmarès des créateurs TRMNL</b><small id="brandSub"></small></span></a>
   <div class="updated"><span><span class="live"></span><span id="updated">…</span></span>
     <button class="theme-btn" id="langBtn" type="button"></button>
-    <button class="theme-btn" id="themeBtn" type="button">◐</button></div>
+    <button class="theme-btn" id="themeBtn" type="button">Aa</button></div>
 </header>
 <nav class="tabs" id="tabs"><div class="in" id="tabsIn"></div></nav>
 
@@ -941,14 +972,70 @@ const METRICS = [
 /* ================= Thème et graphiques ================= */
 const themeKey = 'trmnl-theme';
 function applyTheme(t) { if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
-applyTheme(store.get(themeKey, ''));
+if (!document.documentElement.dataset.palette) applyTheme(store.get(themeKey, ''));   // ancien réglage clair/sombre, si aucun thème choisi
 const resetViews = () => document.querySelectorAll('main > section').forEach(s => { delete s.dataset.ready; });
-$('#themeBtn').onclick = () => {
-  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
-  const cur = document.documentElement.dataset.theme || (dark ? 'dark' : 'light');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  applyTheme(next); store.set(themeKey, next); resetViews(); route();
+// ---------- Panneau « Affichage » : thème de couleurs, police et taille du texte (mémorisés dans le navigateur, sans cookie)
+const PALETTES = () => [
+  { k: 'auto', n: L('Automatique', 'Automatic'), bg: 'linear-gradient(90deg,#f3efe6 50%,#1f2328 50%)' },
+  { k: 'papier', n: L('Papier', 'Paper'), bg: '#f3efe6' }, { k: 'lin', n: L('Lin', 'Linen'), bg: '#ece8df' },
+  { k: 'sepia', n: L('Sépia', 'Sepia'), bg: '#efe2c8' }, { k: 'encre', n: L('Encre (e-ink)', 'Ink (e-ink)'), bg: '#eeeeec' },
+  { k: 'ardoise', n: L('Ardoise', 'Slate'), bg: '#1f2328', dark: 1 }, { k: 'nuit', n: L('Nuit chaude', 'Warm night'), bg: '#211d1a', dark: 1 },
+];
+const FONTS = {
+  site: { n: 'Archivo', s: "'Archivo'" }, inter: { n: 'Inter', s: "'Inter'", g: 'Inter:wght@400;500;600;700;800' },
+  plex: { n: 'IBM Plex Sans', s: "'IBM Plex Sans'", g: 'IBM+Plex+Sans:wght@400;500;600;700' },
+  lexend: { n: 'Lexend', s: "'Lexend'", g: 'Lexend:wght@400;500;600;700;800' },
+  literata: { n: 'Literata', s: "'Literata',serif", g: 'Literata:wght@400;500;600;700;800' },
+  sourceserif: { n: 'Source Serif', s: "'Source Serif 4',serif", g: 'Source+Serif+4:wght@400;500;600;700;800' },
+  newsreader: { n: 'Newsreader', s: "'Newsreader',serif", g: 'Newsreader:wght@400;500;600;700;800' },
+  fraunces: { n: 'Fraunces', s: "'Fraunces',serif", g: 'Fraunces:wght@400;500;600;700;800' },
+  atkinson: { n: 'Atkinson Hyperlegible', s: "'Atkinson Hyperlegible'", g: 'Atkinson+Hyperlegible:wght@400;700' },
+  system: { n: L('Police du système', 'System font'), s: 'system-ui' },
 };
+const SIZES = () => [['s', L('Petit', 'Small')], ['m', L('Normal', 'Normal')], ['l', L('Grand', 'Large')], ['xl', L('Très grand', 'Extra large')]];
+const fontLinks = new Set();
+function loadFont(k) {
+  const g = FONTS[k]?.g; if (!g || fontLinks.has(g)) return;
+  fontLinks.add(g); const l = document.createElement('link'); l.rel = 'stylesheet';
+  l.href = `https://fonts.googleapis.com/css2?family=${g}&display=swap`; l.onload = () => { resetViews(); route(); }; document.head.append(l);
+}
+const curPalette = () => document.documentElement.dataset.palette || 'auto';
+function setPalette(k) {
+  const d = document.documentElement, p = PALETTES().find(x => x.k === k);
+  if (k === 'auto') { delete d.dataset.palette; delete d.dataset.theme; } else { d.dataset.palette = k; d.dataset.theme = p?.dark ? 'dark' : 'light'; }
+  store.set('trmnl-palette', k); store.del(themeKey); resetViews(); route();
+}
+function setFont(k) { const d = document.documentElement; if (k === 'site') delete d.dataset.font; else d.dataset.font = k; store.set('trmnl-font', k); loadFont(k); resetViews(); route(); }
+function setSize(k) { const d = document.documentElement; if (k === 'm') delete d.dataset.size; else d.dataset.size = k; store.set('trmnl-size', k); resetViews(); route(); }
+loadFont(document.documentElement.dataset.font);
+function openDisplay() {
+  const wrap = document.createElement('div'); wrap.className = 'modal';
+  const draw = () => {
+    const pal = curPalette(), fnt = document.documentElement.dataset.font || 'site', sz = document.documentElement.dataset.size || 'm';
+    wrap.innerHTML = `<div class="box disp" role="dialog" aria-modal="true" aria-label="${L('Affichage', 'Display')}" style="width:min(560px,96vw)">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">${L('Affichage', 'Display')}</h2>
+        <button class="btn ghost small" type="button" data-x>${L('Fermer', 'Close')}</button></div>
+      <h3 style="margin-top:12px">${L('Couleurs', 'Colors')}</h3>
+      <div class="disp-grid">${PALETTES().map(p => `<button type="button" class="disp-opt" data-pal="${p.k}" aria-pressed="${p.k === pal}"><span class="disp-sw" style="background:${p.bg}"></span>${p.n}</button>`).join('')}</div>
+      <h3>${L('Police', 'Font')}</h3>
+      <div class="disp-grid">${Object.entries(FONTS).map(([k, f]) => `<button type="button" class="disp-opt" data-fnt="${k}" aria-pressed="${k === fnt}" style="font-family:${f.s},system-ui"><b style="font-size:1.1rem">Aa</b>${esc(f.n)}</button>`).join('')}</div>
+      <h3>${L('Taille du texte', 'Text size')}</h3>
+      <div class="disp-seg">${SIZES().map(([k, n]) => `<button type="button" class="disp-opt" data-sz="${k}" aria-pressed="${k === sz}">${n}</button>`).join('')}</div>
+      <p class="note" style="margin-bottom:0">${L('Vos choix sont mémorisés dans ce navigateur, sans cookie.', 'Your choices are remembered in this browser, without cookies.')}</p></div>`;
+    Object.keys(FONTS).forEach(loadFontPreview);
+  };
+  const loadFontPreview = k => { const g = FONTS[k]?.g; if (g && !fontLinks.has(g)) { fontLinks.add(g); const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = `https://fonts.googleapis.com/css2?family=${g}&display=swap`; document.head.append(l); } };
+  wrap.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (e.target === wrap || b?.dataset.x != null) { wrap.remove(); return; }
+    if (!b) return;
+    if (b.dataset.pal) setPalette(b.dataset.pal); else if (b.dataset.fnt) setFont(b.dataset.fnt); else if (b.dataset.sz) setSize(b.dataset.sz); else return;
+    draw();
+  });
+  document.addEventListener('keydown', function esc_(e) { if (e.key === 'Escape') { wrap.remove(); document.removeEventListener('keydown', esc_); } });
+  draw(); document.body.append(wrap);
+}
+$('#themeBtn').onclick = openDisplay;
 $('#langBtn').onclick = () => {
   lang = EN() ? 'fr' : 'en'; store.set('trmnl-lang', lang); setLocale(); resetViews(); paintChrome();
   const [tab, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');
@@ -993,7 +1080,7 @@ function paintChrome() {
   $('#langBtn').textContent = EN() ? 'FR' : 'EN';
   $('#langBtn').setAttribute('aria-label', L('Switch to English', 'Passer en français'));
   $('#langBtn').title = L('English version', 'Version française');
-  $('#themeBtn').setAttribute('aria-label', L('Changer de thème', 'Toggle theme'));
+  $('#themeBtn').setAttribute('aria-label', L('Affichage : couleurs, police et taille', 'Display: colors, font and size'));
   $('#tabs').setAttribute('aria-label', L('Sections', 'Sections'));
   const T = TAB_LABELS();
   $('#tabsIn').innerHTML = Object.keys(T).map(k => `<a href="${hr(k)}" data-tab="${k}">${T[k]}</a>`).join('');

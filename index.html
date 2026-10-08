@@ -1029,13 +1029,17 @@ function openDisplay() {
     const b = e.target.closest('button');
     if (e.target === wrap || b?.dataset.x != null) { wrap.remove(); return; }
     if (!b) return;
-    if (b.dataset.pal) setPalette(b.dataset.pal); else if (b.dataset.fnt) setFont(b.dataset.fnt); else if (b.dataset.sz) setSize(b.dataset.sz); else return;
+    // Chaque choix est compté dans tes statistiques de visites (événements « affichage-… », détail dans « cible »)
+    if (b.dataset.pal) { setPalette(b.dataset.pal); track('affichage-theme', true, 'theme:' + b.dataset.pal); }
+    else if (b.dataset.fnt) { setFont(b.dataset.fnt); track('affichage-police', true, 'font:' + b.dataset.fnt); }
+    else if (b.dataset.sz) { setSize(b.dataset.sz); track('affichage-taille', true, 'size:' + b.dataset.sz); }
+    else return;
     draw();
   });
   document.addEventListener('keydown', function esc_(e) { if (e.key === 'Escape') { wrap.remove(); document.removeEventListener('keydown', esc_); } });
   draw(); document.body.append(wrap);
 }
-$('#themeBtn').onclick = openDisplay;
+$('#themeBtn').onclick = () => { openDisplay(); track('affichage-ouvert', true); };
 $('#langBtn').onclick = () => {
   lang = EN() ? 'fr' : 'en'; store.set('trmnl-lang', lang); setLocale(); resetViews(); paintChrome();
   const [tab, arg] = (location.hash.slice(1) || '').split('?')[0].split('/');

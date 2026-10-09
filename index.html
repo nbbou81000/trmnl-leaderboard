@@ -3647,6 +3647,11 @@ function sharePanel(o) {
     <div class="row"><button class="btn" type="button" id="eCopy">🔗 ${L('Copier le lien', 'Copy link')}</button>
       <button class="btn ghost" type="button" data-close>${L('Fermer', 'Close')}</button></div>`, 'eshr');
   m.$('.pv img')?.addEventListener('error', e => { e.target.src = 'og.png'; }, { once: true });
+  // Page de partage pas encore générée (projet tout neuf) : le lien marcherait, mais sans vignette, et Discord garderait cet aperçu vide
+  if (o.page) fetch(o.page, { method: 'HEAD', cache: 'no-store' }).then(r => {
+    if (r.ok) return;
+    m.$('.note').insertAdjacentHTML('beforebegin', `<p class="note" style="color:var(--danger,#c0412a);font-weight:600">⏳ ${L("La vignette de ce projet n'est pas encore prête : elle le sera à la prochaine mise à jour du site (moins d'une heure). Partagé maintenant, le lien s'afficherait sans image : revenez un peu plus tard.", "This project's thumbnail isn't ready yet: it will be after the site's next update (under an hour). Shared now, the link would show without an image: come back a little later.")}</p>`);
+  }).catch(() => {});
   m.$('input').onclick = e => e.target.select();
   m.$('#eCopy').onclick = () => { copy(L('Lien copié', 'Link copied')); track(o.event, true, o.target + '@lien'); };
   m.wrap.querySelectorAll('[data-net]').forEach(b => b.addEventListener('click', () => {
@@ -3662,9 +3667,12 @@ function shareEink(a) {
     note: L("Le lien mène à l'article sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", 'The link leads to the article on this site, and shows up with its thumbnail on Discord, Reddit and social networks.') });
 }
 // Projets en élaboration : page de partage p/<id>.html (vignette), qui renvoie sur la fiche du projet dans le site
-const wipShareURL = (p, via) => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}p/${p.id}${EN() ? '-en' : ''}.html${via ? `?via=${via}` : ''}`;
+// v= change à chaque partage : Discord & co. relisent la page au lieu de ressortir un ancien aperçu (sans vignette) gardé en cache
+const shareStamp = () => Math.floor(Date.now() / 60000).toString(36);
+const wipSharePage = p => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}p/${p.id}${EN() ? '-en' : ''}.html`;
+const wipShareURL = (p, via) => `${wipSharePage(p)}?${via ? `via=${via}&` : ''}v=${shareStamp()}`;
 function shareWip(p) {
-  sharePanel({ title: p.name, by: p.profiles?.name || '', teaser: p.description, img: p.images?.[0] ? imgURL(p.images[0]) : '', event: 'projet-partage', target: 'project:' + p.id, link: via => wipShareURL(p, via),
+  sharePanel({ title: p.name, by: p.profiles?.name || '', teaser: p.description, img: p.images?.[0] ? imgURL(p.images[0]) : '', event: 'projet-partage', target: 'project:' + p.id, link: via => wipShareURL(p, via), page: wipSharePage(p),
     heading: L('Partager ce projet', 'Share this project'), label: L('Palmarès des créateurs TRMNL · En élaboration', 'TRMNL Creator Leaderboard · In the making'),
     note: L("Le lien ouvre directement la fiche du projet sur ce site, et s'affiche avec sa vignette sur Discord, Reddit et les réseaux sociaux.", "The link opens the project's page on this site directly, and shows up with its thumbnail on Discord, Reddit and social networks.") });
 }

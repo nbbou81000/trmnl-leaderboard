@@ -191,6 +191,27 @@ p.lead{color:var(--ink2);max-width:64ch;margin:0 0 14px}
 .ladder li.me{background:var(--accent);color:var(--on-accent);border-radius:6px;border-bottom-color:transparent;padding-left:10px}
 .ladder li.me .gap{color:inherit;opacity:.85}
 .tools-row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;align-items:center}
+/* « Ce que la communauté cherche » (onglet En élaboration) */
+details.wanted{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:4px 16px 12px;margin:0 0 24px}
+details.wanted>summary{cursor:pointer;list-style:none;padding:10px 0 6px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+details.wanted>summary::-webkit-details-marker{display:none}
+details.wanted>summary h3{margin:0;font-size:1.08rem}
+details.wanted>summary .muted{font-size:.84rem}
+details.wanted>summary::after{content:'▾';margin-left:auto;color:var(--ink2)}
+details.wanted:not([open])>summary::after{content:'▸'}
+.wlist{list-style:none;margin:6px 0 0;padding:0}
+.wlist li{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:10px 0;border-top:1px solid var(--rule)}
+.wlist .wq{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;min-width:0}
+.wlist .wq b{font-size:1.02rem;overflow-wrap:anywhere}
+.wlist .wq small{color:var(--ink2);font-size:.84rem}
+.wlist .wd{font-size:.76rem;font-weight:700;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent-ink);white-space:nowrap}
+.wlist .wd.lo{background:transparent;border:1px solid var(--rule2);color:var(--ink2)}
+.wlist .wnew{font-size:.76rem;font-weight:700;color:var(--accent-ink)}
+.wlist .wx{grid-column:1/-1;font-size:.86rem;color:var(--ink2)}
+.wlist .wx a{color:var(--ink)}
+.wlist .wx.ok{color:var(--ink)}
+.wlist li .btn{grid-row:1;grid-column:2;white-space:nowrap}
+.wfoot{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-top:10px;font-size:.8rem;color:var(--ink2)}
 .btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:650;text-decoration:none;display:inline-block}
 .btn.ghost{background:var(--sheet);color:var(--ink);border:1.5px solid var(--rule2)}
 .btn.ghost:hover{border-color:var(--accent)}
@@ -1937,6 +1958,56 @@ function wipCard(p, ship) {
     </div></article>`;
 }
 
+// ─── « Ce que la communauté cherche » : recherches sans résultat sur trmnl.com (data/wanted.json, relevé chaque heure) ───
+let WANTED = null, wantedAll = false;
+const WANTED_SHOW = 6;
+async function loadWanted() { if (!WANTED) WANTED = await getJSON('data/wanted.json').catch(() => ({ terms: {} })); return WANTED; }
+function wantedRows() {
+  const B = ['5+', '10+', '15+', '20+'], ts = Object.values(WANTED?.terms || {}).filter(t => t.ok !== false);
+  const since = Math.min(...ts.map(t => Date.parse(t.first)).filter(Number.isFinite));
+  const isNew = t => Date.parse(t.first) - since > DAY && Date.now() - Date.parse(t.first) < 7 * DAY;
+  const active = ts.filter(t => t.active).sort((a, b) => (!!a.filled - !!b.filled) || (B.indexOf(b.demand) - B.indexOf(a.demand)) || (Date.parse(a.first) - Date.parse(b.first)));
+  // Comblés puis sortis de la liste TRMNL : on les montre encore 30 jours, pour rendre hommage à leur créateur
+  const done = ts.filter(t => !t.active && t.filled && Date.now() - Date.parse(t.filled.at) < 30 * DAY);
+  return { rows: [...active, ...done], isNew };
+}
+function wantedHTML() {
+  if (!WANTED) return '';
+  const { rows, isNew } = wantedRows();
+  if (!rows.length) return '';
+  const shown = wantedAll ? rows : rows.slice(0, WANTED_SHOW);
+  const rLink = id => { const r = byR.get(String(id)); return r ? `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : ''; };
+  const li = t => {
+    const hint = EN() ? t.en : t.fr, fr = t.filled && byR.get(String(t.filled.id));
+    const extra = fr
+      ? `<div class="wx ok">✅ ${L('Comblé par', 'Filled by')} ${rLink(fr.id)} · ${creatorLink(fr)}</div>`
+      : t.existing?.length ? `<div class="wx">💡 ${L('Existe peut-être déjà :', 'Might already exist:')} ${t.existing.map(rLink).filter(Boolean).join(', ')}${t.n_existing > t.existing.length ? L(` et ${t.n_existing - t.existing.length} autres`, ` and ${t.n_existing - t.existing.length} more`) : ''}</div>` : '';
+    return `<li><div class="wq"><b>${esc(t.q)}</b>${hint && hint.toLowerCase() !== t.q ? `<small>${esc(hint)}</small>` : ''}
+        ${t.active ? `<span class="wd${t.demand === '5+' ? ' lo' : ''}">${esc(t.demand)} ${L('pers.', 'people')}</span>` : ''}${isNew(t) ? `<span class="wnew">🆕 ${L('nouveau', 'new')}</span>` : ''}</div>
+      ${fr ? '' : `<button class="btn ghost small" type="button" data-want="${esc(t.q)}">🔨 ${L("Je m'y mets", "I'll build it")}</button>`}${extra}</li>`;
+  };
+  const open = store.get('trmnl-wanted-closed') !== '1';
+  return `<details class="wanted" ${open ? 'open' : ''}><summary><h3>🔎 ${L('Ce que la communauté cherche', 'What the community is looking for')}</h3>
+      <span class="muted">${L('Recherches sans résultat sur trmnl.com', 'Searches with no result on trmnl.com')}</span></summary>
+    <ul class="wlist">${shown.map(li).join('')}</ul>
+    <div class="wfoot"><span>${L("Au moins 5 personnes différentes sur 30 jours. Source : TRMNL, relevé chaque heure.", 'At least 5 different people over 30 days. Source: TRMNL, checked every hour.')}</span>
+      ${rows.length > WANTED_SHOW ? `<button class="btn ghost small" type="button" id="wantMore">${wantedAll ? L('Réduire', 'Show less') : L(`Voir les ${rows.length - WANTED_SHOW} autres`, `Show ${rows.length - WANTED_SHOW} more`)}</button>` : ''}</div></details>`;
+}
+function wireWanted(el) {
+  const d = el.querySelector('details.wanted');
+  if (!d) return;
+  d.addEventListener('toggle', () => store.set('trmnl-wanted-closed', d.open ? '0' : '1'));
+  el.querySelector('#wantMore')?.addEventListener('click', () => { wantedAll = !wantedAll; renderWip(); });
+  el.querySelectorAll('[data-want]').forEach(b => b.addEventListener('click', () => {
+    const t = WANTED.terms[b.dataset.want];
+    if (!t) return;
+    track('plugin-recherche-pris', true, 'want:' + t.q);
+    if (!wipMe) { toast(L('Connectez-vous avec Discord pour partager votre projet.', 'Sign in with Discord to share your project.')); $('#wipIn')?.focus(); return; }
+    const nm = t.en || t.q;
+    wipForm(null, { name: nm.charAt(0).toUpperCase() + nm.slice(1),
+      description: L(`Pour tous ceux qui cherchent « ${t.q} » sur trmnl.com sans rien trouver.`, `For everyone searching "${t.q}" on trmnl.com and finding nothing.`) });
+  }));
+}
 async function renderWip(openId) {
   const el = $('#tab-elaboration');
   const head = `<h2>${L("Recettes en cours d'élaboration", 'Recipes in the making')}</h2>
@@ -1945,9 +2016,10 @@ async function renderWip(openId) {
   if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L('Cette section ouvre très bientôt.', 'This section opens very soon.')}</p>`; return; }
   if (!wipList) {
     el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
-    try { await wipLoadSession(); [wipList] = await Promise.all([api().list(), loadSwitches(true)]); wipErr = ''; }
+    try { await wipLoadSession(); [wipList] = await Promise.all([api().list(), loadSwitches(true), loadWanted()]); wipErr = ''; }
     catch (e) { wipErr = trErr(e.message); wipList = []; }
   }
+  if (!WANTED) await loadWanted();
   const items = wipList.map(p => ({ p, ship: shippedOf(p) }));
   const justShipped = items.filter(x => x.ship && Date.now() - Date.parse(x.ship.d) < WIP_SHIPPED_DAYS * DAY).sort((a, b) => Date.parse(b.ship.d) - Date.parse(a.ship.d));
   const open = items.filter(x => !x.ship);
@@ -1963,7 +2035,7 @@ async function renderWip(openId) {
         <button class="btn ghost small" type="button" id="wipOut">${L('Se déconnecter', 'Sign out')}</button></div>`
     : `<div class="tools-row"><button class="btn" type="button" id="wipIn"><span aria-hidden="true">🎮</span> ${L('Se connecter avec Discord', 'Sign in with Discord')}</button>
         <span class="muted" style="font-size:.86rem">${L('pour partager un projet ou commenter. La lecture est libre.', 'to share a project or comment. Reading is open to everyone.')}</span></div>`;
-  el.innerHTML = head + pausedNotice(['comments', 'projects', 'uploads', 'reactions']) + account + (wipErr ? `<p class="notice">${esc(wipErr)}</p>` : '') + `
+  el.innerHTML = head + pausedNotice(['comments', 'projects', 'uploads', 'reactions']) + account + (wipErr ? `<p class="notice">${esc(wipErr)}</p>` : '') + wantedHTML() + `
     ${justShipped.length ? `<h3 style="margin-top:8px">🎉 ${L('Tout juste publiées', 'Just shipped')}</h3><div class="cards" style="margin-bottom:26px">${justShipped.map(x => wipCard(x.p, x.ship)).join('')}</div>` : ''}
     ${active.length ? `<div class="tools"><div class="seg" role="group">
         <button type="button" data-wf="" aria-pressed="${!wipFilter}">${L('Toutes', 'All')} (${active.length})</button>
@@ -1981,6 +2053,7 @@ async function renderWip(openId) {
   $('#wipIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', hr('elaboration')); track('connexion-discord', true); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
   $('#wipOut')?.addEventListener('click', async () => { await api().signOut(); wipMe = wipProfile = null; store.set('trmnl-wip-session', ''); renderWip(); });
   $('#wipNew')?.addEventListener('click', () => wipForm());
+  wireWanted(el);
   $('#wipReports')?.addEventListener('click', wipReportsView);
   $('#wipVisits')?.addEventListener('click', () => go('#stats'));
   $('#wipAdmin')?.addEventListener('click', () => go('#admin'));
@@ -2576,12 +2649,12 @@ function modal(html, cls = '') {
 const counter = (input, out, max) => { const f = () => { out.textContent = `${input.value.length} / ${max}`; out.classList.toggle('down', input.value.length > max); }; input.addEventListener('input', f); f(); };
 
 // ---------- Formulaire de projet (création et modification)
-function wipForm(p = null) {
+function wipForm(p = null, pre = null) {
   const edit = !!p;
   const m = modal(`<h3>${edit ? L('Modifier le projet', 'Edit project') : L('Partager mon projet', "Share what you're building")}</h3>
     <form class="wform" novalidate>
-      <label>${L('Nom du projet', 'Project name')}<input name="name" maxlength="60" required value="${esc(p?.name || '')}"></label>
-      <label>${L('Description courte', 'Short description')} <small class="muted" id="dc"></small><textarea name="description" rows="3" maxlength="${DESC_MAX}">${esc(p?.description || '')}</textarea>
+      <label>${L('Nom du projet', 'Project name')}<input name="name" maxlength="60" required value="${esc(p?.name || pre?.name || '')}"></label>
+      <label>${L('Description courte', 'Short description')} <small class="muted" id="dc"></small><textarea name="description" rows="3" maxlength="${DESC_MAX}">${esc(p?.description || pre?.description || '')}</textarea>
         <small class="muted">${L(`${DESC_MAX} caractères maximum. Le résumé de la carte s'arrête à trois lignes ; le texte complet reste visible sur la fiche du projet.`, `${DESC_MAX} characters max. The card preview stops at three lines; the full text stays visible on the project's page.`)}</small></label>
       <div class="two"><label>${L('État', 'Status')}<select name="status">${Object.entries(WSTAT).map(([k, v]) => `<option value="${k}" ${(p?.status || 'building') === k ? 'selected' : ''}>${v.e} ${v.l()}</option>`).join('')}</select></label>
         <label>${L('Catégorie', 'Category')}<select name="category">${WCATS.map(c => `<option ${(p?.category || 'other') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></label></div>

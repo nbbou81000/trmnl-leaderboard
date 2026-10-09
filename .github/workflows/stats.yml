@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir -p public/data
           if git fetch --depth=1 origin gh-pages 2>/dev/null; then
-            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json; do
+            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json wanted.json; do
               git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
             done
           else
@@ -90,6 +90,13 @@ jobs:
         run: |
           node scripts/eink-news.mjs public/data
           node scripts/admin-rules.mjs eink public/data
+
+      # Recherches sans résultat sur trmnl.com (API officielle, clé de compte TRMNL) → « Ce que la communauté cherche »
+      - name: Plugins recherchés
+        env:
+          TRMNL_API_KEY: ${{ secrets.TRMNL_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+        run: node scripts/wanted.mjs public/data
 
       - name: Visites du jour (GoatCounter)
         run: node scripts/goatcounter-today.mjs public/data

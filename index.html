@@ -244,6 +244,10 @@ details.wanted:not([open])>summary::after{content:'▸'}
 .wvote[aria-pressed="true"] small{color:inherit}
 .wishes .wq{grid-column:2}
 .wishes .wtake{font-weight:700;color:var(--accent-ink)}
+.wreview{border:1.5px dashed var(--accent);border-radius:10px;padding:10px 12px;margin:8px 0}
+.wreview h4{margin:0 0 6px}
+.wpend{padding:8px 0;border-top:1px solid var(--rule)}.wpend:first-of-type{border-top:0}
+.wpend p{margin:2px 0;font-size:.88rem;color:var(--ink2)}.wpend small{color:var(--ink2)}.wpend .row{margin-top:6px;display:flex;gap:8px}
 .wishes .wbody{grid-column:2/-1;margin:0;font-size:.88rem;color:var(--ink2);overflow-wrap:anywhere}
 .wishes .wx{grid-column:2/-1}
 .wishes .wby{font-size:.8rem;color:var(--ink2)}
@@ -1986,10 +1990,19 @@ const realApi = {
   // Souhaits : facultatifs (tant que souhaits.sql n'est pas installé, le bloc ne s'affiche pas)
   async wishes() {
     const c = await client();
-    const r = await c.from('wishes').select('*, profiles(name,avatar), wish_votes(user_id)').order('created_at', { ascending: false }).limit(300);
+    let r = await c.from('wishes').select('id,author,title,body,hidden,created_at,guest_name,pending, profiles(name,avatar), wish_votes(user_id)').order('created_at', { ascending: false }).limit(300);
+    if (r.error) r = await c.from('wishes').select('id,author,title,body,hidden,created_at, profiles(name,avatar), wish_votes(user_id)').order('created_at', { ascending: false }).limit(300);   // avant souhaits2.sql
     if (r.error) return null;
-    return r.data.map(w => ({ ...w, votes: (w.wish_votes || []).map(v => v.user_id) }));
+    // Votes des visiteurs sans compte (souhaits2.sql) : compteurs seulement, plus ceux de ce navigateur
+    const g = await c.rpc('wish_guest_counts', { p_visitor: wishVisitor() }).then(x => x.error ? null : x.data);
+    const gm = new Map((g || []).map(x => [x.wish_id, x]));
+    const out = r.data.map(w => ({ ...w, votes: (w.wish_votes || []).map(v => v.user_id), gvotes: gm.get(w.id)?.n || 0, gmine: !!gm.get(w.id)?.mine }));
+    out.guestReady = !!g;
+    return out;
   },
+  async addWishGuest(title, body, name) { const c = await client(); return ok(await c.rpc('wish_add_guest', { p_visitor: wishVisitor(), p_title: title, p_body: body, p_name: name || null })); },
+  async voteWishGuest(id, on) { const c = await client(); ok(await c.rpc('wish_vote_guest', { p_wish: id, p_visitor: wishVisitor(), p_on: on })); },
+  async approveWish(id) { const c = await client(); ok(await c.from('wishes').update({ pending: false }).eq('id', id)); },
   async addWish(title, body) { const c = await client(); ok(await c.from('wishes').insert({ title, body })); },
   async voteWish(id, on) { const c = await client(); ok(on ? await c.from('wish_votes').insert({ wish_id: id }) : await c.from('wish_votes').delete().eq('wish_id', id).eq('user_id', wipMe.id)); },
   async deleteWish(id) { const c = await client(); ok(await c.from('wishes').delete().eq('id', id)); },
@@ -2222,46 +2235,70 @@ function wireWanted(el) {
 }
 // ─── Souhaits de la communauté : un utilisateur propose un plugin, les autres soutiennent, un créateur le reprend ───
 let WISHES = null, wishesAll = false, WISH_PREFILL = '';
+// Numéro de navigateur propre aux souhaits (sans lien avec la mesure d'audience), pour voter et proposer sans compte
+function wishVisitor() {
+  let id = store.get('trmnl-wish-id', '');
+  if (!/^[0-9a-f-]{36}$/.test(id)) { id = crypto.randomUUID?.() || 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, () => (Math.random() * 16 | 0).toString(16)); store.set('trmnl-wish-id', id); }
+  return id;
+}
+const wishCount = w => w.votes.length + (w.gvotes || 0);
+const wishVoted = w => wipMe ? w.votes.includes(wipMe.id) : !!w.gmine;
+const guestWishesOK = () => !!WISHES?.guestReady;
 const WISHES_SHOW = 5;
 function wishRows() {
   const proj = new Map(); (wipList || []).forEach(p => { if (p.wish_id) { const a = proj.get(p.wish_id) || []; a.push(p); proj.set(p.wish_id, a); } });
-  return (WISHES || []).map(w => {
+  return (WISHES || []).filter(w => !w.pending).map(w => {
     const ps = proj.get(w.id) || [], shipped = ps.map(p => ({ p, s: shippedOf(p) })).find(x => x.s);
     return { w, ps, shipped };
-  }).sort((a, b) => (!!a.shipped - !!b.shipped) || (b.w.votes.length - a.w.votes.length) || (Date.parse(b.w.created_at) - Date.parse(a.w.created_at)));
+  }).sort((a, b) => (!!a.shipped - !!b.shipped) || (wishCount(b.w) - wishCount(a.w)) || (Date.parse(b.w.created_at) - Date.parse(a.w.created_at)));
 }
+const wishAuthor = w => w.profiles?.name || w.guest_name || L('Anonyme', 'Anonymous');
+// Souhaits envoyés sans compte depuis ce navigateur, en attente de validation (rappel affiché à leur auteur)
+const myPendingWishes = () => { try { return JSON.parse(store.get('trmnl-wish-pending', '[]')).filter(x => Date.now() - x.t < 14 * DAY); } catch { return []; } };
 function wishesHTML() {
   if (!WISHES) return '';
   const rows = wishRows(), shown = wishesAll ? rows : rows.slice(0, WISHES_SHOW);
+  const open2all = guestWishesOK(), canPost = wipMe ? !wipProfile?.banned : open2all;
   const pLink = p => `<a href="${hr('elaboration', p.id)}" data-wishproj="${p.id}">${esc(p.name)}</a>`;
   const li = ({ w, ps, shipped }) => {
-    const mine = wipMe && w.author === wipMe.id, voted = wipMe && w.votes.includes(wipMe.id);
+    const mine = wipMe && w.author === wipMe.id, voted = wishVoted(w);
     const status = shipped
       ? `<div class="wx ok">✅ ${L('Réalisé', 'Done')} : <a href="https://trmnl.com/recipes/${shipped.s.r?.id || shipped.p.shipped_recipe}" target="_blank" rel="noopener">${esc(shipped.p.name)}</a> · ${wipWho(shipped.p)}</div>`
       : ps.length ? `<div class="wx ok">🔨 ${L('Repris par', 'Taken up by')} ${ps.map(p => `${wipWho(p)} (${pLink(p)})`).join(', ')}</div>` : '';
-    return `<li${w.hidden ? ' style="opacity:.55"' : ''}><button class="wvote" type="button" data-wv="${w.id}" aria-pressed="${!!voted}" title="${L('Je veux aussi ce plugin', 'I want this too')}">▲ ${w.votes.length}<small>${L('moi aussi', 'me too')}</small></button>
+    return `<li${w.hidden ? ' style="opacity:.55"' : ''}><button class="wvote" type="button" data-wv="${w.id}" aria-pressed="${!!voted}" title="${L('Je veux aussi ce plugin', 'I want this too')}">▲ ${wishCount(w)}<small>${L('moi aussi', 'me too')}</small></button>
       <div class="wq"><b>${esc(w.title)}</b></div>
       ${w.body ? `<p class="wbody">${esc(w.body)}</p>` : ''}
-      <div class="wx wby">${shipped || !wipMe || wipProfile?.banned ? '' : `<button class="linkbtn wtake" type="button" data-wtake="${w.id}">🔨 ${L("Je m'y mets", "I'll build it")}</button> · `}${L('Souhaité par', 'Wished by')} ${esc(w.profiles?.name || '?')} · ${ago2(w.created_at)}${mine ? ` · <button class="linkbtn" type="button" data-wdel="${w.id}">${L('supprimer', 'delete')}</button>` : ''}${isAdmin() ? ` · <button class="linkbtn" type="button" data-whide="${w.id}" data-h="${w.hidden ? 0 : 1}">${w.hidden ? L('réafficher', 'unhide') : L('masquer', 'hide')}</button>` : ''}</div>
+      <div class="wx wby">${shipped || !wipMe || wipProfile?.banned ? '' : `<button class="linkbtn wtake" type="button" data-wtake="${w.id}">🔨 ${L("Je m'y mets", "I'll build it")}</button> · `}${L('Souhaité par', 'Wished by')} ${esc(wishAuthor(w))} · ${ago2(w.created_at)}${mine ? ` · <button class="linkbtn" type="button" data-wdel="${w.id}">${L('supprimer', 'delete')}</button>` : ''}${isAdmin() ? ` · <button class="linkbtn" type="button" data-whide="${w.id}" data-h="${w.hidden ? 0 : 1}">${w.hidden ? L('réafficher', 'unhide') : L('masquer', 'hide')}</button>` : ''}</div>
       ${status}</li>`;
   };
+  // Administrateur : les souhaits sans compte à valider, en tête du bloc
+  const pend = isAdmin() ? WISHES.filter(w => w.pending) : [];
+  const review = pend.length ? `<div class="wreview"><h4>⏳ ${L(`À valider (${pend.length})`, `To review (${pend.length})`)}</h4>${pend.map(w => `<div class="wpend"><b>${esc(w.title)}</b>${w.body ? `<p>${esc(w.body)}</p>` : ''}
+      <small>${esc(wishAuthor(w))} · ${ago2(w.created_at)}</small><div class="row"><button class="btn small" type="button" data-wok="${w.id}">✅ ${L('Publier', 'Publish')}</button><button class="btn ghost small" type="button" data-wno="${w.id}">🗑️ ${L('Refuser', 'Reject')}</button></div></div>`).join('')}</div>` : '';
+  const mp = !wipMe ? myPendingWishes() : [];
+  const waiting = mp.length ? `<p class="notice" style="margin:8px 0">⏳ ${L(`Votre souhait « ${esc(mp[0].title)} » sera visible après validation.`, `Your wish "${esc(mp[0].title)}" will show once it's been reviewed.`)}</p>` : '';
   const open = store.get('trmnl-wishes-closed') !== '1';
   return `<details class="wanted wishes" ${open ? 'open' : ''}><summary><h3>🙋 ${L('Les souhaits de la communauté', 'Community wishes')}</h3>
-      <span class="muted">${L("Un plugin vous manque ? Proposez-le, ou soutenez ceux des autres.", 'Missing a plugin? Wish for it, or back other people’s wishes.')}</span></summary>
-    <div class="tools-row" style="margin:8px 0 4px">${wipMe ? (wipProfile?.banned ? '' : `<button class="btn small" type="button" id="wishNew">+ ${L('Proposer un souhait', 'Make a wish')}</button>`)
-      : `<span class="muted" style="font-size:.86rem">${L('Connectez-vous avec Discord (bouton ci-dessus) pour proposer ou soutenir un souhait. Pas besoin d\'être créateur.', 'Sign in with Discord (button above) to make or back a wish. No need to be a creator.')}</span>`}</div>
+      <span class="muted">${L("Un plugin vous manque ? Proposez-le, ou soutenez ceux des autres.", 'Missing a plugin? Wish for it, or back other people’s wishes.')}</span>${pend.length ? ` <span class="wd">⏳ ${pend.length}</span>` : ''}</summary>
+    ${review}
+    <div class="tools-row" style="margin:8px 0 4px">${canPost ? `<button class="btn small" type="button" id="wishNew">+ ${L('Proposer un souhait', 'Make a wish')}</button>` : ''}
+      ${!wipMe ? `<span class="muted" style="font-size:.84rem">${open2all ? L('Sans compte, c\'est possible aussi.', 'No account needed.') : L('Connectez-vous avec Discord (bouton ci-dessus) pour proposer ou soutenir un souhait.', 'Sign in with Discord (button above) to make or back a wish.')}</span>` : ''}</div>
+    ${waiting}
     ${rows.length ? `<ul class="wlist">${shown.map(li).join('')}</ul>` : `<p class="muted">${L('Aucun souhait pour l\'instant. Lancez-vous !', 'No wish yet. Be the first!')}</p>`}
     ${rows.length > WISHES_SHOW ? `<div class="wfoot"><span></span><button class="btn ghost small" type="button" id="wishMore">${wishesAll ? L('Réduire', 'Show less') : (rows.length - WISHES_SHOW === 1 ? L('Voir le dernier', 'Show 1 more') : L(`Voir les ${rows.length - WISHES_SHOW} autres`, `Show ${rows.length - WISHES_SHOW} more`))}</button></div>` : ''}</details>`;
 }
 async function wishReload() { WISHES = await api().wishes().catch(() => WISHES); renderWip(); }
 function wishForm() {
+  const guest = !wipMe;
   const m = modal(`<h3>🙋 ${L('Proposer un souhait', 'Make a wish')}</h3>
     <form class="wform" novalidate>
       <label>${L('Le plugin que vous aimeriez', 'The plugin you would like')}<input name="title" maxlength="80" required value="${esc(WISH_PREFILL)}" placeholder="${L('Ex. : Mes notes Obsidian du jour', 'E.g. My Obsidian daily note')}"></label>
       <label>${L('Quelques détails (facultatif)', 'A few details (optional)')}<textarea name="body" rows="3" maxlength="400" placeholder="${L('Ce que vous voudriez voir à l\'écran, le service à utiliser…', 'What you would like on screen, which service to use…')}"></textarea></label>
+      ${guest ? `<label>${L('Votre pseudo (facultatif)', 'Your name (optional)')}<input name="gname" maxlength="30" placeholder="${L('Anonyme', 'Anonymous')}"></label>
+      <p class="muted" style="font-size:.84rem;margin:0">${L("Sans compte, votre souhait sera visible après validation par l'administrateur du site. Aucune donnée personnelle n'est demandée.", "Without an account, your wish will show once the site's admin has reviewed it. No personal data is asked.")}</p>` : ''}
       <p class="muted" style="font-size:.84rem;margin:0">${L('Avant de proposer, jetez un œil à la liste : si votre idée y est déjà, soutenez-la plutôt.', 'Before posting, check the list: if your idea is already there, back it instead.')}</p>
       <p class="err" hidden></p>
-      <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${L('Publier', 'Post')}</button></div>
+      <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${guest ? L('Envoyer', 'Send') : L('Publier', 'Post')}</button></div>
     </form>`, 'wipd');
   WISH_PREFILL = '';
   const f = m.$('form'), err = m.$('.err');
@@ -2270,8 +2307,18 @@ function wishForm() {
     const title = f.title.value.trim(), body = f.body.value.trim();
     if (title.length < 3) { err.textContent = L('Décrivez le plugin en quelques mots.', 'Describe the plugin in a few words.'); err.hidden = false; return; }
     const btn = f.querySelector('[type=submit]'); btn.disabled = true;
-    try { await api().addWish(title, body); m.close(); track('souhait-publie', true); toast(L('Souhait publié !', 'Wish posted!')); await wishReload(); }
-    catch (x) { err.textContent = /row-level|policy/i.test(x.message) ? L('Limite atteinte : 5 souhaits par jour au plus.', 'Limit reached: 5 wishes a day at most.') : trErr(x.message); err.hidden = false; btn.disabled = false; }
+    try {
+      if (guest) {
+        await api().addWishGuest(title, body, f.gname.value.trim());
+        store.set('trmnl-wish-pending', JSON.stringify([{ title, t: Date.now() }, ...myPendingWishes()].slice(0, 5)));
+        m.close(); track('souhait-propose-sans-compte', true); toast(L('Merci ! Votre souhait sera publié après validation.', 'Thanks! Your wish will show once reviewed.')); renderWip();
+      } else { await api().addWish(title, body); m.close(); track('souhait-publie', true); toast(L('Souhait publié !', 'Wish posted!')); await wishReload(); }
+    } catch (x) {
+      const msg = x.message || '';
+      err.textContent = /limit|row-level|policy/i.test(msg) ? (guest ? L('Limite atteinte : 3 souhaits par jour au plus.', 'Limit reached: 3 wishes a day at most.') : L('Limite atteinte : 5 souhaits par jour au plus.', 'Limit reached: 5 wishes a day at most.'))
+        : /too many/i.test(msg) ? L('Beaucoup de souhaits sont en attente : réessayez un peu plus tard.', 'Many wishes are waiting for review: please try again later.') : trErr(msg);
+      err.hidden = false; btn.disabled = false;
+    }
   };
 }
 function wireWishes(el) {
@@ -2282,19 +2329,25 @@ function wireWishes(el) {
   el.querySelector('#wishMore')?.addEventListener('click', () => { wishesAll = !wishesAll; renderWip(); });
   const W = id => WISHES.find(w => w.id === +id);
   d.querySelectorAll('[data-wv]').forEach(b => b.addEventListener('click', async () => {
-    if (!wipMe) { toast(L('Connectez-vous avec Discord pour soutenir un souhait.', 'Sign in with Discord to back a wish.')); $('#wipIn')?.focus(); return; }
-    const w = W(b.dataset.wv), on = !w.votes.includes(wipMe.id);
-    w.votes = on ? [...w.votes, wipMe.id] : w.votes.filter(u => u !== wipMe.id); renderWip();   // affichage immédiat
-    try { await api().voteWish(w.id, on); track('souhait-soutenu', true, 'wish:' + w.id); } catch (x) { toast(trErr(x.message)); await wishReload(); }
+    if (!wipMe && !guestWishesOK()) { toast(L('Connectez-vous avec Discord pour soutenir un souhait.', 'Sign in with Discord to back a wish.')); $('#wipIn')?.focus(); return; }
+    const w = W(b.dataset.wv), on = !wishVoted(w);
+    if (wipMe) w.votes = on ? [...w.votes, wipMe.id] : w.votes.filter(u => u !== wipMe.id);
+    else { w.gmine = on; w.gvotes = Math.max(0, (w.gvotes || 0) + (on ? 1 : -1)); }
+    renderWip();   // affichage immédiat
+    try { await (wipMe ? api().voteWish(w.id, on) : api().voteWishGuest(w.id, on)); track('souhait-soutenu', true, 'wish:' + w.id); } catch (x) { toast(trErr(x.message)); await wishReload(); }
   }));
   d.querySelectorAll('[data-wtake]').forEach(b => b.addEventListener('click', () => {
     const w = W(b.dataset.wtake); track('souhait-repris', true, 'wish:' + w.id);
     wipForm(null, { name: w.title, description: w.body || '', wish_id: w.id });
   }));
   d.querySelectorAll('[data-wishproj]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); wipDetail(wipList.find(p => p.id === +a.dataset.wishproj)); }));
-  d.querySelectorAll('[data-wdel]').forEach(b => b.addEventListener('click', async () => {
-    if (!await confirmBox({ title: L('Supprimer ce souhait ?', 'Delete this wish?'), text: L('Il disparaîtra avec ses soutiens.', 'It will disappear along with its backers.') })) return;
-    try { await api().deleteWish(+b.dataset.wdel); await wishReload(); } catch (x) { toast(trErr(x.message)); }
+  d.querySelectorAll('[data-wdel], [data-wno]').forEach(b => b.addEventListener('click', async () => {
+    const id = +(b.dataset.wdel || b.dataset.wno);
+    if (!await confirmBox({ title: b.dataset.wno ? L('Refuser ce souhait ?', 'Reject this wish?') : L('Supprimer ce souhait ?', 'Delete this wish?'), text: L('Il sera effacé définitivement.', 'It will be deleted for good.') })) return;
+    try { await api().deleteWish(id); await wishReload(); } catch (x) { toast(trErr(x.message)); }
+  }));
+  d.querySelectorAll('[data-wok]').forEach(b => b.addEventListener('click', async () => {
+    try { await api().approveWish(+b.dataset.wok); toast(L('Souhait publié', 'Wish published')); await wishReload(); } catch (x) { toast(trErr(x.message)); }
   }));
   d.querySelectorAll('[data-whide]').forEach(b => b.addEventListener('click', async () => {
     try { await api().hideWish(+b.dataset.whide, b.dataset.h === '1'); await wishReload(); } catch (x) { toast(trErr(x.message)); }
@@ -2347,7 +2400,7 @@ async function renderWip(openId) {
   $('#wipNew')?.addEventListener('click', () => wipForm());
   wireWanted(el);
   wireWishes(el);
-  if (WISH_PREFILL) { const box = el.querySelector('details.wishes'); if (box) { box.open = true; box.scrollIntoView({ block: 'start' }); if (wipMe && !wipProfile?.banned) wishForm(); else WISH_PREFILL = ''; } }
+  if (WISH_PREFILL) { const box = el.querySelector('details.wishes'); if (box) { box.open = true; box.scrollIntoView({ block: 'start' }); if (wipMe ? !wipProfile?.banned : guestWishesOK()) wishForm(); else WISH_PREFILL = ''; } }
   $('#wipReports')?.addEventListener('click', wipReportsView);
   $('#wipVisits')?.addEventListener('click', () => go('#stats'));
   $('#wipAdmin')?.addEventListener('click', () => go('#admin'));

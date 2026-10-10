@@ -191,6 +191,9 @@ p.lead{color:var(--ink2);max-width:64ch;margin:0 0 14px}
 .ladder li.me{background:var(--accent);color:var(--on-accent);border-radius:6px;border-bottom-color:transparent;padding-left:10px}
 .ladder li.me .gap{color:inherit;opacity:.85}
 .tools-row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;align-items:center}
+.wkpick{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:14px 0 8px;font-size:.9rem}
+.wkpick select{font:inherit;padding:4px 8px;border:1.5px solid var(--rule2);border-radius:8px;background:var(--paper);color:var(--ink)}
+.sttiles.wk{margin-bottom:4px}
 /* « Vous venez d'avoir votre TRMNL ? » (accueil) */
 .starter{margin:22px 0 4px;background:var(--sheet);border:1px solid var(--rule);border-radius:14px;padding:16px 16px 18px}
 .starter h3{margin:0 0 2px;font-size:1.15rem}
@@ -3498,6 +3501,10 @@ async function admVersions(body) {
 
 // ---------- Statistiques de visite : page pleine, réservée aux administrateurs (adresse #stats)
 let statsDays = 30, statsTimers = [], statsLiveAt = 0;
+// Style des graphiques principaux (choisi par l'administrateur, retenu sur cet appareil) et semaines comparées
+let statsStyle = ['classic', 'area', 'line', 'bar'].includes(store.get('trmnl-stats-style')) ? store.get('trmnl-stats-style') : 'classic';
+let statsWeekA = null, statsWeekB = null, statsYear = null, statsYearAt = 0;
+const STYLE_LABELS = () => [['classic', L('Classique', 'Classic')], ['area', L('Aires translucides', 'Translucent areas')], ['line', L('Courbes', 'Lines')], ['bar', L('Barres', 'Bars')]];
 const stopStats = () => { statsTimers.forEach(clearInterval); statsTimers = []; };
 const TZ_CC = { 'Europe/Paris': 'FR', 'Europe/Brussels': 'BE', 'Europe/Zurich': 'CH', 'Europe/Luxembourg': 'LU', 'Europe/Monaco': 'MC', 'America/Montreal': 'CA', 'America/Toronto': 'CA', 'America/Vancouver': 'CA', 'America/Edmonton': 'CA', 'America/Winnipeg': 'CA', 'America/Halifax': 'CA',
   'Europe/London': 'GB', 'Europe/Dublin': 'IE', 'Europe/Berlin': 'DE', 'Europe/Vienna': 'AT', 'Europe/Amsterdam': 'NL', 'Europe/Madrid': 'ES', 'Atlantic/Canary': 'ES', 'Europe/Lisbon': 'PT', 'Europe/Rome': 'IT', 'Europe/Copenhagen': 'DK', 'Europe/Stockholm': 'SE', 'Europe/Oslo': 'NO', 'Europe/Helsinki': 'FI', 'Europe/Warsaw': 'PL', 'Europe/Prague': 'CZ', 'Europe/Budapest': 'HU', 'Europe/Bucharest': 'RO', 'Europe/Athens': 'GR', 'Europe/Kiev': 'UA', 'Europe/Kyiv': 'UA', 'Europe/Istanbul': 'TR', 'Europe/Moscow': 'RU', 'Europe/Tallinn': 'EE', 'Europe/Riga': 'LV', 'Europe/Vilnius': 'LT', 'Europe/Bratislava': 'SK', 'Europe/Ljubljana': 'SI', 'Europe/Zagreb': 'HR', 'Europe/Belgrade': 'RS', 'Europe/Sofia': 'BG',
@@ -3562,10 +3569,15 @@ async function renderStats() {
   el.innerHTML = `<div class="sthead">${head}
       <div class="stlive" id="stLive"><span class="dot"></span> <b id="stNow">…</b> ${L('en ce moment', 'right now')}</div></div>
     <div class="stbar"><div class="seg" role="group">${[1, 7, 30, 90, 365].map(n => `<button type="button" data-sd="${n}" aria-pressed="${n === statsDays}">${n === 1 ? L("Aujourd'hui", 'Today') : n === 365 ? L('1 an', '1 year') : L(`${n} jours`, `${n} days`)}</button>`).join('')}</div>
+      <div class="seg" role="group" aria-label="${L('Style des graphiques', 'Chart style')}">${STYLE_LABELS().map(([k, lb]) => `<button type="button" data-sstyle="${k}" aria-pressed="${k === statsStyle}">${lb}</button>`).join('')}</div>
       <button class="btn ghost small" type="button" id="stRefresh">↻ ${L('Actualiser', 'Refresh')}</button>
       <span class="muted" id="stAt"></span></div>
     <div id="stBody"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`;
   el.querySelectorAll('[data-sd]').forEach(b => b.onclick = () => { statsDays = +b.dataset.sd; renderStats(); });
+  el.querySelectorAll('[data-sstyle]').forEach(b => b.onclick = () => {
+    statsStyle = b.dataset.sstyle; store.set('trmnl-stats-style', statsStyle);
+    el.querySelectorAll('[data-sstyle]').forEach(x => x.setAttribute('aria-pressed', x === b)); loadStats();
+  });
   $('#stRefresh').onclick = () => { loadStats(); loadLive(); };
   await Promise.all([loadStats(), loadLive()]);
   statsTimers.push(setInterval(loadLive, 15000), setInterval(loadStats, 120000),
@@ -3592,6 +3604,61 @@ async function loadLive() {
   } catch (e) { const n = $('#stNow'); if (n) n.textContent = '?'; }
 }
 
+// ─── Semaine par semaine (lundi → dimanche, heure de Paris), à partir du détail jour par jour ───
+// Une « visite » = un visiteur sur une journée : quelqu'un qui vient 3 jours dans la semaine compte 3 fois.
+async function loadWeeks() {
+  const box = $('#stWeeks'); if (!box) return;
+  try {
+    if (!statsYear || Date.now() - statsYearAt > 10 * 6e4) { statsYear = (await api().visitStats(371)).daily || []; statsYearAt = Date.now(); }
+  } catch { box.innerHTML = `<p class="err">${L('Impossible de charger l\'historique.', 'Could not load the history.')}</p>`; return; }
+  const P = PAL(), ST = statsStyle;
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Paris' });
+  const days = statsYear.filter(x => x.day <= today);
+  const firstReal = days.find(x => x.visitors > 0)?.day;
+  if (!firstReal) { box.innerHTML = `<p class="muted">—</p>`; return; }
+  const monday = iso => { const d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() - (d.getUTCDay() + 6) % 7); return d.toISOString().slice(0, 10); };
+  const weeks = new Map();
+  for (const x of days) { if (x.day < monday(firstReal)) continue; const k = monday(x.day); if (!weeks.has(k)) weeks.set(k, Array(7).fill(null)); weeks.get(k)[(new Date(x.day + 'T12:00:00Z').getUTCDay() + 6) % 7] = x.day < firstReal ? null : x; }
+  const keys = [...weeks.keys()].sort();
+  const cur = keys[keys.length - 1], prev = keys[keys.length - 2];
+  const todayIdx = (new Date(today + 'T12:00:00Z').getUTCDay() + 6) % 7;
+  const sum = (w, f, upto = 6) => (weeks.get(w) || []).slice(0, upto + 1).reduce((a, x) => a + (x ? +x[f] || 0 : 0), 0);
+  const wLabel = k => L(`sem. du ${new Date(k + 'T12:00:00Z').toLocaleDateString(LOC, { day: 'numeric', month: 'short' })}`, `week of ${new Date(k + 'T12:00:00Z').toLocaleDateString(LOC, { day: 'numeric', month: 'short' })}`);
+  const tr = (a, b) => b ? `<span class="${a >= b ? 'up' : 'down'}">${a >= b ? '▲' : '▼'} ${Math.abs(Math.round(100 * (a - b) / b))} %</span>` : `<span class="muted">—</span>`;
+  // 1. Cette semaine contre la précédente, à date égale (lundi → même jour)
+  const M = [['visitors', L('visites', 'visits')], ['new', L('nouveaux visiteurs', 'new visitors')], ['views', L('pages vues', 'page views')], ['seconds', L('temps passé', 'time spent')]];
+  const fmtv = (f, v) => f === 'seconds' ? dur(v) : nf(v);
+  const kpis = prev ? `<div class="sttiles wk">${M.map(([f, lb]) => { const a = sum(cur, f, todayIdx), b = sum(prev, f, todayIdx); return `<div><b>${fmtv(f, a)}</b>${lb} ${tr(a, b)}<small>${L(`même période sem. dernière : ${fmtv(f, b)}`, `same days last week: ${fmtv(f, b)}`)}</small></div>`; }).join('')}</div>
+      <p class="note">${L(`Du lundi à aujourd'hui, comparé au lundi → ${['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'][todayIdx]} de la semaine dernière.`, `Monday to today, compared with Monday → ${['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][todayIdx]} last week.`)}</p>`
+    : `<p class="muted">${L('Il faut au moins deux semaines de relevés pour comparer.', 'At least two weeks of data are needed to compare.')}</p>`;
+  const partial = prev && prev < firstReal ? `<p class="note">⚠️ ${L(`La semaine dernière n'est relevée qu'en partie (compteur démarré le ${new Date(firstReal + 'T12:00:00Z').toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long' })}) : la hausse est donc exagérée.`, `Last week is only partly recorded (counter started on ${new Date(firstReal + 'T12:00:00Z').toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long' })}), so the increase is overstated.`)}</p>` : '';
+  if (!keys.includes(statsWeekA)) statsWeekA = cur;
+  if (!keys.includes(statsWeekB)) statsWeekB = prev || cur;
+  const opts = sel => keys.slice().reverse().map(k => `<option value="${k}" ${k === sel ? 'selected' : ''}>${wLabel(k)}${k === cur ? L(' (en cours)', ' (current)') : ''}</option>`).join('');
+  box.innerHTML = `${kpis}${partial}
+    <div class="wkpick"><label>${L('Comparer', 'Compare')} <select id="wkA">${opts(statsWeekA)}</select></label> <label>${L('avec', 'with')} <select id="wkB">${opts(statsWeekB)}</select></label>
+      <div class="seg" role="group">${M.slice(0, 3).map(([f, lb]) => `<button type="button" data-wkm="${f}" aria-pressed="${f === (box.dataset.m || 'visitors')}">${lb}</button>`).join('')}</div></div>
+    <div class="chart"><canvas id="chWeekCmp"></canvas></div>
+    <h4 style="margin:18px 0 6px">${L('Évolution semaine après semaine', 'Week after week')}</h4>
+    <div class="chart short"><canvas id="chWeekly"></canvas></div>
+    <p class="note">${L("Une visite = un visiteur sur une journée : quelqu'un qui vient 3 jours dans la semaine compte 3 fois. La semaine en cours est incomplète (hachurée).", 'A visit = one visitor on one day: someone who comes on 3 days in a week counts 3 times. The current week is incomplete (hatched).')}</p>`;
+  const m = box.dataset.m || 'visitors', mLabel = M.find(x => x[0] === m)[1];
+  const DOWL = [L('lun', 'Mon'), L('mar', 'Tue'), L('mer', 'Wed'), L('jeu', 'Thu'), L('ven', 'Fri'), L('sam', 'Sat'), L('dim', 'Sun')];
+  const serie = k => (weeks.get(k) || []).map(x => x ? +x[m] || 0 : null);
+  chart('chWeekCmp', { type: ST === 'bar' ? 'bar' : 'line', data: { labels: DOWL, datasets: [
+    { label: wLabel(statsWeekA), data: serie(statsWeekA), borderColor: P[0], backgroundColor: ST === 'bar' ? P[0] : alpha(P[0], ST === 'line' ? 0 : .35), fill: ST !== 'line', tension: .35, cubicInterpolationMode: 'monotone', pointRadius: 3, borderWidth: 2, borderRadius: 4 },
+    { label: wLabel(statsWeekB), data: serie(statsWeekB), borderColor: P[2], backgroundColor: ST === 'bar' ? alpha(P[2], .6) : alpha(P[2], ST === 'line' ? 0 : .25), fill: ST !== 'line', tension: .35, cubicInterpolationMode: 'monotone', pointRadius: 3, borderWidth: 2, borderRadius: 4 }] },
+    options: { plugins: { legend: { display: true, position: 'bottom' }, title: { display: true, text: mLabel, align: 'start', color: css('--ink2'), font: { weight: 600 } } }, interaction: { mode: 'index', intersect: false },
+      scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+  const tot = keys.map(k => sum(k, m));
+  const hatch = (() => { try { const c = document.createElement('canvas'); c.width = c.height = 8; const g = c.getContext('2d'); g.fillStyle = alpha(P[0], .25); g.fillRect(0, 0, 8, 8); g.strokeStyle = P[0]; g.lineWidth = 2; g.beginPath(); g.moveTo(0, 8); g.lineTo(8, 0); g.stroke(); return g.createPattern(c, 'repeat'); } catch { return alpha(P[0], .4); } })();
+  chart('chWeekly', { type: 'bar', data: { labels: keys.map(wLabel), datasets: [{ label: mLabel, data: tot, backgroundColor: keys.map(k => k === cur ? hatch : P[0]), borderColor: P[0], borderWidth: keys.map(k => k === cur ? 1.5 : 0), borderRadius: 5 }] },
+    options: { plugins: { legend: { display: false }, tooltip: { callbacks: { afterLabel: c => { const i = c.dataIndex; if (!i || !tot[i - 1]) return ''; const d = Math.round(100 * (tot[i] - tot[i - 1]) / tot[i - 1]); return `${d >= 0 ? '▲' : '▼'} ${Math.abs(d)} % ${L('vs semaine précédente', 'vs previous week')}${keys[i] === cur ? L(' (semaine incomplète)', ' (incomplete week)') : ''}`; } } } },
+      scales: { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }, y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+  $('#wkA').onchange = e => { statsWeekA = e.target.value; loadWeeks(); };
+  $('#wkB').onchange = e => { statsWeekB = e.target.value; loadWeeks(); };
+  box.querySelectorAll('[data-wkm]').forEach(b => b.onclick = () => { box.dataset.m = b.dataset.wkm; loadWeeks(); });
+}
 async function loadStats() {
   const body = $('#stBody'); if (!body) return;
   let S;
@@ -3629,6 +3696,7 @@ async function loadStats() {
     <div class="stgrid">
       ${box(L('En direct : pages vues, 30 dernières minutes', 'Live: page views, last 30 minutes'), `<div class="chart short"><canvas id="chLive"></canvas></div>`, 'wide')}
       ${one ? '' : box(L('Visiteurs par jour', 'Visitors per day'), `<div class="chart"><canvas id="chDays"></canvas></div>`, 'wide')}
+      ${box(L('Semaine par semaine', 'Week by week'), `<div id="stWeeks"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`, 'wide')}
       ${box(L("Par heure : aujourd'hui et hier", 'By hour: today and yesterday'), `<div class="chart"><canvas id="chHours"></canvas></div><p class="note">${L('Heure de Paris. La ligne pointillée donne la moyenne de pages vues par heure sur la période.', 'Paris time. The dotted line is the average page views per hour over the period.')}</p>`, 'wide')}
       ${box(L('Jours et heures les plus actifs', 'Busiest days and hours'), `<div class="heat"><span></span>${Array.from({ length: 24 }, (_, h) => `<span class="hh">${h % 3 ? '' : h}</span>`).join('')}
         ${heat.map((row, d) => `<span class="dd">${DOW[d]}</span>${row.map((v, h) => `<i style="--a:${v ? .12 + .88 * v / hmax : 0}" title="${DOW[d]} ${hh(h)} : ${nf(v)} ${L('pages vues', 'page views')}"></i>`).join('')}`).join('')}</div>`, 'wide')}
@@ -3652,19 +3720,32 @@ async function loadStats() {
     <p class="note">✔ ${L('Cet appareil est le vôtre : il n\'est pas compté.', 'This device is yours: it is not counted.')} ${L("Comptage maison, sans cookie. N'apparaissent pas : les visiteurs qui ont choisi « Ne plus être compté », ceux dont le navigateur bloque Supabase, les robots, les pages fermées en moins de 2 secondes, et vos propres visites sur les appareils où vous vous êtes connecté. Une même personne sur deux appareils compte deux fois. Les données de plus de 13 mois sont effacées.",
       'Home-made counting, no cookies. Not shown: visitors who chose "Stop counting me", those whose browser blocks Supabase, bots, pages closed within 2 seconds, and your own visits on devices where you signed in. The same person on two devices counts twice. Data older than 13 months is deleted.')}</p>`;
 
-  if (!one) chart('chDays', { type: 'bar', data: { labels: daily.map(x => fmtDay(x.day)), datasets: [
-    { label: L('Visiteurs', 'Visitors'), data: daily.map(x => x.visitors), backgroundColor: P[0], borderRadius: 4, order: 2 },
+  const ST = statsStyle, lineish = ST === 'area' || ST === 'line';
+  const fillA = (c, a) => ST === 'area' ? { backgroundColor: alpha(c, a), fill: 'origin' } : { backgroundColor: 'transparent', fill: false };
+  const dayScales = { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }, y: { beginAtZero: true, ticks: { precision: 0 } }, y2: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { precision: 0 } } };
+  if (!one) chart('chDays', { type: lineish ? 'line' : 'bar', data: { labels: daily.map(x => fmtDay(x.day)), datasets: lineish ? [
+    { label: L('Visiteurs', 'Visitors'), data: daily.map(x => x.visitors), borderColor: P[0], ...fillA(P[0], .32), tension: .35, cubicInterpolationMode: 'monotone', pointRadius: daily.length > 40 ? 0 : 2, borderWidth: 2 },
+    { label: L('dont nouveaux', 'of which new'), data: daily.map(x => x.new), borderColor: P[1], ...fillA(P[1], .4), tension: .35, cubicInterpolationMode: 'monotone', pointRadius: 0, borderWidth: 2 },
+    { label: L('Pages vues', 'Page views'), data: daily.map(x => x.views), borderColor: css('--ink2'), backgroundColor: 'transparent', borderDash: [4, 4], pointRadius: 0, borderWidth: 1.5, tension: .3, yAxisID: 'y2' }]
+  : [
+    { label: L('Visiteurs', 'Visitors'), data: daily.map(x => x.visitors), backgroundColor: P[0], borderRadius: 4, order: 2, ...(ST === 'bar' ? { grouped: true } : {}) },
     { label: L('dont nouveaux', 'of which new'), data: daily.map(x => x.new), backgroundColor: P[1], borderRadius: 4, order: 1 },
-    { type: 'line', label: L('Pages vues', 'Page views'), data: daily.map(x => x.views), borderColor: css('--ink2'), backgroundColor: 'transparent', pointRadius: 0, borderWidth: 1.5, tension: .3, yAxisID: 'y2', order: 0 }] },
+    ST === 'bar'
+      ? { label: L('Pages vues', 'Page views'), data: daily.map(x => x.views), backgroundColor: alpha(css('--ink2'), .35), borderRadius: 4, yAxisID: 'y2', order: 3 }
+      : { type: 'line', label: L('Pages vues', 'Page views'), data: daily.map(x => x.views), borderColor: css('--ink2'), backgroundColor: 'transparent', pointRadius: 0, borderWidth: 1.5, tension: .3, yAxisID: 'y2', order: 0 }] },
     options: { plugins: { legend: { display: true, position: 'bottom' } }, interaction: { mode: 'index', intersect: false },
-      scales: { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }, y: { beginAtZero: true, ticks: { precision: 0 } }, y2: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { precision: 0 } } } } });
+      scales: ST === 'bar' ? { ...dayScales, x: { ...dayScales.x, stacked: false } } : dayScales } });
   const H0 = S.hours_today || [], H1 = S.hours_yesterday || [], HA = S.hours_avg || [], curH = +new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris', hour: '2-digit', hour12: false }) % 24;
-  chart('chHours', { type: 'line', data: { labels: H0.map(x => hh(x.hour)), datasets: [
-    { label: L("Visiteurs aujourd'hui", 'Visitors today'), data: H0.map(x => x.hour <= curH ? x.visitors : null), borderColor: P[0], backgroundColor: alpha(P[0], .15), fill: true, tension: .3, pointRadius: 2 },
-    { label: L('Visiteurs hier', 'Visitors yesterday'), data: H1.map(x => x.visitors), borderColor: P[2], backgroundColor: 'transparent', tension: .3, pointRadius: 0, borderWidth: 1.5 },
-    { label: L('Pages vues, moyenne', 'Page views, average'), data: HA.map(x => +x.views), borderColor: css('--ink2'), borderDash: [4, 4], backgroundColor: 'transparent', tension: .3, pointRadius: 0, borderWidth: 1.2, yAxisID: 'y2' }] },
+  const hToday = H0.map(x => x.hour <= curH ? x.visitors : null), hYest = H1.map(x => x.visitors);
+  chart('chHours', { type: ST === 'bar' ? 'bar' : 'line', data: { labels: H0.map(x => hh(x.hour)), datasets: [
+    ST === 'bar' ? { label: L("Visiteurs aujourd'hui", 'Visitors today'), data: hToday, backgroundColor: P[0], borderRadius: 3 }
+      : { label: L("Visiteurs aujourd'hui", 'Visitors today'), data: hToday, borderColor: P[0], backgroundColor: alpha(P[0], ST === 'area' ? .38 : .15), fill: ST !== 'line', tension: .3, cubicInterpolationMode: 'monotone', pointRadius: 2, borderWidth: 2 },
+    ST === 'bar' ? { label: L('Visiteurs hier', 'Visitors yesterday'), data: hYest, backgroundColor: alpha(P[2], .55), borderRadius: 3 }
+      : { label: L('Visiteurs hier', 'Visitors yesterday'), data: hYest, borderColor: P[2], backgroundColor: ST === 'area' ? alpha(P[2], .25) : 'transparent', fill: ST === 'area', tension: .3, cubicInterpolationMode: 'monotone', pointRadius: 0, borderWidth: 1.5 },
+    { type: 'line', label: L('Pages vues, moyenne', 'Page views, average'), data: HA.map(x => +x.views), borderColor: css('--ink2'), borderDash: [4, 4], backgroundColor: 'transparent', fill: false, tension: .3, pointRadius: 0, borderWidth: 1.2, yAxisID: 'y2' }] },
     options: { plugins: { legend: { display: true, position: 'bottom' } }, interaction: { mode: 'index', intersect: false },
       scales: { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }, y: { beginAtZero: true, ticks: { precision: 0 } }, y2: { position: 'right', beginAtZero: true, grid: { display: false } } } } });
+  loadWeeks();
   const pages = S.pages || [];
   chart('chPages', { type: 'bar', data: { labels: pages.map(x => T[x.path] || x.path), datasets: [
     { label: L('Pages vues', 'Page views'), data: pages.map(x => x.views), backgroundColor: P[0], borderRadius: 4 },

@@ -2290,7 +2290,7 @@ function wishesHTML() {
     ${rows.length ? `<ul class="wlist">${shown.map(li).join('')}</ul>` : `<p class="muted">${L('Aucun souhait pour l\'instant. Lancez-vous !', 'No wish yet. Be the first!')}</p>`}
     ${rows.length > WISHES_SHOW ? `<div class="wfoot"><span></span><button class="btn ghost small" type="button" id="wishMore">${wishesAll ? L('Réduire', 'Show less') : (rows.length - WISHES_SHOW === 1 ? L('Voir le dernier', 'Show 1 more') : L(`Voir les ${rows.length - WISHES_SHOW} autres`, `Show ${rows.length - WISHES_SHOW} more`))}</button></div>` : ''}</details>`;
 }
-async function wishReload() { WISHES = await api().wishes().catch(() => WISHES); renderWip(); }
+async function wishReload() { WISHES = (await api().wishes().catch(() => null)) || WISHES; renderWip(); }
 function wishForm() {
   const guest = !wipMe;
   const m = modal(`<h3>🙋 ${L('Proposer un souhait', 'Make a wish')}</h3>
@@ -2368,6 +2368,8 @@ async function renderWip(openId) {
     catch (e) { wipErr = trErr(e.message); wipList = []; }
   }
   if (!WANTED) await loadWanted();
+  // La liste des projets peut avoir été chargée ailleurs (page de statistiques…) : les souhaits, eux, se chargent ici s'ils manquent
+  if (!WISHES && api().wishes) WISHES = await api().wishes().catch(() => null);
   const items = wipList.map(p => ({ p, ship: shippedOf(p) }));
   const justShipped = items.filter(x => x.ship && Date.now() - Date.parse(x.ship.d) < WIP_SHIPPED_DAYS * DAY).sort((a, b) => Date.parse(b.ship.d) - Date.parse(a.ship.d));
   const open = items.filter(x => !x.ship);

@@ -191,13 +191,39 @@ p.lead{color:var(--ink2);max-width:64ch;margin:0 0 14px}
 .ladder li.me{background:var(--accent);color:var(--on-accent);border-radius:6px;border-bottom-color:transparent;padding-left:10px}
 .ladder li.me .gap{color:inherit;opacity:.85}
 .tools-row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;align-items:center}
+/* « Vous venez d'avoir votre TRMNL ? » (accueil) */
+.starter{margin:22px 0 4px;background:var(--sheet);border:1px solid var(--rule);border-radius:14px;padding:16px 16px 18px}
+.starter h3{margin:0 0 2px;font-size:1.15rem}
+.starter>p{margin:0 0 12px;color:var(--ink2);font-size:.92rem}
+.stabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.stabs button{flex:0 0 auto;border:1.5px solid var(--rule2);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 12px;font-weight:600;cursor:pointer;font-size:.9rem}
+.stabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.spicks{display:grid;gap:10px;grid-template-columns:1fr}
+.spick{display:grid;grid-template-columns:118px 1fr;border:1px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--paper);color:inherit;text-decoration:none}
+.spick:hover{border-color:var(--accent)}
+.sfind{display:flex;gap:8px;margin:0 0 12px}
+.sfind input{flex:1;min-width:0;font:inherit;font-size:1rem;padding:9px 12px;border:1.5px solid var(--rule2);border-radius:10px;background:var(--paper);color:var(--ink)}
+.sfind input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.shint{margin:-4px 0 12px;font-size:.84rem;color:var(--ink2)}
+.shint b{color:var(--ink)}
+.snone{padding:14px;border:1.5px dashed var(--rule2);border-radius:12px;text-align:center}
+.snone p{margin:0 0 10px}
+.sopts{margin:0 0 12px}.sopts .seg button{font-size:.86rem}
+.smore{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:12px 0 0;font-size:.88rem}
+.spick img{width:100%;height:100%;min-height:92px;object-fit:cover;display:block;background:#fff;border-right:1px solid var(--rule)}
+.spick div{padding:9px 12px 10px;display:flex;flex-direction:column;gap:3px;min-width:0}
+@media(min-width:720px){.spicks{grid-template-columns:repeat(4,1fr);gap:12px}.spick{grid-template-columns:1fr}.spick img{aspect-ratio:5/3;height:auto;border-right:0;border-bottom:1px solid var(--rule)}}
+.spick b{font-size:1rem;line-height:1.25}
+.spick small{color:var(--ink2);font-size:.82rem}
+.spick p{margin:0;font-size:.84rem;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.spick .go{margin-top:auto;padding-top:4px;font-weight:700;font-size:.86rem;color:var(--accent-ink)}
 /* « Ce que la communauté cherche » (onglet En élaboration) */
 details.wanted{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:4px 16px 12px;margin:0 0 24px}
-details.wanted>summary{cursor:pointer;list-style:none;padding:10px 0 6px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+details.wanted>summary{cursor:pointer;list-style:none;padding:10px 22px 6px 0;display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;position:relative}
 details.wanted>summary::-webkit-details-marker{display:none}
 details.wanted>summary h3{margin:0;font-size:1.08rem}
 details.wanted>summary .muted{font-size:.84rem}
-details.wanted>summary::after{content:'▾';margin-left:auto;color:var(--ink2)}
+details.wanted>summary::after{content:'▾';position:absolute;right:0;top:12px;color:var(--ink2)}
 details.wanted:not([open])>summary::after{content:'▸'}
 .wlist{list-style:none;margin:6px 0 0;padding:0}
 .wlist li{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:10px 0;border-top:1px solid var(--rule)}
@@ -211,6 +237,17 @@ details.wanted:not([open])>summary::after{content:'▸'}
 .wlist .wx a{color:var(--ink)}
 .wlist .wx.ok{color:var(--ink)}
 .wlist li .btn{grid-row:1;grid-column:2;white-space:nowrap}
+.wishes .wlist li{grid-template-columns:auto 1fr;align-items:start}
+.wvote{grid-row:1/span 4;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:3.2rem;border:1.5px solid var(--rule2);border-radius:10px;background:var(--paper);color:var(--ink);font-weight:750;cursor:pointer;padding:6px 4px;line-height:1.1}
+.wvote small{font-size:.66rem;font-weight:600;color:var(--ink2)}
+.wvote[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.wvote[aria-pressed="true"] small{color:inherit}
+.wishes .wq{grid-column:2}
+.wishes .wtake{font-weight:700;color:var(--accent-ink)}
+.wishes .wbody{grid-column:2/-1;margin:0;font-size:.88rem;color:var(--ink2);overflow-wrap:anywhere}
+.wishes .wx{grid-column:2/-1}
+.wishes .wby{font-size:.8rem;color:var(--ink2)}
+.wishes .linkbtn{font-size:.8rem}
 .wfoot{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-top:10px;font-size:.8rem;color:var(--ink2)}
 .btn{background:var(--accent);color:var(--on-accent);border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:650;text-decoration:none;display:inline-block}
 .btn.ghost{background:var(--sheet);color:var(--ink);border:1.5px solid var(--rule2)}
@@ -1400,6 +1437,168 @@ async function renderCartonnerAdmin() {
     bindMode();
   });
 }
+// ─── « Vous venez d'avoir votre TRMNL ? » : les recettes que tout le monde installe, par besoin (calculé, aucune saisie) ───
+const STARTER = () => [
+  ['meteo', L('🌤️ Météo', '🌤️ Weather'), r => /weather|forecast|météo|meteo|wetter|rainfall|precipitation/i.test(`${r.n} ${r.d || ''}`)],
+  ['agenda', L('📅 Agenda', '📅 Calendar'), r => r.c.includes('calendar')],
+  ['orga', L('✅ Organisation', '✅ Get organised'), r => r.c.includes('productivity')],
+  ['infos', L('📰 Infos', '📰 News'), r => r.c.includes('news')],
+  ['trajets', L('🚆 Trajets', '🚆 Getting around'), r => r.c.includes('travel')],
+  ['maison', L('🏠 Vie quotidienne', '🏠 Everyday life'), r => r.c.includes('life') || r.c.includes('personal')],
+  ['sport', L('⚽ Sport', '⚽ Sports'), r => r.c.includes('sports')],
+  ['images', L('🖼️ Images & art', '🖼️ Pictures & art'), r => r.c.some(c => ['images', 'art', 'comics'].includes(c))],
+  ['detente', L('🎲 Détente', '🎲 Fun'), r => r.c.some(c => ['games', 'humor', 'entertainment'].includes(c))],
+  ['argent', L('💰 Finances', '💰 Money'), r => r.c.includes('finance')],
+];
+let starterTab = store.get('trmnl-starter', 'meteo'), starterSort = 'top', starterMore = false;
+const STARTER_FIRST = 4, STARTER_MAX = 12;
+// « Les plus installées » ou « En vogue ce mois-ci » (installations gagnées sur 30 jours) : pas seulement les poids lourds
+function starterPicks(key) {
+  const t = STARTER().find(x => x[0] === key) || STARTER()[0];
+  const list = D.recipes.filter(t[2]);
+  const sorted = starterSort === 'hot' ? list.filter(r => (r.d30 || 0) > 0).sort((a, b) => b.d30 - a.d30) : list.sort((a, b) => b.i - a.i);
+  return { all: sorted.length, picks: sorted.slice(0, starterMore ? STARTER_MAX : STARTER_FIRST), total: list.length };
+}
+// ─── Recherche par besoin : multilingue (petit dictionnaire + équivalents déjà trouvés par Mistral pour Search Insights),
+//     tolérante aux fautes de frappe, entièrement dans le navigateur (aucun appel extérieur) ───
+const NEED_SYN = {
+  weather: 'météo meteo temps wetter tiempo clima meteo weer vær väder pogoda previsioni prévisions forecast pluie rain regen température temperature',
+  calendar: 'calendrier agenda kalender calendario calander calender rendez-vous termine events événements planning',
+  clock: 'horloge heure uhr reloj orologio klok klokke klocka time zeit',
+  todo: 'tâches taches todo to-do aufgaben tareas checklist liste tasks',
+  news: 'actualités actualites infos nouvelles nachrichten noticias notizie nieuws headlines journal presse',
+  transit: 'transport transports bus train métro metro tram horaires abfahrt departures trains zug trein',
+  stocks: 'bourse actions aktien acciones crypto bitcoin finance stock market',
+  sport: 'football foot soccer fussball fútbol rugby tennis nba nfl f1 formule match score',
+  photo: 'photos photo bilder fotos images album galerie gallery picture',
+  quote: 'citation citations zitat cita quote quotes proverbe',
+  recipe: 'cuisine recette recettes kochen rezepte cocina receta meal repas courses shopping grocery',
+  home: 'domotique maison smart home zuhause casa hogar homeassistant home-assistant',
+  energy: 'énergie energie électricité solaire solar strom electricity power battery',
+  air: 'qualité air pollution luftqualität aqi',
+  word: 'mot vocabulaire wort palabra word dictionary dictionnaire langue language',
+  joke: 'blague blagues humour witz chiste joke comic bd',
+  birthday: 'anniversaire anniversaires geburtstag cumpleaños birthday',
+  countdown: 'compte rebours countdown décompte noël noel christmas weihnachten navidad',
+  music: 'musique spotify music musik lastfm',
+  github: 'github git commits code programmation',
+  plant: 'plante plantes arrosage pflanze pflanzen planta plantas jardin garden gardening watering',
+  moon: 'lune mond luna lunaire lunar',
+  fitness: 'sport santé pas steps strava garmin running course vélo velo',
+};
+let NEED_IDX = null;
+function needIndex() {
+  if (NEED_IDX) return NEED_IDX;
+  const norm = w => w.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const syn = new Map();
+  for (const [en, words] of Object.entries(NEED_SYN)) for (const w of words.split(' ')) { const k = norm(w); if (!syn.has(k)) syn.set(k, new Set()); syn.get(k).add(en); }
+  // Équivalents trouvés par Mistral pour les recherches sans résultat de trmnl.com (uhr → clock, vær → weather…)
+  for (const t of Object.values(WANTED?.terms || {})) if (t.kw) { const k = norm(t.q); if (!syn.has(k)) syn.set(k, new Set()); t.kw.forEach(w => syn.get(k).add(w)); }
+  const docs = D.recipes.map(r => ({ r, n: ' ' + norm(r.n) + ' ', t: ' ' + norm(`${r.n} ${r.d || ''} ${(r.c || []).join(' ')}`) + ' ' }));
+  const vocab = new Set(); docs.forEach(d => d.t.split(/[^a-z0-9]+/).forEach(w => w.length >= 4 && vocab.add(w)));
+  return NEED_IDX = { norm, syn, docs, vocab: [...vocab] };
+}
+function editDist(a, b, max) {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i]; let best = i;
+    for (let j = 1; j <= b.length; j++) { cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); best = Math.min(best, cur[j]); }
+    if (best > max) return max + 1; prev = cur;
+  }
+  return prev[b.length];
+}
+function needSearch(q) {
+  const X = needIndex(), STOP = new Set(['le', 'la', 'les', 'de', 'des', 'du', 'un', 'une', 'mon', 'ma', 'mes', 'pour', 'avec', 'et', 'sur', 'jour', 'quotidien', 'quotidienne', 'the', 'my', 'for', 'with', 'and', 'of', 'a', 'an', 'to', 'on', 'in', 'day', 'daily', 'today', 'der', 'die', 'das', 'mein', 'meine', 'el', 'mi', 'del']);
+  const toks = X.norm(q).split(/[^a-z0-9+-]+/).filter(w => w.length >= 2 && !STOP.has(w));
+  if (!toks.length) return { res: [], terms: [] };
+  // Pour chaque mot : le mot lui-même et ses traductions (poids 1), sinon seulement des mots proches (fautes de frappe, poids 0,5)
+  const groups = toks.map(w => {
+    const alts = new Map([[w, 1]]);
+    const exact = X.syn.get(w);
+    if (exact) exact.forEach(a => {
+      alts.set(X.norm(a), 1);
+      // les autres mots du même besoin (transports → metro, bus, train…), un peu moins forts
+      (NEED_SYN[a] || '').split(' ').forEach(x => { x = X.norm(x); if (x.length >= 3 && !alts.has(x)) alts.set(x, .8); });
+    });
+    else if (w.length >= 5) {
+      const max = w.length >= 8 ? 2 : 1;
+      for (const [k, v] of X.syn) if (k.length >= 5 && editDist(w, k, max) <= max) [k, ...v].forEach(a => alts.has(X.norm(a)) || alts.set(X.norm(a), .5));
+    }
+    if (alts.size === 1 && w.length >= 5 && !X.vocab.includes(w)) {
+      const max = w.length >= 8 ? 2 : 1;
+      X.vocab.filter(v => editDist(w, v, max) <= max).slice(0, 3).forEach(a => alts.set(a, .5));
+    }
+    return [...alts];
+  });
+  // Début de mot (calendar trouve calendars, mais sport ne trouve pas transport) ; mot entier pour les mots courts
+  const hit = (txt, a) => txt.includes(' ' + a) || new RegExp(`[^a-z0-9]${a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}${a.length >= 4 ? '' : '[^a-z0-9]'}`).test(txt);
+  const res = [];
+  for (const d of X.docs) {
+    let score = 0, all = true;
+    for (const g of groups) {
+      let best = 0;
+      for (const [a, wt] of g) { if (hit(d.n, a)) best = Math.max(best, 3 * wt); else if (hit(d.t, a)) best = Math.max(best, wt); }
+      if (!best) all = false; score += best;
+    }
+    if (score >= 1) res.push({ r: d.r, s: score + (all && groups.length > 1 ? 4 : 0) + Math.log10(1 + d.r.i) / 2 });
+  }
+  res.sort((a, b) => b.s - a.s);
+  const shown = groups.flatMap((g, k) => g.filter(([a, wt]) => a !== toks[k] && wt !== .8 && /^[a-z]/.test(a)).map(([a]) => a).slice(0, 2));
+  return { res: res.map(x => x.r), terms: [...new Set(shown)].slice(0, 5) };
+}
+let starterQ = '';
+function starterHTML() {
+  const tabs = STARTER();
+  if (!tabs.some(t => t[0] === starterTab)) starterTab = tabs[0][0];
+  const P = starterPicks(starterTab);
+  const card = r => `<a class="spick" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener" data-sp="${r.id}">
+      ${r.sc ? `<img src="${esc(r.sc)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '<span></span>'}
+      <div><b>${esc(r.n)}</b><small>${L('par', 'by')} ${esc(nameOf(r.u))} · ${starterSort === 'hot' ? `${sg(r.d30)} ${L('en 30 j', 'in 30 d')} · ` : ''}${nf(r.i)} ${L('installations', 'installs')}</small>
+      ${r.d ? `<p>${esc(r.d)}</p>` : ''}<span class="go">${L('Installer', 'Install')} ↗</span></div></a>`;
+  return `<section class="starter" id="starter"><h3>${L('Vous venez d\'avoir votre TRMNL ?', 'Just got your TRMNL?')}</h3>
+    <p>${L('Les recettes que tout le monde installe, selon ce que vous voulez afficher.', 'The recipes everyone installs, by what you want on your screen.')}</p>
+    <form class="sfind" role="search" id="sfindF"><input type="search" id="sfind" value="${esc(starterQ)}" placeholder="${L('Que voulez-vous afficher ? (météo, agenda Google, bourse…)', 'What do you want on screen? (weather, Google Calendar, stocks…)')}" aria-label="${L('Rechercher une recette par besoin', 'Search recipes by need')}" autocomplete="off" enterkeyhint="search"></form>
+    ${starterQ ? starterResults(card) : `<div class="stabs" role="group">${tabs.map(([k, lb]) => `<button type="button" data-st="${k}" aria-pressed="${k === starterTab}">${lb}</button>`).join('')}</div>
+    <div class="sopts"><div class="seg" role="group"><button type="button" data-ss="top" aria-pressed="${starterSort === 'top'}">${L('Les plus installées', 'Most installed')}</button><button type="button" data-ss="hot" aria-pressed="${starterSort === 'hot'}">🔥 ${L('En vogue ce mois-ci', 'Trending this month')}</button></div></div>
+    <div class="spicks">${P.picks.map(card).join('')}</div>
+    ${P.all > STARTER_FIRST ? `<p class="smore"><button class="btn ghost small" type="button" id="starterMore">${starterMore ? L('Réduire', 'Show less') : L(`Voir plus (${Math.min(P.all, STARTER_MAX) - STARTER_FIRST} de plus)`, `Show ${Math.min(P.all, STARTER_MAX) - STARTER_FIRST} more`)}</button>
+      <a href="${hr('recettes')}">${L(`Toutes les recettes (${nf(P.total)} dans ce thème) →`, `All recipes (${nf(P.total)} in this theme) →`)}</a></p>` : ''}`}</section>`;
+}
+function starterResults(card) {
+  const { res, terms } = needSearch(starterQ);
+  const shown = res.slice(0, starterMore ? STARTER_MAX : STARTER_FIRST);
+  if (!res.length) return `<div class="snone"><p>${L(`Aucune recette ne correspond à « ${esc(starterQ)} » pour l'instant.`, `No recipe matches "${esc(starterQ)}" yet.`)}</p>
+      <p class="muted" style="font-size:.88rem">${L('Proposez-la aux créateurs : ils voient les souhaits de la communauté.', 'Suggest it to creators: they see the community’s wishes.')}</p>
+      <a class="btn small" href="${hr('elaboration')}" id="sWish">🙋 ${L('En faire un souhait', 'Make it a wish')}</a></div>`;
+  return `<p class="shint">${L(`<b>${nf(res.length)}</b> recette${res.length > 1 ? 's' : ''} trouvée${res.length > 1 ? 's' : ''}`, `<b>${nf(res.length)}</b> recipe${res.length > 1 ? 's' : ''} found`)}${terms.length ? L(` · aussi cherché : ${terms.map(esc).join(', ')}`, ` · also searched: ${terms.map(esc).join(', ')}`) : ''}</p>
+    <div class="spicks">${shown.map(card).join('')}</div>
+    <p class="smore">${res.length > STARTER_FIRST ? `<button class="btn ghost small" type="button" id="starterMore">${starterMore ? L('Réduire', 'Show less') : L(`Voir plus (${Math.min(res.length, STARTER_MAX) - STARTER_FIRST} de plus)`, `Show ${Math.min(res.length, STARTER_MAX) - STARTER_FIRST} more`)}</button>` : ''}
+      <button class="linkbtn" type="button" id="sClear">${L('Effacer la recherche', 'Clear search')}</button></p>`;
+}
+function wireStarter(el) {
+  const redraw = () => { const box = el.querySelector('#starter'), x = box.querySelector('.stabs')?.scrollLeft || 0; box.outerHTML = starterHTML(); const t = el.querySelector('#starter .stabs'); if (t) t.scrollLeft = x; wireStarter(el); };
+  el.querySelectorAll('[data-st]').forEach(b => b.onclick = () => {
+    starterTab = b.dataset.st; starterMore = false; store.set('trmnl-starter', starterTab); redraw();
+    track('incontournables-theme', true, 'theme:' + starterTab);
+  });
+  el.querySelectorAll('[data-ss]').forEach(b => b.onclick = () => { starterSort = b.dataset.ss; redraw(); track('incontournables-tri', true, 'sort:' + starterSort); });
+  el.querySelector('#starterMore')?.addEventListener('click', () => { starterMore = !starterMore; redraw(); });
+  if (!WANTED) loadWanted().then(() => { NEED_IDX = null; });   // équivalents multilingues de Search Insights
+  const inp = el.querySelector('#sfind');
+  let tm;
+  const go = (now) => { clearTimeout(tm); tm = setTimeout(() => {
+    const v = inp.value.trim().slice(0, 60); if (v === starterQ) return;
+    starterQ = v; starterMore = false; const pos = inp.selectionStart; redraw();
+    const ni = el.querySelector('#sfind'); ni.focus(); try { ni.setSelectionRange(pos, pos); } catch {}
+  }, now ? 0 : 350); };
+  inp.addEventListener('input', () => go(false));
+  el.querySelector('#sfindF').addEventListener('submit', e => { e.preventDefault(); go(true); inp.blur(); track('recherche-besoin', true); });
+  el.querySelector('#sClear')?.addEventListener('click', () => { starterQ = ''; redraw(); });
+  el.querySelector('#sWish')?.addEventListener('click', () => { WISH_PREFILL = starterQ; track('recherche-vers-souhait', true); });
+  el.querySelectorAll('#starter .spick img').forEach(i => i.addEventListener('error', () => { i.style.visibility = 'hidden'; }, { once: true }));
+  el.querySelectorAll('[data-sp]').forEach(a => a.addEventListener('click', () => track('incontournable-installe', true, 'recipe:' + a.dataset.sp)));
+}
 function renderHome() {
   const el = $('#tab-accueil');
   const T = D.totals, top = D.creators.slice(0, 3);
@@ -1421,6 +1620,7 @@ function renderHome() {
       <div class="base"></div>
     </div>
   </div>
+  ${starterHTML()}
   <div class="kpis">
     <div><b>${nf(T.recipes)}</b>${L('recettes publiques', 'public recipes')}</div><div><b>${nf(T.creators)}</b>${L('créateurs', 'creators')}</div>
     <div><b>${nf(T.installs)}</b>${L('installations', 'installs')}</div><div><b>${nf(T.forks)}</b>forks</div>
@@ -1436,6 +1636,7 @@ function renderHome() {
   </div>
   <p style="margin-top:18px"><a class="btn ghost" href="${hr('classements')}">${L('Voir tous les classements', 'See all rankings')}</a></p>`;
   bindFinder('homeFind', chooseMe);
+  wireStarter(el);
 }
 
 /* ================= Compte à rebours vers l'objectif ================= */
@@ -1782,6 +1983,17 @@ const realApi = {
     q = commentId ? q.eq('comment_id', commentId) : q.is('comment_id', null);
     return ok(await q);
   },
+  // Souhaits : facultatifs (tant que souhaits.sql n'est pas installé, le bloc ne s'affiche pas)
+  async wishes() {
+    const c = await client();
+    const r = await c.from('wishes').select('*, profiles(name,avatar), wish_votes(user_id)').order('created_at', { ascending: false }).limit(300);
+    if (r.error) return null;
+    return r.data.map(w => ({ ...w, votes: (w.wish_votes || []).map(v => v.user_id) }));
+  },
+  async addWish(title, body) { const c = await client(); ok(await c.from('wishes').insert({ title, body })); },
+  async voteWish(id, on) { const c = await client(); ok(on ? await c.from('wish_votes').insert({ wish_id: id }) : await c.from('wish_votes').delete().eq('wish_id', id).eq('user_id', wipMe.id)); },
+  async deleteWish(id) { const c = await client(); ok(await c.from('wishes').delete().eq('id', id)); },
+  async hideWish(id, hidden) { const c = await client(); ok(await c.from('wishes').update({ hidden }).eq('id', id)); },
   async saveProject(fields, id) { const c = await client(); return ok(id ? await c.from('projects').update(fields).eq('id', id).select().single() : await c.from('projects').insert(fields).select().single()); },
   async deleteProject(p) { const c = await client(); const ups = ok(await c.from('updates').select('images').eq('project_id', p.id)); await this.removeImages([...(p.images || []), ...ups.flatMap(u => u.images || [])]); ok(await c.from('projects').delete().eq('id', p.id)); },
   async setHidden(id, hidden) { const c = await client(); ok(await c.from('projects').update({ hidden }).eq('id', id)); },
@@ -1991,7 +2203,7 @@ function wantedHTML() {
       <span class="muted">${L('Recherches sans résultat sur trmnl.com', 'Searches with no result on trmnl.com')}</span></summary>
     <ul class="wlist">${shown.map(li).join('')}</ul>
     <div class="wfoot"><span>${L("Au moins 5 personnes différentes sur 30 jours. Source : TRMNL, relevé chaque heure.", 'At least 5 different people over 30 days. Source: TRMNL, checked every hour.')}</span>
-      ${rows.length > WANTED_SHOW ? `<button class="btn ghost small" type="button" id="wantMore">${wantedAll ? L('Réduire', 'Show less') : L(`Voir les ${rows.length - WANTED_SHOW} autres`, `Show ${rows.length - WANTED_SHOW} more`)}</button>` : ''}</div></details>`;
+      ${rows.length > WANTED_SHOW ? `<button class="btn ghost small" type="button" id="wantMore">${wantedAll ? L('Réduire', 'Show less') : (rows.length - WANTED_SHOW === 1 ? L('Voir le dernier', 'Show 1 more') : L(`Voir les ${rows.length - WANTED_SHOW} autres`, `Show ${rows.length - WANTED_SHOW} more`))}</button>` : ''}</div></details>`;
 }
 function wireWanted(el) {
   const d = el.querySelector('details.wanted');
@@ -2008,6 +2220,86 @@ function wireWanted(el) {
       description: L(`Pour tous ceux qui cherchent « ${t.q} » sur trmnl.com sans rien trouver.`, `For everyone searching "${t.q}" on trmnl.com and finding nothing.`) });
   }));
 }
+// ─── Souhaits de la communauté : un utilisateur propose un plugin, les autres soutiennent, un créateur le reprend ───
+let WISHES = null, wishesAll = false, WISH_PREFILL = '';
+const WISHES_SHOW = 5;
+function wishRows() {
+  const proj = new Map(); (wipList || []).forEach(p => { if (p.wish_id) { const a = proj.get(p.wish_id) || []; a.push(p); proj.set(p.wish_id, a); } });
+  return (WISHES || []).map(w => {
+    const ps = proj.get(w.id) || [], shipped = ps.map(p => ({ p, s: shippedOf(p) })).find(x => x.s);
+    return { w, ps, shipped };
+  }).sort((a, b) => (!!a.shipped - !!b.shipped) || (b.w.votes.length - a.w.votes.length) || (Date.parse(b.w.created_at) - Date.parse(a.w.created_at)));
+}
+function wishesHTML() {
+  if (!WISHES) return '';
+  const rows = wishRows(), shown = wishesAll ? rows : rows.slice(0, WISHES_SHOW);
+  const pLink = p => `<a href="${hr('elaboration', p.id)}" data-wishproj="${p.id}">${esc(p.name)}</a>`;
+  const li = ({ w, ps, shipped }) => {
+    const mine = wipMe && w.author === wipMe.id, voted = wipMe && w.votes.includes(wipMe.id);
+    const status = shipped
+      ? `<div class="wx ok">✅ ${L('Réalisé', 'Done')} : <a href="https://trmnl.com/recipes/${shipped.s.r?.id || shipped.p.shipped_recipe}" target="_blank" rel="noopener">${esc(shipped.p.name)}</a> · ${wipWho(shipped.p)}</div>`
+      : ps.length ? `<div class="wx ok">🔨 ${L('Repris par', 'Taken up by')} ${ps.map(p => `${wipWho(p)} (${pLink(p)})`).join(', ')}</div>` : '';
+    return `<li${w.hidden ? ' style="opacity:.55"' : ''}><button class="wvote" type="button" data-wv="${w.id}" aria-pressed="${!!voted}" title="${L('Je veux aussi ce plugin', 'I want this too')}">▲ ${w.votes.length}<small>${L('moi aussi', 'me too')}</small></button>
+      <div class="wq"><b>${esc(w.title)}</b></div>
+      ${w.body ? `<p class="wbody">${esc(w.body)}</p>` : ''}
+      <div class="wx wby">${shipped || !wipMe || wipProfile?.banned ? '' : `<button class="linkbtn wtake" type="button" data-wtake="${w.id}">🔨 ${L("Je m'y mets", "I'll build it")}</button> · `}${L('Souhaité par', 'Wished by')} ${esc(w.profiles?.name || '?')} · ${ago2(w.created_at)}${mine ? ` · <button class="linkbtn" type="button" data-wdel="${w.id}">${L('supprimer', 'delete')}</button>` : ''}${isAdmin() ? ` · <button class="linkbtn" type="button" data-whide="${w.id}" data-h="${w.hidden ? 0 : 1}">${w.hidden ? L('réafficher', 'unhide') : L('masquer', 'hide')}</button>` : ''}</div>
+      ${status}</li>`;
+  };
+  const open = store.get('trmnl-wishes-closed') !== '1';
+  return `<details class="wanted wishes" ${open ? 'open' : ''}><summary><h3>🙋 ${L('Les souhaits de la communauté', 'Community wishes')}</h3>
+      <span class="muted">${L("Un plugin vous manque ? Proposez-le, ou soutenez ceux des autres.", 'Missing a plugin? Wish for it, or back other people’s wishes.')}</span></summary>
+    <div class="tools-row" style="margin:8px 0 4px">${wipMe ? (wipProfile?.banned ? '' : `<button class="btn small" type="button" id="wishNew">+ ${L('Proposer un souhait', 'Make a wish')}</button>`)
+      : `<span class="muted" style="font-size:.86rem">${L('Connectez-vous avec Discord (bouton ci-dessus) pour proposer ou soutenir un souhait. Pas besoin d\'être créateur.', 'Sign in with Discord (button above) to make or back a wish. No need to be a creator.')}</span>`}</div>
+    ${rows.length ? `<ul class="wlist">${shown.map(li).join('')}</ul>` : `<p class="muted">${L('Aucun souhait pour l\'instant. Lancez-vous !', 'No wish yet. Be the first!')}</p>`}
+    ${rows.length > WISHES_SHOW ? `<div class="wfoot"><span></span><button class="btn ghost small" type="button" id="wishMore">${wishesAll ? L('Réduire', 'Show less') : (rows.length - WISHES_SHOW === 1 ? L('Voir le dernier', 'Show 1 more') : L(`Voir les ${rows.length - WISHES_SHOW} autres`, `Show ${rows.length - WISHES_SHOW} more`))}</button></div>` : ''}</details>`;
+}
+async function wishReload() { WISHES = await api().wishes().catch(() => WISHES); renderWip(); }
+function wishForm() {
+  const m = modal(`<h3>🙋 ${L('Proposer un souhait', 'Make a wish')}</h3>
+    <form class="wform" novalidate>
+      <label>${L('Le plugin que vous aimeriez', 'The plugin you would like')}<input name="title" maxlength="80" required value="${esc(WISH_PREFILL)}" placeholder="${L('Ex. : Mes notes Obsidian du jour', 'E.g. My Obsidian daily note')}"></label>
+      <label>${L('Quelques détails (facultatif)', 'A few details (optional)')}<textarea name="body" rows="3" maxlength="400" placeholder="${L('Ce que vous voudriez voir à l\'écran, le service à utiliser…', 'What you would like on screen, which service to use…')}"></textarea></label>
+      <p class="muted" style="font-size:.84rem;margin:0">${L('Avant de proposer, jetez un œil à la liste : si votre idée y est déjà, soutenez-la plutôt.', 'Before posting, check the list: if your idea is already there, back it instead.')}</p>
+      <p class="err" hidden></p>
+      <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${L('Publier', 'Post')}</button></div>
+    </form>`, 'wipd');
+  WISH_PREFILL = '';
+  const f = m.$('form'), err = m.$('.err');
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const title = f.title.value.trim(), body = f.body.value.trim();
+    if (title.length < 3) { err.textContent = L('Décrivez le plugin en quelques mots.', 'Describe the plugin in a few words.'); err.hidden = false; return; }
+    const btn = f.querySelector('[type=submit]'); btn.disabled = true;
+    try { await api().addWish(title, body); m.close(); track('souhait-publie', true); toast(L('Souhait publié !', 'Wish posted!')); await wishReload(); }
+    catch (x) { err.textContent = /row-level|policy/i.test(x.message) ? L('Limite atteinte : 5 souhaits par jour au plus.', 'Limit reached: 5 wishes a day at most.') : trErr(x.message); err.hidden = false; btn.disabled = false; }
+  };
+}
+function wireWishes(el) {
+  const d = el.querySelector('details.wishes');
+  if (!d) return;
+  d.addEventListener('toggle', () => store.set('trmnl-wishes-closed', d.open ? '0' : '1'));
+  el.querySelector('#wishNew')?.addEventListener('click', wishForm);
+  el.querySelector('#wishMore')?.addEventListener('click', () => { wishesAll = !wishesAll; renderWip(); });
+  const W = id => WISHES.find(w => w.id === +id);
+  d.querySelectorAll('[data-wv]').forEach(b => b.addEventListener('click', async () => {
+    if (!wipMe) { toast(L('Connectez-vous avec Discord pour soutenir un souhait.', 'Sign in with Discord to back a wish.')); $('#wipIn')?.focus(); return; }
+    const w = W(b.dataset.wv), on = !w.votes.includes(wipMe.id);
+    w.votes = on ? [...w.votes, wipMe.id] : w.votes.filter(u => u !== wipMe.id); renderWip();   // affichage immédiat
+    try { await api().voteWish(w.id, on); track('souhait-soutenu', true, 'wish:' + w.id); } catch (x) { toast(trErr(x.message)); await wishReload(); }
+  }));
+  d.querySelectorAll('[data-wtake]').forEach(b => b.addEventListener('click', () => {
+    const w = W(b.dataset.wtake); track('souhait-repris', true, 'wish:' + w.id);
+    wipForm(null, { name: w.title, description: w.body || '', wish_id: w.id });
+  }));
+  d.querySelectorAll('[data-wishproj]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); wipDetail(wipList.find(p => p.id === +a.dataset.wishproj)); }));
+  d.querySelectorAll('[data-wdel]').forEach(b => b.addEventListener('click', async () => {
+    if (!await confirmBox({ title: L('Supprimer ce souhait ?', 'Delete this wish?'), text: L('Il disparaîtra avec ses soutiens.', 'It will disappear along with its backers.') })) return;
+    try { await api().deleteWish(+b.dataset.wdel); await wishReload(); } catch (x) { toast(trErr(x.message)); }
+  }));
+  d.querySelectorAll('[data-whide]').forEach(b => b.addEventListener('click', async () => {
+    try { await api().hideWish(+b.dataset.whide, b.dataset.h === '1'); await wishReload(); } catch (x) { toast(trErr(x.message)); }
+  }));
+}
 async function renderWip(openId) {
   const el = $('#tab-elaboration');
   const head = `<h2>${L("Recettes en cours d'élaboration", 'Recipes in the making')}</h2>
@@ -2016,7 +2308,7 @@ async function renderWip(openId) {
   if (!wipReady() && !window.__WIP_MOCK) { el.innerHTML = head + `<p class="notice">${L('Cette section ouvre très bientôt.', 'This section opens very soon.')}</p>`; return; }
   if (!wipList) {
     el.innerHTML = head + `<p class="muted">${L('Chargement…', 'Loading…')}</p>`;
-    try { await wipLoadSession(); [wipList] = await Promise.all([api().list(), loadSwitches(true), loadWanted()]); wipErr = ''; }
+    try { await wipLoadSession(); [wipList, WISHES] = await Promise.all([api().list(), api().wishes ? api().wishes().catch(() => null) : null, loadSwitches(true), loadWanted()]); wipErr = ''; }
     catch (e) { wipErr = trErr(e.message); wipList = []; }
   }
   if (!WANTED) await loadWanted();
@@ -2035,7 +2327,7 @@ async function renderWip(openId) {
         <button class="btn ghost small" type="button" id="wipOut">${L('Se déconnecter', 'Sign out')}</button></div>`
     : `<div class="tools-row"><button class="btn" type="button" id="wipIn"><span aria-hidden="true">🎮</span> ${L('Se connecter avec Discord', 'Sign in with Discord')}</button>
         <span class="muted" style="font-size:.86rem">${L('pour partager un projet ou commenter. La lecture est libre.', 'to share a project or comment. Reading is open to everyone.')}</span></div>`;
-  el.innerHTML = head + pausedNotice(['comments', 'projects', 'uploads', 'reactions']) + account + (wipErr ? `<p class="notice">${esc(wipErr)}</p>` : '') + wantedHTML() + `
+  el.innerHTML = head + pausedNotice(['comments', 'projects', 'uploads', 'reactions']) + account + (wipErr ? `<p class="notice">${esc(wipErr)}</p>` : '') + wishesHTML() + wantedHTML() + `
     ${justShipped.length ? `<h3 style="margin-top:8px">🎉 ${L('Tout juste publiées', 'Just shipped')}</h3><div class="cards" style="margin-bottom:26px">${justShipped.map(x => wipCard(x.p, x.ship)).join('')}</div>` : ''}
     ${active.length ? `<div class="tools"><div class="seg" role="group">
         <button type="button" data-wf="" aria-pressed="${!wipFilter}">${L('Toutes', 'All')} (${active.length})</button>
@@ -2054,6 +2346,8 @@ async function renderWip(openId) {
   $('#wipOut')?.addEventListener('click', async () => { await api().signOut(); wipMe = wipProfile = null; store.set('trmnl-wip-session', ''); renderWip(); });
   $('#wipNew')?.addEventListener('click', () => wipForm());
   wireWanted(el);
+  wireWishes(el);
+  if (WISH_PREFILL) { const box = el.querySelector('details.wishes'); if (box) { box.open = true; box.scrollIntoView({ block: 'start' }); if (wipMe && !wipProfile?.banned) wishForm(); else WISH_PREFILL = ''; } }
   $('#wipReports')?.addEventListener('click', wipReportsView);
   $('#wipVisits')?.addEventListener('click', () => go('#stats'));
   $('#wipAdmin')?.addEventListener('click', () => go('#admin'));
@@ -2679,6 +2973,7 @@ function wipForm(p = null, pre = null) {
     const val = n => (f[n]?.value || '').trim();
     const fields = { name: val('name'), description: val('description'), status: val('status'), category: val('category'),
       eta: val('eta') || null, link: val('link') || null };
+    if (!edit && pre?.wish_id) fields.wish_id = pre.wish_id;   // ce projet réalise un souhait de la communauté
     const fail = msg => { err.textContent = msg; err.hidden = false; };
     if (edit && f.shipped_recipe) {
       fields.shipped_recipe = (val('shipped_recipe').match(/\d{3,}/) || [])[0] || null;

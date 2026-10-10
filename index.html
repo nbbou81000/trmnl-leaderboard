@@ -1990,8 +1990,8 @@ const realApi = {
   // Souhaits : facultatifs (tant que souhaits.sql n'est pas installé, le bloc ne s'affiche pas)
   async wishes() {
     const c = await client();
-    let r = await c.from('wishes').select('id,author,title,body,hidden,created_at,guest_name,pending, profiles(name,avatar), wish_votes(user_id)').order('created_at', { ascending: false }).limit(300);
-    if (r.error) r = await c.from('wishes').select('id,author,title,body,hidden,created_at, profiles(name,avatar), wish_votes(user_id)').order('created_at', { ascending: false }).limit(300);   // avant souhaits2.sql
+    let r = await c.from('wishes').select('id,author,title,body,hidden,created_at,guest_name,pending, profiles!wishes_author_fkey(name,avatar), wish_votes(user_id)').order('created_at', { ascending: false }).limit(300);
+    if (r.error) r = await c.from('wishes').select('id,author,title,body,hidden,created_at, profiles!wishes_author_fkey(name,avatar), wish_votes(user_id)').order('created_at', { ascending: false }).limit(300);   // avant souhaits2.sql
     if (r.error) return null;
     // Votes des visiteurs sans compte (souhaits2.sql) : compteurs seulement, plus ceux de ce navigateur
     const g = await c.rpc('wish_guest_counts', { p_visitor: wishVisitor() }).then(x => x.error ? null : x.data);

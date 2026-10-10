@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sauver un écran EGA défectueux avec un hack logiciel · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un hack rétro en assembleur force un écran EGA défectueux à afficher en mode 640×350 pour contourner un tube CRT en panne.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Sauver un écran EGA défectueux avec un hack logiciel">
+<meta property="og:description" content="Un hack rétro en assembleur force un écran EGA défectueux à afficher en mode 640×350 pour contourner un tube CRT en panne.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/0beb65599071.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-13.jpg">
+<meta property="article:published_time" content="2026-10-08T13:00:21.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sauver un écran EGA défectueux avec un hack logiciel">
+<meta name="twitter:description" content="Un hack rétro en assembleur force un écran EGA défectueux à afficher en mode 640×350 pour contourner un tube CRT en panne.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-13.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0beb65599071.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0beb65599071-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/0beb65599071", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/picture-13.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 8 octobre 2026 · source : Adafruit</p>
+  <h1>Sauver un écran EGA défectueux avec un hack logiciel</h1>
+  <p class="lead">Un hack rétro en assembleur force un écran EGA défectueux à afficher en mode 640×350 pour contourner un tube CRT en panne.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/0beb65599071">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Dans les années 1990, un passionné d’informatique a hérité d’un PC clone équipé d’une carte graphique EGA et d’un écran CRT de 14 pouces. Rapidement, le tube a montré des signes de défaillance : l’image se déformait et gonflait après seulement trois minutes de chauffe, mais uniquement en mode 320×200. Le mode 640×350, plus net, fonctionnait parfaitement. Or, la majorité des jeux de l’époque, dont <em>Civilization</em>, utilisaient le mode basse résolution. Impossible d’envisager un remplacement du tube, trop coûteux.</p><p>La solution est venue d’un programme TSR (Terminate and Stay Resident) écrit en assembleur. Ce logiciel interceptait les tentatives de passage en mode 320×200 et forçait systématiquement l’affichage en 640×350. Le jeu continuait à fonctionner comme si de rien n’était, mais avec des artefacts visuels : les lignes impaires s’affichaient en haut à gauche, les lignes paires en haut à droite, et le texte devenait illisible sur une partie de l’écran. Malgré ces compromis, le hack a permis de jouer pendant des mois, jusqu’à ce qu’une carte graphique et un écran neufs soient enfin accessibles.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

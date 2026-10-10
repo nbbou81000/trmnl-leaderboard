@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Récupérer le contrôle d’un OSD dans un écran composite bon marché · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un bricoleur a détourné le circuit d’affichage intégré d’un écran de caméra pour l’utiliser comme tableau de bord personnalisé.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Récupérer le contrôle d’un OSD dans un écran composite bon marché">
+<meta property="og:description" content="Un bricoleur a détourné le circuit d’affichage intégré d’un écran de caméra pour l’utiliser comme tableau de bord personnalisé.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/1e3868c400df.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/10/osd-monitor-featured.jpg">
+<meta property="article:published_time" content="2026-10-03T11:00:21.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Récupérer le contrôle d’un OSD dans un écran composite bon marché">
+<meta name="twitter:description" content="Un bricoleur a détourné le circuit d’affichage intégré d’un écran de caméra pour l’utiliser comme tableau de bord personnalisé.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/10/osd-monitor-featured.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/1e3868c400df.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/1e3868c400df-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/1e3868c400df", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/10/osd-monitor-featured.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 3 octobre 2026 · source : Hackaday</p>
+  <h1>Récupérer le contrôle d’un OSD dans un écran composite bon marché</h1>
+  <p class="lead">Un bricoleur a détourné le circuit d’affichage intégré d’un écran de caméra pour l’utiliser comme tableau de bord personnalisé.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/1e3868c400df">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un passionné d’électronique, derrière le projet <strong>Ogrinz Labs</strong>, a transformé un écran de caméra de recul automobile en solution d’affichage pour un costume robotisé inspiré de <em>Robbie le Robot</em>. L’écran, initialement destiné à afficher le flux vidéo de la caméra, intégrait un circuit <strong>AMT630A</strong>, un composant combinant un commutateur vidéo, un système graphique pour l’affichage à l’écran (OSD) et un microcontrôleur 8052.</p><p>Après des mois de reverse engineering, il a réussi à interagir avec ce circuit via un port <strong>I2C</strong> depuis un microcontrôleur <strong>ESP32</strong>, sans parvenir à exploiter pleinement le cœur 8052. Le résultat permet d’afficher des graphiques personnalisés, comme des données de navigation, pour assister le pilotage du costume. Une bibliothèque Arduino dédiée a été publiée sur GitHub pour faciliter la réutilisation de ce composant.</p><p>Le <strong>AMT630A</strong> est un circuit intégré spécialisé dans la superposition d’informations graphiques sur un flux vidéo, une fonctionnalité courante dans les écrans de surveillance ou les moniteurs embarqués. L’<strong>OSD</strong> (On-Screen Display) permet d’ajouter des éléments comme des menus, des icônes ou des données techniques sans modifier le signal vidéo principal. Le microcontrôleur 8052, bien que non exploité ici, est un classique des années 1980 encore utilisé dans certains systèmes embarqués.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

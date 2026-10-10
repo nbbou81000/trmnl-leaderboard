@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TNY-360 v2: Open-Source DIY Robot Dog for Everyone · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-hardware, modular quadruped robot designed to make robotics more accessible.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="TNY-360 v2: Open-Source DIY Robot Dog for Everyone">
+<meta property="og:description" content="An open-hardware, modular quadruped robot designed to make robotics more accessible.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/9e5fdfa5edd6-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-05T10:49:20.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TNY-360 v2: Open-Source DIY Robot Dog for Everyone">
+<meta name="twitter:description" content="An open-hardware, modular quadruped robot designed to make robotics more accessible.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9e5fdfa5edd6-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9e5fdfa5edd6.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/9e5fdfa5edd6", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · October 5, 2026 · source : Hackster</p>
+  <h1>TNY-360 v2: Open-Source DIY Robot Dog for Everyone</h1>
+  <p class="lead">An open-hardware, modular quadruped robot designed to make robotics more accessible.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/9e5fdfa5edd6">Read the article on the TRMNL Leaderboard →</a>
+  <p>Paul Loisil, a developer and computer science student, has released the TNY-360 v2, an open-hardware quadrupedal robot dog designed to simplify robotics. After nearly three years of solo development, Loisil aimed to bridge the gap between overly simplistic robots and overly complex, expensive systems. The project features a modular PCB ecosystem to minimize wiring errors and ease assembly.</p><p>The robot is powered by an <strong>Espressif ESP32-S3</strong> microcontroller, split across two cores: the "Reflex" core handles kinematics calculations and a 200Hz closed-loop control system for modified <strong>TowerPro MG996R servos</strong> with analog feedback via a custom op-amp PCB, while the "Brain" core manages orchestration, network connectivity, and the user interface. The hardware is modular, with dedicated PCBs for control, sensors, power, and the "brain," connected via JST cables and low-profile headers to reduce clutter and miswiring risks. A dorsal port provides I2C and power for optional expansion boards.</p><p>The base configuration includes 12 modified MG996R servos for the legs, 2 MG90D micro-servos for the ears, an <strong>Omnivision OV2640</strong> camera module, an <strong>STMicroelectronics VL53L0X</strong> time-of-flight lidar, an <strong>LSM6DS3</strong> six-axis IMU, an <strong>SSD1306-based 128×64 OLED display</strong>, an I2S MEMS microphone, and an onboard speaker. Pre-orders are open on the <strong>TNY Robotics</strong> website: $332 for a barebones kit, $458 for a more complete maker kit. A fully-assembled "Ready2Run" kit is planned at $688 but is not yet available. Documentation, hardware files, and source code for V1 are available on GitHub under the <strong>Creative Commons Attribution-NonCommercial-ShareAlike 4.0</strong> license, with V2 files to be uploaded soon.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

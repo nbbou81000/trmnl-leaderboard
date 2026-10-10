@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Issued: A Self-Hosted Server to Read Your Comics Without Reorganizing Them · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A lightweight self-hosted server to browse your comics and BDs archives from a browser, without altering their structure.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Issued: A Self-Hosted Server to Read Your Comics Without Reorganizing Them">
+<meta property="og:description" content="A lightweight self-hosted server to browse your comics and BDs archives from a browser, without altering their structure.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/dc4921b46e01-en.html">
+<meta property="og:image" content="https://korben.info/issued-serveur-comics-auto-heberge/issued-serveur-comics-auto-heberge-1.png">
+<meta property="article:published_time" content="2026-10-07T05:54:15.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Issued: A Self-Hosted Server to Read Your Comics Without Reorganizing Them">
+<meta name="twitter:description" content="A lightweight self-hosted server to browse your comics and BDs archives from a browser, without altering their structure.">
+<meta name="twitter:image" content="https://korben.info/issued-serveur-comics-auto-heberge/issued-serveur-comics-auto-heberge-1.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/dc4921b46e01-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/dc4921b46e01.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/dc4921b46e01", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://korben.info/issued-serveur-comics-auto-heberge/issued-serveur-comics-auto-heberge-1.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 7, 2026 · source : Korben</p>
+  <h1>Issued: A Self-Hosted Server to Read Your Comics Without Reorganizing Them</h1>
+  <p class="lead">A lightweight self-hosted server to browse your comics and BDs archives from a browser, without altering their structure.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/dc4921b46e01">Read the article on the TRMNL Leaderboard →</a>
+  <p>Issued is a lightweight tool designed for comic and BD enthusiasts who want to browse their archives from a browser without reorganizing files. The software scans a folder containing files in <strong>CBZ, CBR, CB7 or PDF</strong> formats and generates a browsable library accessible via a web interface or OPDS-compatible apps like <strong>Panels, Chunky Reader or Moon+ Reader</strong>.</p><p>Unlike other solutions, Issued preserves the original file structure: a folder containing comics is treated as a series, and subfolders are not mixed. The server displays recent additions, ongoing reads, and allows marking ongoing series with an <strong>Ongoing</strong> button. Cover thumbnails are generated once to reduce server load, and new file scanning can run automatically or manually based on preferences.</p><p>For security reasons, the OPDS catalog remains accessible without authentication, meaning the port 8181 should not be exposed directly to the internet. The developer recommends using a <strong>local network, a reverse proxy or a VPN like Tailscale</strong> for secure access. Installation is possible via <strong>Docker</strong> or standalone executables for macOS, Linux and Windows. The interface features a purple theme as a tribute to the developer’s daughter.</p><p>The software is released under the <strong>MIT license</strong> and, according to the developer, supports up to 20,000 files, as they use it daily with around 4,500 comics.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

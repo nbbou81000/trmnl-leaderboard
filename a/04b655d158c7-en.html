@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>An Open-Source Emulator for the Philips Velo 1 Windows CE Handheld · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A developer releases an emulator for the Philips Velo 1, a 1997 Windows CE PDA, featuring advanced features.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="An Open-Source Emulator for the Philips Velo 1 Windows CE Handheld">
+<meta property="og:description" content="A developer releases an emulator for the Philips Velo 1, a 1997 Windows CE PDA, featuring advanced features.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/04b655d158c7-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-5.jpg">
+<meta property="article:published_time" content="2026-10-07T15:20:52.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="An Open-Source Emulator for the Philips Velo 1 Windows CE Handheld">
+<meta name="twitter:description" content="A developer releases an emulator for the Philips Velo 1, a 1997 Windows CE PDA, featuring advanced features.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-5.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/04b655d158c7-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/04b655d158c7.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/04b655d158c7", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/picture-5.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 7, 2026 · source : Adafruit</p>
+  <h1>An Open-Source Emulator for the Philips Velo 1 Windows CE Handheld</h1>
+  <p class="lead">A developer releases an emulator for the Philips Velo 1, a 1997 Windows CE PDA, featuring advanced features.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/04b655d158c7">Read the article on the TRMNL Leaderboard →</a>
+  <p>Philip Howard releases <strong>velo-emu</strong>, an open-source emulator for the <strong>Philips Velo 1</strong>, a 1997 Windows CE PDA. The emulator simulates the backlit LCD screen, CompactFlash cards, and the period’s desktop connection tools. It builds on the CERF project but runs on <strong>macOS</strong>, <strong>Linux</strong>, and <strong>Android</strong>.</p><p>The emulator loads the official <strong>Windows CE 1.0 and 2.0 ROMs</strong>, though these are not included in the software. Each emulated instance has a fixed screen size and memory, and saves its state on exit and every minute. Upon launch, the state is restored with the clock advanced by the time spent outside the emulator.</p><p>For connectivity, the emulator includes a <strong>PPP server</strong> over the serial port, enabling network access. A host-side <strong>web proxy</strong> allows Pocket IE to reach modern HTTPS sites. The <strong>RAPI</strong> remote API is exposed as a socket, or optionally over TCP, enabling a command-line tool to push files and registry keys. A <strong>GDB server</strong> with per-process breakpoints is available, along with a <strong>deterministic headless mode</strong> for testing. A patch addresses a write bug in Windows CE 1.0’s <strong>fatfs.dll</strong>.</p><p>The project is released under the <strong>MIT license</strong> and available on <strong>GitHub</strong>.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

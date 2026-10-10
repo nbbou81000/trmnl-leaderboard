@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Three Home Assistant Projects to Save Your Plants · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="Home Assistant automations to monitor, light, and water your plants effortlessly.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Three Home Assistant Projects to Save Your Plants">
+<meta property="og:description" content="Home Assistant automations to monitor, light, and water your plants effortlessly.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/157f5db05a3b-en.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/08/a-plant-pot-with-a-soil-moisture-sensor-connected-to-an-esp32.png">
+<meta property="article:published_time" content="2026-10-07T19:30:13.000Z">
+<meta property="article:section" content="Dashboards &amp; home automation">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Three Home Assistant Projects to Save Your Plants">
+<meta name="twitter:description" content="Home Assistant automations to monitor, light, and water your plants effortlessly.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/08/a-plant-pot-with-a-soil-moisture-sensor-connected-to-an-esp32.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/157f5db05a3b-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/157f5db05a3b.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/157f5db05a3b", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/08/a-plant-pot-with-a-soil-moisture-sensor-connected-to-an-esp32.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; home automation · October 7, 2026 · source : How-To Geek</p>
+  <h1>Three Home Assistant Projects to Save Your Plants</h1>
+  <p class="lead">Home Assistant automations to monitor, light, and water your plants effortlessly.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/157f5db05a3b">Read the article on the TRMNL Leaderboard →</a>
+  <p>With an ESP32 and a few sensors, a simple houseplant can become a fully automated system using Home Assistant. Three practical projects demonstrate this approach, ranging from basic monitoring to fully automatic watering.</p> <h2>A smart plant monitor with presence detection</h2> <p>An ESP32 paired with <strong>capacitive moisture sensors</strong> tracks soil humidity and can trigger a visual alert (RGB LEDs) when the plant needs water. Some users enhance this by adding a <strong>mmWave presence sensor</strong> to adjust LED behavior based on room occupancy. For example, animations activate only when someone is present, with a night mode disabling LEDs when the room is empty. All logic is managed by Home Assistant, which centralizes sensor data and actions. Wiring details and hardware lists are shared by creators, but 3D-printed enclosures are not yet available.</p> <h2>A grow light controlled entirely by automations</h2> <p>Instead of manually adjusting a plant grow light, an ESP32-S3 can be wired to the control pads of a generic lamp. Using ESPHome, the lamp's physical buttons are replaced by Home Assistant automations. The lamp can turn on, off, or adjust brightness and color based on the plant's needs. Some users combine this with a moisture sensor for a more integrated system, though watering remains manual.</p> <h2>An automatic and optimized watering system</h2> <p>The <strong>Plant1337</strong> project takes automation further by watering up to four plants from a single reservoir. Four moisture sensors monitor soil humidity, while four small aquarium pumps deliver water in <strong>pulsed doses</strong> to prevent overwatering. A software filter removes noise, and a float switch detects empty reservoirs. The creator estimates refilling the reservoir once a week is sufficient. Open-source design files (KiCad) and a parts list are available on GitHub.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

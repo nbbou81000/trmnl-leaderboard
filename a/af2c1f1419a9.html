@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contrôler une lumière ESP32 avec Matter et les assistants vocaux · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Transformez un ESP32 en interrupteur connecté Matter compatible avec Alexa, Google Home et Apple Home via Arduino IDE.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Contrôler une lumière ESP32 avec Matter et les assistants vocaux">
+<meta property="og:description" content="Transformez un ESP32 en interrupteur connecté Matter compatible avec Alexa, Google Home et Apple Home via Arduino IDE.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/af2c1f1419a9.html">
+<meta property="og:image" content="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-Matter-On-OFF-thumbnail.jpg">
+<meta property="article:published_time" content="2026-10-08T13:10:16.000Z">
+<meta property="article:section" content="Bidouille e-ink">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contrôler une lumière ESP32 avec Matter et les assistants vocaux">
+<meta name="twitter:description" content="Transformez un ESP32 en interrupteur connecté Matter compatible avec Alexa, Google Home et Apple Home via Arduino IDE.">
+<meta name="twitter:image" content="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-Matter-On-OFF-thumbnail.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/af2c1f1419a9.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/af2c1f1419a9-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/af2c1f1419a9", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-Matter-On-OFF-thumbnail.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille e-ink · 8 octobre 2026 · source : Random Nerd Tutorials</p>
+  <h1>Contrôler une lumière ESP32 avec Matter et les assistants vocaux</h1>
+  <p class="lead">Transformez un ESP32 en interrupteur connecté Matter compatible avec Alexa, Google Home et Apple Home via Arduino IDE.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/af2c1f1419a9">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Ce tutoriel explique comment concevoir un dispositif d’éclairage compatible Matter à partir d’un ESP32 programmé avec l’Arduino IDE. Le projet permet de contrôler une broche GPIO via un interrupteur physique ou un assistant vocal, tout en assurant la persistance de l’état de la lumière après un redémarrage et la possibilité de réinitialisation complète.</p><p>Le protocole Matter, développé par la <strong>Connectivity Standards Alliance</strong> (CSA) avec des acteurs majeurs comme Apple, Google et Amazon, vise à uniformiser les interactions entre appareils connectés. Il garantit l’interopérabilité entre différents écosystèmes (Apple Home, Google Home, Amazon Alexa, Home Assistant, etc.), une communication locale sécurisée et chiffrée, ainsi qu’une configuration simplifiée via un code QR ou un code manuel.</p><p>Avant de commencer, il faut disposer de l’<strong>ESP32 Arduino Core version 3.1.0 ou ultérieure</strong>, qui intègre nativement la bibliothèque Matter. Le guide détaille les concepts clés : <strong>nœud</strong> (un appareil Matter unique), <strong>point de terminaison</strong> (fonctionnalité comme un interrupteur), <strong>cluster</strong> (groupe d’attributs et commandes, par exemple le cluster On/Off) et <strong>fabric</strong> (réseau logique créé lors de l’appairage avec un contrôleur).</p><p>Le sketch Arduino fourni transforme l’ESP32 en un nœud Matter On/Off Light, contrôlant une broche GPIO. L’état de l’interrupteur est sauvegardé dans la mémoire non volatile pour persister après un redémarrage. Le code gère aussi un bouton physique (par défaut le bouton BOOT) pour basculer manuellement l’état de la lumière. Les puces ESP32 compatibles Matter incluent les modèles supportant le <strong>CHIPoBLE</strong> (Bluetooth Low Energy pour la transmission des identifiants Wi-Fi), tandis que les autres nécessitent une saisie manuelle des identifiants dans le sketch.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

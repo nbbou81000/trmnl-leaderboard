@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TNY-360 v2 : un robot chien open-source à monter soi-même · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un robot quadrupède open-hardware et modulaire, conçu pour simplifier l&#39;accès à la robotique.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="TNY-360 v2 : un robot chien open-source à monter soi-même">
+<meta property="og:description" content="Un robot quadrupède open-hardware et modulaire, conçu pour simplifier l&#39;accès à la robotique.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/9e5fdfa5edd6.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-05T10:49:20.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TNY-360 v2 : un robot chien open-source à monter soi-même">
+<meta name="twitter:description" content="Un robot quadrupède open-hardware et modulaire, conçu pour simplifier l&#39;accès à la robotique.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9e5fdfa5edd6.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9e5fdfa5edd6-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/9e5fdfa5edd6", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 5 octobre 2026 · source : Hackster</p>
+  <h1>TNY-360 v2 : un robot chien open-source à monter soi-même</h1>
+  <p class="lead">Un robot quadrupède open-hardware et modulaire, conçu pour simplifier l&#39;accès à la robotique.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/9e5fdfa5edd6">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le TNY-360 v2 est un robot quadrupède open-source et modulaire développé par Paul Loisil, étudiant en informatique, pour démocratiser la robotique. Après près de trois ans de travail, il propose une solution intermédiaire entre les robots simples et les systèmes complexes, coûteux et difficiles à appréhender. Le projet repose sur un écosystème de cartes électroniques conçues pour éviter les erreurs de câblage et faciliter l’assemblage.</p><p>Le robot est alimenté par un microcontrôleur <strong>Espressif ESP32-S3</strong>, exploitant ses deux cœurs pour une architecture séparée : le cœur « Reflex » gère les calculs de cinématique et une boucle de contrôle fermée à 200 Hz pour les servomoteurs, tandis que le cœur « Brain » s’occupe de l’orchestration, de la connectivité réseau et de l’interface utilisateur. Les servomoteurs <strong>TowerPro MG996R modifiés</strong> intègrent un retour analogique via une carte additionnelle, permettant un contrôle précis. La structure est composée de cartes dédiées (contrôle, capteurs, alimentation, cerveau) reliées par des connecteurs JST et des broches basse hauteur pour limiter l’encombrement et les risques d’erreur.</p><p>En configuration de base, le TNY-360 v2 intègre 12 servomoteurs MG996R modifiés pour les pattes, 2 micro-servomoteurs MG90D pour les oreilles, une caméra <strong>Omnivision OV2640</strong>, un capteur lidar <strong>STMicroelectronics VL53L0X</strong>, une centrale inertielle <strong>LSM6DS3</strong>, un écran OLED <strong>SSD1306 128×64</strong>, un microphone MEMS et un haut-parleur. Un port dorsal permet d’ajouter des modules d’extension via I2C et alimentation.</p><p>Les précommandes sont ouvertes sur le site de <strong>TNY Robotics</strong> : 332 $ pour un kit minimaliste, 458 $ pour un kit maker plus complet. Un kit « Ready2Run » entièrement assemblé est annoncé à 688 $, mais n’est pas encore disponible. La documentation, les fichiers matériels et le code source de la version 1 sont accessibles sur GitHub sous licence <strong>Creative Commons Attribution-NonCommercial-ShareAlike 4.0</strong>. Les fichiers de la v2 seront publiés prochainement.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

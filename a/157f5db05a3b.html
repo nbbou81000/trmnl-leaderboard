@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trois projets Home Assistant pour sauver vos plantes · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Des automations Home Assistant pour surveiller, éclairer et arroser vos plantes sans effort.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Trois projets Home Assistant pour sauver vos plantes">
+<meta property="og:description" content="Des automations Home Assistant pour surveiller, éclairer et arroser vos plantes sans effort.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/157f5db05a3b.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/08/a-plant-pot-with-a-soil-moisture-sensor-connected-to-an-esp32.png">
+<meta property="article:published_time" content="2026-10-07T19:30:13.000Z">
+<meta property="article:section" content="Dashboards &amp; domotique">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Trois projets Home Assistant pour sauver vos plantes">
+<meta name="twitter:description" content="Des automations Home Assistant pour surveiller, éclairer et arroser vos plantes sans effort.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/08/a-plant-pot-with-a-soil-moisture-sensor-connected-to-an-esp32.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/157f5db05a3b.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/157f5db05a3b-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/157f5db05a3b", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/08/a-plant-pot-with-a-soil-moisture-sensor-connected-to-an-esp32.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; domotique · 7 octobre 2026 · source : How-To Geek</p>
+  <h1>Trois projets Home Assistant pour sauver vos plantes</h1>
+  <p class="lead">Des automations Home Assistant pour surveiller, éclairer et arroser vos plantes sans effort.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/157f5db05a3b">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Avec un ESP32 et quelques capteurs, il est possible de transformer une simple plante en un système autonome grâce à Home Assistant. Trois projets concrets illustrent cette approche, allant du suivi basique à l’arrosage automatique.</p> <h2>Un moniteur de plante intelligent et réactif</h2> <p>Un ESP32 équipé de capteurs de <strong>moisture capacitive</strong> mesure l’humidité du sol et peut déclencher une alerte visuelle (LED RGB) lorsque la plante a soif. Certains utilisateurs poussent l’idée plus loin en intégrant un capteur de présence <strong>mmWave</strong> pour adapter l’affichage des LED selon la présence dans la pièce. Par exemple, les animations s’activent uniquement si quelqu’un est présent, avec un mode nuit désactivant les LED en l’absence de présence. Toutes ces logiques sont gérées par Home Assistant, qui centralise les données des capteurs et les actions à entreprendre. Les fichiers de câblage et la liste du matériel sont partagés par les créateurs, mais les boîtiers 3D ne sont pas encore disponibles.</p> <h2>Un éclairage de plante piloté par automations</h2> <p>Plutôt que de régler manuellement une lampe de croissance, un ESP32-S3 peut être connecté aux pads de contrôle d’une lampe générique. Grâce à ESPHome, les boutons physiques de la lampe sont remplacés par des automations Home Assistant. Ainsi, la lampe s’allume, s’éteint ou ajuste sa luminosité et sa couleur en fonction des besoins de la plante. Certains utilisateurs combinent cette solution avec un capteur de moisture pour un système encore plus intégré, bien que l’arrosage reste manuel.</p> <h2>Un système d’arrosage automatique et optimisé</h2> <p>Le projet <strong>Plant1337</strong> va plus loin en automatisant l’arrosage de jusqu’à quatre plantes depuis un seul réservoir. Quatre capteurs de moisture surveillent l’humidité du sol, tandis que quatre petites pompes aquariums distribuent l’eau de manière <strong>pulsée</strong> pour éviter le surdosage. Un filtre logiciel élimine les bruits parasites, et un interrupteur à flotteur détecte les réservoirs vides. Selon son créateur, le système ne nécessite un remplissage qu’une fois par semaine. Les fichiers de conception (KiCad) et la liste des composants sont disponibles en open source sur GitHub.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

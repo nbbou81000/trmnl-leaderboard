@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Un bloqueur DNS Pi-hole sur ESP32-C3 à 2 $ sans PSRAM · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un bloqueur DNS ultra-léger fonctionne sur un ESP32-C3 à 2 $ sans mémoire PSRAM, en stockant les domaines sous forme de hachages binaires dans la mémoire flash.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Un bloqueur DNS Pi-hole sur ESP32-C3 à 2 $ sans PSRAM">
+<meta property="og:description" content="Un bloqueur DNS ultra-léger fonctionne sur un ESP32-C3 à 2 $ sans mémoire PSRAM, en stockant les domaines sous forme de hachages binaires dans la mémoire flash.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/7abe34959799.html">
+<meta property="og:image" content="https://opengraph.githubassets.com/41bca35151b9e26f79ca33859a018a321b9a27e2f5b7f9a96f9e41fe23628d30/M-Abozaid/esp32-c3-adblock">
+<meta property="article:published_time" content="2026-10-07T01:39:21Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Un bloqueur DNS Pi-hole sur ESP32-C3 à 2 $ sans PSRAM">
+<meta name="twitter:description" content="Un bloqueur DNS ultra-léger fonctionne sur un ESP32-C3 à 2 $ sans mémoire PSRAM, en stockant les domaines sous forme de hachages binaires dans la mémoire flash.">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/41bca35151b9e26f79ca33859a018a321b9a27e2f5b7f9a96f9e41fe23628d30/M-Abozaid/esp32-c3-adblock">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/7abe34959799.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/7abe34959799-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/7abe34959799", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://opengraph.githubassets.com/41bca35151b9e26f79ca33859a018a321b9a27e2f5b7f9a96f9e41fe23628d30/M-Abozaid/esp32-c3-adblock" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 7 octobre 2026 · source : Hacker News</p>
+  <h1>Un bloqueur DNS Pi-hole sur ESP32-C3 à 2 $ sans PSRAM</h1>
+  <p class="lead">Un bloqueur DNS ultra-léger fonctionne sur un ESP32-C3 à 2 $ sans mémoire PSRAM, en stockant les domaines sous forme de hachages binaires dans la mémoire flash.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/7abe34959799">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Ce projet open source transforme un microcontrôleur ESP32-C3 à seulement 2 $ en un bloqueur DNS de type Pi-hole, sans nécessiter de mémoire PSRAM. Le cœur de l’astuce repose sur le stockage des domaines sous forme de hachages binaires de 40 bits (algorithme FNV-1a) dans la mémoire flash, plutôt que sous forme de chaînes de caractères en RAM. Cette méthode permet d’intégrer plus de 537 000 domaines dans environ 0,7 Mo de flash, avec un temps de recherche d’environ 10 ms et une consommation de seulement 50 Ko de RAM.</p> <p>Le système fonctionne comme un <strong>sinkhole DNS</strong> : les requêtes vers des domaines bloqués reçoivent une réponse 0.0.0.0, tandis que les autres sont relayées vers un serveur DNS en amont. Le projet inclut également un tableau de bord web pour gérer les listes de blocage, mettre à jour le firmware ou configurer le réseau. Les listes de blocage par défaut combinent les entrées de StevenBlack et Hagezi Light, couvrant environ 100 000 domaines, avec une option pour ajouter des règles personnalisées via des fichiers hosts ou des règles AdGuard basiques.</p> <p>Le projet est compatible avec la plupart des cartes ESP32-C3 (testé sur une C3 SuperMini) et même avec des ESP32 classiques comme le DevKit ou WROOM, à condition d’avoir 4 Mo de flash. La configuration initiale se fait via un point d’accès Wi-Fi temporaire ou directement via le tableau de bord une fois connecté au réseau. Les mises à jour du firmware et des listes de blocage s’effectuent ensuite sans fil. Un boîtier imprimable en 3D est fourni pour protéger la carte, avec des conseils pour préserver la qualité du signal Wi-Fi (éviter les obstructions près de l’antenne PCB).</p> <p>Le projet est distribué sous licence MIT et nécessite l’outil <strong>PlatformIO</strong> pour la compilation et le flashage. Une version simplifiée d’installation via navigateur est en développement. Les mises à jour automatiques des listes de blocage sont disponibles chaque semaine via une URL stable hébergée sur GitHub.</p> <p>Les limites incluent un compromis sur la taille de la partition pour les mises à jour OTA du firmware, réduisant l’espace disponible pour les listes de blocage à environ 1,3 Mo (soit ~250 000 domaines). Les fonctionnalités sensibles du tableau de bord (comme l’ajout de domaines ou les mises à jour) sont protégées par une authentification HTTP Basic.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

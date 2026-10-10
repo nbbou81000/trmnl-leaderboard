@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Control an ESP32 Light with Matter and Voice Assistants · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="Turn an ESP32 into a Matter-compatible smart switch compatible with Alexa, Google Home, and Apple Home via Arduino IDE.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Control an ESP32 Light with Matter and Voice Assistants">
+<meta property="og:description" content="Turn an ESP32 into a Matter-compatible smart switch compatible with Alexa, Google Home, and Apple Home via Arduino IDE.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/af2c1f1419a9-en.html">
+<meta property="og:image" content="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-Matter-On-OFF-thumbnail.jpg">
+<meta property="article:published_time" content="2026-10-08T13:10:16.000Z">
+<meta property="article:section" content="E-ink hacks">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Control an ESP32 Light with Matter and Voice Assistants">
+<meta name="twitter:description" content="Turn an ESP32 into a Matter-compatible smart switch compatible with Alexa, Google Home, and Apple Home via Arduino IDE.">
+<meta name="twitter:image" content="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-Matter-On-OFF-thumbnail.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/af2c1f1419a9-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/af2c1f1419a9.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/af2c1f1419a9", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-Matter-On-OFF-thumbnail.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">E-ink hacks · October 8, 2026 · source : Random Nerd Tutorials</p>
+  <h1>Control an ESP32 Light with Matter and Voice Assistants</h1>
+  <p class="lead">Turn an ESP32 into a Matter-compatible smart switch compatible with Alexa, Google Home, and Apple Home via Arduino IDE.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/af2c1f1419a9">Read the article on the TRMNL Leaderboard →</a>
+  <p>This tutorial shows how to build a Matter-compatible on/off light device using an ESP32 programmed with the Arduino IDE. The project allows controlling a GPIO pin via a physical switch or voice assistant, while maintaining the light state after a reboot and supporting full factory reset.</p><p>The Matter protocol, developed by the <strong>Connectivity Standards Alliance</strong> (CSA) with major players like Apple, Google, and Amazon, aims to standardize interactions between smart home devices. It ensures interoperability across ecosystems (Apple Home, Google Home, Amazon Alexa, Home Assistant, etc.), secure local communication, and easy setup using a QR code or manual pairing code.</p><p>Before starting, you need the <strong>ESP32 Arduino Core version 3.1.0 or later</strong>, which includes the Matter library by default. The guide explains key concepts: <strong>node</strong> (a single Matter device), <strong>endpoint</strong> (a function like a switch), <strong>cluster</strong> (a group of attributes and commands, e.g., the On/Off cluster), and <strong>fabric</strong> (the logical network created when pairing with a controller).</p><p>The provided Arduino sketch turns the ESP32 into a Matter On/Off Light node, controlling a GPIO pin. The switch state is saved in non-volatile memory to persist after a reboot. The code also handles a physical button (default BOOT button) to manually toggle the light. Compatible ESP32 chips include those supporting <strong>CHIPoBLE</strong> (Bluetooth Low Energy for Wi-Fi credential transfer), while others require manual entry of credentials in the sketch.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

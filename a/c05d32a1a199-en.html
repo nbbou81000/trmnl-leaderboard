@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DIY System to Automatically Measure Parcels Before Shipping · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An electronic setup measures a parcel’s weight, length, width and height, then sends the data to a web interface for shipping quotes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="DIY System to Automatically Measure Parcels Before Shipping">
+<meta property="og:description" content="An electronic setup measures a parcel’s weight, length, width and height, then sends the data to a web interface for shipping quotes.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/c05d32a1a199-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-05T22:43:36.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DIY System to Automatically Measure Parcels Before Shipping">
+<meta name="twitter:description" content="An electronic setup measures a parcel’s weight, length, width and height, then sends the data to a web interface for shipping quotes.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/c05d32a1a199-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/c05d32a1a199.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/c05d32a1a199", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · October 5, 2026 · source : Hackster</p>
+  <h1>DIY System to Automatically Measure Parcels Before Shipping</h1>
+  <p class="lead">An electronic setup measures a parcel’s weight, length, width and height, then sends the data to a web interface for shipping quotes.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/c05d32a1a199">Read the article on the TRMNL Leaderboard →</a>
+  <p>Shipping a package often means hunting for a misplaced tape measure, converting fractions to decimals, and weighing the object. To automate these steps, a DIY project introduces a system that instantly calculates a parcel’s dimensions and weight as soon as it is placed on the platform.</p><p>The setup combines four key components: a <strong>UNIHIKER K10</strong> as the central unit, a <strong>DFRobot 8×8 Matrix ToF (Time-of-Flight) sensor</strong> to measure distances, a <strong>DFRobot Gravity HX711-based weight sensor kit</strong>, and a <strong>DFRobot Gravity I2C Hub</strong> to aggregate data. The weight sensor acts as a scale, while the ToF module scans the box’s contours in 3D.</p><p>The height is calculated by subtracting the distance to the top of the box from the distance to the platform. For width and length, the system uses trigonometry: it combines the distance to the top of the box with the angle of detected edges to derive linear dimensions. The <strong>UNIHIKER K10</strong> then displays a grid on its screen, visualizing the boundaries of the scanned parcel.</p><p>In the demo, the K10 sends measurements over a serial connection to a computer, which displays them on a custom web page. This interface can also fetch real-time shipping quotes if the carrier provides an API. Otherwise, values can be entered manually or linked via a script to the carrier’s interface for automated data transfer.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

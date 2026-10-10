@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DSPi transforme un Raspberry Pi Pico en carte son USB avec DSP intégré · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un firmware open source pour Raspberry Pi Pico ou Pico 2 en fait une carte son USB avec traitement audio avancé.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="DSPi transforme un Raspberry Pi Pico en carte son USB avec DSP intégré">
+<meta property="og:description" content="Un firmware open source pour Raspberry Pi Pico ou Pico 2 en fait une carte son USB avec traitement audio avancé.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/55ae3b2bd3f5.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-19.jpg">
+<meta property="article:published_time" content="2026-10-08T16:40:25.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DSPi transforme un Raspberry Pi Pico en carte son USB avec DSP intégré">
+<meta name="twitter:description" content="Un firmware open source pour Raspberry Pi Pico ou Pico 2 en fait une carte son USB avec traitement audio avancé.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-19.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/55ae3b2bd3f5.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/55ae3b2bd3f5-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/55ae3b2bd3f5", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/picture-19.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 8 octobre 2026 · source : Adafruit</p>
+  <h1>DSPi transforme un Raspberry Pi Pico en carte son USB avec DSP intégré</h1>
+  <p class="lead">Un firmware open source pour Raspberry Pi Pico ou Pico 2 en fait une carte son USB avec traitement audio avancé.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/55ae3b2bd3f5">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le projet <strong>DSPi</strong>, développé par Weeb Labs et publié sur GitHub, transforme un <strong>Raspberry Pi Pico</strong> (RP2040) ou <strong>Pico 2</strong> (RP2350) en une carte son USB dotée d’un moteur de traitement numérique du signal (DSP) intégré. Le firmware gère des fonctions audio avancées comme la correction acoustique de pièce, les filtres passe-haut/passe-bas actifs, l’égaliseur paramétrique, l’alignement temporel des canaux, la compensation de volume et le crossfeed pour casque. Les deux microcontrôleurs fonctionnent à une fréquence d’horloge fixe de 307,2 MHz, optimisée pour des taux d’échantillonnage entiers (44,1 kHz, 48 kHz et 96 kHz).</p><p>Le RP2040 nécessite une légère augmentation de tension pour atteindre cette fréquence, tandis que le RP2350, grâce à son unité de calcul flottant matériel, offre plus de ressources et supporte jusqu’à 11 canaux et 9 sorties, contre 7 et 5 pour le RP2040. Chaque sortie peut basculer dynamiquement entre les protocoles <strong>S/PDIF</strong> (audio numérique) et <strong>I2S</strong> (interface série audio), et un seul appareil peut mixer les deux. Les broches de sortie sont reconfigurables à la volée, sans nécessiter de reflashage, et les affectations sont sauvegardées dans la mémoire flash avec jusqu’à 10 préréglages disponibles.</p><p>Un modulateur delta-sigma, exécuté sur le second cœur du microcontrôleur, génère une sortie pour un haut-parleur subwoofer en modulation d’impulsion codée (PDM), filtrée par un simple circuit RC passe-bas. Le firmware est distribué sous licence <strong>GPL v3</strong> et se compile avec l’outilchain standard C/C++ du Pico.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

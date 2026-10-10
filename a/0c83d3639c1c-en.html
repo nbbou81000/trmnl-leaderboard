@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rust Firmware for Elgato Key Light with ESP32-C3 and Matter · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source Rust firmware replaces the Elgato Key Light’s controller with an ESP32-C3 for local Matter and WiFi control, no cloud.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Rust Firmware for Elgato Key Light with ESP32-C3 and Matter">
+<meta property="og:description" content="An open-source Rust firmware replaces the Elgato Key Light’s controller with an ESP32-C3 for local Matter and WiFi control, no cloud.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/0c83d3639c1c-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/aaa-1.png">
+<meta property="article:published_time" content="2026-10-09T13:00:35.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rust Firmware for Elgato Key Light with ESP32-C3 and Matter">
+<meta name="twitter:description" content="An open-source Rust firmware replaces the Elgato Key Light’s controller with an ESP32-C3 for local Matter and WiFi control, no cloud.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/aaa-1.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0c83d3639c1c-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0c83d3639c1c.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/0c83d3639c1c", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/aaa-1.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 9, 2026 · source : Adafruit</p>
+  <h1>Rust Firmware for Elgato Key Light with ESP32-C3 and Matter</h1>
+  <p class="lead">An open-source Rust firmware replaces the Elgato Key Light’s controller with an ESP32-C3 for local Matter and WiFi control, no cloud.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/0c83d3639c1c">Read the article on the TRMNL Leaderboard →</a>
+  <p>Michael (@micthiesen) has released <strong>key-right</strong>, an open-source Rust firmware for GitHub that replaces the stock controller in an <strong>Elgato Key Light</strong> with an <strong>ESP32-C3-MINI-1</strong>. The lamp’s PCA9635 LED driver, stock circuitry, LEDs, and power supply remain unchanged. The goal is local control via <strong>Apple Home</strong> and the <strong>Matter</strong> protocol over WiFi, without relying on the cloud.</p><p>After flashing, each lamp appears as a <strong>Matter Color Temperature Light</strong> in Apple Home, allowing control of power, brightness, and color temperature. Apple Home’s 1 to 100 percent brightness range is mapped to the lamp’s nominal 1 to 10 percent range, meaning Home’s 100 percent corresponds to a low-light ceiling. The color temperature covers a range of <strong>143 to 344 mired</strong> (approximately 6993 K to 2907 K). Multiple lamps can be paired separately and then grouped in Apple Home.</p><p>The ESP32-C3 communicates with the PCA9635 over <strong>I²C</strong> using GPIO4, 5, and 6 for SDA, SCL, and OE signals, and draws power from the lamp’s 3.37 V rail. Firmware version 0.1.4 adds 400 ms eased transitions for smoother brightness adjustments.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

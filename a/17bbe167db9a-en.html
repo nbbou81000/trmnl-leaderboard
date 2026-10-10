@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hexa-Bouncer: A Hexapod Robot That Plays Ping Pong by Itself · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A hexapod robot keeps a ping-pong ball airborne using six motors and two high-speed cameras without human input.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Hexa-Bouncer: A Hexapod Robot That Plays Ping Pong by Itself">
+<meta property="og:description" content="A hexapod robot keeps a ping-pong ball airborne using six motors and two high-speed cameras without human input.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/17bbe167db9a-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-06T14:10:02.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hexa-Bouncer: A Hexapod Robot That Plays Ping Pong by Itself">
+<meta name="twitter:description" content="A hexapod robot keeps a ping-pong ball airborne using six motors and two high-speed cameras without human input.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/17bbe167db9a-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/17bbe167db9a.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/17bbe167db9a", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · October 6, 2026 · source : Hackster</p>
+  <h1>Hexa-Bouncer: A Hexapod Robot That Plays Ping Pong by Itself</h1>
+  <p class="lead">A hexapod robot keeps a ping-pong ball airborne using six motors and two high-speed cameras without human input.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/17bbe167db9a">Read the article on the TRMNL Leaderboard →</a>
+  <p>The <strong>Hexa-Bouncer</strong>, created by Electron Dust, tackles the challenge of keeping a ping-pong ball in perpetual motion using a hexapod platform. This system, also known as a <em>Stewart platform</em>, consists of six independently controlled arms connecting a fixed base to a triangular upper platform, providing six degrees of freedom: vertical, lateral, and longitudinal translations, as well as pitch, roll, and yaw rotations.</p><p>To react with sufficient speed, each arm is driven by a <strong>Nema 23 stepper motor</strong> paired with a 10:1 planetary gearbox, enhancing torque and precision. Six <strong>StepperOnline CL57T</strong> controllers operate the motors, while a <strong>Teensy 4.0</strong> microcontroller handles low-level motion. Ball detection relies on two <strong>e-con Systems See3CAM_24CUG</strong> cameras, capturing up to 120 frames per second from different angles. A Windows PC, running custom software built in Unity, processes the video feeds to isolate the white ping-pong ball and calculate its 3D trajectory.</p><p>The system then predicts the ball’s impact point on the platform and adjusts its position in real time, accounting for the required speed and orientation to send the ball back. Precise timing is critical: a delay of a few milliseconds can misdirect the trajectory, making the next correction even more difficult. The project showcases the balance between computer vision, motor control, and real-time processing, all for a result that is as impressive as it is entertaining.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cloudflare Quick Tunnels : exposer un serveur local en ligne avec contrôle d&#39;accès · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Cloudflare propose des tunnels temporaires pour partager un serveur local via une URL aléatoire, avec une option pour restreindre l&#39;accès par e-mail.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Cloudflare Quick Tunnels : exposer un serveur local en ligne avec contrôle d&#39;accès">
+<meta property="og:description" content="Cloudflare propose des tunnels temporaires pour partager un serveur local via une URL aléatoire, avec une option pour restreindre l&#39;accès par e-mail.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/f4158864b9d8.html">
+<meta property="og:image" content="https://korben.info/cloudflare-quick-tunnels-tuto/cloudflare-quick-tunnels-tuto-1.webp">
+<meta property="article:published_time" content="2026-10-05T07:40:07.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cloudflare Quick Tunnels : exposer un serveur local en ligne avec contrôle d&#39;accès">
+<meta name="twitter:description" content="Cloudflare propose des tunnels temporaires pour partager un serveur local via une URL aléatoire, avec une option pour restreindre l&#39;accès par e-mail.">
+<meta name="twitter:image" content="https://korben.info/cloudflare-quick-tunnels-tuto/cloudflare-quick-tunnels-tuto-1.webp">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/f4158864b9d8.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/f4158864b9d8-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/f4158864b9d8", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://korben.info/cloudflare-quick-tunnels-tuto/cloudflare-quick-tunnels-tuto-1.webp" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 5 octobre 2026 · source : Korben</p>
+  <h1>Cloudflare Quick Tunnels : exposer un serveur local en ligne avec contrôle d&#39;accès</h1>
+  <p class="lead">Cloudflare propose des tunnels temporaires pour partager un serveur local via une URL aléatoire, avec une option pour restreindre l&#39;accès par e-mail.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/f4158864b9d8">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Cloudflare Quick Tunnels permet d’exposer un serveur local sur Internet sans configuration complexe : une commande cloudflared tunnel --url génère une URL aléatoire en trycloudflare.com, sans besoin de compte, de domaine ou d’ouverture de port. Idéal pour des tests ou des démonstrations rapides, ce service offre une solution temporaire et sans engagement.</p> <h2>Installation et utilisation</h2> <p>L’outil <strong>cloudflared</strong>, client open source de Cloudflare, s’installe facilement selon la plateforme. Sous macOS avec Homebrew (brew install cloudflared), sous Debian/Ubuntu via un dépôt officiel mis à jour récemment, ou sous Windows via un MSI, un exécutable ou Winget (winget install Cloudflare.cloudflared). La version 2026.9.3 ou ultérieure est requise pour bénéficier des options d’authentification.</p> <p>Une fois installé, lancez votre serveur local (par exemple sur le port 8080) et exécutez cloudflared tunnel --url http://localhost:8080. Cloudflare génère une URL aléatoire du type quelque-chose-truc-bidule.trycloudflare.com, accessible depuis n’importe quel appareil connecté à Internet. Pour arrêter le tunnel, un simple Ctrl+C suffit.</p> <h2>Restriction d’accès par e-mail</h2> <p>Une nouveauté récente permet de limiter l’accès au tunnel à des adresses e-mail spécifiques via l’option --allowed-mail. Chaque invité reçoit un code à usage unique envoyé par Cloudflare Access pour s’authentifier. Les adresses autorisées ne sont pas visibles dans la configuration, évitant toute fuite de données personnelles. Plusieurs e-mails peuvent être ajoutés, séparés par des virgules, ou un domaine entier avec un joker (--allowed-mail '*@example.com').</p> <p>Cette fonctionnalité est particulièrement utile pour partager un projet en cours avec une équipe restreinte ou pour éviter qu’un agent IA ne publie accidentellement un tunnel public. Cloudflare recommande également l’utilisation d’un <strong>hook PreToolUse</strong> pour bloquer les commandes sans restriction d’accès.</p> <p>À noter : Quick Tunnels est conçu pour des usages temporaires et non pour un déploiement en production. Cloudflare ne garantit pas la disponibilité du service, et chaque tunnel est limité à 200 requêtes simultanées. Les Server-Sent Events (SSE) ne sont pas supportés. Pour un usage professionnel, il est préférable de créer un tunnel nommé via un compte Cloudflare et un domaine personnalisé.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

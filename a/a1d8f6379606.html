@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L&#39;ESP32 se transforme en récepteur radio logiciel grâce à une fonction cachée · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Une fonction non documentée de certains ESP32 permet d&#39;utiliser leur puce radio comme récepteur SDR, sans matériel supplémentaire.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="L&#39;ESP32 se transforme en récepteur radio logiciel grâce à une fonction cachée">
+<meta property="og:description" content="Une fonction non documentée de certains ESP32 permet d&#39;utiliser leur puce radio comme récepteur SDR, sans matériel supplémentaire.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/a1d8f6379606.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2021/07/esp32-linux-featured.jpg">
+<meta property="article:published_time" content="2026-10-03T17:00:31.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="L&#39;ESP32 se transforme en récepteur radio logiciel grâce à une fonction cachée">
+<meta name="twitter:description" content="Une fonction non documentée de certains ESP32 permet d&#39;utiliser leur puce radio comme récepteur SDR, sans matériel supplémentaire.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2021/07/esp32-linux-featured.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a1d8f6379606.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a1d8f6379606-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/a1d8f6379606", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2021/07/esp32-linux-featured.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 3 octobre 2026 · source : Hackaday</p>
+  <h1>L&#39;ESP32 se transforme en récepteur radio logiciel grâce à une fonction cachée</h1>
+  <p class="lead">Une fonction non documentée de certains ESP32 permet d&#39;utiliser leur puce radio comme récepteur SDR, sans matériel supplémentaire.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/a1d8f6379606">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Une découverte indépendante, réalisée par deux passionnés, révèle qu’une partie des microcontrôleurs <strong>ESP32</strong> (à partir des versions équipées du cœur Tensilica) intègre une fonction radio non documentée. Cette fonction permet d’extraire le flux <strong>I/Q</strong> (signal radio en quadrature) avant le modem Wi-Fi, offrant ainsi la possibilité de l’exploiter via un logiciel de radio logicielle (<strong>SDR</strong>) sur un ordinateur externe.</p> <p>Seuls les modèles ESP32 dotés de la radio 2,4 GHz ou 5 GHz sont concernés, à l’exclusion des versions Bluetooth-only ou des ESP32-P4 sans radio. La fonction est limitée à la réception, mais couvre les bandes 2,4 GHz et 5 GHz selon le modèle. Bien que cette solution ne remplace pas un récepteur SDR dédié comme le RTL-SDR, elle ouvre des perspectives pour des projets nécessitant une écoute passive du spectre radio.</p> <p>Les internautes soulignent que la transmission pourrait également être possible, mais reste non documentée. La principale limite technique réside dans le transfert des données vers un ordinateur : le débit maximal des interfaces SDIO (4 bits) ou PARLIO (8 bits) des ESP32 ne permet pas d’exploiter pleinement le flux I/Q à haut débit, limitant ainsi les applications à des bandes étroites ou à des débits réduits.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

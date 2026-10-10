@@ -1,0 +1,11 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palmarès des créateurs TRMNL</title>
+<script>
+(function () {
+  var site = "https://nbbou81000.github.io/trmnl-leaderboard/", path = location.pathname, m, dest = site;
+  if ((m = path.match(/\/p\/(\d+)(-en)?\.html$/))) dest = site + (m[2] ? '?lang=en' : '') + '#elaboration/' + m[1];
+  else if ((m = path.match(/\/a\/([0-9a-f]+)(-en)?\.html$/))) dest = site + (m[2] ? '?lang=en' : '') + '#eink/' + m[1];
+  else if ((m = path.match(/\/r\/(\d+)\.html$/))) dest = site;
+  location.replace(dest);
+})();
+</script></head><body><p><a href="https://nbbou81000.github.io/trmnl-leaderboard/">Palmarès des créateurs TRMNL</a></p></body></html>

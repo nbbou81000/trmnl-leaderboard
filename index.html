@@ -2211,7 +2211,7 @@ function wantedHTML() {
         ${t.active ? `<span class="wd${t.demand === '5+' ? ' lo' : ''}">${esc(t.demand)} ${L('pers.', 'people')}</span>` : ''}${isNew(t) ? `<span class="wnew">🆕 ${L('nouveau', 'new')}</span>` : ''}</div>
       ${fr ? '' : `<button class="btn ghost small" type="button" data-want="${esc(t.q)}">🔨 ${L("Je m'y mets", "I'll build it")}</button>`}${extra}</li>`;
   };
-  const open = store.get('trmnl-wanted-closed') !== '1';
+  const open = store.get('trmnl-wanted-closed') === '0';   // replié par défaut : ne pas écraser les projets ; rouvert si le visiteur l'a ouvert lui-même
   return `<details class="wanted" ${open ? 'open' : ''}><summary><h3>🔎 ${L('Ce que la communauté cherche', 'What the community is looking for')}</h3>
       <span class="muted">${L('Recherches sans résultat sur trmnl.com', 'Searches with no result on trmnl.com')}</span></summary>
     <ul class="wlist">${shown.map(li).join('')}</ul>
@@ -2277,7 +2277,7 @@ function wishesHTML() {
       <small>${esc(wishAuthor(w))} · ${ago2(w.created_at)}</small><div class="row"><button class="btn small" type="button" data-wok="${w.id}">✅ ${L('Publier', 'Publish')}</button><button class="btn ghost small" type="button" data-wno="${w.id}">🗑️ ${L('Refuser', 'Reject')}</button></div></div>`).join('')}</div>` : '';
   const mp = !wipMe ? myPendingWishes() : [];
   const waiting = mp.length ? `<p class="notice" style="margin:8px 0">⏳ ${L(`Votre souhait « ${esc(mp[0].title)} » sera visible après validation.`, `Your wish "${esc(mp[0].title)}" will show once it's been reviewed.`)}</p>` : '';
-  const open = store.get('trmnl-wishes-closed') !== '1';
+  const open = store.get('trmnl-wishes-closed') === '0';   // replié par défaut : ne pas écraser les projets ; rouvert si le visiteur l'a ouvert lui-même
   return `<details class="wanted wishes" ${open ? 'open' : ''}><summary><h3>🙋 ${L('Les souhaits de la communauté', 'Community wishes')}</h3>
       <span class="muted">${L("Un plugin vous manque ? Proposez-le, ou soutenez ceux des autres.", 'Missing a plugin? Wish for it, or back other people’s wishes.')}</span>${pend.length ? ` <span class="wd">⏳ ${pend.length}</span>` : ''}</summary>
     ${review}

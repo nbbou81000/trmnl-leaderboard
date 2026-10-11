@@ -372,6 +372,11 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .sttiles>div{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;font-size:.84rem;color:var(--ink2)}
 .sttiles b{display:block;color:var(--ink);font-stretch:115%;font-weight:800;font-size:1.5rem;font-variant-numeric:tabular-nums}
 .sttiles small{display:block;font-size:.76rem;margin-top:2px}
+.xbadge{font-size:.72rem;padding:2px 7px;vertical-align:middle}
+.sttiles.small{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.sttiles.small b{font-size:1.25rem}
+#myInstalls .sheet{margin-top:22px}
+#myInstalls h4,#stInstalls h4{margin:16px 0 6px}
 .sttiles .up{color:var(--sage);font-weight:700}.sttiles .down{color:var(--accent-ink);font-weight:700}
 .stgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .stgrid .wide{grid-column:1/-1}
@@ -993,6 +998,15 @@ function track(path, event = false, target = null) {
   if (!GOATCOUNTER || !window.goatcounter?.count) return;
   window.goatcounter.count({ path, title: event ? path : document.title, event });
 }
+// Clics vers une page de recette sur trmnl.com : servent à estimer les installations apportées par le site
+// (scripts/attribution.mjs). La cible note la recette et l'onglet d'où vient le clic : « recipe:123@jour ».
+const curTab = () => { const t = (location.hash.slice(1) || '').split('?')[0].split('/')[0]; return FROM_SLUG[t] || t || 'accueil'; };
+const trackRecipe = (id, src) => id && track('recette-cliquee', true, `recipe:${id}@${src || curTab()}`);
+['click', 'auxclick'].forEach(type => document.addEventListener(type, e => {
+  if (type === 'auxclick' && e.button !== 1) return;
+  const a = e.target.closest?.('a[href]'); if (!a || a.hasAttribute('data-sp')) return;   // Incontournables : suivis à part
+  const m = /^https:\/\/(?:www\.)?(?:trmnl|usetrmnl)\.com\/recipes\/(\d+)/.exec(a.href); if (m) trackRecipe(m[1]);
+}, true));
 const currentPath = () => { const [tab] = (location.hash.slice(1) || '').split('?')[0].split('/'); const t = FROM_SLUG[tab] || tab || 'accueil'; return location.pathname + (EN() ? 'en/' : '') + '#' + t; };
 if (GOATCOUNTER) {
   window.goatcounter = { no_onload: true };
@@ -1309,7 +1323,7 @@ function bindFinder(id, onPick) {
 /* ================= Accueil ================= */
 const recipeLink = r => `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>`;
 const creatorLink = c => `<a href="${hr('createur', c.u)}">${esc(nameOf(c.u))}</a>`;
-const openRecipe = r => window.open(`https://trmnl.com/recipes/${r.id}`, '_blank', 'noopener');
+const openRecipe = r => { trackRecipe(r.id); window.open(`https://trmnl.com/recipes/${r.id}`, '_blank', 'noopener'); };
 const shareURL = r => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}r/${r.id}.html`;
 function miniList(items, val, label, link, sub, isMine = x => isMe(x.u)) {
   const max = Math.max(1e-9, ...items.map(val));
@@ -1604,7 +1618,7 @@ function wireStarter(el) {
   el.querySelector('#sClear')?.addEventListener('click', () => { starterQ = ''; redraw(); });
   el.querySelector('#sWish')?.addEventListener('click', () => { WISH_PREFILL = starterQ; track('recherche-vers-souhait', true); });
   el.querySelectorAll('#starter .spick img').forEach(i => i.addEventListener('error', () => { i.style.visibility = 'hidden'; }, { once: true }));
-  el.querySelectorAll('[data-sp]').forEach(a => a.addEventListener('click', () => track('incontournable-installe', true, 'recipe:' + a.dataset.sp)));
+  el.querySelectorAll('[data-sp]').forEach(a => a.addEventListener('click', () => track('incontournable-installe', true, `recipe:${a.dataset.sp}@${starterQ ? 'recherche' : 'incontournables'}`)));
 }
 function renderHome() {
   const el = $('#tab-accueil');
@@ -1770,6 +1784,8 @@ function renderProfile(u) {
     </div>
   </div>
 
+  <div id="myInstalls"></div>
+
   <h2>${L('Tous les classements', 'Every ranking')}</h2>
   <p class="lead">${mine ? L('Votre rang', 'Your rank') : L('Rang de ce créateur', "This creator's rank")} ${L('parmi les créateurs, métrique par métrique. La barre indique la part des créateurs devancés.', 'among all creators, metric by metric. The bar shows the share of creators outranked.')}</p>
   <div class="tiles">${tiles}</div>
@@ -1810,6 +1826,7 @@ function renderProfile(u) {
   </table></div>`;
 
   const refresh = () => { resetViews(); renderProfile(c.u); };
+  loadMyInstalls(c.u);
   $('#setMe')?.addEventListener('click', () => chooseMe(c.u));
   $('#changeMe')?.addEventListener('click', () => { me = ''; store.del('trmnl-me'); resetViews(); go(hr('moi')); });
   $('#myName')?.addEventListener('change', e => { myName = e.target.value.trim(); myName ? store.set('trmnl-myname', myName) : store.del('trmnl-myname'); refresh(); });
@@ -2030,6 +2047,8 @@ const realApi = {
   async adminLog(n = 500) { const c = await client(); return ok(await c.rpc('admin_log_list', { p_limit: n })) || []; },
   async members() { const c = await client(); return ok(await c.rpc('admin_members')) || []; },
   async health() { const c = await client(); return ok(await c.rpc('admin_health')); },
+  async clickInstalls(days) { const c = await client(); return ok(await c.rpc('click_installs_admin', { p_days: days })); },
+  async myClickInstalls() { const c = await client(); return ok(await c.rpc('click_installs_mine')); },
   async visitStats(days) { const c = await client(); return ok(await c.rpc('visit_stats', { p_days: days })); },
   async visitLive() { const c = await client(); return ok(await c.rpc('visit_live')); },
   async forgetVisitor(id) { const c = await client(); return ok(await c.rpc('forget_visitor', { p_visitor: id })); },
@@ -3519,7 +3538,7 @@ const flagOf = cc => cc ? String.fromCodePoint(...[...cc].map(c => 0x1F1A5 + c.c
 const countryOf = tz => { const cc = TZ_CC[tz]; let name = tz || '?';
   if (cc) { try { name = new Intl.DisplayNames([EN() ? 'en' : 'fr'], { type: 'region' }).of(cc); } catch { name = cc; } } else if (tz) name = tz.split('/').pop().replace(/_/g, ' ');
   return { cc: cc || tz || '?', label: `${flagOf(cc)} ${name}` }; };
-const EVENT_LABELS = () => ({ 'actu-eink-lue': L('Article e-ink lu', 'E-ink article read'), 'actu-eink-partagee': L('Article e-ink partagé', 'E-ink article shared'), 'avancee-publiee': L('Avancée publiée', 'Update posted'),
+const EVENT_LABELS = () => ({ 'recette-cliquee': L('Clic vers une recette', 'Click to a recipe'), 'actu-eink-lue': L('Article e-ink lu', 'E-ink article read'), 'actu-eink-partagee': L('Article e-ink partagé', 'E-ink article shared'), 'avancee-publiee': L('Avancée publiée', 'Update posted'),
   'bandeau-modifie': L("Bandeau d'accueil modifié", 'Home banner edited'), 'commentaire-publie': L('Commentaire publié', 'Comment posted'), 'connexion-discord': L('Connexion Discord', 'Discord sign-in'),
   'liaison-demandee': L('Liaison de profil demandée', 'Profile link requested'), 'lien-pied-de-page': L('Lien du pied de page', 'Footer link'), 'lien-profil-copie': L('Lien de profil copié', 'Profile link copied'),
   'lien-recette-copie': L('Lien de recette copié', 'Recipe link copied'), 'profil-choisi': L('Profil choisi', 'Profile picked'), 'projet-ouvert': L('Projet ouvert', 'Project opened'), 'projet-partage': L('Projet partagé', 'Project shared'), 'reaction': L('Réaction (émoji)', 'Reaction (emoji)'), 'projet-publie': L('Projet publié', 'Project posted'),
@@ -3604,6 +3623,65 @@ async function loadLive() {
         <td>${h.mobile ? '📱' : h.mobile === false ? '💻' : ''} ${esc([h.browser, h.os].filter(Boolean).join(' · '))}</td>
         <td>${h.tz ? esc(c.label) : ''}</td><td>${esc([h.via && (VL[h.via] || h.via), h.ref].filter(Boolean).join(' · '))}</td></tr>`; }).join('') || `<tr><td colspan="6" class="muted">—</td></tr>`;
   } catch (e) { const n = $('#stNow'); if (n) n.textContent = '?'; }
+}
+
+// ─── Installations apportées par le site (estimation, scripts/attribution.mjs + supabase/installations.sql) ───
+const CLICK_SOURCES = () => ({ ...TAB_LABELS(), createur: L('Fiche créateur', 'Creator page'), incontournables: L('Incontournables (accueil)', 'Must-haves (home)'), recherche: L('Recherche par besoin', 'Search by need'), autre: L('Autre', 'Other') });
+const recipeName = id => { const r = byR.get(String(id)); return r ? `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : L(`Recette #${esc(id)}`, `Recipe #${esc(id)}`); };
+const rateOf = X => { const n = (+X.probable || 0) + (+X.none || 0); return n ? Math.round(100 * X.probable / n) : null; };
+const clickTiles = X => `<div class="sttiles small">
+    <div><b>${nf(X.probable)}</b>${L('installations probables', 'likely installs')}</div>
+    <div><b>${nf(X.clicks)}</b>${L('clics vers les recettes', 'clicks to recipes')}${X.visitors != null ? `<small>${L(`${nf(X.visitors)} visiteurs`, `${nf(X.visitors)} visitors`)}</small>` : ''}</div>
+    <div><b>${rateOf(X) == null ? '—' : rateOf(X) + ' %'}</b>${L('des clics vérifiables finissent en installation', 'of checkable clicks end in an install')}</div>
+    <div><b>${nf(X.undetermined)}</b>${L('indéterminés', 'undetermined')}<small>${L('recette trop active ou trop récente', 'recipe too busy or too new')}</small></div>
+  </div>`;
+const recipeCols = rows => [[L('Recette', 'Recipe'), x => recipeName(x.recipe_id)], [L('Clics', 'Clicks'), x => nf(x.clicks)], [L('Probables', 'Likely'), x => nf(x.probable)],
+  ...(rows.some(x => +x.undetermined) ? [[L('Indét.', 'Undet.'), x => nf(x.undetermined)]] : [])];
+const clickTable = (rows, cols) => rows.length ? `<div class="scroll"><table><thead><tr>${cols.map((c, i) => `<th${i ? '' : ' class="l"'}>${c[0]}</th>`).join('')}</tr></thead>
+  <tbody>${rows.map(x => `<tr>${cols.map((c, i) => `<td${i ? '' : ' class="l"'}>${c[1](x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : `<p class="muted">${L('Aucun clic pour le moment.', 'No clicks yet.')}</p>`;
+const CLICK_NOTE = () => L("Estimation : TRMNL ne dit jamais qui installe une recette. Un clic compte comme « installation probable » si la recette a gagné une installation ou un fork dans les 2 heures suivantes, au-delà de son rythme habituel. Les recettes très actives ou toutes récentes restent « indéterminées ». Un même visiteur qui reclique dans les 24 h ne compte qu'une fois.",
+  "Estimate: TRMNL never says who installs a recipe. A click counts as a “likely install” when the recipe gained an install or a fork within the next 2 hours, beyond its usual pace. Very busy or brand-new recipes stay “undetermined”. A visitor clicking again within 24 h only counts once.");
+async function loadClickInstalls() {
+  const box = $('#stInstalls'); if (!box) return;
+  let X;
+  try { X = await api().clickInstalls(statsDays); }
+  catch (e) { box.innerHTML = `<p class="muted">${esc(/click_installs|function|schema cache/i.test(e.message) ? L("Pas encore prêt : collez supabase/installations.sql dans l'éditeur SQL de Supabase. Les clics sont déjà enregistrés en attendant.", 'Not ready yet: paste supabase/installations.sql into the Supabase SQL editor. Clicks are already being recorded meanwhile.') : e.message)}</p>`; return; }
+  const S = CLICK_SOURCES(), P = PAL();
+  box.innerHTML = `${clickTiles(X)}
+    ${X.pending ? `<p class="note">${L(`${nf(X.pending)} clic(s) récent(s) en attente : ils sont vérifiés 2 à 3 heures après, au relevé suivant.`, `${nf(X.pending)} recent click(s) waiting: they are checked 2 to 3 hours later, at the next reading.`)}</p>` : ''}
+    ${(X.daily || []).length > 1 ? `<div class="chart short"><canvas id="chClickInst"></canvas></div>` : ''}
+    <div class="grid g2">
+      <div><h4>${L("D'où viennent les clics", 'Where clicks come from')}</h4>${clickTable(X.sources || [], [[L('Onglet ou bloc', 'Tab or block'), x => esc(S[x.source] || x.source)], [L('Clics', 'Clicks'), x => nf(x.clicks)], [L('Probables', 'Likely'), x => nf(x.probable)]])}</div>
+      <div><h4>${L('Créateurs qui en profitent le plus', 'Creators who benefit most')}</h4>${clickTable(X.creators || [], [[L('Créateur', 'Creator'), x => `<a href="${hr('createur', x.creator_id)}">${esc(nameOf(x.creator_id))}</a>`], [L('Clics', 'Clicks'), x => nf(x.clicks)], [L('Probables', 'Likely'), x => nf(x.probable)]])}</div>
+    </div>
+    <h4>${L('Recettes', 'Recipes')}</h4>
+    ${clickTable(X.recipes || [], recipeCols(X.recipes || []))}
+    <p class="note">${CLICK_NOTE()}</p>`;
+  const d = X.daily || [];
+  if (d.length > 1) chart('chClickInst', { type: 'bar', data: { labels: d.map(x => new Date(x.day + 'T12:00:00').toLocaleDateString(LOC, { day: 'numeric', month: 'short' })),
+    datasets: [{ label: L('Clics', 'Clicks'), data: d.map(x => x.clicks), backgroundColor: alpha(P[0], .35), borderRadius: 4 }, { label: L('Installations probables', 'Likely installs'), data: d.map(x => x.probable), backgroundColor: P[2], borderRadius: 4 }] },
+    options: { plugins: { legend: { display: true, position: 'bottom' } }, scales: { x: { grid: { display: false }, stacked: false }, y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+}
+// Bloc « Mon profil » : uniquement pour le créateur connecté dont la liaison Discord est vérifiée, et sur son propre profil
+async function loadMyInstalls(u) {
+  const box = $('#myInstalls'); if (!box || !store.get('trmnl-wip-session', '')) return;
+  try { if (wipProfile === undefined || wipProfile === null) await wipLoadSession(); } catch { return; }
+  if (wipProfile?.creator_status !== 'verified' || String(wipProfile.creator_id) !== String(u)) return;
+  let X; try { X = await api().myClickInstalls(); } catch { return; }   // base pas encore prête : rien n'est affiché
+  if (!$('#myInstalls')) return;
+  const S = CLICK_SOURCES(), A = X.all || {}, M = X.d30 || {};
+  const young = !X.since || Date.now() - Date.parse(X.since) < 30 * DAY;   // moins de 30 jours de recul : un seul jeu de chiffres
+  if (!A.clicks) { box.innerHTML = `<div class="sheet"><h3>${L('Installations apportées par le Palmarès', 'Installs brought by the Leaderboard')} <span class="badge xbadge">${L('Estimation', 'Estimate')}</span></h3>
+    <p class="muted" style="margin:0">${L("Aucun visiteur du site n'a encore cliqué vers vos recettes. Dès que ce sera le cas, vous verrez ici combien d'installations le site vous a probablement apportées. Visible par vous seul.", "No visitor has clicked through to your recipes yet. Once they do, you'll see here how many installs the site likely brought you. Only you can see this.")}</p></div>`; return; }
+  box.innerHTML = `<div class="sheet"><h3>${L('Installations apportées par le Palmarès', 'Installs brought by the Leaderboard')} <span class="badge xbadge">${L('Estimation', 'Estimate')}</span></h3>
+    <p class="muted" style="margin:0 0 10px">${L('Visible par vous seul, parce que votre compte Discord est lié à ce profil.', 'Only you can see this, because your Discord account is linked to this profile.')}</p>
+    ${young ? `<h4>${L(`Depuis le ${dfmt(X.since)}`, `Since ${dfmt(X.since)}`)}</h4>${clickTiles(A)}`
+      : `<div class="grid g2"><div><h4>${L('30 derniers jours', 'Last 30 days')}</h4>${clickTiles(M)}</div><div><h4>${L(`Depuis le ${dfmt(X.since)}`, `Since ${dfmt(X.since)}`)}</h4>${clickTiles(A)}</div></div>`}
+    <h4>${L('Par recette', 'Per recipe')}</h4>
+    ${clickTable(A.recipes || [], recipeCols(A.recipes || []))}
+    <h4>${L("D'où viennent les clics", 'Where clicks come from')}</h4>
+    ${clickTable(A.sources || [], [[L('Onglet ou bloc', 'Tab or block'), x => esc(S[x.source] || x.source)], [L('Clics', 'Clicks'), x => nf(x.clicks)], [L('Probables', 'Likely'), x => nf(x.probable)]])}
+    <p class="note">${CLICK_NOTE()}</p></div>`;
 }
 
 // ─── Semaine par semaine (lundi → dimanche, heure de Paris), à partir du détail jour par jour ───
@@ -3699,6 +3777,7 @@ async function loadStats() {
       ${box(L('En direct : pages vues, 30 dernières minutes', 'Live: page views, last 30 minutes'), `<div class="chart short"><canvas id="chLive"></canvas></div>`, 'wide')}
       ${one ? '' : box(L('Visiteurs par jour', 'Visitors per day'), `<div class="chart"><canvas id="chDays"></canvas></div>`, 'wide')}
       ${box(L('Semaine par semaine', 'Week by week'), `<div id="stWeeks"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`, 'wide')}
+      ${box(L('Installations apportées aux recettes', 'Installs brought to recipes') + ` <span class="badge xbadge">${L('Estimation', 'Estimate')}</span>`, `<div id="stInstalls"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>`, 'wide')}
       ${box(L("Par heure : aujourd'hui et hier", 'By hour: today and yesterday'), `<div class="chart"><canvas id="chHours"></canvas></div><p class="note">${L('Heure de Paris. La ligne pointillée donne la moyenne de pages vues par heure sur la période.', 'Paris time. The dotted line is the average page views per hour over the period.')}</p>`, 'wide')}
       ${box(L('Jours et heures les plus actifs', 'Busiest days and hours'), `<div class="heat"><span></span>${Array.from({ length: 24 }, (_, h) => `<span class="hh">${h % 3 ? '' : h}</span>`).join('')}
         ${heat.map((row, d) => `<span class="dd">${DOW[d]}</span>${row.map((v, h) => `<i style="--a:${v ? .12 + .88 * v / hmax : 0}" title="${DOW[d]} ${hh(h)} : ${nf(v)} ${L('pages vues', 'page views')}"></i>`).join('')}`).join('')}</div>`, 'wide')}
@@ -3748,6 +3827,7 @@ async function loadStats() {
     options: { plugins: { legend: { display: true, position: 'bottom' } }, interaction: { mode: 'index', intersect: false },
       scales: { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true } }, y: { beginAtZero: true, ticks: { precision: 0 } }, y2: { position: 'right', beginAtZero: true, grid: { display: false } } } } });
   loadWeeks();
+  loadClickInstalls();
   const pages = S.pages || [];
   chart('chPages', { type: 'bar', data: { labels: pages.map(x => T[x.path] || x.path), datasets: [
     { label: L('Pages vues', 'Page views'), data: pages.map(x => x.views), backgroundColor: P[0], borderRadius: 4 },

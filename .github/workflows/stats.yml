@@ -66,6 +66,13 @@ jobs:
             node scripts/fetch-trmnl.mjs public/data
           fi
 
+      # Installations probablement apportées par les clics du site vers les recettes (estimation, table privée)
+      - name: Installations apportées par le site
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/attribution.mjs public/data
+
       - name: Recette du jour (rotation équitable + présentation Mistral)
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}

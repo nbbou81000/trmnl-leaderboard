@@ -61,10 +61,15 @@ create table if not exists public.projects (
   eta            text check (char_length(eta) <= 40),
   images         text[] not null default '{}',
   shipped_recipe text check (shipped_recipe ~ '^[0-9]{1,10}$'),
+  shipped_plugin text check (shipped_plugin ~ '^[a-z0-9][a-z0-9_-]{0,79}$'),   -- trmnl.com/integrations/<nom>
+  shipped_at     timestamptz,
   hidden         boolean not null default false,
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
+
+alter table public.projects add column if not exists shipped_plugin text check (shipped_plugin ~ '^[a-z0-9][a-z0-9_-]{0,79}$');
+alter table public.projects add column if not exists shipped_at timestamptz;
 
 -- ---------- Mise à niveau : ancienne colonne "image" (une seule capture) → "images" (plusieurs, jusqu'à IMG_MAX)
 do $$
@@ -138,15 +143,19 @@ begin
   if tg_op = 'INSERT' then
     new.owner := auth.uid(); new.hidden := false; new.created_at := now(); new.updated_at := now();
     new.creator_id := (select creator_id from public.profiles where id = new.owner and creator_status = 'verified');
-    if not public.is_admin() and (select count(*) from public.projects where owner = auth.uid() and shipped_recipe is null) >= 5 then
+    new.shipped_at := case when new.shipped_plugin is not null then now() end;
+    if not public.is_admin() and (select count(*) from public.projects where owner = auth.uid() and shipped_recipe is null and shipped_plugin is null) >= 5 then
       raise exception 'You can share up to 5 projects in progress at a time.';
     end if;
   else
     new.owner := old.owner; new.created_at := old.created_at;
     new.creator_id := (select creator_id from public.profiles where id = old.owner and creator_status = 'verified');
     if not public.is_admin() then new.hidden := old.hidden; end if;
-    if (new.name, new.description, new.status, new.category, new.link, new.eta, new.images, new.shipped_recipe)
-       is distinct from (old.name, old.description, old.status, old.category, old.link, old.eta, old.images, old.shipped_recipe)
+    -- Date de publication d'un plugin : fixée au moment où l'auteur le déclare
+    new.shipped_at := case when new.shipped_plugin is null then null
+                           when new.shipped_plugin is distinct from old.shipped_plugin then now() else old.shipped_at end;
+    if (new.name, new.description, new.status, new.category, new.link, new.eta, new.images, new.shipped_recipe, new.shipped_plugin)
+       is distinct from (old.name, old.description, old.status, old.category, old.link, old.eta, old.images, old.shipped_recipe, old.shipped_plugin)
     then new.updated_at := now(); else new.updated_at := old.updated_at; end if;
   end if;
   if array_length(new.images, 1) > 4 then raise exception 'Up to 4 screenshots per project.'; end if;

@@ -2170,12 +2170,18 @@ const STOP = new Set(['trmnl', 'the', 'and', 'for', 'les', 'des', 'une', 'plugin
 const toks = t => new Set(String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^a-z0-9]+/).filter(w => w.length >= 3 && !STOP.has(w)));
 function sameName(a, b) { const A = toks(a), B = toks(b); if (!A.size || !B.size) return false; let n = 0; A.forEach(w => { if (B.has(w)) n++; }); return n / Math.min(A.size, B.size) >= 0.6; }
 function shippedOf(p) {
+  // Plugin publié sur trmnl.com/integrations/… : déclaré par l'auteur du projet (pas de numéro de créateur à vérifier)
+  if (p.shipped_plugin) return { plugin: p.shipped_plugin, d: p.shipped_at || p.updated_at };
   if (!p.creator_id) return null;   // numéro vérifié uniquement
   if (p.shipped_recipe) { const r = byR.get(String(p.shipped_recipe)); if (r && r.u === p.creator_id) return { r, d: r.p || p.updated_at }; }
   const from = Date.parse(p.created_at) - 2 * DAY;
   const r = D.recipes.find(r => r.p && Date.parse(r.p) >= from && r.u === p.creator_id && sameName(r.n, p.name));
   return r ? { r, d: r.p } : null;
 }
+// Lien et libellé du bouton d'une publication (recette ou plugin)
+const shipURL = ship => ship?.plugin ? `https://trmnl.com/integrations/${encodeURIComponent(ship.plugin)}` : ship?.r ? `https://trmnl.com/recipes/${ship.r.id}` : '';
+const shipBtn = (ship, cls = 'btn') => shipURL(ship) ? `<a class="${cls}" href="${shipURL(ship)}" target="_blank" rel="noopener">${ship.plugin ? L('Voir le plugin', 'View the plugin') : L('Installer', 'Install')}</a>` : '';
+const parsePlugin = t => (String(t).match(/(?:trmnl|usetrmnl)\.com\/integrations\/([a-z0-9][a-z0-9_-]{0,79})/i) || [])[1]?.toLowerCase() || null;
 const ago2 = iso => { const d = Math.floor((Date.now() - Date.parse(iso)) / DAY); return d <= 0 ? L("aujourd'hui", 'today') : d === 1 ? L('hier', 'yesterday') : L(`il y a ${d} jours`, `${d} days ago`); };
 const fdate = iso => new Date(iso).toLocaleDateString(LOC, { day: 'numeric', month: 'long', year: 'numeric' });
 const isOwner = p => wipMe && p.owner === wipMe.id;
@@ -2194,14 +2200,15 @@ function wipCard(p, ship) {
   const badge = ship ? `<span class="fresh">🎉 ${L('Disponible', 'Now available')}</span>` : `<span class="fresh" style="background:var(${st.c})">${st.e} ${st.l()}</span>`;
   const who = wipWho(p);
   const days = ship ? Math.max(1, Math.round((Date.parse(ship.d) - Date.parse(p.created_at)) / DAY)) : 0;
+  const pub = ship?.plugin ? L('publié comme plugin', 'published as a plugin') : L('publiée', 'published');
   return `<article class="card wip ${ship ? 'shipped' : ''} ${isOwner(p) ? 'mine' : ''}" data-wip="${p.id}" tabindex="0">
     <div class="shot">${shot}${badge}${p.hidden ? `<span class="rk">${L('masqué', 'hidden')}</span>` : ''}</div>
     <div class="body"><h4>${esc(p.name)}</h4>${p.description ? `<p class="desc">${esc(p.description)}</p>` : ''}
       <p class="tagline">${avatarHTML(p.profiles)} ${who}${p.category ? ' · ' + esc(p.category) : ''}</p>
       <p class="upd">${p.n_updates ? `📝 ${L(`${p.n_updates} avancée${p.n_updates > 1 ? 's' : ''}`, `${p.n_updates} update${p.n_updates > 1 ? 's' : ''}`)}` : ''}${p.n_updates && p.n_comments ? ' · ' : ''}${p.n_comments ? `💬 ${p.n_comments}` : ''}</p>
-      <p class="meta">${ship ? `<span>${L(`En élaboration ${days} j, publiée ${ago2(ship.d)}`, `In the making for ${days} day${days > 1 ? 's' : ''}, published ${ago2(ship.d)}`)}</span>`
+      <p class="meta">${ship ? `<span>${L(`En élaboration ${days} j, ${pub} ${ago2(ship.d)}`, `In the making for ${days} day${days > 1 ? 's' : ''}, ${pub} ${ago2(ship.d)}`)}</span>`
         : `<span>${L('Mise à jour', 'Updated')} ${ago2(p.updated_at)}</span>${p.eta ? `<span>· ${L('prévue', 'expected')} ${esc(p.eta)}</span>` : ''}`}</p>
-      ${r ? `<div class="acts"><a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>` : ''}
+      ${ship && shipURL(ship) ? `<div class="acts">${ship.plugin ? `<span class="badge">🧩 ${L('Plugin', 'Plugin')}</span> ` : ''}${shipBtn(ship)}</div>` : ''}
     </div></article>`;
 }
 
@@ -2285,7 +2292,7 @@ function wishesHTML() {
   const li = ({ w, ps, shipped }) => {
     const mine = wipMe && w.author === wipMe.id, voted = wishVoted(w);
     const status = shipped
-      ? `<div class="wx ok">✅ ${L('Réalisé', 'Done')} : <a href="https://trmnl.com/recipes/${shipped.s.r?.id || shipped.p.shipped_recipe}" target="_blank" rel="noopener">${esc(shipped.p.name)}</a> · ${wipWho(shipped.p)}</div>`
+      ? `<div class="wx ok">✅ ${L('Réalisé', 'Done')} : <a href="${shipURL(shipped.s) || `https://trmnl.com/recipes/${shipped.p.shipped_recipe}`}" target="_blank" rel="noopener">${esc(shipped.p.name)}</a> · ${wipWho(shipped.p)}</div>`
       : ps.length ? `<div class="wx ok">🔨 ${L('Repris par', 'Taken up by')} ${ps.map(p => `${wipWho(p)} (${pLink(p)})`).join(', ')}</div>` : '';
     return `<li${w.hidden ? ' style="opacity:.55"' : ''}><button class="wvote" type="button" data-wv="${w.id}" aria-pressed="${!!voted}" title="${L('Je veux aussi ce plugin', 'I want this too')}">▲ ${wishCount(w)}<small>${L('moi aussi', 'me too')}</small></button>
       <div class="wq"><b>${esc(w.title)}</b></div>
@@ -3037,7 +3044,8 @@ function wipForm(p = null, pre = null) {
         ? L(`✔ Ce projet sera relié à votre profil de créateur (${esc(nameOf(wipProfile.creator_id))}).`, `✔ This project will be linked to your creator profile (${esc(nameOf(wipProfile.creator_id))}).`)
         : L('Il sera affiché sous votre nom Discord. Liez votre numéro de créateur pour le relier à votre profil et faire repérer sa publication automatiquement.', 'It will show under your Discord name. Link your creator number to connect it to your profile and have its release spotted automatically.')}</p>
       <label>${L('Lien pour suivre le projet (facultatif)', 'Link to follow the project (optional)')}<input name="link" type="url" placeholder="https://" value="${esc(p?.link || '')}"></label>
-      ${edit ? (wipProfile?.creator_status === 'verified' ? `<label>${L('Déjà publiée ? Numéro de la recette', 'Already published? Recipe number')}<input name="shipped_recipe" inputmode="numeric" value="${esc(p?.shipped_recipe || '')}" placeholder="123456"></label>` : '')
+      ${edit ? `<label>${wipProfile?.creator_status === 'verified' ? L('Déjà publié ? Numéro de la recette, ou lien du plugin', 'Already published? Recipe number, or plugin link') : L('Déjà publié comme plugin ? Lien de sa page TRMNL', 'Already published as a plugin? Link to its TRMNL page')}
+          <input name="shipped" value="${esc(p?.shipped_plugin ? `https://trmnl.com/integrations/${p.shipped_plugin}` : p?.shipped_recipe || '')}" placeholder="${wipProfile?.creator_status === 'verified' ? '123456 · ' : ''}https://trmnl.com/integrations/…"></label>`
         : `<label class="chk"><input type="checkbox" name="consent" required> ${L("C'est mon propre projet, et j'accepte qu'il soit affiché publiquement.", "This is my own project and I'm happy for it to be shown publicly.")}</label>`}
       <p class="err" hidden></p>
       <div class="row"><button class="btn ghost" type="button" data-close>${L('Annuler', 'Cancel')}</button><button class="btn" type="submit">${edit ? L('Enregistrer', 'Save') : L('Publier', 'Publish')}</button></div>
@@ -3052,9 +3060,14 @@ function wipForm(p = null, pre = null) {
       eta: val('eta') || null, link: val('link') || null };
     if (!edit && pre?.wish_id) fields.wish_id = pre.wish_id;   // ce projet réalise un souhait de la communauté
     const fail = msg => { err.textContent = msg; err.hidden = false; };
-    if (edit && f.shipped_recipe) {
-      fields.shipped_recipe = (val('shipped_recipe').match(/\d{3,}/) || [])[0] || null;
-      if (fields.shipped_recipe && byR.get(fields.shipped_recipe)?.u !== wipProfile.creator_id) return fail(L("Ce numéro ne correspond à aucune de vos recettes publiées.", "This number doesn't match any of your published recipes."));
+    if (edit && f.shipped) {
+      const raw = val('shipped'), plugin = parsePlugin(raw);
+      fields.shipped_plugin = plugin; fields.shipped_recipe = null;
+      if (raw && !plugin) {
+        if (wipProfile?.creator_status !== 'verified') return fail(L('Collez le lien de la page du plugin, du type https://trmnl.com/integrations/nom-du-plugin', 'Paste the link to the plugin page, like https://trmnl.com/integrations/plugin-name'));
+        fields.shipped_recipe = (raw.match(/\d{3,}/) || [])[0] || null;
+        if (!fields.shipped_recipe || byR.get(fields.shipped_recipe)?.u !== wipProfile.creator_id) return fail(L("Ce numéro ne correspond à aucune de vos recettes publiées. Pour un plugin, collez le lien de sa page (https://trmnl.com/integrations/…).", "This number doesn't match any of your published recipes. For a plugin, paste the link to its page (https://trmnl.com/integrations/…)."));
+      }
     }
     if (fields.name.length < 2) return fail(L('Donnez un nom à votre projet.', 'Please name your project.'));
     if (fields.link && !/^https?:\/\//i.test(fields.link)) return fail(L('Le lien doit commencer par https://', 'The link must start with https://'));
@@ -3126,7 +3139,8 @@ async function wipDetail(p) {
       <p class="muted" style="margin:0 0 10px">${avatarHTML(p.profiles)} ${who} · ${p.category ? esc(p.category) + ' · ' : ''}${L('partagé le', 'shared on')} ${fdate(p.created_at)}${p.eta && !ship ? ` · ${L('prévue', 'expected')} ${esc(p.eta)}` : ''}</p>
       ${p.description ? `<p>${esc(p.description)}</p>` : ''}
       ${p.hidden ? '' : reactBar((d.reactions || []).filter(x => !x.comment_id))}
-      <div class="tools-row">${r ? `<a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>` : ''}
+      ${ship?.plugin ? `<p class="muted" style="margin:0 0 10px">🧩 ${L("Publié comme plugin sur TRMNL, d'après son auteur.", 'Published as a TRMNL plugin, according to its author.')}</p>` : ''}
+      <div class="tools-row">${shipBtn(ship)}
         ${p.hidden ? '' : `<button class="btn ghost" type="button" data-act="share">📤 ${L('Partager', 'Share')}</button>`}
         ${p.link ? `<a class="btn ghost" href="${esc(p.link)}" target="_blank" rel="noopener nofollow ugc">${L('Suivre le projet', 'Follow the project')} ↗</a>` : ''}
         ${own ? `<button class="btn ghost small" data-act="edit">${L('Modifier', 'Edit')}</button>` : ''}

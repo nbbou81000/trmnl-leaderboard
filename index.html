@@ -373,9 +373,12 @@ details.onhold summary{cursor:pointer;color:var(--ink2);margin:26px 0 12px}
 .sttiles b{display:block;color:var(--ink);font-stretch:115%;font-weight:800;font-size:1.5rem;font-variant-numeric:tabular-nums}
 .sttiles small{display:block;font-size:.76rem;margin-top:2px}
 .xbadge{font-size:.72rem;padding:2px 7px;vertical-align:middle}
+.ptag{font-size:.85em;margin-left:3px;cursor:help}
 .sttiles.small{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
 .sttiles.small b{font-size:1.25rem}
 #myInstalls .sheet{margin-top:22px}
+#myPlugins .sheet{margin-top:16px}
+.plist{list-style:none;padding:0;margin:0 0 6px}.plist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--rule)}
 #myInstalls h4,#stInstalls h4{margin:16px 0 6px}
 .sttiles .up{color:var(--sage);font-weight:700}.sttiles .down{color:var(--accent-ink);font-weight:700}
 .stgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
@@ -1321,9 +1324,13 @@ function bindFinder(id, onPick) {
 }
 
 /* ================= Accueil ================= */
-const recipeLink = r => `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>`;
+// Lien vers la page TRMNL : recette (trmnl.com/recipes/<id>) ou plugin rattaché (trmnl.com/integrations/<nom>, id « p-<nom> »)
+const isPlugin = r => r?.k === 'p';
+const rURL = r => isPlugin(r) ? `https://trmnl.com/integrations/${encodeURIComponent(r.slug || String(r.id).slice(2))}` : `https://trmnl.com/recipes/${r?.id}`;
+const pTag = r => isPlugin(r) ? ` <span class="ptag" title="${L('Plugin TRMNL : connexions comptées comme des installations', 'TRMNL plugin: connections counted as installs')}">🧩</span>` : '';
+const recipeLink = r => `<a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a>${pTag(r)}`;
 const creatorLink = c => `<a href="${hr('createur', c.u)}">${esc(nameOf(c.u))}</a>`;
-const openRecipe = r => { trackRecipe(r.id); window.open(`https://trmnl.com/recipes/${r.id}`, '_blank', 'noopener'); };
+const openRecipe = r => { trackRecipe(r.id); window.open(rURL(r), '_blank', 'noopener'); };
 const shareURL = r => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}r/${r.id}.html`;
 function miniList(items, val, label, link, sub, isMine = x => isMe(x.u)) {
   const max = Math.max(1e-9, ...items.map(val));
@@ -1340,19 +1347,19 @@ function renderSpotlightTab() {
   const today = SPOT && !SPOT.empty ? `<div class="cards"><article class="card">
       <div class="shot">${SPOT.sc ? `<img src="${esc(SPOT.sc)}" alt="${esc(SPOT.n)}" loading="lazy">` : ''}</div>
       <div class="body">
-        <h4><a href="https://trmnl.com/recipes/${SPOT.id}" target="_blank" rel="noopener">${esc(SPOT.n)}</a></h4>
+        <h4><a href="${rURL(SPOT)}" target="_blank" rel="noopener">${esc(SPOT.n)}</a></h4>
         <p class="tagline"><a href="${hr('createur', SPOT.u)}">${esc(nameOf(SPOT.u))}</a>${SPOT.c?.length ? ' · ' + esc(SPOT.c.join(', ')) : ''}</p>
         <p class="desc full">${esc(EN() ? (SPOT.text_en || SPOT.text_fr) : SPOT.text_fr)}</p>
         ${settingsHTML(SPOT)}
         <p class="meta"><span><b>${nf(spotConn)}</b> ${L('connexions', 'connections')}</span><span>${L(`${nf(Math.max(0, 50 - spotConn))} avant le seuil de 50`, `${nf(Math.max(0, 50 - spotConn))} to go to 50`)}</span></p>
-        <div class="acts"><a class="btn" href="https://trmnl.com/recipes/${SPOT.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>
+        <div class="acts"><a class="btn" href="${rURL(SPOT)}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>
       </div>
     </article></div>`
     : `<p class="notice">${L("Aucune recette sous le seuil actuellement : rien à mettre en avant aujourd'hui.", 'No recipe under the threshold right now: nothing to feature today.')}</p>`;
   const past = (SPOT_HIST?.shown || []).slice().reverse().filter(x => !SPOT || x.id !== SPOT.id || x.date !== new Date().toISOString().slice(0, 10));
   const archive = past.length ? `<div class="sheet" style="margin-top:22px"><h3>${L('Déjà mises en avant', 'Previously featured')}</h3>
     <ul class="archive-list">${past.slice(0, 60).map(x => { const r = byR.get(x.id);
-      const nameHTML = r ? `<a class="rn" href="https://trmnl.com/recipes/${x.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : `<span class="rn">${esc(x.n)}</span>`;
+      const nameHTML = r ? `<a class="rn" href="${rURL(x)}" target="_blank" rel="noopener">${esc(r.n)}</a>` : `<span class="rn">${esc(x.n)}</span>`;
       return `<li><div class="row1">${nameHTML}<span class="date">${dfmt(x.date)}</span></div><div class="sub">${esc(nameOf(x.u))}${r ? ` · ${nf(r.s)} ${L('connexions', 'connections')}` : ''}</div></li>`; }).join('')}</ul></div>`
     : '';
 
@@ -1364,12 +1371,12 @@ function renderSpotlightTab() {
   const bCard = bToday => `<article class="card">
       <div class="shot">${bToday.sc ? `<img src="${esc(bToday.sc)}" alt="${esc(bToday.n)}" loading="lazy">` : ''}</div>
       <div class="body">
-        <h4><a href="https://trmnl.com/recipes/${bToday.id}" target="_blank" rel="noopener">${esc(bToday.n)}</a></h4>
+        <h4><a href="${rURL(bToday)}" target="_blank" rel="noopener">${esc(bToday.n)}</a></h4>
         <p class="tagline"><a href="${hr('createur', bToday.u)}">${esc(nameOf(bToday.u))}</a>${bToday.c?.length ? ' · ' + esc(bToday.c.join(', ')) : ''}</p>
         ${bToday.d ? `<p class="desc full">${esc(bToday.d)}</p>` : ''}
         <p class="meta"><span><b>${nf(bToday.s ?? bToday.i)}</b> ${bToday.s != null ? L('connexions', 'connections') : 'installs'}</span><span><b>${sg(bToday.d24)}</b> ${L('sur 24 h', 'in 24 h')}</span></p>
         ${bToday.pred ? `<p class="meta"><span>${L('Prévision', 'Forecast')} 24h : <b>${nf(bToday.pred.h24)}</b></span><span>48h : <b>${nf(bToday.pred.h48)}</b></span><span>${L('7j', '7d')} : <b>${nf(bToday.pred.d7)}</b></span></p>` : ''}
-        <div class="acts"><a class="btn" href="https://trmnl.com/recipes/${bToday.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>
+        <div class="acts"><a class="btn" href="${rURL(bToday)}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a></div>
       </div>
     </article>`;
   const verdictDay = bTodays.length ? dfmt(new Date(Date.parse(bTodays[0].date) + BREAKOUT_VERIFY_DAYS_JS * DAY).toISOString()) : '';
@@ -1388,7 +1395,7 @@ function renderSpotlightTab() {
   };
   const bArchive = bPast.length ? `<div class="sheet" style="margin-top:22px"><h3>${L('Paris précédents', 'Previous bets')}</h3>
     <ul class="archive-list">${bPast.slice(0, 60).map(x => { const r = byR.get(x.id);
-      const nameHTML = r ? `<a class="rn" href="https://trmnl.com/recipes/${x.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : `<span class="rn">${esc(x.n)}</span>`;
+      const nameHTML = r ? `<a class="rn" href="${rURL(x)}" target="_blank" rel="noopener">${esc(r.n)}</a>` : `<span class="rn">${esc(x.n)}</span>`;
       return `<li><div class="row1">${nameHTML}<span class="date">${dfmt(x.date)}</span></div><div class="sub">${checkpoints(x)}</div></li>`; }).join('')}</ul></div>`
     : '';
 
@@ -1573,7 +1580,7 @@ function starterHTML() {
   const tabs = STARTER();
   if (!tabs.some(t => t[0] === starterTab)) starterTab = tabs[0][0];
   const P = starterPicks(starterTab);
-  const card = r => `<a class="spick" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener" data-sp="${r.id}">
+  const card = r => `<a class="spick" href="${rURL(r)}" target="_blank" rel="noopener" data-sp="${r.id}">
       ${r.sc ? `<img src="${esc(r.sc)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '<span></span>'}
       <div><b>${esc(r.n)}</b><small>${L('par', 'by')} ${esc(nameOf(r.u))} · ${starterSort === 'hot' ? `${sg(r.d30)} ${L('en 30 j', 'in 30 d')} · ` : ''}${nf(r.i)} ${L('installations', 'installs')}</small>
       ${r.d ? `<p>${esc(r.d)}</p>` : ''}<span class="go">${L('Installer', 'Install')} ↗</span></div></a>`;
@@ -1785,6 +1792,7 @@ function renderProfile(u) {
   </div>
 
   <div id="myInstalls"></div>
+  <div id="myPlugins"></div>
 
   <h2>${L('Tous les classements', 'Every ranking')}</h2>
   <p class="lead">${mine ? L('Votre rang', 'Your rank') : L('Rang de ce créateur', "This creator's rank")} ${L('parmi les créateurs, métrique par métrique. La barre indique la part des créateurs devancés.', 'among all creators, metric by metric. The bar shows the share of creators outranked.')}</p>
@@ -1827,6 +1835,7 @@ function renderProfile(u) {
 
   const refresh = () => { resetViews(); renderProfile(c.u); };
   loadMyInstalls(c.u);
+  loadMyPlugins(c.u);
   $('#setMe')?.addEventListener('click', () => chooseMe(c.u));
   $('#changeMe')?.addEventListener('click', () => { me = ''; store.del('trmnl-me'); resetViews(); go(hr('moi')); });
   $('#myName')?.addEventListener('change', e => { myName = e.target.value.trim(); myName ? store.set('trmnl-myname', myName) : store.del('trmnl-myname'); refresh(); });
@@ -1921,12 +1930,12 @@ function cardHTML(r) {
     <div class="shot">${r.sc ? `<img src="${esc(r.sc)}" alt="${esc(L('Aperçu de', 'Preview of'))} ${esc(r.n)}" loading="lazy" decoding="async" crossorigin="anonymous">` : ''}
       <span class="rk">#${r.r}</span>${badge ? `<span class="fresh">${badge}</span>` : ''}</div>
     <div class="body">
-      <h4><a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a></h4>
+      <h4><a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a>${pTag(r)}</h4>
       ${r.d ? `<p class="desc">${esc(r.d)}</p>` : ''}
       <p class="tagline"><a href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a>${r.c.length ? ' · ' + esc(r.c.join(', ')) : ''}</p>
       <p class="meta"><span><b>${nf(r.i)}</b> ${L('installs', 'installs')}</span><span><b>${nf(r.f)}</b> forks</span>${r.d7 > 0 ? `<span><b>${sg(r.d7)}</b> ${L('/ 7 j', '/ 7 d')}</span>` : ''}<span>${dfmt(r.p)}</span></p>
       <div class="acts">
-        <a class="btn" href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>
+        <a class="btn" href="${rURL(r)}" target="_blank" rel="noopener">${L('Installer', 'Install')}</a>
         <button class="btn ghost" type="button" data-share="${r.id}">${L('Partager', 'Share')}</button>
       </div>
     </div></article>`;
@@ -1947,6 +1956,11 @@ const WSTAT = {
 let wipFilter = '', wipList = null, wipMe = null, wipProfile = null, wipErr = '', wipPending = 0;
 // Messages de la base traduits pour l'interface
 const ERRS = [
+  [/Link your creator number first/, 'Liez d\'abord votre numéro de créateur (dans « En élaboration »).', 'Link your creator number first (in “In the making”).'],
+  [/already linked to another creator/, 'Ce plugin est déjà rattaché à un autre créateur.', 'This plugin is already linked to another creator.'],
+  [/Invalid plugin link/, 'Lien de plugin invalide.', 'Invalid plugin link.'],
+  [/5 plugins awaiting review/, 'Vous avez déjà 5 plugins en attente de validation.', 'You already have 5 plugins awaiting review.'],
+  
   [/paused by the site admin/i, "Fonction momentanément en pause par l'administrateur du site. Réessayez plus tard.", 'Temporarily paused by the site admin. Please try again later.'],
   [/wait a few seconds/i, 'Patientez quelques secondes avant de commenter à nouveau.', 'Please wait a few seconds before commenting again.'],
   [/daily comment limit/i, 'Limite quotidienne de commentaires atteinte. À demain !', 'Daily comment limit reached. See you tomorrow!'],
@@ -2078,6 +2092,13 @@ const realApi = {
   async removeImages(paths) { const c = await client(); const list = paths.filter(x => x && !/^(https?:|data:|blob:)/.test(x)).flatMap(x => [x, thumbOf(x)]); if (list.length) await c.storage.from('wip').remove(list); },
   async requestLink(cid) { const c = await client(); ok(await c.rpc('request_creator_link', { cid })); },
   async pendingLinks() { const c = await client(); return ok(await c.from('profiles').select('id,name,avatar,creator_id').eq('creator_status', 'pending')); },
+  async claimPlugin(slug) { const c = await client(); return ok(await c.rpc('plugin_claim', { p_slug: slug })); },
+  async myPlugins() { const c = await client(); return ok(await c.rpc('plugin_mine')) || []; },
+  async unclaimPlugin(slug) { const c = await client(); ok(await c.rpc('plugin_unclaim', { p_slug: slug })); },
+  async pluginPending() { const c = await client(); return ok(await c.rpc('plugin_pending')) || []; },
+  async pluginDecide(slug, okk) { const c = await client(); ok(await c.rpc('plugin_decide', { p_slug: slug, p_ok: !!okk })); },
+  async pluginAdminSet(slug, cid) { const c = await client(); ok(await c.rpc('plugin_admin_set', { p_slug: slug, p_creator: String(cid) })); },
+  async pluginAdminRemove(slug) { const c = await client(); ok(await c.rpc('plugin_admin_remove', { p_slug: slug })); },
   async reviewLink(target, approve) { const c = await client(); ok(await c.rpc('review_creator_link', { target, approve })); },
   async predictions() { const c = await client(); return ok(await c.from('predictions').select('id,user_id,recipe_id,week,created_at,profiles(name,avatar)').order('created_at', { ascending: false }).limit(3000)); },
   async predict(recipeId) { const c = await client(); ok(await c.from('predictions').insert({ recipe_id: String(recipeId) })); },
@@ -2230,7 +2251,7 @@ function wantedHTML() {
   const { rows, isNew } = wantedRows();
   if (!rows.length) return '';
   const shown = wantedAll ? rows : rows.slice(0, WANTED_SHOW);
-  const rLink = id => { const r = byR.get(String(id)); return r ? `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : ''; };
+  const rLink = id => { const r = byR.get(String(id)); return r ? `<a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a>${pTag(r)}` : ''; };
   const li = t => {
     const hint = EN() ? t.en : t.fr, fr = t.filled && byR.get(String(t.filled.id));
     const extra = fr
@@ -2457,7 +2478,7 @@ async function wipLoadSession() {
   store.set('trmnl-wip-session', wipMe ? '1' : '');
   // un créateur vérifié retrouve automatiquement son profil dans « Mon profil »
   if (wipProfile?.creator_status === 'verified' && !me) { me = wipProfile.creator_id; store.set('trmnl-me', me); }
-  wipPending = isAdmin() ? (await api().pendingLinks().catch(() => [])).length : 0;
+  wipPending = isAdmin() ? (await api().pendingLinks().catch(() => [])).length + (await api().pluginPending().catch(() => [])).length : 0;
 }
 async function wipReload() { await wipLoadSession(); await wipRefresh(); }
 function linkChip() {
@@ -2485,9 +2506,47 @@ function wipLinkForm() {
 async function wipLinksView() {
   const m = modal(`<h3>${L('Liaisons à valider', 'Links to review')}</h3>
     <p class="muted" style="font-size:.9rem">${L("Comparez le nom Discord avec le créateur demandé (nom revendiqué, recettes). En cas de doute, demandez confirmation sur Discord avant de valider.", 'Compare the Discord name with the requested creator (claimed name, recipes). If in doubt, ask on Discord before approving.')}</p>
-    <div class="lk"><p class="muted">${L('Chargement…', 'Loading…')}</p></div><div class="row"><button class="btn ghost" data-close>${L('Fermer', 'Close')}</button></div>`, 'wipd');
+    <div class="lk"><p class="muted">${L('Chargement…', 'Loading…')}</p></div>
+    <h3 style="margin-top:22px">🧩 ${L('Plugins TRMNL', 'TRMNL plugins')}</h3>
+    <p class="muted" style="font-size:.9rem">${L("Un plugin validé compte dans les points de son créateur, comme une recette. Ouvrez sa page pour vérifier qu'il s'agit bien de lui (lien de documentation, nom…).", "An approved plugin counts toward its creator's points, like a recipe. Open its page to check it's really theirs (docs link, name…).")}</p>
+    <div class="pk"></div>
+    <form class="wform pkadd"><div class="row" style="flex-wrap:wrap;gap:8px;align-items:flex-end">
+      <label style="flex:2 1 220px">${L('Lien du plugin', 'Plugin link')}<input name="slug" placeholder="https://trmnl.com/integrations/…"></label>
+      <label style="flex:1 1 120px">${L('N° de créateur', 'Creator #')}<input name="cid" inputmode="numeric" placeholder="12345"></label>
+      <button class="btn small" type="submit">${L('Rattacher', 'Link')}</button></div><p class="err" hidden></p></form>
+    <div class="row"><button class="btn ghost" data-close>${L('Fermer', 'Close')}</button></div>`, 'wipd');
+  const pLink = slug => `<a href="https://trmnl.com/integrations/${encodeURIComponent(slug)}" target="_blank" rel="noopener">${esc(slug)}</a>`;
+  function drawPlugins(plist) {
+    const box = m.$('.pk'); if (!box) return;
+    if (plist == null) { box.innerHTML = `<p class="muted">${L("Pas encore prêt : collez supabase/plugins-revendiques.sql dans l'éditeur SQL de Supabase.", 'Not ready yet: paste supabase/plugins-revendiques.sql into the Supabase SQL editor.')}</p>`; m.$('.pkadd').hidden = true; return; }
+    const linked = (D?.recipes || []).filter(isPlugin);
+    box.innerHTML = (plist.length ? `<h4>${L('En attente', 'Pending')}</h4><ul class="coms">${plist.map(x => `<li><div class="ch">${avatarHTML(x)} <b>${esc(x.name || '?')}</b> → ${pLink(x.slug)}</div>
+        <p class="muted" style="font-size:.86rem">${L('pour', 'for')} <a href="${hr('createur', x.creator_id)}" target="_blank">${esc(nameOf(x.creator_id))}</a> · ${ago2(x.created_at)}</p>
+        <div class="cacts"><button class="btn small" data-pok="${esc(x.slug)}">${L('Valider', 'Approve')}</button><button class="btn ghost small" data-pno="${esc(x.slug)}">${L('Refuser', 'Reject')}</button></div></li>`).join('')}</ul>`
+        : `<p class="muted">${L('Aucun plugin en attente.', 'No pending plugin.')}</p>`)
+      + (linked.length ? `<h4>${L('Déjà rattachés', 'Already linked')}</h4><ul class="coms">${linked.map(r => `<li><div class="ch">${pLink(r.slug)} → ${esc(nameOf(r.u))} · ${nf(r.i)} ${L('connexions', 'connections')}</div>
+        <div class="cacts"><button class="btn ghost small" data-prm="${esc(r.slug)}">${L('Retirer', 'Remove')}</button></div></li>`).join('')}</ul>` : '');
+    box.querySelectorAll('[data-pok],[data-pno]').forEach(b => b.onclick = async () => {
+      try { await api().pluginDecide(b.dataset.pok || b.dataset.pno, !!b.dataset.pok); toast(b.dataset.pok ? L('Plugin validé : il entrera aux classements au prochain relevé.', 'Plugin approved: it joins the rankings at the next update.') : L('Plugin refusé', 'Plugin rejected')); await draw(); }
+      catch (x) { toast(trErr(x.message)); }
+    });
+    box.querySelectorAll('[data-prm]').forEach(b => b.onclick = async () => {
+      if (!await confirmBox({ title: L('Retirer ce plugin ?', 'Remove this plugin?'), text: L('Il sortira des classements au prochain relevé.', 'It will leave the rankings at the next update.') })) return;
+      try { await api().pluginAdminRemove(b.dataset.prm); toast(L('Plugin retiré', 'Plugin removed')); await draw(); } catch (x) { toast(trErr(x.message)); }
+    });
+  }
+  m.$('.pkadd').onsubmit = async e => {
+    e.preventDefault(); const f = e.target, er = f.querySelector('.err'); er.hidden = true;
+    const slug = parsePlugin(f.slug.value) || (/^[a-z0-9][a-z0-9_-]{0,79}$/i.test(f.slug.value.trim()) ? f.slug.value.trim().toLowerCase() : null), cid = f.cid.value.replace(/\D/g, '');
+    if (!slug) { er.textContent = L('Collez le lien https://trmnl.com/integrations/…', 'Paste the https://trmnl.com/integrations/… link'); er.hidden = false; return; }
+    if (!byU.has(cid)) { er.textContent = L('Aucun créateur public avec ce numéro.', 'No public creator with this number.'); er.hidden = false; return; }
+    try { await api().pluginAdminSet(slug, cid); f.reset(); toast(L('Plugin rattaché : il entrera aux classements au prochain relevé.', 'Plugin linked: it joins the rankings at the next update.')); await draw(); }
+    catch (x) { er.textContent = trErr(x.message); er.hidden = false; }
+  };
   const draw = async () => {
-    const list = await api().pendingLinks(); wipPending = list.length;
+    const list = await api().pendingLinks();
+    const plist = await api().pluginPending().catch(() => null); wipPending = list.length + (plist?.length || 0);
+    drawPlugins(plist);
     m.$('.lk').innerHTML = list.length ? `<ul class="coms">${list.map(u => { const cr = byU.get(u.creator_id);
       return `<li><div class="ch">${avatarHTML(u)} <b>${esc(u.name)}</b> → <a href="${hr('createur', u.creator_id)}" target="_blank">${esc(nameOf(u.creator_id))}</a></div>
         <p class="muted" style="font-size:.86rem">${cr ? `${plural(cr.n, 'recette', 'recipe')} : ${esc(cr.recipes.slice(0, 3).map(r => r.n).join(', '))}` : L('Aucun créateur public avec ce numéro.', 'No public creator with this number.')}</p>
@@ -3552,7 +3611,7 @@ const flagOf = cc => cc ? String.fromCodePoint(...[...cc].map(c => 0x1F1A5 + c.c
 const countryOf = tz => { const cc = TZ_CC[tz]; let name = tz || '?';
   if (cc) { try { name = new Intl.DisplayNames([EN() ? 'en' : 'fr'], { type: 'region' }).of(cc); } catch { name = cc; } } else if (tz) name = tz.split('/').pop().replace(/_/g, ' ');
   return { cc: cc || tz || '?', label: `${flagOf(cc)} ${name}` }; };
-const EVENT_LABELS = () => ({ 'recette-cliquee': L('Clic vers une recette', 'Click to a recipe'), 'actu-eink-lue': L('Article e-ink lu', 'E-ink article read'), 'actu-eink-partagee': L('Article e-ink partagé', 'E-ink article shared'), 'avancee-publiee': L('Avancée publiée', 'Update posted'),
+const EVENT_LABELS = () => ({ 'plugin-demande': L('Plugin ajouté à un profil', 'Plugin added to a profile'), 'recette-cliquee': L('Clic vers une recette', 'Click to a recipe'), 'actu-eink-lue': L('Article e-ink lu', 'E-ink article read'), 'actu-eink-partagee': L('Article e-ink partagé', 'E-ink article shared'), 'avancee-publiee': L('Avancée publiée', 'Update posted'),
   'bandeau-modifie': L("Bandeau d'accueil modifié", 'Home banner edited'), 'commentaire-publie': L('Commentaire publié', 'Comment posted'), 'connexion-discord': L('Connexion Discord', 'Discord sign-in'),
   'liaison-demandee': L('Liaison de profil demandée', 'Profile link requested'), 'lien-pied-de-page': L('Lien du pied de page', 'Footer link'), 'lien-profil-copie': L('Lien de profil copié', 'Profile link copied'),
   'lien-recette-copie': L('Lien de recette copié', 'Recipe link copied'), 'profil-choisi': L('Profil choisi', 'Profile picked'), 'projet-ouvert': L('Projet ouvert', 'Project opened'), 'projet-partage': L('Projet partagé', 'Project shared'), 'reaction': L('Réaction (émoji)', 'Reaction (emoji)'), 'projet-publie': L('Projet publié', 'Project posted'),
@@ -3641,7 +3700,7 @@ async function loadLive() {
 
 // ─── Installations apportées par le site (estimation, scripts/attribution.mjs + supabase/installations.sql) ───
 const CLICK_SOURCES = () => ({ ...TAB_LABELS(), createur: L('Fiche créateur', 'Creator page'), incontournables: L('Incontournables (accueil)', 'Must-haves (home)'), recherche: L('Recherche par besoin', 'Search by need'), autre: L('Autre', 'Other') });
-const recipeName = id => { const r = byR.get(String(id)); return r ? `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : L(`Recette #${esc(id)}`, `Recipe #${esc(id)}`); };
+const recipeName = id => { const r = byR.get(String(id)); return r ? `<a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a>${pTag(r)}` : L(`Recette #${esc(id)}`, `Recipe #${esc(id)}`); };
 const rateOf = X => { const n = (+X.probable || 0) + (+X.none || 0); return n ? Math.round(100 * X.probable / n) : null; };
 const clickTiles = X => `<div class="sttiles small">
     <div><b>${nf(X.probable)}</b>${L('installations probables', 'likely installs')}</div>
@@ -3696,6 +3755,37 @@ async function loadMyInstalls(u) {
     <h4>${L("D'où viennent les clics", 'Where clicks come from')}</h4>
     ${clickTable(A.sources || [], [[L('Onglet ou bloc', 'Tab or block'), x => esc(S[x.source] || x.source)], [L('Clics', 'Clicks'), x => nf(x.clicks)], [L('Probables', 'Likely'), x => nf(x.probable)]])}
     <p class="note">${CLICK_NOTE()}</p></div>`;
+}
+
+// ─── Plugins TRMNL rattachés à son profil (supabase/plugins-revendiques.sql + scripts/plugins.mjs) ───
+async function loadMyPlugins(u) {
+  const box = $('#myPlugins'); if (!box || !store.get('trmnl-wip-session', '')) return;
+  try { if (!wipProfile) await wipLoadSession(); } catch { return; }
+  if (wipProfile?.creator_status !== 'verified' || String(wipProfile.creator_id) !== String(u)) return;
+  let mine; try { mine = await api().myPlugins(); } catch { return; }   // base pas encore prête : rien n'est affiché
+  if (!$('#myPlugins')) return;
+  const ST = { verified: ['✔', L('validé', 'approved')], pending: ['⏳', L('en attente de validation', 'awaiting review')], rejected: ['✖', L('refusé', 'rejected')] };
+  const live = new Map((D?.recipes || []).filter(isPlugin).map(r => [r.slug, r]));
+  box.innerHTML = `<div class="sheet"><h3>🧩 ${L('Mes plugins TRMNL', 'My TRMNL plugins')}</h3>
+    <p class="muted" style="margin:0 0 10px">${L("Vous avez publié un plugin (trmnl.com/integrations/…) ? Ajoutez-le : une fois validé, ses connexions comptent dans vos points, comme une recette.", 'Published a plugin (trmnl.com/integrations/…)? Add it here: once approved, its connections count toward your points, like a recipe.')}</p>
+    ${mine.length ? `<ul class="plist">${mine.map(x => { const r = live.get(x.slug), st = ST[x.status] || ST.pending;
+      return `<li><a href="https://trmnl.com/integrations/${encodeURIComponent(x.slug)}" target="_blank" rel="noopener">${esc(r?.n || x.slug)}</a>
+        <span class="muted">${st[0]} ${st[1]}${x.status === 'verified' ? (r ? ` · ${nf(r.i)} ${L('connexions', 'connections')}` : ` · ${L('au prochain relevé', 'at the next update')}`) : ''}</span>
+        <button class="linkbtn" type="button" data-unp="${esc(x.slug)}">${L('Retirer', 'Remove')}</button></li>`; }).join('')}</ul>` : ''}
+    <form class="row padd" style="flex-wrap:wrap;gap:8px;margin-top:8px"><input name="slug" style="flex:1 1 240px" placeholder="https://trmnl.com/integrations/…" aria-label="${L('Lien du plugin', 'Plugin link')}">
+      <button class="btn small" type="submit">${L('Ajouter', 'Add')}</button></form><p class="err" hidden></p></div>`;
+  const err = box.querySelector('.err');
+  box.querySelector('.padd').onsubmit = async e => {
+    e.preventDefault(); err.hidden = true;
+    const slug = parsePlugin(e.target.slug.value);
+    if (!slug) { err.textContent = L('Collez le lien de la page du plugin, du type https://trmnl.com/integrations/nom-du-plugin', 'Paste the link to the plugin page, like https://trmnl.com/integrations/plugin-name'); err.hidden = false; return; }
+    try { const st = await api().claimPlugin(slug); track('plugin-demande', true); toast(st === 'verified' ? L('Ce plugin est déjà rattaché à votre profil.', 'This plugin is already linked to your profile.') : L("Demande envoyée : l'administrateur va vérifier.", 'Request sent: the admin will check it.')); loadMyPlugins(u); }
+    catch (x) { err.textContent = trErr(x.message); err.hidden = false; }
+  };
+  box.querySelectorAll('[data-unp]').forEach(b => b.onclick = async () => {
+    if (!await confirmBox({ title: L('Retirer ce plugin ?', 'Remove this plugin?'), text: L('Ses connexions ne compteront plus dans vos points.', "Its connections will no longer count toward your points.") })) return;
+    try { await api().unclaimPlugin(b.dataset.unp); loadMyPlugins(u); } catch (x) { toast(trErr(x.message)); }
+  });
 }
 
 // ─── Semaine par semaine (lundi → dimanche, heure de Paris), à partir du détail jour par jour ───
@@ -4000,7 +4090,7 @@ async function renderWeek(sel) {
   if (!all.length) { el.innerHTML = head + `<p class="notice">${L('La première édition arrive au prochain passage de mise à jour.', 'The first edition arrives with the next update run.')}</p>`; return; }
   let i = Math.max(0, all.findIndex(w => w.week === sel));
   const w = all[i];
-  const rec = x => `<a href="https://trmnl.com/recipes/${x.id}" target="_blank" rel="noopener">${esc(x.n)}</a><a class="sub" href="${hr('createur', x.u)}">${esc(nameOf(x.u))}</a>`;
+  const rec = x => `<a href="${rURL(x)}" target="_blank" rel="noopener">${esc(x.n)}</a>${pTag(x)}<a class="sub" href="${hr('createur', x.u)}">${esc(nameOf(x.u))}</a>`;
   const block = w => `
     <div class="wk-kpis"><div><b>${nf(w.new_recipes)}</b><span>${L('nouvelles recettes', 'new recipes')}</span></div>
       ${w.gained != null ? `<div><b>+${nf(w.gained)}</b><span>${L('connexions gagnées', 'connections gained')}</span></div>` : ''}
@@ -4088,7 +4178,7 @@ async function renderPronos() {
   const week = isoWeekKey(Date.now());
   const mine = wipMe ? pronoList.filter(b => b.user_id === wipMe.id) : [];
   const current = mine.find(b => b.week === week);
-  const recLink = r => r ? `<a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener">${esc(r.n)}</a>` : L('recette disparue', 'recipe gone');
+  const recLink = r => r ? `<a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a>${pTag(r)}` : L('recette disparue', 'recipe gone');
 
   let me_ = '';
   if (!wipMe) {
@@ -4761,7 +4851,7 @@ function showLaunch(r) {
   const verdict = lastP == null ? '' : lastP >= 90 ? L('un démarrage exceptionnel', 'an exceptional start') : lastP >= 75 ? L('un très bon démarrage', 'a very good start') : lastP >= 50 ? L('un démarrage au-dessus de la moyenne', 'an above-average start') : lastP >= 25 ? L('un démarrage un peu en dessous de la moyenne', 'a slightly below-average start') : L('un démarrage discret, pour l\'instant', 'a quiet start, for now');
   const mark = [1, 3, 7, 14, 30, 60].filter(d => d <= maxD);
   out.innerHTML = `
-    <div class="ln-head"><div><a href="https://trmnl.com/recipes/${r.id}" target="_blank" rel="noopener"><b>${esc(r.n)}</b></a> <span class="muted">· <a href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a> · ${L('publiée le', 'released')} ${dfmt(r.p)}</span></div></div>
+    <div class="ln-head"><div><a href="${rURL(r)}" target="_blank" rel="noopener"><b>${esc(r.n)}</b></a> <span class="muted">· <a href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a> · ${L('publiée le', 'released')} ${dfmt(r.p)}</span></div></div>
     ${st ? `<p class="ln-verdict">${L(`À <b>J+${last}</b> : <b>${nf(lastV)}</b> connexions, ${verdict}. C'est mieux que <b>${lastP} %</b> des ${nf(st.n)} recettes au même âge (médiane : ${nf(st.med)}, top 10 % : ${nf(st.p90)}).`,
       `At <b>day ${last}</b>: <b>${nf(lastV)}</b> connections, ${verdict}. Better than <b>${lastP}%</b> of the ${nf(st.n)} recipes at the same age (median: ${nf(st.med)}, top 10%: ${nf(st.p90)}).`)}</p>` : ''}
     <div class="chart"><canvas id="chLaunch"></canvas></div>

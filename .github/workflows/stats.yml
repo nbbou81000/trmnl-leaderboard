@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir -p public/data
           if git fetch --depth=1 origin gh-pages 2>/dev/null; then
-            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json wanted.json; do
+            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json wanted.json plugins.json; do
               git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
             done
           else
@@ -54,6 +54,14 @@ jobs:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
         run: node scripts/admin-rules.mjs fetch public/data
+
+      # Plugins (trmnl.com/integrations/…) rattachés à un créateur et validés dans #admin : connexions lues sur leur page publique
+      - name: Plugins rattachés aux créateurs
+        if: inputs.collect != false
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+        run: node scripts/plugins.mjs public/data
 
       - name: Collecter les recettes et calculer les classements
         env:

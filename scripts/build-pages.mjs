@@ -23,7 +23,7 @@ const page = r => {
   const author = nameOf(r.u);
   const stats = `${nf(r.i)} installs · ${nf(r.f)} forks · #${r.r} on the leaderboard`;
   const desc = r.d ? `${r.d} — by ${author}. ${stats}.` : `By ${author}. ${stats}.`;
-  const title = `${r.n} — TRMNL recipe`;
+  const title = `${r.n} — TRMNL ${r.k === 'p' ? 'plugin' : 'recipe'}`;
   const img = r.sc || `${SITE}og.png`;
   return `<!DOCTYPE html>
 <html lang="en">
@@ -75,13 +75,13 @@ footer{color:var(--ink2);font-size:.8rem;margin-top:34px;border-top:1px solid va
   <p class="by">by <a href="${esc(SITE)}?lang=en#creator/${esc(r.u)}">${esc(author)}</a>${c ? ` · ranked #${c.r} of ${nf(data.creators.length)} creators` : ''}${r.c.length ? ` · ${esc(r.c.join(', '))}` : ''}</p>
   ${r.d ? `<p class="desc">${esc(r.d)}</p>` : ''}
   <ul class="facts">
-    <li><b>${nf(r.i)}</b><span>installs</span></li>
-    <li><b>${nf(r.f)}</b><span>forks</span></li>
+    <li><b>${nf(r.i)}</b><span>${r.k === 'p' ? 'connections' : 'installs'}</span></li>
+    ${r.k === 'p' ? '' : `<li><b>${nf(r.f)}</b><span>forks</span></li>`}
     <li><b>#${r.r}</b><span>of ${nf(data.recipes.length)} recipes</span></li>
     ${r.p ? `<li><b>${new Date(r.p).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</b><span>published</span></li>` : ''}
   </ul>
   <div class="btns">
-    <a class="btn" href="https://trmnl.com/recipes/${r.id}">Install on TRMNL</a>
+    <a class="btn" href="${r.k === 'p' ? `https://trmnl.com/integrations/${esc(r.slug)}` : `https://trmnl.com/recipes/${r.id}`}">${r.k === 'p' ? 'Enable this plugin on TRMNL' : 'Install on TRMNL'}</a>
     <a class="btn ghost" href="${esc(SITE)}?lang=en#gallery">Browse all recipes</a>
   </div>
   <footer>Unofficial page from the TRMNL Creator Leaderboard, built from the public recipes API. Preview image and description belong to their creator.</footer>

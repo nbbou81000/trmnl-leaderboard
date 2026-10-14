@@ -111,6 +111,19 @@ for (const r of all) {
   });
 }
 
+// --- Plugins TRMNL rattachés à un créateur et validés par l'administrateur (scripts/plugins.mjs → plugins.json).
+// Ils comptent comme des recettes : connexions = installations, pas de forks. Identifiant « p-<nom> »,
+// marqueur k = 'p' pour que le site les relie à trmnl.com/integrations/<nom> et les écarte de la recette du jour.
+{
+  const P = (await readJSON(path.join(OUT, 'plugins.json'), { plugins: [] })).plugins || [];
+  for (const p of P) {
+    if (!p.slug || !p.u || !Number.isFinite(p.i)) continue;
+    recipes.push({ id: `p-${p.slug}`, k: 'p', slug: p.slug, n: p.n || p.slug, u: String(p.u), i: p.i, f: 0, s: p.i, p: p.p || null,
+      c: ['plugin'], ic: p.ic || '', sc: p.sc || '', d: p.d || '', ab: {} });
+  }
+  if (P.length) console.log(`Plugins rattachés : ${P.length} ajouté(s) aux classements.`);
+}
+
 // --- Historique
 const hourly = await readJSON(path.join(OUT, 'hourly.json'), { v: 1, idx: [], snaps: [] });
 const daily = await readJSON(path.join(OUT, 'daily.json'), { v: 1, idx: [], snaps: [] });
@@ -179,6 +192,7 @@ for (const r of recipes) {
     if (!P) { r[key] = null; continue; }
     const old = P.scores.get(r.id);
     if (old != null) r[key] = r.s - old;
+    else if (r.k === 'p') r[key] = 0;   // plugin tout juste rattaché : ses connexions d'avant ne sont pas des gains
     else if (r.p && Date.parse(r.p) > P.from) {   // publiée pendant la fenêtre
       const fs = firstSeen.get(r.id);
       r[key] = fs && fs.jump && fs.v > FIRST_SEEN_MAX ? r.s - fs.v : r.s;   // stock d'avant la publication : non compté
@@ -226,6 +240,8 @@ for (const [key, label] of [['d24', 'r24'], ['d7', 'r7']]) {
   if (!P) { creators.forEach(c => { c[label] = null; }); continue; }
   const tot = new Map();
   for (const [id, s] of P.scores) { const u = userOf.get(id); if (exR.has(id) || exU.has(u)) continue; tot.set(u, (tot.get(u) || 0) + s); }
+  // Plugin rattaché depuis : compté à sa valeur actuelle, pour que le rattachement ne fasse pas « bondir » le rang
+  for (const r of recipes) if (r.k === 'p' && !P.scores.has(r.id)) tot.set(r.u, (tot.get(r.u) || 0) + r.s);
   const rk = rankMap([...tot.entries()].map(([u, s]) => [u, s, 0]));
   creators.forEach(c => { c[label] = rk.get(c.u) ?? null; });
 }

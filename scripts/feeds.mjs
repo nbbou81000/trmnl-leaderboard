@@ -24,7 +24,7 @@ const log = (...a) => console.log('[flux RSS]', ...a);
 async function readJSON(p, fb) { try { return JSON.parse(await fs.readFile(p, 'utf8')); } catch { return fb; } }
 const xml = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const cdata = s => `<![CDATA[${String(s ?? '').replace(/]]>/g, ']]&gt;')}]]>`;
-const recipeURL = id => `https://trmnl.com/recipes/${id}`;
+const recipeURL = id => String(id).startsWith('p-') ? `https://trmnl.com/integrations/${String(id).slice(2)}` : `https://trmnl.com/recipes/${id}`;
 
 function channel({ file, en, title, desc, link, items }) {
   return `<?xml version="1.0" encoding="UTF-8"?>

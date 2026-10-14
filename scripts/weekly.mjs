@@ -69,7 +69,7 @@ function summarize({ from, to, live }, latest, daily, names) {
 const xml = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 function issueHTML(w, en) {
   const dt = iso => new Date(iso).toLocaleDateString(en ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'short' });
-  const link = r => `<a href="https://trmnl.com/recipes/${r.id}">${xml(r.n)}</a>`;
+  const link = r => `<a href="${r.k === 'p' ? `https://trmnl.com/integrations/${r.slug}` : `https://trmnl.com/recipes/${r.id}`}">${xml(r.n)}</a>`;
   const t = (fr, e) => en ? e : fr;
   let h = `<p>${t(`Du ${dt(w.from)} au ${dt(w.to)} :`, `From ${dt(w.from)} to ${dt(w.to)}:`)} <b>${w.new_recipes}</b> ${t('nouvelles recettes', 'new recipes')}, <b>${w.new_creators}</b> ${t('nouveaux créateurs', 'new creators')}.</p>`;
   if (w.milestones.length) h += `<h3>${t('Paliers franchis', 'Milestones reached')}</h3><ul>${w.milestones.map(m => `<li>${link(m)} : ${m.T} ${t('connexions', 'connections')}${m.T === 50 ? ' (Creator Fund)' : ''}</li>`).join('')}</ul>`;

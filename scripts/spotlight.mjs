@@ -116,7 +116,7 @@ async function runSpotlight(latest) {
 
   // On écarte les recettes trop récentes : elles auraient de toute façon moins de 50 connexions,
   // pas parce qu'elles sont délaissées mais simplement parce qu'elles viennent de sortir.
-  const eligible = latest.recipes.filter(r => r.s < THRESHOLD && r.p && Date.now() - Date.parse(r.p) >= MIN_AGE_DAYS * DAY);
+  const eligible = latest.recipes.filter(r => !r.k && r.s < THRESHOLD && r.p && Date.now() - Date.parse(r.p) >= MIN_AGE_DAYS * DAY);
   if (!eligible.length) {
     console.log('Aucune recette sous le seuil actuellement : rien à mettre en avant.');
     await fs.writeFile(path.join(OUT, 'spotlight.json'), JSON.stringify({ v: 1, generated_at: new Date().toISOString(), empty: true }));

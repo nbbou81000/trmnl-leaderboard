@@ -46,6 +46,17 @@ async function fetchPage(slug) {
   }
 }
 
+// Les images des plugins passent par une redirection trmnl.com/rails/active_storage/… qui n'autorise pas
+// l'affichage depuis un autre site (pas d'en-tête CORS). On garde donc l'adresse finale (stockage public TRMNL).
+async function finalURL(u) {
+  if (!u || !/\/rails\/active_storage\//.test(u)) return u;
+  try {
+    const r = await fetch(u, { method: 'HEAD', redirect: 'manual', headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15000) });
+    const loc = r.headers.get('location');
+    return loc && /^https:\/\//.test(loc) ? loc : u;
+  } catch { return u; }
+}
+
 async function main() {
   const prev = JSON.parse(await fs.readFile(FILE, 'utf8').catch(() => '{"plugins":[]}'));
   const old = new Map((prev.plugins || []).map(p => [p.slug, p]));
@@ -63,6 +74,7 @@ async function main() {
     let page = null;
     try { page = parsePluginPage(await fetchPage(c.slug), c.slug); } catch (e) { console.log(`  ${c.slug} : ${e.message}`); }
     if (!page && !before) { console.log(`  ${c.slug} : page introuvable, ignoré pour l'instant.`); continue; }
+    if (page) { page.icon = await finalURL(page.icon); page.shot = await finalURL(page.shot); }
     const p = page ? {
       slug: c.slug, u: String(c.creator_id), n: page.name, d: page.desc, ic: page.icon, sc: page.shot, i: page.connections,
       p: before?.p || c.decided_at || new Date().toISOString(), seen: new Date().toISOString(),

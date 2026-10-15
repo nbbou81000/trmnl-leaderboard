@@ -1927,7 +1927,7 @@ function cardHTML(r) {
   const age = r.p ? (Date.now() - Date.parse(r.p)) / DAY : 999;
   const badge = age < 1 ? L('nouveau', 'new') : age < 7 ? L('cette semaine', 'this week') : '';
   return `<article class="card ${isMe(r.u) ? 'mine' : ''}">
-    <div class="shot">${r.sc ? `<img src="${esc(r.sc)}" alt="${esc(L('Aperçu de', 'Preview of'))} ${esc(r.n)}" loading="lazy" decoding="async" crossorigin="anonymous">` : ''}
+    <div class="shot">${r.sc ? `<img src="${esc(r.sc)}" alt="${esc(L('Aperçu de', 'Preview of'))} ${esc(r.n)}" loading="lazy" decoding="async" ${isPlugin(r) ? 'referrerpolicy="no-referrer"' : 'crossorigin="anonymous"'}>` : ''}
       <span class="rk">#${r.r}</span>${badge ? `<span class="fresh">${badge}</span>` : ''}</div>
     <div class="body">
       <h4><a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a>${pTag(r)}</h4>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arduino Library to Calculate Sunrise/Sunset Without Hardware · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source Arduino library computes sunrise and sunset times using pure math, no hardware needed.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Arduino Library to Calculate Sunrise/Sunset Without Hardware">
+<meta property="og:description" content="An open-source Arduino library computes sunrise and sunset times using pure math, no hardware needed.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/a9c9bd96653c-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/b-9.png">
+<meta property="article:published_time" content="2026-10-13T15:11:56.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Arduino Library to Calculate Sunrise/Sunset Without Hardware">
+<meta name="twitter:description" content="An open-source Arduino library computes sunrise and sunset times using pure math, no hardware needed.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/b-9.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a9c9bd96653c-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a9c9bd96653c.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/a9c9bd96653c", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/b-9.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 13, 2026 · source : Adafruit</p>
+  <h1>Arduino Library to Calculate Sunrise/Sunset Without Hardware</h1>
+  <p class="lead">An open-source Arduino library computes sunrise and sunset times using pure math, no hardware needed.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/a9c9bd96653c">Read the article on the TRMNL Leaderboard →</a>
+  <p>Cliff (@clifarr) has released <strong>SunLocator</strong>, an open-source Arduino library that calculates sunrise, sunset, and twilight times using only geographic and temporal inputs. Unlike typical solutions, it requires no additional hardware, Wi-Fi, or RTC module. The code relies solely on standard Arduino APIs and the math.h library, ensuring compatibility with any microcontroller following the Arduino API.</p><p>The user inputs a date, location (latitude/longitude), UTC offset, and solar elevation angle. The library then returns the local time when the sun reaches that angle. For example, official sunrise/sunset times use an angle of -0.833°, accounting for the sun’s apparent diameter and atmospheric refraction. Civil, nautical, and astronomical twilight correspond to different angles. Results are provided as minutes after local midnight or as a structured time format.</p><p>Within the polar circles, the library indicates when no crossing occurs. The dayLength() function returns 1440 minutes for midnight sun and 0 for polar night. The UTC offset must be manually adjusted for daylight saving time, as the library does not handle this rule automatically. The algorithm is based on the <em>USNO Almanac for Computers</em> (1990) and has been validated against published data at 15 locations over 5 dates.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

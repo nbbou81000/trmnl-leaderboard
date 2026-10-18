@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trilium: A Note-Taking App to Organize Your Homelab · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A tech journalist uses Trilium, an open-source self-hosted tool, to centralize and structure scattered homelab notes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Trilium: A Note-Taking App to Organize Your Homelab">
+<meta property="og:description" content="A tech journalist uses Trilium, an open-source self-hosted tool, to centralize and structure scattered homelab notes.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/d1356fce01b8-en.html">
+<meta property="og:image" content="https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2026/10/trilium-homelab-notebook-macbook.jpeg">
+<meta property="article:published_time" content="2026-10-11T20:00:17.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Trilium: A Note-Taking App to Organize Your Homelab">
+<meta name="twitter:description" content="A tech journalist uses Trilium, an open-source self-hosted tool, to centralize and structure scattered homelab notes.">
+<meta name="twitter:image" content="https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2026/10/trilium-homelab-notebook-macbook.jpeg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/d1356fce01b8-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/d1356fce01b8.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/d1356fce01b8", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2026/10/trilium-homelab-notebook-macbook.jpeg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 11, 2026 · source : XDA</p>
+  <h1>Trilium: A Note-Taking App to Organize Your Homelab</h1>
+  <p class="lead">A tech journalist uses Trilium, an open-source self-hosted tool, to centralize and structure scattered homelab notes.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/d1356fce01b8">Read the article on the TRMNL Leaderboard →</a>
+  <p>A growing homelab with over 20 Docker containers spread across six machines, VPS, and networking gear makes tracking technical details a challenge. The author, struggling with scattered notes (Word files, Notes app snippets, network configs in LLM chats), sought a centralized solution for critical information: IP addresses, ports, configurations, and troubleshooting steps.</p><p>After dismissing self-hosted wikis and standard note apps, he chose <strong>Trilium</strong>, an open-source self-hosted note-taking tool based on a hierarchical note tree. Key features include sync, progressive web app (PWA), revision history, password protection, and a web clipper. Deployment via Docker on a personal server took minutes, but importing existing data—spread across various formats—required prior organization.</p><h2>Gradual migration and immediate benefits</h2><p>The author used a local language model (Gemma 4 via llama.cpp) to sort and structure old notes before importing them into Trilium. Despite import imperfections, the tree structure quickly took shape, providing a clear overview of his infrastructure. Benefits appeared rapidly: precise search (exact match first, then fuzzy logic), instant access to configurations, and reduced stress during technical interventions.</p><p>However, the author identified a major risk: hosting notes on the same server as the documented services. In case of failure, accessing reconstruction data becomes impossible. To address this, he plans to use Trilium’s sync and backup options, redirecting them to separate VPS or NAS storage.</p><p>Trilium proves to be a suitable solution for complex homelabs, but its effectiveness depends on initial data organization and setting up external backups.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VoltGuard: An Open-Source Circuit to Protect Your Car Battery · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source project to prevent dash cams from draining car batteries, even in 12 V systems.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="VoltGuard: An Open-Source Circuit to Protect Your Car Battery">
+<meta property="og:description" content="An open-source project to prevent dash cams from draining car batteries, even in 12 V systems.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/28f5beffc21c-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-12T16:31:14.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VoltGuard: An Open-Source Circuit to Protect Your Car Battery">
+<meta name="twitter:description" content="An open-source project to prevent dash cams from draining car batteries, even in 12 V systems.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/28f5beffc21c-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/28f5beffc21c.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/28f5beffc21c", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · October 12, 2026 · source : Hackster</p>
+  <h1>VoltGuard: An Open-Source Circuit to Protect Your Car Battery</h1>
+  <p class="lead">An open-source project to prevent dash cams from draining car batteries, even in 12 V systems.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/28f5beffc21c">Read the article on the TRMNL Leaderboard →</a>
+  <p>Dash cams are useful for recording incidents even when parked, but they can drain a car’s 12 V battery if left powered. Commercial hardwire kits are supposed to cut power when the battery voltage drops too low, but they don’t always work as intended. Dieter Santy tested a dash cam kit and found its protection circuit failed to activate even as the voltage dropped dangerously low.</p><h2>An open-source, configurable solution</h2><p>To address this, Santy developed <strong>VoltGuard</strong>, an open-source power board that monitors battery voltage and automatically disconnects the dash cam when it falls below a configurable threshold. The system uses an Infineon TLE8366EV50 automotive buck converter to step down the 12 V supply to 5 V for the dash cam, along with a resettable fuse, transient voltage suppression diodes, and a P-channel MOSFET to prevent electrical faults and reverse polarity. A Texas Instruments TPS3700 voltage detector continuously checks the battery via a resistor divider and triggers the MOSFET to cut power when the voltage drops below a set level. Santy set a cutoff voltage of 12.2 V for his setup.</p><p>The circuit also includes an optocoupler to monitor the vehicle’s ignition-switched accessory line, keeping the dash cam powered while driving. A separate accessory-status signal is generated so the camera can distinguish between driving and parking conditions. The PCB was designed in KiCad, hand-assembled, and housed in a custom 3D-printed enclosure made from PETG, chosen for its heat resistance (up to 135 °F during operation).</p><p>The complete KiCad project files, bill of materials, and 3D-printable enclosure designs are available under the CERN-OHL-P open hardware license, allowing for modifications and community-driven improvements.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

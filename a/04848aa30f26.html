@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La mémoire de votre ordinateur est bien plus complexe qu&#39;il n&#39;y paraît · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Le modèle simple de la mémoire comme tableau de bytes adressables est une simplification extrême des mécanismes modernes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="La mémoire de votre ordinateur est bien plus complexe qu&#39;il n&#39;y paraît">
+<meta property="og:description" content="Le modèle simple de la mémoire comme tableau de bytes adressables est une simplification extrême des mécanismes modernes.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/04848aa30f26.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2017/08/memory.jpg">
+<meta property="article:published_time" content="2026-10-12T14:00:11.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="La mémoire de votre ordinateur est bien plus complexe qu&#39;il n&#39;y paraît">
+<meta name="twitter:description" content="Le modèle simple de la mémoire comme tableau de bytes adressables est une simplification extrême des mécanismes modernes.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2017/08/memory.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/04848aa30f26.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/04848aa30f26-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/04848aa30f26", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2017/08/memory.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 12 octobre 2026 · source : Hackaday</p>
+  <h1>La mémoire de votre ordinateur est bien plus complexe qu&#39;il n&#39;y paraît</h1>
+  <p class="lead">Le modèle simple de la mémoire comme tableau de bytes adressables est une simplification extrême des mécanismes modernes.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/04848aa30f26">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le modèle classique de la mémoire comme un tableau de bytes adressables par des numéros est une vision simplifiée, voire trompeuse, des systèmes modernes. En réalité, l’adresse que vous utilisez n’est souvent pas un emplacement physique en RAM, et les données lues peuvent provenir de caches, de disques ou même d’autres niveaux de mémoire.</p><h2>Une hiérarchie de mémoires</h2><p>Les processeurs actuels sont bien plus rapides que la mémoire vive (DRAM). Pour éviter des temps d’attente prohibitifs, des caches de plus en plus rapides et proches du CPU sont utilisés. La plupart des processeurs modernes disposent d’au moins trois niveaux de cache : le L1 (rapide et minuscule), le L2 (plus grand et légèrement plus lent) et le L3 (encore plus grand et plus lent). Certains processeurs partagent ces caches entre plusieurs cœurs, tandis que d’autres les isolent. Les caches ne fonctionnent pas octet par octet, mais par blocs de 64 bytes (cache lines), ce qui explique pourquoi les accès séquentiels sont plus rapides que les accès aléatoires.</p><p>Les systèmes multi-cœurs introduisent des défis supplémentaires. Deux cœurs modifiant des variables situées dans la même cache line peuvent provoquer des invalidations répétées, ralentissant l’exécution malgré l’absence de partage logique. Des protocoles comme MESI (Modified, Exclusive, Shared, Invalid) maintiennent la cohérence des caches, mais ne suppriment pas le besoin de règles de synchronisation dans les programmes multithreads.</p><h2>Mémoire virtuelle et NUMA</h2><p>Les systèmes modernes utilisent la mémoire virtuelle : les adresses virtuelles sont traduites en adresses physiques par l’unité de gestion mémoire (MMU), via des tables de pages. Pour accélérer cette traduction, un cache dédié, le TLB (Translation Lookaside Buffer), mémorise les correspondances récentes. Les pages mémoire font généralement 4 Ko, bien que des tailles plus grandes soient parfois utilisées.</p><p>Sur les systèmes multi-processeurs ou avec des architectures chiplet, l’accès à la mémoire peut être non-uniforme (NUMA). Un processeur accède plus rapidement à la mémoire locale qu’à celle d’un autre nœud, même si les deux sont en RAM. Le système d’exploitation tente d’optimiser la localisation des données pour réduire ces écarts.</p><p>Enfin, la mémoire virtuelle permet de ne pas charger immédiatement toutes les données en RAM. En cas d’accès à une page non présente, un <em>page fault</em> est généré, et le système d’exploitation décide de la charger depuis le disque, un fichier mappé ou de l’allouer. La RAM sert ainsi de cache pour le stockage secondaire, tout comme le cache L3 sert de cache pour la RAM.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

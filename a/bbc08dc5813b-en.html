@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESP32 and SHT41 Sensor: Measuring Temperature and Humidity · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="Learn how to connect an SHT41 sensor to an ESP32 via I2C to measure temperature and humidity accurately.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="ESP32 and SHT41 Sensor: Measuring Temperature and Humidity">
+<meta property="og:description" content="Learn how to connect an SHT41 sensor to an ESP32 via I2C to measure temperature and humidity accurately.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/bbc08dc5813b-en.html">
+<meta property="og:image" content="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-SHT41-Temperature-Humidity-Sensor-Arduino-IDE.jpg">
+<meta property="article:published_time" content="2026-10-15T13:15:49.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ESP32 and SHT41 Sensor: Measuring Temperature and Humidity">
+<meta name="twitter:description" content="Learn how to connect an SHT41 sensor to an ESP32 via I2C to measure temperature and humidity accurately.">
+<meta name="twitter:image" content="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-SHT41-Temperature-Humidity-Sensor-Arduino-IDE.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/bbc08dc5813b-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/bbc08dc5813b.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/bbc08dc5813b", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://randomnerdtutorials.com/wp-content/uploads/2026/09/ESP32-SHT41-Temperature-Humidity-Sensor-Arduino-IDE.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 15, 2026 · source : Random Nerd Tutorials</p>
+  <h1>ESP32 and SHT41 Sensor: Measuring Temperature and Humidity</h1>
+  <p class="lead">Learn how to connect an SHT41 sensor to an ESP32 via I2C to measure temperature and humidity accurately.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/bbc08dc5813b">Read the article on the TRMNL Leaderboard →</a>
+  <p>The <strong>SHT41</strong> is a 4th-generation temperature and humidity sensor from Sensirion, offering high accuracy (±0.2°C for temperature and ±1.8% RH for humidity) and low power consumption (0.4 µA on average). It is well-suited for projects requiring reliable measurements while minimizing energy use. The sensor communicates via <strong>I2C</strong>, making it easy to interface with microcontrollers like the <strong>ESP32</strong>.</p> <p>Three versions of the sensor are available: <strong>SHT40</strong>, <strong>SHT41</strong>, and <strong>SHT45</strong>. The main difference lies in accuracy, with the SHT45 providing the highest precision. All three share the same pinout and I2C interface, allowing for easy interchangeability. The sensor can be used on a development board or a breakout module, often featuring <strong>STEMMA QT/Qwiic connectors</strong> for simplified connections to other I2C modules.</p> <p>To interface it with an ESP32, simply connect the power pins (VIN and 3Vo) and the I2C pins (SCL and SDA) to the corresponding ESP32 pins. The I2C pin configuration may vary depending on the ESP32 model. Once wired, libraries like <strong>Adafruit SHT4x</strong> can be used to easily retrieve temperature and humidity data. This library supports all three sensor versions and offers precision options (high, medium, or low) as well as control over the built-in heater to prevent condensation in humid environments.</p> <p>The sensor also includes an adjustable internal heater with three levels, useful for maintaining performance in extreme conditions. Its use with the ESP32 is documented through simple code examples available in the Adafruit or Sensirion libraries.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

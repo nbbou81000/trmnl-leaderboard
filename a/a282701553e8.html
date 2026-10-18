@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Émulateur BBC Micro sur RP2350 : un micro-ordinateur rétro dans la paume · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un émulateur cycle-accurate du BBC Micro, conçu pour un microcontrôleur à 1,20 $, tourne désormais sur un Raspberry Pi RP2350 avec écran tactile intégré.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Émulateur BBC Micro sur RP2350 : un micro-ordinateur rétro dans la paume">
+<meta property="og:description" content="Un émulateur cycle-accurate du BBC Micro, conçu pour un microcontrôleur à 1,20 $, tourne désormais sur un Raspberry Pi RP2350 avec écran tactile intégré.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/a282701553e8.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-12T14:49:13.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Émulateur BBC Micro sur RP2350 : un micro-ordinateur rétro dans la paume">
+<meta name="twitter:description" content="Un émulateur cycle-accurate du BBC Micro, conçu pour un microcontrôleur à 1,20 $, tourne désormais sur un Raspberry Pi RP2350 avec écran tactile intégré.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a282701553e8.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a282701553e8-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/a282701553e8", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 12 octobre 2026 · source : Hackster</p>
+  <h1>Émulateur BBC Micro sur RP2350 : un micro-ordinateur rétro dans la paume</h1>
+  <p class="lead">Un émulateur cycle-accurate du BBC Micro, conçu pour un microcontrôleur à 1,20 $, tourne désormais sur un Raspberry Pi RP2350 avec écran tactile intégré.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/a282701553e8">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Dominic Pajak a réussi à porter un émulateur précis du <strong>BBC Micro</strong>, un ordinateur familial britannique des années 1980, sur un microcontrôleur <strong>Raspberry Pi RP2350</strong> d’une valeur de 1,20 $. Le projet utilise la plateforme <strong>Pimoroni Presto</strong>, équipée d’un RP2350, d’un écran tactile 480×480 pixels, du Wi-Fi et d’un lecteur de cartes SD. L’émulateur démarre directement sur le jeu <em>Elite</em>, un classique du trading spatial et du combat, sans nécessiter d’ordinateur externe.</p>,<h2>Optimisations techniques et défis</h2>,<p>L’émulateur repose sur <strong>beebjit</strong>, un projet open source simulant le processeur 6502 du BBC Micro et ses composants matériels de manière cycle-par-cycle. Cependant, beebjit était initialement conçu pour des machines bien plus puissantes. Pour l’adapter au RP2350, Pajak a porté l’émulateur sur ses deux cœurs <strong>Cortex-M33</strong> et développé un <strong>compilateur JIT (just-in-time)</strong> pour le jeu d’instructions <strong>Thumb-2</strong>. Ce compilateur traduit les instructions 6502 en code ARM natif, accélérant significativement leur exécution par rapport à une interprétation classique.</p>,<p>La mémoire disponible (520 Ko de SRAM et 8 Mo de PSRAM) a imposé des contraintes majeures. Pajak a réservé 4 Mo de PSRAM pour le code compilé et implémenté des mécanismes logiciels pour gérer les accès mémoire et l’invalidation de code, en l’absence d’unité de gestion mémoire (MMU).</p>,<p>Le travail est réparti entre les deux cœurs : l’un gère l’émulation du processeur et du matériel, l’autre s’occupe des graphismes. Le RP2350 utilise ses <strong>I/O programmables</strong> pour synchroniser l’affichage. Le JIT initial permettait d’exécuter <em>Elite</em> à 1,45 fois la vitesse originale, puis jusqu’à 7,6 fois après optimisations. En mode normal, l’émulateur n’utilise que 13 % d’un cœur et 11 % de l’autre.</p>,<p>Le dépôt GitHub du projet fournit le code source, le firmware précompilé, les instructions de flashage pour le Pimoroni Presto, ainsi que des scripts de build, des outils de test, des utilitaires de monitoring et une documentation détaillée expliquant le fonctionnement de l’émulateur. Le projet est sous licence <strong>GNU GPL v3</strong>.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

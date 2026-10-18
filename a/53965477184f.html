@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>REA : un serveur MCP pour automatiser le reverse engineering avec IA · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un serveur MCP permet de connecter des agents IA à des outils comme Ghidra pour automatiser l&#39;analyse de binaires et générer du code.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="REA : un serveur MCP pour automatiser le reverse engineering avec IA">
+<meta property="og:description" content="Un serveur MCP permet de connecter des agents IA à des outils comme Ghidra pour automatiser l&#39;analyse de binaires et générer du code.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/53965477184f.html">
+<meta property="og:image" content="https://korben.info/rea-reverse-engineering-agent-ia-test/rea-reverse-engineering-agent-ia-test-1.png">
+<meta property="article:published_time" content="2026-10-14T08:13:00.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="REA : un serveur MCP pour automatiser le reverse engineering avec IA">
+<meta name="twitter:description" content="Un serveur MCP permet de connecter des agents IA à des outils comme Ghidra pour automatiser l&#39;analyse de binaires et générer du code.">
+<meta name="twitter:image" content="https://korben.info/rea-reverse-engineering-agent-ia-test/rea-reverse-engineering-agent-ia-test-1.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/53965477184f.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/53965477184f-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/53965477184f", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://korben.info/rea-reverse-engineering-agent-ia-test/rea-reverse-engineering-agent-ia-test-1.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 14 octobre 2026 · source : Korben</p>
+  <h1>REA : un serveur MCP pour automatiser le reverse engineering avec IA</h1>
+  <p class="lead">Un serveur MCP permet de connecter des agents IA à des outils comme Ghidra pour automatiser l&#39;analyse de binaires et générer du code.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/53965477184f">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>REA (<strong>Reverse Engineer Anything</strong>) est un serveur MCP conçu pour faciliter le reverse engineering via des agents IA comme Claude Code. Il s’intègre à des outils d’analyse comme <strong>Ghidra</strong>, <strong>Hopper</strong> ou <strong>IDA</strong>, ainsi qu’à des analyseurs dédiés aux applications Electron, .NET ou aux sites web. L’objectif est de permettre à un agent IA de décortiquer une fonction dans un binaire ou une application, puis de générer une version fonctionnelle du code sans accès au code source.</p><p>Pour tester REA, un banc d’essai a été mis en place avec <strong>Claude Code Opus 5.5</strong> et <strong>Ghidra 12.1.4</strong>. Quatre exercices ont été réalisés : la création d’un <strong>keygen</strong> pour une fausse application, un <strong>patch</strong> pour modifier un utilitaire de comptage de lignes et de mots, le clonage d’une fonction de veille système d’une application macOS, et l’extraction de codes de triche d’un jeu DOS compressé (<strong>Wolfenstein 3D</strong>).</p><p>Dans chaque cas, REA a permis à l’agent IA d’analyser le binaire, de comprendre son fonctionnement et de générer du code fonctionnel. Par exemple, pour le keygen, REA a produit un script Python en 2 minutes pour valider 479 noms d’utilisateurs aléatoires. Pour le patch, l’agent a modifié l’exécutable en détournant des instructions vers une zone inutilisée et en re-signant le binaire. Pour Amphetamine, REA a extrait la logique de veille système et généré un outil équivalent en Swift. Enfin, pour Wolfenstein 3D, il a recréé un décompresseur et identifié des raccourcis clavier cachés, confirmant leur présence dans le code source original.</p><p>Cependant, des tests comparatifs avec un agent IA utilisant directement Ghidra ont montré que REA n’était pas systématiquement plus performant. Il a été plus rapide pour trois exercices (keygen, Amphetamine, Wolfenstein 3D), mais plus lent pour le patch. REA est distribué sous licence <strong>MIT</strong> et fonctionne en local, bien que les résultats soient envoyés au fournisseur du modèle IA utilisé. Les outils comme Hopper ou IDA restent payants et nécessitent des licences séparées.</p><p>Le créateur de REA précise que l’outil ne doit pas être utilisé pour contourner des licences ou modifier des jeux, d’où l’utilisation de crackmes et de codes de triche déjà publics dans les tests. Une autre limite concerne la sécurité : des chercheurs ont démontré qu’un binaire malveillant peut manipuler les résultats d’un agent IA en y injectant des chaînes de texte trompeuses dans le code décompilé.</p><p>Pour installer REA, la commande suivante est requise : npx rea-agents setup.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paperboy: Game Boy Emulation at 60 FPS on ESP32 e-Ink Screens · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An ESP-IDF firmware enables Game Boy emulation on M5Stack e-ink screens, delivering 60 FPS and sound support.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Paperboy: Game Boy Emulation at 60 FPS on ESP32 e-Ink Screens">
+<meta property="og:description" content="An ESP-IDF firmware enables Game Boy emulation on M5Stack e-ink screens, delivering 60 FPS and sound support.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/c6ae6298dd44-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-38.jpg">
+<meta property="article:published_time" content="2026-10-12T19:39:14.000Z">
+<meta property="article:section" content="Display screens">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Paperboy: Game Boy Emulation at 60 FPS on ESP32 e-Ink Screens">
+<meta name="twitter:description" content="An ESP-IDF firmware enables Game Boy emulation on M5Stack e-ink screens, delivering 60 FPS and sound support.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-38.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/c6ae6298dd44-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/c6ae6298dd44.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/c6ae6298dd44", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/picture-38.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Display screens · October 12, 2026 · source : Adafruit</p>
+  <h1>Paperboy: Game Boy Emulation at 60 FPS on ESP32 e-Ink Screens</h1>
+  <p class="lead">An ESP-IDF firmware enables Game Boy emulation on M5Stack e-ink screens, delivering 60 FPS and sound support.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/c6ae6298dd44">Read the article on the TRMNL Leaderboard →</a>
+  <p>Developer <strong>hpsaturn</strong> has ported <strong>Paperboy</strong>, an e-ink driver originally created by Wenting Zhang, to older hardware. This ESP-IDF firmware directly drives e-ink panels at the row and column level, achieving up to 60 frames per second without requiring a full screen refresh. Paperboy was initially designed to run original Game Boy games on M5Stack devices equipped with e-ink screens.</p><p>The emulation relies on the <strong>CrankBoy</strong> core (based on peanut_gb), which executes game logic at the full DMG Game Boy speed. Each frame is rendered directly onto the e-paper panel, while the screen refresh follows the physical constraints of e-ink technology. The project also includes sound support, touch controls, an on-device ROM picker, and persistent save states. Originally, Paperboy ran on an <strong>M5Paper ESP32-S3</strong>. The migrated version now operates on an <strong>M5Paper v1.1</strong>, which uses a standard ESP32 chip.</p><p>The source code is available on GitLab, and the project is also shared via an X (formerly Twitter) post.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

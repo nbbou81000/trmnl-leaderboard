@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Un modem Raspberry Pi pour revivre l&#39;ère du RTC et des BBS · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un projet open source recrée l&#39;expérience des modems RTC avec un Raspberry Pi Zero 2 W, compatible BBS et commandes Hayes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Un modem Raspberry Pi pour revivre l&#39;ère du RTC et des BBS">
+<meta property="og:description" content="Un projet open source recrée l&#39;expérience des modems RTC avec un Raspberry Pi Zero 2 W, compatible BBS et commandes Hayes.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/0493b61fa243.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-15T16:03:43.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Un modem Raspberry Pi pour revivre l&#39;ère du RTC et des BBS">
+<meta name="twitter:description" content="Un projet open source recrée l&#39;expérience des modems RTC avec un Raspberry Pi Zero 2 W, compatible BBS et commandes Hayes.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0493b61fa243.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0493b61fa243-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/0493b61fa243", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 15 octobre 2026 · source : Hackster</p>
+  <h1>Un modem Raspberry Pi pour revivre l&#39;ère du RTC et des BBS</h1>
+  <p class="lead">Un projet open source recrée l&#39;expérience des modems RTC avec un Raspberry Pi Zero 2 W, compatible BBS et commandes Hayes.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/0493b61fa243">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Xavi Paz propose <strong>RetroBox Modem</strong>, un modem Wi-Fi compatible Hayes qui simule les comportements des anciens modems RTC, permettant à des ordinateurs vintage ou modernes de se connecter à des <strong>Bulletin Board Systems (BBS)</strong> toujours actifs. Contrairement à un simple adaptateur série vers Wi-Fi, ce projet émule les commandes AT, les séquences de numérotation, les indicateurs de statut et même les sons caractéristiques de la connexion.</p><p>Le cœur du système repose sur un <strong>Raspberry Pi Zero 2 W</strong>, qui gère la connectivité Wi-Fi, la communication réseau et l'interpréteur de commandes Hayes. Les ordinateurs communiquent avec le modem via une liaison série, envoyant des commandes comme AT ou ATD, tandis que RetroBox les traduit en connexions TCP/Telnet sur Wi-Fi. Les machines modernes se connectent en USB série, tandis que les ordinateurs anciens utilisent un convertisseur de niveau <strong>MAX3232</strong> pour une interface RS-232. Le prototype a déjà été testé avec des PC 486 et Pentium, ainsi qu'avec des machines modernes.</p><p>Le matériel inclut un écran OLED 128×64 pour afficher les informations de connexion, un amplificateur audio I2S avec haut-parleur pour reproduire les sons du modem, et des LEDs de statut. L'ensemble est logé dans un boîtier 3D imprimé inspiré des modems externes des années 1980-1990. Le firmware permet de simuler plusieurs générations de modems, avec des profils allant de V.22bis à V.90 et des vitesses configurables de 300 bps à 56 000 bps.</p><p>RetroBox Modem est encore en développement, avec des améliorations matérielles et des optimisations de compatibilité prévues. Le prototype fonctionnel offre déjà une immersion complète dans les débuts de la communication en ligne, sans nécessiter de ligne téléphonique.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

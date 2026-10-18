@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Two Arduino Libraries to Integrate Escape Room Puzzles into Home Assistant · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="Open source Arduino libraries turn escape room puzzles into Home Assistant devices using ESP32 or RP2040.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Two Arduino Libraries to Integrate Escape Room Puzzles into Home Assistant">
+<meta property="og:description" content="Open source Arduino libraries turn escape room puzzles into Home Assistant devices using ESP32 or RP2040.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/3d32253dc6e0-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-53.jpg">
+<meta property="article:published_time" content="2026-10-12T21:22:39.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Two Arduino Libraries to Integrate Escape Room Puzzles into Home Assistant">
+<meta name="twitter:description" content="Open source Arduino libraries turn escape room puzzles into Home Assistant devices using ESP32 or RP2040.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-53.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3d32253dc6e0-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3d32253dc6e0.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/3d32253dc6e0", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/picture-53.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 12, 2026 · source : Adafruit</p>
+  <h1>Two Arduino Libraries to Integrate Escape Room Puzzles into Home Assistant</h1>
+  <p class="lead">Open source Arduino libraries turn escape room puzzles into Home Assistant devices using ESP32 or RP2040.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/3d32253dc6e0">Read the article on the TRMNL Leaderboard →</a>
+  <p>Djair Guilherme has released two open source Arduino libraries to connect escape room puzzles to Home Assistant. The first, <strong>esp32_escaperoom</strong>, runs on ESP32 boards and handles WiFi and MQTT connectivity. The second, <strong>propmaker_escaperoom</strong>, operates on an RP2040 using the Adafruit PropMaker Feather, with no network capabilities, communicating with other puzzles via RS485.</p><p>Both libraries share a common engine: a puzzle state machine, audio management, a pin contract per board, and a hardware abstraction layer that scans the I2C bus at boot. On the Home Assistant side, integration relies on MQTT discovery through ArduinoHA, automatically adding entities without requiring YAML configuration. Device name, room, puzzle ID, and MQTT broker credentials are stored in a <strong>wifi.json</strong> file on the board, making room changes as simple as editing a file rather than recompiling.</p><p>To meet input/output needs, projects use I2C components such as <strong>PCF8574/PCF8575</strong> port expanders, an <strong>HT16K33</strong> display, an <strong>ADS1115</strong> analog-to-digital converter, a <strong>PCA9685</strong> PWM driver, or a <strong>PN532</strong> NFC reader. A practical example, <strong>BombTimer</strong>, exposes eight sensors, a lock, four buttons, a selector, two numbers, and a switch. Both libraries are released under the MIT license.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

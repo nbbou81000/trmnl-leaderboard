@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A 30 FPS e-Paper Game Boy Display via Smart Software Tweaks · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A hacker achieves 30 FPS on a 1.54&quot; e-paper screen by pushing the limits of its built-in controller and fine-tuning calibration.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="A 30 FPS e-Paper Game Boy Display via Smart Software Tweaks">
+<meta property="og:description" content="A hacker achieves 30 FPS on a 1.54&quot; e-paper screen by pushing the limits of its built-in controller and fine-tuning calibration.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/3b929ed43a7f-en.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/10/ePaper_esp32_gameboy.jpg">
+<meta property="article:published_time" content="2026-10-14T18:30:02.000Z">
+<meta property="article:section" content="Display screens">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A 30 FPS e-Paper Game Boy Display via Smart Software Tweaks">
+<meta name="twitter:description" content="A hacker achieves 30 FPS on a 1.54&quot; e-paper screen by pushing the limits of its built-in controller and fine-tuning calibration.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/10/ePaper_esp32_gameboy.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3b929ed43a7f-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3b929ed43a7f.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/3b929ed43a7f", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/10/ePaper_esp32_gameboy.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Display screens · October 14, 2026 · source : Hackaday</p>
+  <h1>A 30 FPS e-Paper Game Boy Display via Smart Software Tweaks</h1>
+  <p class="lead">A hacker achieves 30 FPS on a 1.54&quot; e-paper screen by pushing the limits of its built-in controller and fine-tuning calibration.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/3b929ed43a7f">Read the article on the TRMNL Leaderboard →</a>
+  <p>E-paper displays are notorious for slow refresh rates, low contrast, and ghosting effects—limitations that eerily echo the monochrome LCDs of 1980s Game Boys. Yet these constraints become an advantage for [Bo Made It], who managed to run Game Boy emulation on a 1.54-inch e-paper screen at 30 frames per second.</p><p>Unlike previous projects that relied on raw e-paper controllers, [Bo] used a Waveshare ESP32-S3-ePaper-1.54 development board, which includes an integrated e-paper controller. While this controller restricts direct pixel access, it enables clever software optimizations. Each pixel is assigned an "energy budget" of up to 8 electrical pulses, adjusted based on the required shade change. This approach speeds up refresh rates, as pixels aren’t driven to their full potential.</p><p>The real breakthrough lies in handling the Game Boy’s 4-bit grayscale (16 shades). [Bo] deliberately leverages ghosting to simulate intermediate gray levels. By not maintaining pixels long enough for a full transition, faster shade shifts are achieved. However, this complicates calibration: the time to shift from black to white differs from shifting to a lighter gray, requiring precise timing adjustments for each transition. Calibration involved automated testing via video analysis and remains a work in progress.</p><p>The code isn’t yet available, but [Bo] plans to open-source it once finalized. The project is part of a broader effort to integrate this display into a PDA-like device. This technique echoes a recent hack achieving 20 FPS, built on the same principles.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

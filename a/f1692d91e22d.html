@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>USBSID-Pico : deux puces SID vintage pilotables via USB · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un projet open source associe deux puces SID de Commodore 64 à un Raspberry Pi Pico pour les connecter à des systèmes modernes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="USBSID-Pico : deux puces SID vintage pilotables via USB">
+<meta property="og:description" content="Un projet open source associe deux puces SID de Commodore 64 à un Raspberry Pi Pico pour les connecter à des systèmes modernes.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/f1692d91e22d.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/10/USBSID-pico.jpg">
+<meta property="article:published_time" content="2026-10-14T02:00:08.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="USBSID-Pico : deux puces SID vintage pilotables via USB">
+<meta name="twitter:description" content="Un projet open source associe deux puces SID de Commodore 64 à un Raspberry Pi Pico pour les connecter à des systèmes modernes.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/10/USBSID-pico.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/f1692d91e22d.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/f1692d91e22d-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/f1692d91e22d", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/10/USBSID-pico.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 14 octobre 2026 · source : Hackaday</p>
+  <h1>USBSID-Pico : deux puces SID vintage pilotables via USB</h1>
+  <p class="lead">Un projet open source associe deux puces SID de Commodore 64 à un Raspberry Pi Pico pour les connecter à des systèmes modernes.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/f1692d91e22d">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le <strong>USBSID-Pico</strong> est un projet open source conçu pour relier deux puces <strong>MOS 6581 SID</strong> — le célèbre circuit sonore du Commodore 64 — à des équipements contemporains via un <strong>Raspberry Pi Pico</strong>. L’objectif est de permettre une intégration directe de ces composants vintage, souvent utilisés pour leur son caractéristique dans les musiques chiptunes, avec des systèmes modernes.</p><p>Le dispositif prend en charge plusieurs protocoles de communication : <strong>USB (CDC/WebUSB/WebSerial)</strong>, <strong>MIDI</strong> et <strong>ASID</strong>, un protocole dédié au streaming des registres du SID via MIDI. Bien que des émulations logicielles précises existent sur des microcontrôleurs comme l’<strong>RP2040</strong>, certains utilisateurs privilégient le son brut et légèrement imparfait des puces physiques, arguant que les distorsions inhérentes aux composants analogiques apportent une coloration unique absente des émulations.</p><p>Le projet, certifié <strong>Open Source Hardware</strong>, s’inscrit dans la catégorie <strong>rétro-modernité</strong> du concours de rétro-informatique organisé par Hackaday. Les concepteurs rappellent cependant les différences entre les versions <strong>PAL</strong> et <strong>NTSC</strong> des puces SID, qui peuvent affecter la justesse des sons produits. Des alternatives modernes au <strong>MOS 6581</strong> existent, mais les puces originales restent recherchées malgré leur arrêt de production il y a plusieurs décennies.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESP32-C5 détecte NavIC sans GPS : un test expérimental · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un développeur teste la détection des signaux NavIC avec un ESP32-C5 et un firmware open source, sans puce satellite dédiée.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="ESP32-C5 détecte NavIC sans GPS : un test expérimental">
+<meta property="og:description" content="Un développeur teste la détection des signaux NavIC avec un ESP32-C5 et un firmware open source, sans puce satellite dédiée.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/4f15fdbbf575.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-63.jpg">
+<meta property="article:published_time" content="2026-10-13T16:16:12.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ESP32-C5 détecte NavIC sans GPS : un test expérimental">
+<meta name="twitter:description" content="Un développeur teste la détection des signaux NavIC avec un ESP32-C5 et un firmware open source, sans puce satellite dédiée.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-63.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4f15fdbbf575.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4f15fdbbf575-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/4f15fdbbf575", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/picture-63.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 13 octobre 2026 · source : Adafruit</p>
+  <h1>ESP32-C5 détecte NavIC sans GPS : un test expérimental</h1>
+  <p class="lead">Un développeur teste la détection des signaux NavIC avec un ESP32-C5 et un firmware open source, sans puce satellite dédiée.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/4f15fdbbf575">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le projet <strong>snappnt</strong>, mené par le développeur <strong>h-shiono</strong>, explore une approche originale pour capter les signaux de NavIC, le système de navigation par satellite indien. Contrairement à un récepteur GPS classique, cette méthode repose sur l’analyse logicielle de très courts échantillons radio. Le prototype utilise une carte <strong>Seeed Studio XIAO ESP32-C5</strong>, équipée d’un module Wi-Fi 2,4 GHz intégré, et non d’un récepteur satellite dédié.</p><p>Le montage expérimental comprend une antenne parabolique de 45 cm, une antenne tige 2,4 GHz et un amplificateur à faible bruit. Lors d’un premier essai, le système a identifié un signal NavIC en bande S, référencé <strong>PRN 10</strong>, à partir d’un échantillon de seulement 4,1 millisecondes. Le projet fournit également des outils de simulation pour valider le code de détection avec des signaux connus.</p><p>Cette approche reste au stade expérimental : aucun calcul de position n’a encore été réalisé. Le ESP32-C5 exploite donc ses capacités radio existantes pour intercepter des signaux satellites, une piste prometteuse mais encore limitée par la puissance de traitement et la sensibilité du matériel.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

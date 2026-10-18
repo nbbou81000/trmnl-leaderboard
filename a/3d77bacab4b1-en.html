@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A WiFi 7 Router Turned into a Software-Defined Radio Receiver · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="The MediaTek MT7996 chip in a Gemtek W1700K WiFi 7 router enables SDR reception across 2.4, 5, and 6 GHz bands via its SoC.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="A WiFi 7 Router Turned into a Software-Defined Radio Receiver">
+<meta property="og:description" content="The MediaTek MT7996 chip in a Gemtek W1700K WiFi 7 router enables SDR reception across 2.4, 5, and 6 GHz bands via its SoC.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/3d77bacab4b1-en.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/10/wifi-sdr-featured.jpg">
+<meta property="article:published_time" content="2026-10-12T23:00:26.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A WiFi 7 Router Turned into a Software-Defined Radio Receiver">
+<meta name="twitter:description" content="The MediaTek MT7996 chip in a Gemtek W1700K WiFi 7 router enables SDR reception across 2.4, 5, and 6 GHz bands via its SoC.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/10/wifi-sdr-featured.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3d77bacab4b1-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3d77bacab4b1.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/3d77bacab4b1", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/10/wifi-sdr-featured.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 12, 2026 · source : Hackaday</p>
+  <h1>A WiFi 7 Router Turned into a Software-Defined Radio Receiver</h1>
+  <p class="lead">The MediaTek MT7996 chip in a Gemtek W1700K WiFi 7 router enables SDR reception across 2.4, 5, and 6 GHz bands via its SoC.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/3d77bacab4b1">Read the article on the TRMNL Leaderboard →</a>
+  <p>The <strong>Gemtek W1700K</strong> WiFi 7 router, powered by the <strong>MediaTek MT7996</strong> chipset, has been repurposed as a software-defined radio (SDR) receiver using open-source code. The project by <strong>h0m3us3r</strong> configures the router’s SoC to extract raw I/Q data streams from radio signals and stream them over Ethernet to a Linux machine. This approach bypasses the need for dedicated SDR hardware like the RTL-SDR, which is often restricted to lower frequency bands.</p><p>The MT7996 chip supports <strong>2.4 GHz, 5 GHz, and 6 GHz</strong> bands, depending on the router version. However, it does not cover frequencies below 2.4 GHz, limiting its use for certain radio protocols. Enthusiasts have already expressed interest in capturing signals around <strong>2 400–2 412 MHz</strong>, or even as low as <strong>2 300 MHz</strong>. A hardware modification, such as a frequency up-converter, could expand its capabilities.</p><p>This project aligns with a growing trend where radio chips embedded in everyday devices reveal unexpected functionalities. Developers hope that other WiFi or IoT chipsets will be similarly exploited, paving the way for new low-cost and accessible SDR solutions.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

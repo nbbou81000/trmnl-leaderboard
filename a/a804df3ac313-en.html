@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>5 clever ways to use a Fire TV Stick with Home Assistant · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="Repurpose a Fire TV Stick into a smart home tool with Home Assistant: doorbell feed, automations, dashboards, or home screen replacement.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="5 clever ways to use a Fire TV Stick with Home Assistant">
+<meta property="og:description" content="Repurpose a Fire TV Stick into a smart home tool with Home Assistant: doorbell feed, automations, dashboards, or home screen replacement.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/a804df3ac313-en.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/09/fire-tv-stick.jpg">
+<meta property="article:published_time" content="2026-10-15T16:00:15.000Z">
+<meta property="article:section" content="Dashboards &amp; home automation">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="5 clever ways to use a Fire TV Stick with Home Assistant">
+<meta name="twitter:description" content="Repurpose a Fire TV Stick into a smart home tool with Home Assistant: doorbell feed, automations, dashboards, or home screen replacement.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/09/fire-tv-stick.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a804df3ac313-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a804df3ac313.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/a804df3ac313", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/09/fire-tv-stick.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; home automation · October 15, 2026 · source : How-To Geek</p>
+  <h1>5 clever ways to use a Fire TV Stick with Home Assistant</h1>
+  <p class="lead">Repurpose a Fire TV Stick into a smart home tool with Home Assistant: doorbell feed, automations, dashboards, or home screen replacement.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/a804df3ac313">Read the article on the TRMNL Leaderboard →</a>
+  <p>A Fire TV Stick, often limited to streaming, can become a central smart home tool with Home Assistant. Several community projects repurpose the device into a versatile gadget, provided you use models released before 2025 running Fire OS (not Vega OS).</p><h2>Seamless doorbell monitoring</h2><p>The <strong>PiPup</strong> project displays a doorbell camera feed in a picture-in-picture window on your TV when someone rings. Installed via HACS, it lets you check visitors without interrupting your movie or show. The feed can remain visible as long as motion is detected by the camera.</p><h2>Instant playback automations</h2><p>Home Assistant’s official Fire TV integration uses ADB to poll playback states, but with a slight delay. The <strong>Fire2MQTT</strong> project bypasses this by sending real-time updates over MQTT whenever the state changes (playing, paused, idle). This enables faster automations, such as dimming lights when content starts or restoring them when paused.</p><p>Setting up Fire2MQTT takes less than five minutes.</p><h2>Giant dashboard display</h2><p>For dashboard enthusiasts, the <strong>Kiosk Wall Panel</strong> app turns your TV into a dedicated Home Assistant dashboard screen, without browser tabs or address bars. The clean interface is ideal for monitoring your home. Free alternatives exist for users who prefer not to pay.</p><h2>One-tap app launching</h2><p>Home Assistant’s integration can send ADB commands to launch installed apps (Netflix, Disney+, Plex, etc.) directly. An automation can open an app with a single button press or action from a connected device, like an Aqara Cube.</p><h2>Custom home screen replacement</h2><p>The <strong>Firestick Minder</strong> app replaces the Fire TV Stick’s ad-filled home screen with a photo slideshow. It detects when the home screen is active and launches a slideshow app instead. The tool supports MQTT, allowing Home Assistant to track idle states and power off the TV if no one is watching.</p><p>These projects won’t work on recent models (Fire TV Stick HD 2026, Fire TV Stick 4K Select 2025) running Vega OS, which doesn’t support ADB. Older devices, however, become powerful smart home tools.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

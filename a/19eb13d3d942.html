@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Esp32sim : émuler un ESP32 dans le navigateur sans matériel · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un émulateur open source permet d&#39;exécuter des firmwares ESP32 directement dans le navigateur, sans matériel ni abonnement.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Esp32sim : émuler un ESP32 dans le navigateur sans matériel">
+<meta property="og:description" content="Un émulateur open source permet d&#39;exécuter des firmwares ESP32 directement dans le navigateur, sans matériel ni abonnement.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/19eb13d3d942.html">
+<meta property="og:image" content="https://opengraph.githubassets.com/dbf049fc17d189d3fcad9b65bcba62e895dfb42afe6feb99e08b5b91ebb29aa6/mikroverk/esp32sim">
+<meta property="article:published_time" content="2026-10-17T13:51:08Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Esp32sim : émuler un ESP32 dans le navigateur sans matériel">
+<meta name="twitter:description" content="Un émulateur open source permet d&#39;exécuter des firmwares ESP32 directement dans le navigateur, sans matériel ni abonnement.">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/dbf049fc17d189d3fcad9b65bcba62e895dfb42afe6feb99e08b5b91ebb29aa6/mikroverk/esp32sim">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/19eb13d3d942.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/19eb13d3d942-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/19eb13d3d942", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://opengraph.githubassets.com/dbf049fc17d189d3fcad9b65bcba62e895dfb42afe6feb99e08b5b91ebb29aa6/mikroverk/esp32sim" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 17 octobre 2026 · source : Hacker News</p>
+  <h1>Esp32sim : émuler un ESP32 dans le navigateur sans matériel</h1>
+  <p class="lead">Un émulateur open source permet d&#39;exécuter des firmwares ESP32 directement dans le navigateur, sans matériel ni abonnement.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/19eb13d3d942">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le projet <strong>esp32sim</strong> propose un émulateur open source pour simuler quatre modèles de microcontrôleurs ESP32 d’Espressif, couvrant leurs deux architectures CPU (Xtensa et RISC-V). Contrairement aux solutions classiques, il exécute le firmware réel, y compris le masque ROM, le second étage de démarrage et l’image applicative, sans modification ni stub intermédiaire. L’émulation couvre suffisamment de périphériques (GPIO, UART, timers, Wi-Fi, etc.) pour faire tourner des projets complets, avec un comportement proche du matériel.</p> <p>Quatre SoC sont pris en charge : l’ESP32 classique (Xtensa LX6 dual-core), l’ESP32-S3 (Xtensa LX7 dual-core), l’ESP32-C3 et l’ESP32-C6 (RISC-V RV32IMAC single-core). L’émulateur modélise les mémoires, les contrôleurs de cache, les périphériques partagés (UART, SPI, cryptographie, etc.) et les interruptions, tout en intégrant un émulateur de Wi-Fi virtuel avec point d’accès et NAT. Les tests de régression comparent les sorties logicielles aux comportements matériels, avec des ajustements pour les exceptions matérielles et les boucles de délai.</p> <p>Plusieurs cartes virtuelles sont disponibles pour l’ESP32-S3, comme la <strong>Waveshare ESP32-S3-Touch-LCD-4B</strong> (écran tactile 480×480, GT911, codecs audio) ou la <strong>Waveshare ESP32-S3-CAM-OV5640</strong> (caméra OV5640, détecteur de piétons via esp-dl). Un synthétiseur SID et un lecteur de fichiers .sid sont également intégrés pour des démonstrations audio. L’outil en ligne de commande esp32sim permet de lancer des simulations locales, tandis qu’une interface web (via WebAssembly) offre une expérience interactive sans installation.</p> <p>Le projet est publié sous licence MIT et ne nécessite ni compte, ni cloud, ni matériel. Une démo est accessible directement dans le navigateur à l’adresse <strong>https://mikroverk.github.io/esp32sim/</strong>.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

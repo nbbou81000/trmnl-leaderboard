@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Focuspocus: A Lightweight Arduino GUI Library · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A minimalist Arduino library to build graphical interfaces on TFT or OLED screens.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Focuspocus: A Lightweight Arduino GUI Library">
+<meta property="og:description" content="A minimalist Arduino library to build graphical interfaces on TFT or OLED screens.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/8a741731a5dd-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-13T14:33:30.000Z">
+<meta property="article:section" content="E-ink hacks">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Focuspocus: A Lightweight Arduino GUI Library">
+<meta name="twitter:description" content="A minimalist Arduino library to build graphical interfaces on TFT or OLED screens.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/8a741731a5dd-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/8a741731a5dd.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/8a741731a5dd", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">E-ink hacks · October 13, 2026 · source : Adafruit</p>
+  <h1>Focuspocus: A Lightweight Arduino GUI Library</h1>
+  <p class="lead">A minimalist Arduino library to build graphical interfaces on TFT or OLED screens.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/8a741731a5dd">Read the article on the TRMNL Leaderboard →</a>
+  <p>Developer <strong>glutio</strong> has released <strong>Focuspocus</strong>, an open-source Arduino library designed to simplify GUI creation on displays. It supports interactive elements such as buttons, labels, checkboxes, radio buttons, sliders, progress bars, and pop-ups, with automatic layout, touch input, and focus-driven navigation.</p><p>The library adds just 12 to 16 KB of flash usage. Basic examples like <em>HelloButton</em> run on an Arduino Uno, which reaches 93 % flash usage with this single project alone. More powerful boards like Mega, Nano Every, SAMD, ESP32, or RP2040 provide ample room for additional sketch code.</p><p>The system uses a window stack managed by a focus manager. The main sketch loop must call fm.loop(millis()) to handle timers, layouts, and redraws. Rendering is handled through <strong>AdafruitGraphics</strong>, a wrapper compatible with <strong>Adafruit_GFX</strong> and extendable to other libraries via the <strong>BGraphicsApi</strong> interface. Three themes are included: a dark TFT mode, a light gray mode, and a monochrome mode for 128×64 OLED screens.</p><p>Each example comes with a diagram.json file for the <strong>Wokwi</strong> simulator, a Win32 graphics backend, and <strong>doctest</strong> unit tests that simulate touch and key inputs. The library is licensed under <strong>MIT</strong> and available on <strong>GitHub</strong>.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

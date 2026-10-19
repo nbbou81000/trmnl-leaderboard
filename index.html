@@ -4272,7 +4272,7 @@ async function renderPronos() {
   if ($('#prQ')) autoPick($('#prQ'), $('#prAc'), D.recipes.filter(r => r.s <= PRONO_MAX).map(r => ({ label: `${r.n} · #${r.id}`, name: r.n, sub: `${nameOf(r.u)} · ${plural(r.s, L('connexion', 'connection'))}` })));
   $('#prGo')?.addEventListener('click', async () => {
     const err = $('#prErr'); err.hidden = true;
-    const id = ($('#prQ').value.match(/#(\d+)\s*$/) || [])[1];
+    const id = ($('#prQ').value.match(/#(\d+|p-[a-z0-9][a-z0-9_-]*)\s*$/) || [])[1];
     const r = id && byR.get(id);
     if (!r || r.s > PRONO_MAX) { err.textContent = L('Choisis une recette dans la liste proposée.', 'Pick a recipe from the suggested list.'); err.hidden = false; return; }
     if (!confirm(L(`Parier sur « ${r.n} » ? Ce pari est définitif pour la semaine.`, `Bet on "${r.n}"? This bet is final for the week.`))) return;
@@ -4834,7 +4834,7 @@ function launchSection(host) {
   if (!C || !C.stats.length) { box.querySelector('#lnOut').innerHTML = `<p class="notice">${L('Pas encore assez de relevés pour comparer.', 'Not enough snapshots yet to compare.')}</p>`; return; }
   const cand = D.recipes.filter(r => C.curves.has(r.id));
   autoPick(box.querySelector('#lnQ'), box.querySelector('#lnAc'), cand.map(r => ({ label: `${r.n} · #${r.id}`, name: r.n, sub: `${nameOf(r.u)} · ${L('publiée le', 'released')} ${dfmt(r.p)}` })), 8, L(`Aucune recette publiée depuis le ${since} ne correspond`, `No recipe released since ${since} matches`));
-  box.querySelector('#lnQ').addEventListener('change', e => { const id = (e.target.value.match(/#(\d+)\s*$/) || [])[1]; if (id) showLaunch(byR.get(id)); });
+  box.querySelector('#lnQ').addEventListener('change', e => { const id = (e.target.value.match(/#(\d+|p-[a-z0-9][a-z0-9_-]*)\s*$/) || [])[1]; if (id) showLaunch(byR.get(id)); });
   // Par défaut : la dernière recette de « mon profil », sinon la dernière sortie qui a au moins une semaine
   const newest = list => list.sort((a, b) => Date.parse(b.p) - Date.parse(a.p))[0];
   const pick = newest(cand.filter(r => isMe(r.u))) || newest(cand.filter(r => Date.now() - Date.parse(r.p) >= 7 * DAY)) || newest(cand.slice());

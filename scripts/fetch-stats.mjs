@@ -186,13 +186,24 @@ for (const [key, [hist, span]] of Object.entries(windows)) {
   past[key] = covers(snap) ? { at: snap.t, from: Date.parse(snap.t), scores: scoresOf(src, snap) } : null;
 }
 
+// Premier relevé connu d'un plugin (dans l'historique quotidien ou horaire) : point de départ de ses variations
+// tant qu'il n'est pas rattaché depuis toute la durée de la fenêtre (avant, ses connexions ne sont pas des gains).
+function firstValue(id) {
+  let best = null;
+  for (const hist of [daily, hourly]) {
+    const k = hist.idx.findIndex(([x]) => x === id); if (k < 0) continue;
+    for (const s of hist.snaps) { const i = s.i[k]; if (i == null) continue; const t = Date.parse(s.t); if (!best || t < best.t) best = { t, v: i + (s.f[k] || 0) }; break; }
+  }
+  return best;
+}
+
 for (const r of recipes) {
   for (const key of Object.keys(windows)) {
     const P = past[key];
     if (!P) { r[key] = null; continue; }
     const old = P.scores.get(r.id);
     if (old != null) r[key] = r.s - old;
-    else if (r.k === 'p') r[key] = 0;   // plugin tout juste rattaché : ses connexions d'avant ne sont pas des gains
+    else if (r.k === 'p') { const b = firstValue(r.id); r[key] = b ? Math.max(0, r.s - b.v) : 0; }   // gains depuis son rattachement
     else if (r.p && Date.parse(r.p) > P.from) {   // publiée pendant la fenêtre
       const fs = firstSeen.get(r.id);
       r[key] = fs && fs.jump && fs.v > FIRST_SEEN_MAX ? r.s - fs.v : r.s;   // stock d'avant la publication : non compté
@@ -241,7 +252,7 @@ for (const [key, label] of [['d24', 'r24'], ['d7', 'r7']]) {
   const tot = new Map();
   for (const [id, s] of P.scores) { const u = userOf.get(id); if (exR.has(id) || exU.has(u)) continue; tot.set(u, (tot.get(u) || 0) + s); }
   // Plugin rattaché depuis : compté à sa valeur actuelle, pour que le rattachement ne fasse pas « bondir » le rang
-  for (const r of recipes) if (r.k === 'p' && !P.scores.has(r.id)) tot.set(r.u, (tot.get(r.u) || 0) + r.s);
+  for (const r of recipes) if (r.k === 'p' && !P.scores.has(r.id)) tot.set(r.u, (tot.get(r.u) || 0) + r.s - (r[key] || 0));
   const rk = rankMap([...tot.entries()].map(([u, s]) => [u, s, 0]));
   creators.forEach(c => { c[label] = rk.get(c.u) ?? null; });
 }

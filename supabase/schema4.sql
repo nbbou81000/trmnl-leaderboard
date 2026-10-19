@@ -402,7 +402,7 @@ update public.profiles pr set name = left(coalesce(nullif(btrim(u.raw_user_meta_
 create table if not exists public.predictions (
   id         bigint generated always as identity primary key,
   user_id    uuid not null default auth.uid() references public.profiles(id) on delete cascade,
-  recipe_id  text not null check (recipe_id ~ '^[0-9]{1,12}$'),
+  recipe_id  text not null check (recipe_id ~ '^([0-9]{1,12}|p-[a-z0-9][a-z0-9_-]{0,79})$'),   -- recette ou plugin rattaché
   week       text not null default to_char((now() at time zone 'utc'), 'IYYY-"W"IW'),
   created_at timestamptz not null default now(),
   unique (user_id, week)

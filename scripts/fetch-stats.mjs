@@ -187,6 +187,28 @@ const HOLD_D = 7;
 
 addSnapshot(hourly, now, recipes, (a, b) => a.slice(0, 13) === b.slice(0, 13));
 addSnapshot(daily, now, recipes, (a, b) => a.slice(0, 10) === b.slice(0, 10));
+// Trous dans l'historique : une recette absente quelques relevés (en erreur chez TRMNL) puis revenue.
+// On comble le trou avec sa dernière valeur connue, pour éviter les creux dans les courbes et les points des créateurs.
+function fillHoles(hist) {
+  let n = 0;
+  hist.idx.forEach((_, k) => {
+    let last = -1;
+    hist.snaps.forEach((sn, j) => {
+      if (sn.i[k] == null) return;
+      if (last >= 0 && j - last > 1 && Date.parse(sn.t) - Date.parse(hist.snaps[last].t) <= HOLD_D * D) {
+        for (let m = last + 1; m < j; m++) {
+          const S = hist.snaps[m];
+          while (S.i.length <= k) { S.i.push(null); S.f.push(null); }
+          S.i[k] = hist.snaps[last].i[k]; S.f[k] = hist.snaps[last].f[k]; n++;
+        }
+      }
+      last = j;
+    });
+  });
+  return n;
+}
+const filled = fillHoles(hourly) + fillHoles(daily);
+if (filled) console.log(`Historique : ${filled} relevé(s) manquant(s) comblé(s) (recettes momentanément absentes puis revenues).`);
 hourly.snaps = hourly.snaps.filter(s => nowMs - Date.parse(s.t) <= HOURLY_KEEP_H * H);
 daily.snaps = daily.snaps.filter(s => nowMs - Date.parse(s.t) <= DAILY_KEEP_D * D);
 

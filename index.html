@@ -1328,7 +1328,8 @@ function bindFinder(id, onPick) {
 const isPlugin = r => r?.k === 'p';
 const rURL = r => isPlugin(r) ? `https://trmnl.com/integrations/${encodeURIComponent(r.slug || String(r.id).slice(2))}` : `https://trmnl.com/recipes/${r?.id}`;
 const pTag = r => isPlugin(r) ? ` <span class="ptag" title="${L('Plugin TRMNL : connexions comptées comme des installations', 'TRMNL plugin: connections counted as installs')}">🧩</span>` : '';
-const recipeLink = r => `<a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a>${pTag(r)}`;
+const goneTag = r => r?.gone ? ` <span class="ptag" title="${esc(L(`Absente du catalogue TRMNL depuis le ${new Date(r.gone).toLocaleString(LOC, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} (souvent une recette en erreur). Ses derniers chiffres sont gardés 7 jours, le temps qu'elle revienne.`, `Missing from the TRMNL catalog since ${new Date(r.gone).toLocaleString(LOC, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} (often a recipe in error). Its last numbers are kept for 7 days while it comes back.`))}">⏸</span>` : '';
+const recipeLink = r => `<a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a>${pTag(r)}${goneTag(r)}`;
 const creatorLink = c => `<a href="${hr('createur', c.u)}">${esc(nameOf(c.u))}</a>`;
 const openRecipe = r => { trackRecipe(r.id); window.open(rURL(r), '_blank', 'noopener'); };
 const shareURL = r => `${location.origin}${location.pathname.replace(/[^/]*$/, '')}r/${r.id}.html`;
@@ -4197,7 +4198,7 @@ async function renderPronos() {
       <p style="margin:10px 0 0;display:flex;justify-content:space-between"><span class="muted">${L(`Verdict ${dshort(sc.verdict)}`, `Verdict ${dshort(sc.verdict)}`)}</span><span>${sc.started ? `${L('depuis', 'so far')} : <b class="up">+${nf(sc.gain)}</b>` : `<span class="muted">${L('pas encore commencé', 'not started yet')}</span>`}</span></p>
       <div class="pr-bar"><i style="width:${Math.round(100 * day / 7)}%"></i></div></div>`;
   } else {
-    const eligible = D.recipes.filter(r => r.s <= PRONO_MAX).sort((a, b) => a.n.localeCompare(b.n));
+    const eligible = D.recipes.filter(r => r.s <= PRONO_MAX && !r.gone).sort((a, b) => a.n.localeCompare(b.n));
     me_ = `<div class="sheet pr-card"><h3>${L('Mon pronostic de la semaine', 'My prediction this week')}</h3>
       <p class="muted" style="margin-top:0">${L(`Choisis une recette parmi les ${nf(eligible.length)} éligibles (${PRONO_MAX} connexions au plus).`, `Pick one of the ${nf(eligible.length)} eligible recipes (at most ${PRONO_MAX} connections).`)}</p>
       <div class="pr-pick"><div class="acwrap"><input id="prQ" type="search" placeholder="${L('Tapez le nom de la recette…', 'Type the recipe name…')}" autocomplete="off" autocapitalize="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="prAc"><div class="acbox" id="prAc" role="listbox" hidden></div></div>
@@ -4269,7 +4270,7 @@ async function renderPronos() {
   el.querySelectorAll('[data-pp]').forEach(b => b.onclick = () => { pronoPeriod = b.dataset.pp; renderPronos(); });
   $('#prWeek')?.addEventListener('change', e => { pronoWeek = e.target.value; renderPronos(); });
   $('#prIn')?.addEventListener('click', async () => { store.set('trmnl-wip-return', hr('pronos')); track('connexion-discord', true); try { await api().signIn(); } catch (e) { toast(trErr(e.message)); } });
-  if ($('#prQ')) autoPick($('#prQ'), $('#prAc'), D.recipes.filter(r => r.s <= PRONO_MAX).map(r => ({ label: `${r.n} · #${r.id}`, name: r.n, sub: `${nameOf(r.u)} · ${plural(r.s, L('connexion', 'connection'))}` })));
+  if ($('#prQ')) autoPick($('#prQ'), $('#prAc'), D.recipes.filter(r => r.s <= PRONO_MAX && !r.gone).map(r => ({ label: `${r.n} · #${r.id}`, name: r.n, sub: `${nameOf(r.u)} · ${plural(r.s, L('connexion', 'connection'))}` })));
   $('#prGo')?.addEventListener('click', async () => {
     const err = $('#prErr'); err.hidden = true;
     const id = ($('#prQ').value.match(/#(\d+|p-[a-z0-9][a-z0-9_-]*)\s*$/) || [])[1];

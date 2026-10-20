@@ -151,6 +151,40 @@ async function mergeSeed(hist, file) {
 }
 const seeded = await mergeSeed(daily, 'seed/excuseme-daily.json');
 if (seeded) console.log(`Historique d'ExcuseMi : ${seeded} jours ajoutés avant tes propres relevés.`);
+// --- Recettes momentanément absentes du catalogue TRMNL (souvent une recette en erreur, masquée par TRMNL).
+// Plutôt que de les retirer d'un coup (creux dans les courbes et les points des créateurs), on garde leurs derniers
+// chiffres pendant HOLD_D jours, avec un marqueur « gone » (date de disparition). Au-delà, elles sortent du palmarès.
+const HOLD_D = 7;
+{
+  const have = new Set(recipes.map(r => r.id));
+  const held = [];
+  // 1. Celles déjà présentes au relevé précédent (métadonnées complètes)
+  for (const r of prevLatest?.recipes || []) {
+    if (r.k === 'p' || have.has(r.id)) continue;
+    const gone = r.gone || prevLatest.generated_at;
+    if (nowMs - Date.parse(gone) > HOLD_D * D) continue;
+    const { d1, d24, d7, d30, r: rank, ...keep } = r;
+    held.push({ ...keep, gone }); have.add(r.id);
+  }
+  // 2. Celles retirées dans les dernières 24 h avant cette règle : dernier relevé horaire connu + nom gardé par les flux RSS
+  const rn = (await readJSON(path.join(OUT, 'feeds-state.json'), {})).rn || {};
+  hourly.idx.forEach(([id, u], k) => {
+    if (have.has(id) || String(id).startsWith('p-')) return;
+    for (let j = hourly.snaps.length - 1; j >= 0; j--) {
+      const sn = hourly.snaps[j], i = sn.i[k];
+      if (i == null) continue;
+      const t = Date.parse(sn.t);
+      if (nowMs - t <= D && nowMs - t > 1.5 * H && rn[id]) {   // seulement les disparitions récentes : ne pas ressusciter d'anciennes recettes
+        const f = sn.f[k] || 0;
+        held.push({ id, n: rn[id], u: String(u), i, f, s: i + f, p: null, c: [], ic: '', sc: '', d: '', ab: {}, gone: new Date(t + H).toISOString() });
+        have.add(id);
+      }
+      break;
+    }
+  });
+  if (held.length) { recipes.push(...held); console.log(`Recettes momentanément absentes de TRMNL, gardées ${HOLD_D} j : ${held.map(r => r.id).join(', ')}`); }
+}
+
 addSnapshot(hourly, now, recipes, (a, b) => a.slice(0, 13) === b.slice(0, 13));
 addSnapshot(daily, now, recipes, (a, b) => a.slice(0, 10) === b.slice(0, 10));
 hourly.snaps = hourly.snaps.filter(s => nowMs - Date.parse(s.t) <= HOURLY_KEEP_H * H);

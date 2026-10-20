@@ -49,7 +49,7 @@ const daily = await readJSON(path.join(OUT, 'daily.json'), { idx: [], snaps: [] 
 const hourly = await readJSON(path.join(OUT, 'hourly.json'), { idx: [], snaps: [] });
 const hist = await readJSON(path.join(OUT, 'breakout.json'), { v: 1, picks: [] });
 const names = await readJSON('names.json', {});
-const R = latest.recipes.filter(r => !r.k), byId = new Map(R.map(r => [r.id, r]));
+const R = latest.recipes.filter(r => !r.k && !r.gone), byId = new Map(R.map(r => [r.id, r]));
 const who = u => names[u] || `#${u}`;
 
 // ---------- Historiques : valeur (installs + forks) d'une recette à une date donnée

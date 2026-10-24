@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Control a Raspberry Pi Pico Over SSH with an Embedded Server · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An embedded SSH server on an RP2040 enables controlling a Pico over Ethernet, even for basic tasks.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Control a Raspberry Pi Pico Over SSH with an Embedded Server">
+<meta property="og:description" content="An embedded SSH server on an RP2040 enables controlling a Pico over Ethernet, even for basic tasks.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/bbac1e13e314-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-21T23:41:25.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Control a Raspberry Pi Pico Over SSH with an Embedded Server">
+<meta name="twitter:description" content="An embedded SSH server on an RP2040 enables controlling a Pico over Ethernet, even for basic tasks.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/bbac1e13e314-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/bbac1e13e314.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/bbac1e13e314", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · October 21, 2026 · source : Hackster</p>
+  <h1>Control a Raspberry Pi Pico Over SSH with an Embedded Server</h1>
+  <p class="lead">An embedded SSH server on an RP2040 enables controlling a Pico over Ethernet, even for basic tasks.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/bbac1e13e314">Read the article on the TRMNL Leaderboard →</a>
+  <p>The <strong>SSH</strong> (Secure Shell) protocol, introduced in 1995, remains a reliable solution for remote machine administration. Ricardo Marques took this concept further by adapting it to an <strong>RP2040</strong> microcontroller, the core of the Raspberry Pi Pico. This affordable and powerful component is found in many development boards. To add network connectivity, the author used a <strong>WIZnet W5500-EVB-Pico</strong> board, which includes a TCP/IP controller and an RJ45 Ethernet port. An alternative is to pair a Pico (or any RP2040 board) with a separate W5500 module.</p><p>The project relies on a <strong>custom firmware</strong> developed with PlatformIO, combining Arduino-Pico Ethernet drivers and modules for TCP/IP and SSH. Installation begins by cloning a GitHub repository, then configuring a static IP address or using default settings. A critical step involves generating security keys. After compiling and uploading the firmware to the RP2040, simply connect the board via Ethernet and SSH into it from a computer on the same network using the default account « sshrp ». Once connected, the user can turn the onboard LED on or off, make it blink, or check its status.</p><p>While this demonstration is limited to basic commands, it proves the feasibility of remote control via Ethernet on a microcontroller. This method can be extended to other connected peripherals, offering an alternative to serial, Bluetooth, or Wi-Fi solutions depending on the use case.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

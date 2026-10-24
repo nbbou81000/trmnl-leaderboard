@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Esp32sim: Run ESP32 Firmware in the Browser Without Hardware · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source emulator lets you run ESP32 firmware directly in the browser, with no hardware or subscription required.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Esp32sim: Run ESP32 Firmware in the Browser Without Hardware">
+<meta property="og:description" content="An open-source emulator lets you run ESP32 firmware directly in the browser, with no hardware or subscription required.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/19eb13d3d942-en.html">
+<meta property="og:image" content="https://opengraph.githubassets.com/dbf049fc17d189d3fcad9b65bcba62e895dfb42afe6feb99e08b5b91ebb29aa6/mikroverk/esp32sim">
+<meta property="article:published_time" content="2026-10-17T13:51:08Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Esp32sim: Run ESP32 Firmware in the Browser Without Hardware">
+<meta name="twitter:description" content="An open-source emulator lets you run ESP32 firmware directly in the browser, with no hardware or subscription required.">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/dbf049fc17d189d3fcad9b65bcba62e895dfb42afe6feb99e08b5b91ebb29aa6/mikroverk/esp32sim">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/19eb13d3d942-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/19eb13d3d942.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/19eb13d3d942", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://opengraph.githubassets.com/dbf049fc17d189d3fcad9b65bcba62e895dfb42afe6feb99e08b5b91ebb29aa6/mikroverk/esp32sim" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 17, 2026 · source : Hacker News</p>
+  <h1>Esp32sim: Run ESP32 Firmware in the Browser Without Hardware</h1>
+  <p class="lead">An open-source emulator lets you run ESP32 firmware directly in the browser, with no hardware or subscription required.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/19eb13d3d942">Read the article on the TRMNL Leaderboard →</a>
+  <p>The <strong>esp32sim</strong> project provides an open-source emulator for simulating four Espressif ESP32 microcontroller models, covering both CPU architectures (Xtensa and RISC-V). Unlike typical solutions, it runs real firmware, including the mask ROM, second-stage bootloader, and unmodified application image, without patches or intermediate stubs. The emulation covers enough peripherals (GPIO, UART, timers, Wi-Fi, etc.) to run complete projects with behavior close to real hardware.</p> <p>Four SoCs are supported: the classic ESP32 (Xtensa LX6 dual-core), ESP32-S3 (Xtensa LX7 dual-core), ESP32-C3, and ESP32-C6 (RISC-V RV32IMAC single-core). The emulator models memories, cache controllers, shared peripherals (UART, SPI, cryptography, etc.), and interrupts, while including a virtual Wi-Fi emulator with access point and NAT. Regression tests compare software outputs to hardware behavior, with adjustments for hardware exceptions and delay loops.</p> <p>Several virtual boards are available for the ESP32-S3, such as the <strong>Waveshare ESP32-S3-Touch-LCD-4B</strong> (480×480 touchscreen, GT911, audio codecs) or the <strong>Waveshare ESP32-S3-CAM-OV5640</strong> (OV5640 camera, pedestrian detection via esp-dl). A SID synthesizer and a .sid file player are also included for audio demos. The esp32sim command-line tool allows local simulations, while a web interface (via WebAssembly) provides an interactive experience without installation.</p> <p>The project is released under the MIT license and requires no account, cloud, or hardware. A demo is accessible directly in the browser at <strong>https://mikroverk.github.io/esp32sim/</strong>.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

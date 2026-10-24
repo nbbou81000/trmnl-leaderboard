@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arduino Nano Matter : Zigbee désormais supporté · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Le Nano Matter d&#39;Arduino intègre Zigbee via une mise à jour du cœur Silicon Labs, simplifiant l&#39;intégration dans les réseaux domotiques.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Arduino Nano Matter : Zigbee désormais supporté">
+<meta property="og:description" content="Le Nano Matter d&#39;Arduino intègre Zigbee via une mise à jour du cœur Silicon Labs, simplifiant l&#39;intégration dans les réseaux domotiques.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/9843ee195b1e.html">
+<meta property="og:image" content="https://blog.arduino.cc/wp-content/uploads/2026/10/Blogpost-1-1024x559.jpg">
+<meta property="article:published_time" content="2026-10-15T20:33:54.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Arduino Nano Matter : Zigbee désormais supporté">
+<meta name="twitter:description" content="Le Nano Matter d&#39;Arduino intègre Zigbee via une mise à jour du cœur Silicon Labs, simplifiant l&#39;intégration dans les réseaux domotiques.">
+<meta name="twitter:image" content="https://blog.arduino.cc/wp-content/uploads/2026/10/Blogpost-1-1024x559.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9843ee195b1e.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9843ee195b1e-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/9843ee195b1e", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://blog.arduino.cc/wp-content/uploads/2026/10/Blogpost-1-1024x559.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 15 octobre 2026 · source : Arduino</p>
+  <h1>Arduino Nano Matter : Zigbee désormais supporté</h1>
+  <p class="lead">Le Nano Matter d&#39;Arduino intègre Zigbee via une mise à jour du cœur Silicon Labs, simplifiant l&#39;intégration dans les réseaux domotiques.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/9843ee195b1e">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>La carte Arduino Nano Matter, conçue pour des applications domotiques à faible consommation, ajoute une troisième option de connectivité sans fil avec le protocole Zigbee. Jusqu’ici limitée à Matter over Thread et Bluetooth LE via son module Silicon Labs MGM240S, elle prend désormais en charge Zigbee 3.0 grâce à une mise à jour du cœur Arduino pour Silicon Labs (version 5.0).</p><p>L’intégration se fait directement depuis l’IDE Arduino : il suffit de sélectionner Zigbee dans le menu <strong>Tools › Protocol stack</strong> avant de compiler et téléverser le sketch. Le code est alors compilé avec la pile Zigbee 3.0, sans modification matérielle. Une bibliothèque dédiée, basée sur le stack EmberZNet de Silicon Labs, simplifie la création de périphériques Zigbee en proposant des classes Arduino pour les capteurs, interrupteurs ou ampoules. Par exemple, un capteur de température peut être configuré en quelques lignes de code, avec un nom personnalisé et une mesure automatique de la température du module MGM240S.</p><p>Le projet <strong>Zigbee Smart Clock</strong>, développé pour tester la bibliothèque, illustre cette intégration. Composé d’une Nano Matter, d’un Modulino Thermo (capteur de température/humidité), d’un Modulino Light (capteur de luminosité) et d’une matrice LED 32×8, il se connecte à un réseau Zigbee et transmet ses données à Home Assistant. Le module récupère également l’heure du réseau et ajuste automatiquement sa luminosité. Le code, le schéma de câblage et les fichiers 3D pour l’enceinte sont disponibles sur l’Arduino Project Hub.</p><p>La bibliothèque propose 14 exemples prêts à l’emploi couvrant 11 types de périphériques : ampoules (on/off, dimmables, RGB), interrupteurs, capteurs (température, humidité, lumière), capteurs de contact, et même un client de synchronisation horaire. Les périphériques peuvent être configurés comme routeurs (par défaut, relayant le trafic du réseau maillé) ou comme dispositifs terminaux. Une fonctionnalité de <strong>binding direct</strong> permet de lier un interrupteur à une ampoule sans passer par le hub, pour un contrôle instantané. La bibliothèque gère également les commandes d’identification (clignotement d’une LED) et stocke les paramètres du réseau dans la mémoire non volatile du module, préservant la connexion après un redémarrage.</p><p>Pour fonctionner, le Nano Matter nécessite un coordinateur Zigbee, qui peut être un hub commercial (Amazon Echo, SmartThings, Hubitat Elevation, IKEA DIRIGERA) ou un autre Nano Matter transformé en coordinateur via un script Python inclus dans le cœur Arduino. Ce script, exécuté depuis un terminal, convertit un Nano Matter en radio Zigbee pour Home Assistant ZHA. Une fois configuré, le coordinateur peut être réutilisé comme périphérique classique en réinitialisant son firmware via l’outil <strong>Burn Bootloader</strong>.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

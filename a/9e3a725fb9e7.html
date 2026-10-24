@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arduino App Lab 0.11 : déploiement, IA et capteurs mobiles · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Nouvelle version d&#39;App Lab pour l&#39;UNO Q : déploiement à grande échelle, reconnaissance de poses et intégration de capteurs mobiles.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Arduino App Lab 0.11 : déploiement, IA et capteurs mobiles">
+<meta property="og:description" content="Nouvelle version d&#39;App Lab pour l&#39;UNO Q : déploiement à grande échelle, reconnaissance de poses et intégration de capteurs mobiles.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/9e3a725fb9e7.html">
+<meta property="og:image" content="https://blog.arduino.cc/wp-content/uploads/2026/10/App-Lab-0.10-Arduino.cc-Blogpost-Cover1100x600-2-1024x559.jpg">
+<meta property="article:published_time" content="2026-10-22T15:05:11.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Arduino App Lab 0.11 : déploiement, IA et capteurs mobiles">
+<meta name="twitter:description" content="Nouvelle version d&#39;App Lab pour l&#39;UNO Q : déploiement à grande échelle, reconnaissance de poses et intégration de capteurs mobiles.">
+<meta name="twitter:image" content="https://blog.arduino.cc/wp-content/uploads/2026/10/App-Lab-0.10-Arduino.cc-Blogpost-Cover1100x600-2-1024x559.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9e3a725fb9e7.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9e3a725fb9e7-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/9e3a725fb9e7", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://blog.arduino.cc/wp-content/uploads/2026/10/App-Lab-0.10-Arduino.cc-Blogpost-Cover1100x600-2-1024x559.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 22 octobre 2026 · source : Arduino</p>
+  <h1>Arduino App Lab 0.11 : déploiement, IA et capteurs mobiles</h1>
+  <p class="lead">Nouvelle version d&#39;App Lab pour l&#39;UNO Q : déploiement à grande échelle, reconnaissance de poses et intégration de capteurs mobiles.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/9e3a725fb9e7">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>La version 0.11 d’<strong>Arduino App Lab</strong> enrichit l’outil de développement pour la carte <strong>UNO Q</strong> avec plusieurs fonctionnalités destinées à industrialiser ou simplifier la création de projets électroniques.</p><h2>Déploiement et reproductibilité</h2><p>L’outil introduit les <strong>« App Releases »</strong>, des paquets figés et précompilés, conçus pour être installés sur des cartes compatibles via le programme <strong>Works with Arduino</strong>. Contrairement à l’export classique, ces paquets verrouillent les dépendances et garantissent un comportement cohérent sur différents matériels. Les modèles d’IA ou bibliothèques externes sont téléchargés lors de l’installation, réduisant les étapes de configuration.</p><h2>Assistance par IA intégrée</h2><p>Un <strong>Agent Panel</strong> s’intègre directement dans l’éditeur pour assister le développement en temps réel. Il analyse le code et les fichiers ouverts dans l’espace de travail, permet de modifier le projet via des instructions en langage naturel, et conserve l’historique des échanges par projet. Contrairement à l’<strong>Agent Mode</strong> (introduit en 0.10), ce panneau reste accessible en parallèle de l’édition du code.</p><h2>Reconnaissance de poses et IA</h2><p>Un nouveau <strong>Pose Estimation Brick</strong> permet de détecter des poses corporelles en temps réel sur la carte <strong>VENTUNO Q</strong>. Il propose deux modes : un suivi squelettique standard (17 points, 10 images par seconde) avec reconnaissance de poses prédéfinies (debout, assis, bras levés), et un mode personnalisé où l’utilisateur fournit des photos pour entraîner le système à reconnaître une pose spécifique, comme un geste de tennis. Aucun outil externe de modélisation n’est requis.</p><p>Il est également possible d’importer des modèles de langage depuis <strong>Hugging Face</strong> pour le <strong>LLM Brick</strong>, en vérifiant leur compatibilité et en adaptant leur quantification automatiquement.</p><h2>Capteurs mobiles et positionnement</h2><p>L’application compagnon mobile transmet désormais des données de microphone et d’unité de mesure inertielle (IMU) vers App Lab via un <strong>périphérique capteur distant</strong>, en temps réel et sécurisé par WebSocket. Les données sont envoyées au format JSON, permettant une intégration personnalisée. Un exemple d’utilisation du <strong>Qualcomm Terrestrial Positioning Service (TPS)</strong> est fourni pour estimer une position en intérieur en exploitant les signaux Wi-Fi, cellulaires et Bluetooth LE, avec un impact limité sur la consommation.</p><p>Les améliorations de l’éditeur incluent la recherche de références pour Python et C++, la vérification syntaxique YAML, et une console dédiée par conteneur Brick.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CuprumFlow Graphics : des écrans haute résolution pour microcontrôleurs sans OS · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Une solution open source pour piloter des écrans graphiques complexes depuis un microcontrôleur, sans système d&#39;exploitation ni Raspberry Pi.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="CuprumFlow Graphics : des écrans haute résolution pour microcontrôleurs sans OS">
+<meta property="og:description" content="Une solution open source pour piloter des écrans graphiques complexes depuis un microcontrôleur, sans système d&#39;exploitation ni Raspberry Pi.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/7eb4ba92b2bf.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-17T15:30:38.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CuprumFlow Graphics : des écrans haute résolution pour microcontrôleurs sans OS">
+<meta name="twitter:description" content="Une solution open source pour piloter des écrans graphiques complexes depuis un microcontrôleur, sans système d&#39;exploitation ni Raspberry Pi.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/7eb4ba92b2bf.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/7eb4ba92b2bf-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/7eb4ba92b2bf", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 17 octobre 2026 · source : Hackster</p>
+  <h1>CuprumFlow Graphics : des écrans haute résolution pour microcontrôleurs sans OS</h1>
+  <p class="lead">Une solution open source pour piloter des écrans graphiques complexes depuis un microcontrôleur, sans système d&#39;exploitation ni Raspberry Pi.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/7eb4ba92b2bf">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Les microcontrôleurs classiques peinent à gérer des écrans graphiques haute résolution, souvent trop gourmands en ressources. CuprumFlow Graphics propose une alternative avec deux cartes de contrôle compactes (50×26 mm) fonctionnant sans système d’exploitation. La version CPU supporte des résolutions jusqu’à 1920×1080 en 24 bits avec transparence alpha, tandis que la version FPGA se limite à 1366×768, mais offre des accélérations matérielles.</p><p>Les cartes s’adaptent à plusieurs types d’écrans via des adaptateurs interchangeables : panneaux LCD de portable (LVDS/eDP), moniteurs HDMI (DVI) ou VGA. Elles intègrent entre 64 Mo et 256 Mo de mémoire DDR et un lecteur microSD pour stocker images et polices. Un port USB hôte permet de connecter clavier, souris ou écrans tactiles, facilitant la création d’interfaces homme-machine complètes.</p><p>Le développement est simplifié par une API C++ de type Arduino et un support MicroPython. La version FPGA utilise un transpileur personnalisé pour convertir du code C en accélérateurs matériels, améliorant les performances par rapport à une implémentation logicielle pure. Le projet, open source et soutenu par la NLnet Foundation, propose actuellement les schémas et des aperçus logiciels sur GitHub. Une campagne de financement participatif est en préparation, mais les prix et dates de disponibilité restent inconnus.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

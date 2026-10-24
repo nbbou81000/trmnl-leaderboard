@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arduino App Lab 0.11 : export de projets et streaming de capteurs mobiles · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Nouvelle version de l&#39;IDE Arduino App Lab avec export de projets et streaming de capteurs depuis smartphone pour UNO Q et VENTUNO Q.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Arduino App Lab 0.11 : export de projets et streaming de capteurs mobiles">
+<meta property="og:description" content="Nouvelle version de l&#39;IDE Arduino App Lab avec export de projets et streaming de capteurs depuis smartphone pour UNO Q et VENTUNO Q.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/e3547cd74285.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-23T09:39:59.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Arduino App Lab 0.11 : export de projets et streaming de capteurs mobiles">
+<meta name="twitter:description" content="Nouvelle version de l&#39;IDE Arduino App Lab avec export de projets et streaming de capteurs depuis smartphone pour UNO Q et VENTUNO Q.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/e3547cd74285.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/e3547cd74285-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/e3547cd74285", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 23 octobre 2026 · source : Hackster</p>
+  <h1>Arduino App Lab 0.11 : export de projets et streaming de capteurs mobiles</h1>
+  <p class="lead">Nouvelle version de l&#39;IDE Arduino App Lab avec export de projets et streaming de capteurs depuis smartphone pour UNO Q et VENTUNO Q.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/e3547cd74285">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Arduino annonce la sortie de la version 0.11 de son environnement de développement intégré (IDE) <strong>Arduino App Lab</strong>, conçu pour ses cartes <strong>Arduino UNO Q</strong> et <strong>VENTUNO Q</strong>. Ces cartes reposent sur une architecture « double cerveau » : un processeur principal Qualcomm Dragonwing (pour les tâches applicatives) et un microcontrôleur STM32 de STMicroelectronics (pour les traitements en temps réel). L’IDE permet de programmer les deux unités simultanément, en Python pour le Dragonwing et en C/C++ (style Wiring) pour l’STM32.</p><p>Cette mise à jour introduit des <strong>« Apps Releases »</strong>, des bundles de distribution « prêts pour la production » générés directement depuis l’IDE. Ces paquets sont compatibles avec les cartes Arduino UNO Q et VENTUNO Q, ainsi qu’avec du matériel tiers certifié « Works with Arduino ».</p><p>Parmi les nouveautés, un modèle d’estimation de pose à 17 points (appelé « Brick ») est ajouté, capable de traiter jusqu’à 10 images par seconde, mais réservé au VENTUNO Q en raison de ses besoins en puissance. Le Brick de modèle de langage (LLM) permet désormais d’importer des modèles compatibles depuis Hugging Face, tandis qu’un chatbot intégré offre une interface conversationnelle. L’application mobile compagnon étend ses fonctionnalités en permettant le streaming de données depuis les microphones et capteurs inertiels (IMU) des smartphones via WebSocket. Enfin, un Brick de service de positionnement terrestre (TPS) utilise les réseaux Wi-Fi, Bluetooth Low Energy et cellulaires pour localiser la carte.</p><p>Disponible gratuitement sur le site d’Arduino, cette version 0.11 est publiée sous licence GNU GPL 3, avec le code source accessible sur GitHub.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

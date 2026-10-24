@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nokia 3310 : un jeu custom sur PCB dédié et en navigateur · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un développeur remplace la carte mère d&#39;un Nokia 3310 par un PCB personnalisé pour y porter un jeu rétro en Go.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Nokia 3310 : un jeu custom sur PCB dédié et en navigateur">
+<meta property="og:description" content="Un développeur remplace la carte mère d&#39;un Nokia 3310 par un PCB personnalisé pour y porter un jeu rétro en Go.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/257f5001fc9a.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/pcbs-scaled.jpg">
+<meta property="article:published_time" content="2026-10-17T17:49:48.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nokia 3310 : un jeu custom sur PCB dédié et en navigateur">
+<meta name="twitter:description" content="Un développeur remplace la carte mère d&#39;un Nokia 3310 par un PCB personnalisé pour y porter un jeu rétro en Go.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/pcbs-scaled.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/257f5001fc9a.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/257f5001fc9a-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/257f5001fc9a", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/pcbs-scaled.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 17 octobre 2026 · source : Adafruit</p>
+  <h1>Nokia 3310 : un jeu custom sur PCB dédié et en navigateur</h1>
+  <p class="lead">Un développeur remplace la carte mère d&#39;un Nokia 3310 par un PCB personnalisé pour y porter un jeu rétro en Go.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/257f5001fc9a">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Pour le concours <em>Nokia 3310 Jam</em>, Hoani Bryson a remporté la première place avec <strong>Trick Shot II</strong>, un jeu conçu comme s'il était développé pour le célèbre téléphone. Plutôt que d'utiliser les outils officiels, il a opté pour une approche radicale : démonter un Nokia 3310 et y intégrer une carte électronique sur mesure, remplaçant la PCB d'origine. Cette modification permet de contourner les limitations techniques du téléphone tout en conservant son apparence et ses commandes.</p><p>Le jeu respecte les contraintes imposées par le concours : affichage monochrome 84×48 pixels, son limité à un buzzer unique, et contrôle via les 12 boutons physiques. Bryson a également développé une version web du jeu, accessible depuis un navigateur, en utilisant un moteur de jeu open source écrit en Go. Ce moteur s'appuie sur <strong>Ebitengine</strong> pour les applications desktop et web, et sur <strong>TinyGo</strong> pour les dispositifs embarqués. L'architecture sépare la logique du jeu des fonctions spécifiques au matériel, facilitant le portage entre plateformes.</p><p>Le projet est entièrement documenté sur <strong>Hoani.net</strong>, et une démo en ligne est disponible. Les fichiers sources et les instructions pour reproduire le PCB personnalisé sont partagés, permettant aux passionnés de s'inspirer ou de contribuer au développement.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

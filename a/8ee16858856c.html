@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KeyBridge 2.0 : transformer un clavier USB en panneau de contrôle Home Assistant · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un projet open source permet de recycler un clavier USB en panneau de contrôle pour Home Assistant, sans ordinateur intermédiaire.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="KeyBridge 2.0 : transformer un clavier USB en panneau de contrôle Home Assistant">
+<meta property="og:description" content="Un projet open source permet de recycler un clavier USB en panneau de contrôle pour Home Assistant, sans ordinateur intermédiaire.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/8ee16858856c.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/09/img_4156.jpg">
+<meta property="article:published_time" content="2026-10-20T12:30:15.000Z">
+<meta property="article:section" content="Dashboards &amp; domotique">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KeyBridge 2.0 : transformer un clavier USB en panneau de contrôle Home Assistant">
+<meta name="twitter:description" content="Un projet open source permet de recycler un clavier USB en panneau de contrôle pour Home Assistant, sans ordinateur intermédiaire.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/09/img_4156.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/8ee16858856c.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/8ee16858856c-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/8ee16858856c", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/09/img_4156.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; domotique · 20 octobre 2026 · source : How-To Geek</p>
+  <h1>KeyBridge 2.0 : transformer un clavier USB en panneau de contrôle Home Assistant</h1>
+  <p class="lead">Un projet open source permet de recycler un clavier USB en panneau de contrôle pour Home Assistant, sans ordinateur intermédiaire.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/8ee16858856c">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le projet <strong>KeyBridge</strong> permet d’utiliser un clavier USB standard comme panneau de contrôle pour un système domotique <strong>Home Assistant</strong>, en transformant chaque touche en bouton intelligent. Contrairement à une utilisation classique où le clavier envoie ses signaux à un ordinateur, KeyBridge intercepte directement les appuis de touches via un microcontrôleur <strong>ESP32-S2</strong> doté de fonctionnalités USB hôte. Ainsi, le clavier n’a pas besoin d’être connecté à un PC pour fonctionner : les actions sont transmises directement à Home Assistant via <strong>ESPHome</strong>.</p><p>La première version du projet, sortie en 2025, nécessitait une configuration manuelle. La version 2.0 simplifie le processus avec une carte électronique plus compacte et une intégration native à ESPHome, facilitant la configuration et l’ajout du périphérique dans Home Assistant. Les utilisateurs peuvent désormais assembler eux-mêmes le circuit ou précommander une carte prête à l’emploi au prix de <strong>35 $</strong>. Une première production de 150 unités est prévue, mais la livraison n’est pas attendue avant la fin de l’année.</p><p>KeyBridge supporte aussi bien les claviers complets que les petits périphériques comme les macropads ou les pavés numériques. Chaque touche peut être configurée pour déclencher des automatisations, contrôler des appareils ou lancer des scénarios domotiques. Par exemple, un pavé numérique peut servir de contrôleur multimédia (lecture, pause, sous-titres) ou de panneau de contrôle pour la chambre (éclairage, chauffage, routines du coucher).</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

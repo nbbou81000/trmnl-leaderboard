@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Un module ESP32 pour afficher les avions sur écran e-ink avec Tesserae · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un module pour Tesserae transforme un écran e-ink en tableau de bord de suivi des avions en temps réel.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Un module ESP32 pour afficher les avions sur écran e-ink avec Tesserae">
+<meta property="og:description" content="Un module pour Tesserae transforme un écran e-ink en tableau de bord de suivi des avions en temps réel.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/2265e01278cf.html">
+<meta property="og:image" content="https://static0.xdaimages.com/wordpress/wp-content/uploads/2026/10/airplane-esp32-e-ink-featured.jpg">
+<meta property="article:published_time" content="2026-10-22T06:24:21.000Z">
+<meta property="article:section" content="Bidouille e-ink">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Un module ESP32 pour afficher les avions sur écran e-ink avec Tesserae">
+<meta name="twitter:description" content="Un module pour Tesserae transforme un écran e-ink en tableau de bord de suivi des avions en temps réel.">
+<meta name="twitter:image" content="https://static0.xdaimages.com/wordpress/wp-content/uploads/2026/10/airplane-esp32-e-ink-featured.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/2265e01278cf.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/2265e01278cf-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/2265e01278cf", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.xdaimages.com/wordpress/wp-content/uploads/2026/10/airplane-esp32-e-ink-featured.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille e-ink · 22 octobre 2026 · source : XDA</p>
+  <h1>Un module ESP32 pour afficher les avions sur écran e-ink avec Tesserae</h1>
+  <p class="lead">Un module pour Tesserae transforme un écran e-ink en tableau de bord de suivi des avions en temps réel.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/2265e01278cf">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le projet <strong>Overhead Tesserae</strong> permet d’afficher les avions survolant une zone choisie sur un écran à encre électronique (e-ink). Développé par l’utilisateur <strong>xDaftTurtle</strong> et intégré à l’écosystème <strong>Tesserae</strong>, ce module récupère les données de vol publiques pour générer des illustrations stylisées des appareils en temps réel.</p> <p>Les images des avions sont générées à partir de photos référencées sur <strong>planespotters.net</strong>, avec une taille proportionnelle à l’envergure de l’appareil. L’utilisateur peut choisir parmi 26 styles graphiques différents (affiche vintage, gravure, estampe japonaise, pixel art, etc.) ou ajouter ses propres styles personnalisés. Une option permet aussi d’afficher directement les photos originales.</p> <p>Ce module s’appuie sur un microcontrôleur <strong>ESP32</strong> et s’intègre au logiciel Tesserae, déjà utilisé pour des projets similaires comme des cadres numériques affichant des oiseaux. Les données de vol sont récupérées via des services publics et converties en images adaptées à l’écran e-ink, offrant une solution autonome et esthétique pour suivre le trafic aérien local.</p> <p>Le code et les instructions détaillées sont disponibles sur la <strong>page GitHub du projet Overhead Tesserae</strong>.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

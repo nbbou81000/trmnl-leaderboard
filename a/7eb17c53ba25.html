@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Linux 7.3 : améliorations VRAM, Btrfs, Ext4 et support ARM/RISC-V/MIPS · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Nouvelle version majeure du noyau Linux avec optimisations mémoire, systèmes de fichiers et extensions pour architectures ARM, RISC-V et MIPS.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Linux 7.3 : améliorations VRAM, Btrfs, Ext4 et support ARM/RISC-V/MIPS">
+<meta property="og:description" content="Nouvelle version majeure du noyau Linux avec optimisations mémoire, systèmes de fichiers et extensions pour architectures ARM, RISC-V et MIPS.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/7eb17c53ba25.html">
+<meta property="og:image" content="https://www.cnx-software.com/wp-content/uploads/2026/10/Linux-7.3-720x450.jpg">
+<meta property="article:published_time" content="2026-10-19T17:01:56.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Linux 7.3 : améliorations VRAM, Btrfs, Ext4 et support ARM/RISC-V/MIPS">
+<meta name="twitter:description" content="Nouvelle version majeure du noyau Linux avec optimisations mémoire, systèmes de fichiers et extensions pour architectures ARM, RISC-V et MIPS.">
+<meta name="twitter:image" content="https://www.cnx-software.com/wp-content/uploads/2026/10/Linux-7.3-720x450.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/7eb17c53ba25.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/7eb17c53ba25-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/7eb17c53ba25", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://www.cnx-software.com/wp-content/uploads/2026/10/Linux-7.3-720x450.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 19 octobre 2026 · source : CNX Software</p>
+  <h1>Linux 7.3 : améliorations VRAM, Btrfs, Ext4 et support ARM/RISC-V/MIPS</h1>
+  <p class="lead">Nouvelle version majeure du noyau Linux avec optimisations mémoire, systèmes de fichiers et extensions pour architectures ARM, RISC-V et MIPS.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/7eb17c53ba25">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Linus Torvalds a annoncé la sortie de Linux 7.3 après une semaine de développement sans particularité majeure. La version finale est disponible, tandis que la fenêtre de fusion pour Linux 7.4 s’ouvre avec un léger décalage en raison de ses vacances familiales. Aucune modification tardive ne sera acceptée pendant cette phase.</p><h2>Améliorations techniques notables</h2><p>Cette version introduit une meilleure gestion de la mémoire vidéo (VRAM) pour les GPU d’entrée de gamme, évitant les conflits entre applications grâce à un mécanisme de priorisation des tampons protégés. Les systèmes de fichiers Btrfs et Ext4 bénéficient d’optimisations significatives : Btrfs retrouve ses performances en I/O direct perdues précédemment, avec des gains jusqu’à 5 fois en latence et débit pour les disques non SSD, tandis qu’Ext4 améliore les écritures parallèles et les performances de fallocate().</p><p>Les performances des systèmes de fichiers utilisateur (FUSE) avec io_uring sont également boostées grâce à une gestion optimisée des pools mémoire et à l’ajout de transferts sans copie. Par ailleurs, l’implémentation complète de <strong>sched_ext</strong> permet désormais d’assigner des ordonnanceurs de tâches basés sur BPF à des groupes de contrôle (cgroup), offrant une flexibilité accrue pour la gestion des processus.</p><h2>Mises à jour pour les architectures ARM, RISC-V et MIPS</h2><p>Linux 7.3 apporte des corrections et extensions pour plusieurs architectures. Pour les SoC ARM, des améliorations concernent les pilotes d’horloge, les contrôleurs MMC, RTC et NMI, ainsi que des correctifs pour des cartes comme le PinePhone ou des boîtiers TV. De nouveaux périphériques sont supportés, dont des cartes comme l’EmbedFire LubanCat 4 (RK3588S) ou l’Anbernic RG Vita-Pro (RK3576).</p><p>Les mises à jour pour les SoC Rockchip incluent des correctifs pour les pilotes d’horloge, PHY et IOMMU, tandis que les SoC Amlogic voient l’ajout de support pour les modèles A1 et T7. Samsung introduit un nouveau SoC haut de gamme, l’Exynos 1580 (ou Exynos 8855), avec des améliorations pour ses pilotes PHY et de gestion d’alimentation. Enfin, Qualcomm ajoute le support d’un nouveau SoC mystérieux basé sur des cœurs Cortex-A78C, nommé « Shikra ».</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

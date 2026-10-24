@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LoraReach: Open-Source Carrier Board to Build Your Own LoRaWAN Gateway · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source carrier board to design a custom LoRaWAN gateway based on a Raspberry Pi Compute Module 4.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="LoraReach: Open-Source Carrier Board to Build Your Own LoRaWAN Gateway">
+<meta property="og:description" content="An open-source carrier board to design a custom LoRaWAN gateway based on a Raspberry Pi Compute Module 4.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/7da401380870-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-19T14:10:25.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LoraReach: Open-Source Carrier Board to Build Your Own LoRaWAN Gateway">
+<meta name="twitter:description" content="An open-source carrier board to design a custom LoRaWAN gateway based on a Raspberry Pi Compute Module 4.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/7da401380870-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/7da401380870.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/7da401380870", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · October 19, 2026 · source : Hackster</p>
+  <h1>LoraReach: Open-Source Carrier Board to Build Your Own LoRaWAN Gateway</h1>
+  <p class="lead">An open-source carrier board to design a custom LoRaWAN gateway based on a Raspberry Pi Compute Module 4.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/7da401380870">Read the article on the TRMNL Leaderboard →</a>
+  <p>LoRaWAN is an IoT technology designed to send small data packets over long distances with minimal power consumption. It is widely used in environmental monitoring, agriculture, and industrial automation, where sensors are spread across large areas. However, these sensors require <strong>gateways</strong> to connect their data to the internet, and commercial solutions often lack flexibility for customization.</p><p>Brightix introduces <strong>LoraReach</strong>, an open-source carrier board designed to build a custom LoRaWAN gateway. Unlike proprietary solutions, this board provides a customizable hardware foundation while allowing users to run their own software. It is built around a <strong>Raspberry Pi Compute Module 4 (CM4)</strong>, which is also compatible with other pin-compatible compute modules, offering the power of an embedded Linux computer.</p><p>The board features two mini-PCIe slots: one for an SPI-based LoRaWAN concentrator module to communicate with LoRaWAN devices, and another for an optional 4G/LTE cellular modem for wireless internet access. A SIM card slot is included. Additional components include a Gigabit Ethernet port, a microSD card reader, Wi-Fi (depending on the installed module), an integrated GPS receiver with a patch antenna for location reporting and precise timing, and an integrated power supply accepting 120-240 VAC. Typical power consumption is under 10 W, and the device measures 146×118×50 mm.</p><p>LoraReach runs standard Linux and uses Semtech’s official <strong>packet forwarder</strong>, enabling compatibility with popular LoRaWAN network servers such as The Things Network, Loriot, or ChirpStack. Users can also run their own software for local data logging, diagnostics, or other processing tasks. Brightix provides the hardware schematics and bill of materials as open-source resources, allowing developers to inspect and modify the design. Components like the CM4, LoRaWAN concentrator, 4G modem, and microSD card must be purchased separately. No release date or pricing has been announced yet, but Brightix is accepting sign-ups for notifications about the upcoming crowdfunding campaign.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

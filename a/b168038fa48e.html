@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MicroManipulatorStepper : plateforme open source de précision nanométrique · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un manipulateur 3D open source atteint une résolution de 50 nm grâce à un système mécanique et électronique optimisé.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="MicroManipulatorStepper : plateforme open source de précision nanométrique">
+<meta property="og:description" content="Un manipulateur 3D open source atteint une résolution de 50 nm grâce à un système mécanique et électronique optimisé.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/b168038fa48e.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-19T19:58:44.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MicroManipulatorStepper : plateforme open source de précision nanométrique">
+<meta name="twitter:description" content="Un manipulateur 3D open source atteint une résolution de 50 nm grâce à un système mécanique et électronique optimisé.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/b168038fa48e.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/b168038fa48e-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/b168038fa48e", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 19 octobre 2026 · source : Adafruit</p>
+  <h1>MicroManipulatorStepper : plateforme open source de précision nanométrique</h1>
+  <p class="lead">Un manipulateur 3D open source atteint une résolution de 50 nm grâce à un système mécanique et électronique optimisé.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/b168038fa48e">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le développeur <strong>0x23</strong> a partagé sur GitHub un manipulateur 3D motorisé open source, conçu pour des applications exigeantes comme l’alignement optique, la caractérisation de composants électroniques ou la microscopie. Sa structure cinématique parallèle, équipée de mini-rotules, offre une rigidité élevée et une grande amplitude de mouvement.</p><p>Le système repose sur des moteurs pas-à-pas standards pilotés par un contrôleur en boucle fermée à 30 kHz. Une astuce de transmission magnétique permet d’amplifier la résolution des encodeurs rotatifs magnétiques bas coût par un facteur 30, atteignant ainsi des pas de 50 nanomètres. L’auteur précise que cette résolution ne garantit pas une précision absolue, cette dernière restant bien inférieure.</p><p>Le contrôle s’effectue via G-Code sur port USB série, facilitant son intégration dans d’autres projets. Le firmware, écrit en C++, intègre une planification de trajectoire avec anticipation et une interpolation de pose à 6 degrés de liberté. Une API Python ainsi qu’une interface graphique avec flux vidéo en direct sont disponibles. Les fichiers de conception (CAD) sont fournis en FreeCAD, les schémas électroniques en KiCAD, et la carte utilise uniquement des composants traversants, simplifiant le montage.</p><p>La version matérielle 4.0 apporte des améliorations sur les rotules et les liaisons mécaniques, tandis que le firmware 1.0.4 ajoute des sorties PWM sur deux broches GPIO pour des usages comme la gravure laser.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

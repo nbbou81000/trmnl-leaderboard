@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Turn a Wii Remote into a Home Assistant Controller · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="Three ways to repurpose a Wii Remote as a Home Assistant smart home controller.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Turn a Wii Remote into a Home Assistant Controller">
+<meta property="og:description" content="Three ways to repurpose a Wii Remote as a Home Assistant smart home controller.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/ea6d4086ba18-en.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/08/a7308468.jpg">
+<meta property="article:published_time" content="2026-10-20T19:30:16.000Z">
+<meta property="article:section" content="Dashboards &amp; home automation">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Turn a Wii Remote into a Home Assistant Controller">
+<meta name="twitter:description" content="Three ways to repurpose a Wii Remote as a Home Assistant smart home controller.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/08/a7308468.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/ea6d4086ba18-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/ea6d4086ba18.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/ea6d4086ba18", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/08/a7308468.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; home automation · October 20, 2026 · source : How-To Geek</p>
+  <h1>Turn a Wii Remote into a Home Assistant Controller</h1>
+  <p class="lead">Three ways to repurpose a Wii Remote as a Home Assistant smart home controller.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/ea6d4086ba18">Read the article on the TRMNL Leaderboard →</a>
+  <p>The Wii Remote, despite being 20 years old, remains a versatile device thanks to its Bluetooth connectivity, motion sensors, infrared camera, and physical buttons. Three methods allow repurposing it as a controller for Home Assistant, the open-source home automation platform.</p> <h2>Replace the motherboard with an ESP32</h2> <p>The <strong>OpenMote</strong> project replaces the Wii Remote’s original circuit board with a custom board built around an ESP32-S3 microcontroller. This solution, compatible with the controller’s physical buttons, turns the Wii Remote into a standalone device that connects via Wi-Fi to Home Assistant using the ESPHome firmware. Each button press or motion can trigger actions or automations in the smart home. The built-in infrared emitter can also learn codes from existing remotes to control TVs or air conditioners. The modified Wii Remote can also function as a standard Bluetooth controller for a PC or Steam Deck. Two versions are available for pre-order on Crowd Supply until the end of October 2026: a fully assembled remote or a DIY modification kit. Shipments are expected in February 2027.</p> <h2>Connect the Wii Remote to a Raspberry Pi</h2> <p>With the open-source tool <strong>CWiid</strong>, a standard Wii Remote can communicate with a Raspberry Pi via Bluetooth without hardware modifications. CWiid provides Linux libraries to interpret the controller’s inputs and forward them to Home Assistant. A tutorial video by The Raspberry Pi Guy and a GitHub repository with Python scripts demonstrate the process. Data can be relayed via Home Assistant’s REST API or the MQTT protocol to trigger automations. The <strong>wminput</strong> tool also turns the Wii Remote into a mouse, ideal for navigating a Home Assistant interface displayed on a screen connected to the Raspberry Pi.</p> <p>For Windows users, the <strong>Touchmote</strong> software, updated in October 2026, allows using the Wii Remote as a pointing device without additional hardware. The controller’s infrared camera detects the position of one or two sensor bars placed in front of the screen, turning the Wii Remote into a touchpad for direct interaction with a Home Assistant dashboard in a browser.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

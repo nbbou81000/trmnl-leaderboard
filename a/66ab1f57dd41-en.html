@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Semtech&#39;s LR2021 LoRa chip repurposed as an open-source SDR receiver · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source project leverages an undocumented command in Semtech’s LR2021 to turn it into an SDR receiver spanning 100 MHz to 2.74 GHz.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Semtech&#39;s LR2021 LoRa chip repurposed as an open-source SDR receiver">
+<meta property="og:description" content="An open-source project leverages an undocumented command in Semtech’s LR2021 to turn it into an SDR receiver spanning 100 MHz to 2.74 GHz.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/66ab1f57dd41-en.html">
+<meta property="og:image" content="https://www.cnx-software.com/wp-content/uploads/2026/10/Semtech-LR2021-LoRa-transceiver-used-as-an-SDR-for-raw-I-Q-capture-and-signal-analysis-Image-AI-generated-720x480.jpg">
+<meta property="article:published_time" content="2026-10-20T07:00:17.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Semtech&#39;s LR2021 LoRa chip repurposed as an open-source SDR receiver">
+<meta name="twitter:description" content="An open-source project leverages an undocumented command in Semtech’s LR2021 to turn it into an SDR receiver spanning 100 MHz to 2.74 GHz.">
+<meta name="twitter:image" content="https://www.cnx-software.com/wp-content/uploads/2026/10/Semtech-LR2021-LoRa-transceiver-used-as-an-SDR-for-raw-I-Q-capture-and-signal-analysis-Image-AI-generated-720x480.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/66ab1f57dd41-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/66ab1f57dd41.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/66ab1f57dd41", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://www.cnx-software.com/wp-content/uploads/2026/10/Semtech-LR2021-LoRa-transceiver-used-as-an-SDR-for-raw-I-Q-capture-and-signal-analysis-Image-AI-generated-720x480.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 20, 2026 · source : CNX Software</p>
+  <h1>Semtech&#39;s LR2021 LoRa chip repurposed as an open-source SDR receiver</h1>
+  <p class="lead">An open-source project leverages an undocumented command in Semtech’s LR2021 to turn it into an SDR receiver spanning 100 MHz to 2.74 GHz.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/66ab1f57dd41">Read the article on the TRMNL Leaderboard →</a>
+  <p>The <strong>LR2021-SDR</strong> project by Samuel Reynolds repurposes Semtech’s LR2021 LoRa transceiver into a software-defined radio (SDR) receiver, leveraging an undocumented ROM command to access raw 16-bit I/Q samples. This enables decoding of P25 Phase 1 digital voice, POCSAG pager messages, and analog FM signals without an external SDR dongle.</p> <h2>Features and technical constraints</h2> <p>The LR2021-SDR supports reception from 100 MHz to 2.74 GHz, far exceeding the chip’s official 150–960 MHz and 1.5–2.5 GHz bands. Continuous capture at 125,000 complex samples per second runs for up to 391 seconds without data loss, while short bursts reach 250,000 samples/s. Higher rates (500,000 or 1,000,000 samples/s) cause FIFO overflows due to the 16 MHz SPI interface limitation. Experimental transmission is also supported for short bursts, such as P25 voice frames or sensor data, but continuous transmission and real-time voice remain under development.</p> <p>The GPL-3.0-licensed firmware includes a C library, standalone ESP32-P4 firmware, Python tools, and build instructions. It can be used with the <strong>LakeShark</strong> project for handheld SDR scanning or in USB capture mode for offline analysis on a computer. Tests confirmed reception at 100 MHz, 1.3 GHz, 2.6 GHz, and 2.74 GHz, though performance varies by hardware and does not guarantee calibrated sensitivity across all devices.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

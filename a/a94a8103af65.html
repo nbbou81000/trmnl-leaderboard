@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Optimiser Home Assistant : réduire le polling pour un système plus fluide · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Réduire les vérifications inutiles des capteurs et des appareils dans Home Assistant améliore la réactivité et la stabilité du système.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Optimiser Home Assistant : réduire le polling pour un système plus fluide">
+<meta property="og:description" content="Réduire les vérifications inutiles des capteurs et des appareils dans Home Assistant améliore la réactivité et la stabilité du système.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/a94a8103af65.html">
+<meta property="og:image" content="https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2026/05/home-assistant-ai.jpg">
+<meta property="article:published_time" content="2026-10-22T21:00:21.000Z">
+<meta property="article:section" content="Dashboards &amp; domotique">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Optimiser Home Assistant : réduire le polling pour un système plus fluide">
+<meta name="twitter:description" content="Réduire les vérifications inutiles des capteurs et des appareils dans Home Assistant améliore la réactivité et la stabilité du système.">
+<meta name="twitter:image" content="https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2026/05/home-assistant-ai.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a94a8103af65.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a94a8103af65-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/a94a8103af65", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.xdaimages.com/wordpress/wp-content/uploads/wm/2026/05/home-assistant-ai.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; domotique · 22 octobre 2026 · source : XDA</p>
+  <h1>Optimiser Home Assistant : réduire le polling pour un système plus fluide</h1>
+  <p class="lead">Réduire les vérifications inutiles des capteurs et des appareils dans Home Assistant améliore la réactivité et la stabilité du système.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/a94a8103af65">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Lors de la configuration d’une automatisation dans <strong>Home Assistant</strong>, l’accent est souvent mis sur son fonctionnement initial, tandis que la fréquence des vérifications des capteurs ou des envois de commandes passe au second plan. Pourtant, cette activité en arrière-plan peut devenir problématique à mesure que le système s’étend.</p> <p>Les déclencheurs basés sur le temps, comme des vérifications régulières d’un capteur de présence, sollicitent inutilement le système même lorsque l’état n’a pas changé. Une solution consiste à privilégier les déclencheurs basés sur l’état, qui n’activent l’automatisation qu’en cas de modification réelle. Par exemple, au lieu de vérifier toutes les minutes si une pièce est vide, l’automatisation peut se déclencher uniquement lorsque le capteur confirme l’absence de présence pendant deux minutes. De même, pour un ventilateur contrôlé par la température, il est plus efficace de réagir aux seuils franchis plutôt qu’à des relevés périodiques.</p> <p>Les appareils hors ligne ou déconnectés ne nécessitent pas non plus une attention constante. Les automatisations qui tentent de communiquer avec eux en permanence génèrent des échecs répétés et encombrent les logs. Home Assistant permet de vérifier la disponibilité d’un appareil avant d’exécuter une action, évitant ainsi des tentatives inutiles. Pour les intégrations prenant en charge cette fonctionnalité, il est possible de désactiver le <em>polling</em> automatique (vérification périodique) et de solliciter manuellement les mises à jour à intervalles adaptés, comme toutes les 15 minutes. Cependant, cette approche nécessite de prévoir un mécanisme de récupération pour détecter le retour en ligne des appareils, sous peine de ne plus jamais les reconnaître disponibles.</p> <p>Les capteurs imparfaits, comme ceux de présence ou de consommation électrique, peuvent fluctuer et déclencher des réactions prématurées. Pour éviter cela, une solution consiste à imposer une durée minimale pendant laquelle une condition doit rester vraie avant d’agir. Par exemple, un lave-linge peut brièvement réduire sa consommation entre deux cycles : en exigeant que cette baisse persiste pendant cinq minutes, on évite des notifications intempestives. De même, un délai de deux minutes avant d’éteindre les lumières après une absence détectée améliore la fiabilité.</p> <p>Enfin, la gestion des données historiques peut aussi peser sur les performances. Home Assistant permet de réduire la fréquence d’enregistrement des changements via le paramètre commit_interval du module <strong>Recorder</strong>, limitant ainsi les écritures en base de données au détriment d’une perte potentielle de données récentes en cas de crash.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

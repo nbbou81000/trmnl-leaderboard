@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BeagleBoard lance deux modules open source pour contrôler jusqu’à 4 moteurs · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="BeagleBoard simplifie le contrôle de plusieurs moteurs avec deux modules open source : un contrôleur et une carte 4 moteurs brushless.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="BeagleBoard lance deux modules open source pour contrôler jusqu’à 4 moteurs">
+<meta property="og:description" content="BeagleBoard simplifie le contrôle de plusieurs moteurs avec deux modules open source : un contrôleur et une carte 4 moteurs brushless.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/668b712a8abf.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-28T13:13:30.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BeagleBoard lance deux modules open source pour contrôler jusqu’à 4 moteurs">
+<meta name="twitter:description" content="BeagleBoard simplifie le contrôle de plusieurs moteurs avec deux modules open source : un contrôleur et une carte 4 moteurs brushless.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/668b712a8abf.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/668b712a8abf-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/668b712a8abf", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 28 octobre 2026 · source : Hackster</p>
+  <h1>BeagleBoard lance deux modules open source pour contrôler jusqu’à 4 moteurs</h1>
+  <p class="lead">BeagleBoard simplifie le contrôle de plusieurs moteurs avec deux modules open source : un contrôleur et une carte 4 moteurs brushless.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/668b712a8abf">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le développement de projets robotiques ou industriels impliquant plusieurs moteurs brushless se heurte souvent à la complexité de leur pilotage simultané. BeagleBoard propose une solution open source avec deux nouveaux modules : le <strong>BeagleConnect Torque</strong> et le <strong>BeagleConnect QuadESC</strong>. Le premier sert de cerveau au système, tandis que le second gère directement jusqu’à quatre moteurs.</p> <p>Le <strong>BeagleConnect Torque</strong> repose sur un microcontrôleur Texas Instruments AM13E23019, doté d’un cœur Arm Cortex-M33 à 200 MHz, de 512 Ko de mémoire flash et de 128 Ko de SRAM. Il intègre également une unité de calcul trigonométrique dédiée aux algorithmes de contrôle moteur, ainsi qu’un accélérateur neuronal TinyEngine pour des tâches comme la détection de défauts. Le module propose trois convertisseurs analogique-numérique 12 bits, des ressources PWM spécifiques au contrôle moteur, et des interfaces de communication variées (CAN FD, UART, SPI, I²C). Un transceiver CAN (TI TCAN844) et un connecteur Qwiic facilitent l’ajout de capteurs ou périphériques.</p> <p>Le <strong>BeagleConnect QuadESC</strong> associe le module Torque à quatre circuits indépendants de pilotage de moteurs brushless. Chaque canal utilise un pilote de porte (TI DRV8323SRTAR) et trois demi-ponts (CSD88599Q5DC) pour contrôler un moteur à courant continu sans balais. Le QuadESC offre des mesures de courant et tension triphasés par canal, ainsi qu’un capteur de température et une surveillance de la tension batterie. Ces données permettent des techniques de contrôle avancées, comme le contrôle vectoriel (field-oriented control) pour une régulation précise du couple et de la vitesse. Alimenté par une batterie 3S à 6S (9 V à 25,2 V), il délivre jusqu’à 40 A en continu et 70 A en crête par moteur.</p> <p>Ces modules s’adressent aux développeurs souhaitant implémenter des firmware personnalisés. BeagleBoard fournit les fichiers de conception KiCad, les schémas et ressources de développement en open source, permettant des modifications matérielles ou une intégration dans des projets existants. Les tarifs et disponibilités ne sont pas encore communiqués.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

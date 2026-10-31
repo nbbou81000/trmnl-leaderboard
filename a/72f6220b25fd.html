@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Réseaux IoT chiffrés par radio avec nRF24 et nRF5x · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un projet open source ajoute le chiffrement aux communications radio entre microcontrôleurs nRF24, nRF52 et nRF54 via RF24Gateway.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Réseaux IoT chiffrés par radio avec nRF24 et nRF5x">
+<meta property="og:description" content="Un projet open source ajoute le chiffrement aux communications radio entre microcontrôleurs nRF24, nRF52 et nRF54 via RF24Gateway.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/72f6220b25fd.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-151.jpg">
+<meta property="article:published_time" content="2026-10-28T20:49:22.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Réseaux IoT chiffrés par radio avec nRF24 et nRF5x">
+<meta name="twitter:description" content="Un projet open source ajoute le chiffrement aux communications radio entre microcontrôleurs nRF24, nRF52 et nRF54 via RF24Gateway.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-151.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/72f6220b25fd.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/72f6220b25fd-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/72f6220b25fd", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/picture-151.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 28 octobre 2026 · source : Adafruit</p>
+  <h1>Réseaux IoT chiffrés par radio avec nRF24 et nRF5x</h1>
+  <p class="lead">Un projet open source ajoute le chiffrement aux communications radio entre microcontrôleurs nRF24, nRF52 et nRF54 via RF24Gateway.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/72f6220b25fd">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un développeur a annoncé l’ajout du chiffrement aux communications sans fil entre microcontrôleurs de la famille nRF24, nRF52 et nRF54 grâce à une mise à jour de <strong>RF24Gateway</strong>. Ce projet, basé sur la bibliothèque <strong>nrf_to_nrf</strong>, permet des échanges directs par radio sans recourir au Bluetooth ou au Zigbee. Il exploite le protocole <strong>Enhanced ShockBurst (ESB)</strong>, une méthode de communication radio optimisée pour les microcontrôleurs Nordic Semiconductor.</p><p>La bibliothèque <strong>nrf_to_nrf</strong> intégrait déjà un chiffrement AES/CCM pour les modèles nRF52840 et nRF54L15. Cette fonctionnalité est désormais étendue aux autres composants de la gamme nRF52 et nRF54. L’objectif est d’intégrer ce chiffrement à <strong>RF24Gateway</strong>, un outil qui transforme les microcontrôleurs en adaptateurs Ethernet sans fil. Ainsi, des protocoles comme MQTT ou HTTP peuvent transiter via un réseau radio sécurisé.</p><p>Pour fonctionner, <strong>RF24Gateway</strong> nécessite un appareil Linux équipé de ports GPIO et SPI, comme un Raspberry Pi. Le code est déjà écrit et les demandes de fusion (pull requests) sont en cours d’examen. Le développeur prévoit une sortie officielle dans les prochaines 48 heures. Les détails techniques sont disponibles sur le <strong>forum Seeed Studio</strong> et le dépôt <strong>GitHub</strong> associé.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

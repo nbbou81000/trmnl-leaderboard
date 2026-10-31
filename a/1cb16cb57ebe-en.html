@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CircuitPython 11.0.0-alpha.2: Major Updates and Security Fixes · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A new alpha release of CircuitPython 11.0.0 boosts performance and adds hardware features, alongside critical security updates for Python tools.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="CircuitPython 11.0.0-alpha.2: Major Updates and Security Fixes">
+<meta property="og:description" content="A new alpha release of CircuitPython 11.0.0 boosts performance and adds hardware features, alongside critical security updates for Python tools.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/1cb16cb57ebe-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/20261012icymi.jpg">
+<meta property="article:published_time" content="2026-10-27T13:53:14.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CircuitPython 11.0.0-alpha.2: Major Updates and Security Fixes">
+<meta name="twitter:description" content="A new alpha release of CircuitPython 11.0.0 boosts performance and adds hardware features, alongside critical security updates for Python tools.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/20261012icymi.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/1cb16cb57ebe-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/1cb16cb57ebe.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/1cb16cb57ebe", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/20261012icymi.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 27, 2026 · source : Adafruit</p>
+  <h1>CircuitPython 11.0.0-alpha.2: Major Updates and Security Fixes</h1>
+  <p class="lead">A new alpha release of CircuitPython 11.0.0 boosts performance and adds hardware features, alongside critical security updates for Python tools.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/1cb16cb57ebe">Read the article on the TRMNL Leaderboard →</a>
+  <p><strong>CircuitPython 11.0.0-alpha.2</strong>, released by Adafruit, represents a significant milestone for this Python distribution designed for microcontrollers. This alpha update, still in development, introduces major speed optimizations, particularly for <strong>displayio</strong> (the display system), along with firmware size reductions. It also adds support for new hardware components like the <strong>Espressif ESP32-S31 and ESP32-P4</strong> microcontrollers.</p> <p>Notable features include <strong>storage.map_file</strong>, which now allows direct reading of files from mapped flash memory, and <strong>usb_host_audio.USBIn</strong>, which supports USB microphones. The <strong>RGBMatrix</strong> system now supports ABC row addressing, and native support for <strong>USB Host Bulk IN</strong> transfers has been added. For Zephyr, several modules such as <strong>analogio</strong>, <strong>bitbangio</strong>, and <strong>pwmio</strong> are now available.</p> <p>Meanwhile, security vulnerabilities have been reported in <strong>eMudhra</strong> intermediate certificates, leading to the removal of the <strong>emSign</strong> root CA certificate from trust bundles like <strong>certifi</strong>. Several Python tools must be updated immediately to prevent <strong>man-in-the-middle (MITM)</strong> attacks: <strong>certifi 2026.10.19</strong>, <strong>pip 26.2.2</strong>, <strong>uv 0.13.4</strong>, <strong>sigstore 4.5.1</strong>, <strong>conda 26.9.4</strong>, and <strong>pixi 0.82.1</strong>.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

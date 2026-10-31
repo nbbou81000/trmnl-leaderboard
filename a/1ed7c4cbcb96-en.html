@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chili Pepper: A Single-Board Solution for DIY Electronic Instruments · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source board combining microcontroller, audio, and connectivity to build digital musical instruments without complex assembly.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Chili Pepper: A Single-Board Solution for DIY Electronic Instruments">
+<meta property="og:description" content="An open-source board combining microcontroller, audio, and connectivity to build digital musical instruments without complex assembly.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/1ed7c4cbcb96-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-26T16:11:31.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chili Pepper: A Single-Board Solution for DIY Electronic Instruments">
+<meta name="twitter:description" content="An open-source board combining microcontroller, audio, and connectivity to build digital musical instruments without complex assembly.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/1ed7c4cbcb96-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/1ed7c4cbcb96.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/1ed7c4cbcb96", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · October 26, 2026 · source : Hackster</p>
+  <h1>Chili Pepper: A Single-Board Solution for DIY Electronic Instruments</h1>
+  <p class="lead">An open-source board combining microcontroller, audio, and connectivity to build digital musical instruments without complex assembly.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/1ed7c4cbcb96">Read the article on the TRMNL Leaderboard →</a>
+  <p>Building a DIY electronic musical instrument often requires assembling multiple modules—microcontroller, audio hardware, input interfaces, storage, and connectivity—before even playing a single note. <strong>Chili Pepper</strong> streamlines this process by consolidating everything onto a single open-source board. Powered by an <strong>Espressif ESP32-S3</strong>, it includes 16 MB of flash storage and 8 MB of PSRAM, providing the processing power needed for synthesizers, samplers, grooveboxes, and MIDI controllers.</p><p>Connectivity is handled via <strong>Wi-Fi and Bluetooth Low Energy</strong>, enabling wireless communication with other devices. For user input, Chili Pepper offers <strong>24 capacitive touch inputs</strong>, managed by two MPR121 controllers, suitable for creating electronic keyboards or unconventional instruments like digital handpans. Audio output is delivered through a <strong>Texas Instruments PCM5102 DAC</strong>, providing stereo, 32-bit line-level audio, alongside a microSD card slot for storing samples and other data.</p><p>The board also features native <strong>USB MIDI support</strong> and a CH343 USB-to-serial interface. Measuring 93.3 × 59 mm and supporting an input voltage range of 1.8 V to 5.5 V, it is well-suited for portable, battery-powered projects. Two optional controllers are available: <strong>Panorythe</strong>, an ammonite-shaped interface with 16 tactile pads, and <strong>French Baguette</strong>, designed for sampling and MIDI performances.</p><p>The project emphasizes openness, with software licensed under Apache 2.0 and hardware/mechanical designs under CERN-OHL-S-2.0. Hardware design files will be released before fulfillment, while firmware and example projects are already publicly available. A crowdfunding campaign is planned, though pricing and launch date remain undisclosed. Interested makers can sign up to receive updates when the campaign goes live.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

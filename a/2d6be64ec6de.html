@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>7 conteneurs Docker indispensables pour un homelab auto-hébergé · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un éditeur de How-To Geek partage les 7 services Docker qu’il exécute en permanence dans son homelab, pour automatisation, sécurité ou divertissement.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="7 conteneurs Docker indispensables pour un homelab auto-hébergé">
+<meta property="og:description" content="Un éditeur de How-To Geek partage les 7 services Docker qu’il exécute en permanence dans son homelab, pour automatisation, sécurité ou divertissement.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/2d6be64ec6de.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/05/angled-laptop-view-of-jellyfin-home-screen-with-recently-added-movie-rows-1.jpg">
+<meta property="article:published_time" content="2026-10-24T14:30:17.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="7 conteneurs Docker indispensables pour un homelab auto-hébergé">
+<meta name="twitter:description" content="Un éditeur de How-To Geek partage les 7 services Docker qu’il exécute en permanence dans son homelab, pour automatisation, sécurité ou divertissement.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/05/angled-laptop-view-of-jellyfin-home-screen-with-recently-added-movie-rows-1.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/2d6be64ec6de.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/2d6be64ec6de-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/2d6be64ec6de", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/05/angled-laptop-view-of-jellyfin-home-screen-with-recently-added-movie-rows-1.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 24 octobre 2026 · source : How-To Geek</p>
+  <h1>7 conteneurs Docker indispensables pour un homelab auto-hébergé</h1>
+  <p class="lead">Un éditeur de How-To Geek partage les 7 services Docker qu’il exécute en permanence dans son homelab, pour automatisation, sécurité ou divertissement.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/2d6be64ec6de">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un homelab personnel peut rapidement devenir un amas de services Docker inutilisés. Pourtant, certains conteneurs s’avèrent indispensables au quotidien, que ce soit pour automatiser des tâches, sécuriser son réseau ou gérer ses données. Voici une sélection de sept solutions recommandées par un éditeur expérimenté en auto-hébergement.</p> <h2>Automatisation et contrôle des appareils connectés</h2> <p><strong>Home Assistant</strong> est un hub open source qui centralise le contrôle des objets connectés, quels que soient leurs protocoles (Zigbee, Z-Wave, Matter). Il permet de créer des automatisations locales, indépendantes des services cloud, et d’intégrer des services d’intelligence artificielle pour une maison plus intelligente. Son principal inconvénient en conteneur Docker : l’accès aux applications intégrées est limité. Pour en profiter pleinement, il faut l’installer sur une machine dédiée ou en machine virtuelle.</p> <h2>Surveillance et alertes en temps réel</h2> <p><strong>Uptime Kuma</strong> est un outil de monitoring auto-hébergé qui vérifie en permanence la disponibilité des services, sites web et appareils connectés. Il supporte plusieurs protocoles (HTTP, TCP, DNS, etc.) et peut envoyer des alertes via Discord, Telegram ou email. Son interface minimaliste permet de l’intégrer discrètement à un tableau de bord, où une couleur verte signale un fonctionnement normal.</p> <h2>Blocage des publicités et traqueurs</h2> <p><strong>Pi-hole</strong> agit comme un filtre DNS au niveau du réseau, bloquant les requêtes vers des domaines connus pour héberger des publicités, des traqueurs ou des logiciels malveillants. Il est particulièrement utile pour les appareils connectés (smart TV, smartphones, objets IoT) qui n’offrent pas de contrôle avancé. Son installation repose sur l’image Docker pihole/pihole, puis la redirection du DNS via le routeur.</p> <p><strong>Portainer</strong> fournit une interface web pour gérer les conteneurs Docker, visualiser leurs logs, démarrer ou arrêter des services, et exécuter des fichiers Compose. Attention : ce tableau de bord doit rester inaccessible depuis Internet, car il dispose de droits administratifs sur l’hôte Docker.</p> <p><strong>Vaultwarden</strong> est une alternative auto-hébergée à Bitwarden, compatible avec les applications officielles. Il permet de stocker ses mots de passe localement et offre des fonctionnalités avancées comme les mots de passe à usage unique (TOTP), normalement réservées aux versions payantes. Sa sécurité repose sur des sauvegardes robustes et l’utilisation d’un proxy inverse (Nginx, Caddy) pour activer le chiffrement HTTPS.</p> <p><strong>Immich</strong> se présente comme une alternative open source à Google Photos, avec une interface intuitive et des fonctionnalités comme la reconnaissance faciale ou la géolocalisation. Cependant, son utilisation intensive de CPU et RAM lors de l’importation de bibliothèques volumineuses peut saturer des machines modestes. Il est conseillé de sauvegarder régulièrement ses données, car Immich n’est pas une solution de sauvegarde en soi.</p> <p><strong>Jellyfin</strong> est un serveur multimédia gratuit et open source, comparable à Plex, mais sans fonctionnalités payantes. Pour une lecture fluide, il est recommandé de l’héberger sur une machine supportant le transcodage matériel (mini PC, PC de bureau reconditionné). Les Raspberry Pi, dépourvus de cette capacité, sont moins adaptés pour un usage intensif.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

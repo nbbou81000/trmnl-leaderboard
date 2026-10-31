@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marelleo : une boîte à histoires open-source pour enfants pilotée par RFID · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un père a conçu une boîte à histoires pour ses enfants, activée par des figurines RFID, sans écran ni abonnement.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Marelleo : une boîte à histoires open-source pour enfants pilotée par RFID">
+<meta property="og:description" content="Un père a conçu une boîte à histoires pour ses enfants, activée par des figurines RFID, sans écran ni abonnement.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/4969594c7a8b.html">
+<meta property="og:image" content="https://zebra.rodeo/assets/images/marelleo/og.jpg">
+<meta property="article:published_time" content="2026-10-27T15:24:36Z">
+<meta property="article:section" content="Bidouille e-ink">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Marelleo : une boîte à histoires open-source pour enfants pilotée par RFID">
+<meta name="twitter:description" content="Un père a conçu une boîte à histoires pour ses enfants, activée par des figurines RFID, sans écran ni abonnement.">
+<meta name="twitter:image" content="https://zebra.rodeo/assets/images/marelleo/og.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4969594c7a8b.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4969594c7a8b-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/4969594c7a8b", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://zebra.rodeo/assets/images/marelleo/og.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille e-ink · 27 octobre 2026 · source : Hacker News</p>
+  <h1>Marelleo : une boîte à histoires open-source pour enfants pilotée par RFID</h1>
+  <p class="lead">Un père a conçu une boîte à histoires pour ses enfants, activée par des figurines RFID, sans écran ni abonnement.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/4969594c7a8b">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Ce projet, baptisé <strong>Marelleo</strong>, est né d’une frustration face aux boîtes à histoires commerciales comme la Toniebox. Ces dispositifs, bien que pratiques, reposent sur des figurines ou des cartes payantes pour accéder au contenu, limitant la liberté des utilisateurs. L’auteur a donc souhaité créer une alternative open-source, sans abonnement ni catalogue fermé, pour raconter des histoires à ses enfants.</p> <p>Pour concrétiser cette idée, il a choisi un microcontrôleur <strong>ESP32</strong>, capable de décoder des fichiers audio MP3 tout en restant simple à programmer, comme un Arduino. Le recours à une <strong>plaque d’essai (breadboard)</strong> a permis de tester rapidement des prototypes sans risque de détérioration, un atout majeur pour un débutant en électronique. Après quelques heures de travail, une première version fonctionnelle était opérationnelle, bien que rudimentaire : une boîte diffusant une histoire dès qu’un tag RFID était posé dessus.</p> <p>Les défis techniques ont suivi. Une erreur de câblage sur un <strong>potentiomètre</strong> (un composant de réglage de volume) a provoqué un court-circuit et une odeur de cire de ski brûlée. La gestion de la batterie lithium, avec son contrôleur de charge, a révélé l’importance de sécuriser les connexions pour éviter tout risque d’incendie. Enfin, la version finale a nécessité le passage à une <strong>plaque à pastilles (perfboard)</strong> pour remplacer la plaque d’essai, garantissant une meilleure durabilité et une résistance aux manipulations des enfants.</p> <p>Le boîtier, imprimé en 3D, a dû être repensé après des tests avec des enfants de 2 à 7 ans. Le bouton de volume, par exemple, a été arraché par des mains trop enthousiastes, poussant l’auteur à repenser son design pour éviter les pièces fragiles. Le projet illustre ainsi l’apprentissage par l’erreur, où chaque problème technique a conduit à une solution plus robuste et adaptée aux besoins réels des utilisateurs.
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

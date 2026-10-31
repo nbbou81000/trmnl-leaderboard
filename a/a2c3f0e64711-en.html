@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pico_hdmi: Native HDMI Output Library for RP2350 Without Overclocking · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source library enabling native 480p and 720p60 HDMI output on RP2350 without bit-banging or overclocking.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="pico_hdmi: Native HDMI Output Library for RP2350 Without Overclocking">
+<meta property="og:description" content="An open-source library enabling native 480p and 720p60 HDMI output on RP2350 without bit-banging or overclocking.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/a2c3f0e64711-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/pico-2w.png">
+<meta property="article:published_time" content="2026-10-27T17:21:45.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="pico_hdmi: Native HDMI Output Library for RP2350 Without Overclocking">
+<meta name="twitter:description" content="An open-source library enabling native 480p and 720p60 HDMI output on RP2350 without bit-banging or overclocking.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/pico-2w.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a2c3f0e64711-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a2c3f0e64711.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/a2c3f0e64711", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/pico-2w.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 27, 2026 · source : Adafruit</p>
+  <h1>pico_hdmi: Native HDMI Output Library for RP2350 Without Overclocking</h1>
+  <p class="lead">An open-source library enabling native 480p and 720p60 HDMI output on RP2350 without bit-banging or overclocking.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/a2c3f0e64711">Read the article on the TRMNL Leaderboard →</a>
+  <p>Weeb Labs has released <strong>pico_hdmi</strong>, an open-source library (Unlicense) enabling native HDMI video and audio output on the <strong>RP2350</strong> or <strong>Raspberry Pi Pico 2</strong>. Unlike software-based <em>bit-banging</em> methods, this library leverages the RP2350’s built-in <strong>HSTX</strong> peripheral and hardware <strong>TMDS</strong> encoding, eliminating the need for overclocking to achieve 480p resolution.</p><p>Audio support is included with a default sample rate of 48 kHz, but the library also supports 32 kHz, 44.1 kHz, 88.2 kHz, 96 kHz, 176.4 kHz, and 192 kHz. Default output pins are set with the clock on GPIO12/13 and the three data pairs on GPIO14 through GPIO19. Boards with swapped lanes or polarity can override the default pinout. Pads are configured for fast slew and 12 mA drive strength to ensure edge margin stability at 720p60.</p><p>A 2.0 beta branch introduces an optional scanout path for applications requiring heavy per-line processing, overlays, 320-to-640 scaling, or live capture. A specific mode allows the callback to return a 320-pixel RGB565 line, which is doubled via DMA to produce a 640-pixel output. For 720p60 output, the RP2350 must run at 372 MHz with a 1.3V core voltage.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

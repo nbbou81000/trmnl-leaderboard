@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reverse Engineering a Commercial Spatial Audio Effect · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A developer recreates a spatial audio effect for Linux by analyzing output files from proprietary software.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Reverse Engineering a Commercial Spatial Audio Effect">
+<meta property="og:description" content="A developer recreates a spatial audio effect for Linux by analyzing output files from proprietary software.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/e25dd3ff2d79-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/aaa-19.png">
+<meta property="article:published_time" content="2026-10-24T13:30:50.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reverse Engineering a Commercial Spatial Audio Effect">
+<meta name="twitter:description" content="A developer recreates a spatial audio effect for Linux by analyzing output files from proprietary software.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/aaa-19.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/e25dd3ff2d79-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/e25dd3ff2d79.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/e25dd3ff2d79", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/aaa-19.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 24, 2026 · source : Adafruit</p>
+  <h1>Reverse Engineering a Commercial Spatial Audio Effect</h1>
+  <p class="lead">A developer recreates a spatial audio effect for Linux by analyzing output files from proprietary software.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/e25dd3ff2d79">Read the article on the TRMNL Leaderboard →</a>
+  <p>A Linux enthusiast, Austin Shijo, attempted to recreate a spatial audio effect originally designed for Windows, adapting it for a GNU/Linux environment. This effect creates the illusion that sound comes from outside the head rather than being pressed against the ears, but posed technical challenges. Shijo first explored solutions based on PipeWire and HRTF (Head-Related Transfer Function) databases, but results using anechoic recordings like the MIT KEMAR dataset did not meet expectations. Using SADIE II, which includes room responses, yielded closer results, yet the project eventually stalled.</p><p>To bypass the limitations of algorithmic methods, Shijo adopted a pragmatic approach: directly measuring the effect’s filter. With only temporary access to the software on a friend’s laptop, he designed a test file containing a variety of signals: impulses at three different amplitudes, a logarithmic sine sweep, steady tones, a multitone, repeated sections, a noise segment, and alignment clicks. Analysis of the output revealed that the main mode of the effect was linear and time-invariant, allowing the capture of four impulse responses. However, two other modes altered gain over time, making their reproduction impossible with fixed convolution.</p><p>Technical details and files used for this reverse engineering are available on epestr.com and GitHub.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

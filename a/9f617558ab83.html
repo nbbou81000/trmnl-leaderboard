@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RF Watchkeeper : un système polyvalent pour surveiller les ondes radio · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un projet open source surveille automatiquement les communications aériennes, maritimes, satellites et capteurs sans fil.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="RF Watchkeeper : un système polyvalent pour surveiller les ondes radio">
+<meta property="og:description" content="Un projet open source surveille automatiquement les communications aériennes, maritimes, satellites et capteurs sans fil.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/9f617558ab83.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-26T13:10:57.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RF Watchkeeper : un système polyvalent pour surveiller les ondes radio">
+<meta name="twitter:description" content="Un projet open source surveille automatiquement les communications aériennes, maritimes, satellites et capteurs sans fil.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9f617558ab83.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/9f617558ab83-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/9f617558ab83", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 26 octobre 2026 · source : Hackster</p>
+  <h1>RF Watchkeeper : un système polyvalent pour surveiller les ondes radio</h1>
+  <p class="lead">Un projet open source surveille automatiquement les communications aériennes, maritimes, satellites et capteurs sans fil.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/9f617558ab83">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Thomas Vikström a conçu <strong>RF Watchkeeper</strong>, une plateforme de calcul embarqué capable de surveiller en continu plusieurs types de transmissions radio sans intervention humaine. Le système repose sur un kit d'évaluation <strong>Qualcomm Dragonwing IQ-9075</strong>, couplé à des récepteurs radio logiciels (SDR) économiques comme l'<strong>RTL-SDR Blog V4</strong> ou un tuner USB basé sur le chipset RTL2832U. Contrairement aux récepteurs radio classiques, les SDR effectuent une grande partie du traitement du signal via logiciel, permettant de changer de fréquence et de décoder différents types de transmissions selon les besoins.</p><h2>Fonctionnalités et applications</h2><p>RF Watchkeeper prend en charge quatre types de surveillance :</p><ul><li><strong>Communications aériennes</strong> : capture des échanges entre tours de contrôle et avions, ainsi que les diffusions ATIS (Automatic Terminal Information Service), qui fournissent des données météo et opérationnelles sur les aéroports. Le système transcrit ces messages localement, bien que des erreurs de reconnaissance puissent survenir en cas de réception médiocre.</li><li><strong>Trafic maritime</strong> : décodage des signaux AIS (Automatic Identification System) autour de 162 MHz via l'outil <strong>AIS-Catcher</strong>, permettant de localiser les navires sur une carte. Des rapports météo marins ont été reçus à plus de 100 km de distance.</li><li><strong>Capteurs sans fil</strong> : décodage des transmissions de capteurs compatibles (stations météo, capteurs de température, systèmes de surveillance de pression des pneus) fonctionnant en 433 MHz.</li><li><strong>Satellites météo METEOR</strong> : prédiction des passages des satellites METEOR, enregistrement de leurs signaux autour de 137 MHz, et conversion des données en images de la Terre grâce à l'outil <strong>SatDump</strong>. La réception reste limitée par l'utilisation d'une antenne d'intérieur.</li></ul><p>Le <strong>Dragonwing IQ-9075</strong> accélère le traitement des données via des accélérateurs matériels dédiés à l'IA locale. Lors d'un test, un pipeline de traitement ATIS accéléré a mis quelques secondes à s'exécuter, contre plus de deux minutes avec une exécution CPU seule (Whisper Small), bien que les pipelines diffèrent.</p><p>Toutes les données collectées sont stockées localement et accessibles via une interface web affichant également l'état du système.</p><p>Le projet, encore en développement, rencontre des problèmes de fiabilité et pourrait améliorer sa réception avec de meilleures antennes. Le code source et la documentation sont disponibles sur <strong>GitHub</strong> pour les passionnés souhaitant reproduire l'installation.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

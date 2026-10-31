@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Un robot jouet à 4 $ transformé en assistant vocal par IA open source · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un robot jouet à bas coût devient un assistant vocal réactif grâce à une IA légère et du hacking matériel.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Un robot jouet à 4 $ transformé en assistant vocal par IA open source">
+<meta property="og:description" content="Un robot jouet à bas coût devient un assistant vocal réactif grâce à une IA légère et du hacking matériel.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/13770554c011.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-10-27T15:37:09.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Un robot jouet à 4 $ transformé en assistant vocal par IA open source">
+<meta name="twitter:description" content="Un robot jouet à bas coût devient un assistant vocal réactif grâce à une IA légère et du hacking matériel.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/13770554c011.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/13770554c011-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/13770554c011", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 27 octobre 2026 · source : Hackster</p>
+  <h1>Un robot jouet à 4 $ transformé en assistant vocal par IA open source</h1>
+  <p class="lead">Un robot jouet à bas coût devient un assistant vocal réactif grâce à une IA légère et du hacking matériel.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/13770554c011">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un robot jouet à moins de 4 $, le Silverlit Maze Breaker, a été transformé en <strong>Bot Reborn</strong>, un projet open source capable de répondre à des commandes vocales et d’engager des conversations. Le robot d’origine, équipé d’un moteur et d’un électroaimant pour la direction, a été modifié en coupant une piste de circuit imprimé et en soudant des fils sur les entrées des pilotes de moteur et de direction. Ces connexions aboutissent à une carte de conversion USB vers GPIO (FT232H), permettant à un smartphone Android de contrôler le robot via l’interface WebUSB de Chrome.</p><p>Le smartphone, fixé avec du carton et des élastiques, sert d’interface visuelle avec une face animée et fournit microphone et haut-parleur. Un serveur Node.js sur un ordinateur du même réseau gère la reconnaissance vocale, les réponses conversationnelles et les commandes de mouvement. Pour éviter les latences liées aux grands modèles de langage, un modèle d’IA spécialisé, <strong>Qwen3.5-0.8B</strong>, a été entraîné pour classer les commandes de déplacement (avancer, reculer, tourner, etc.) avec une précision de 86,6 % sur un jeu de test de 164 exemples. Ce modèle léger, formé en 30 minutes sur un GPU gratuit de Google Colab, répond en 200 ms sur un Mac mini M4.</p><p>Un problème persiste : le poids du smartphone déséquilibre le robot lors des mouvements de recul. Une solution alternative est en développement, basée sur un microcontrôleur <strong>ESP32-S3</strong>, un microphone I2S (INMP441) et un amplificateur audio (MAX98357A). Cette nouvelle version permet déjà de diffuser l’audio en Wi-Fi et de jouer des réponses, mais n’est pas encore intégrée aux moteurs du robot. L’IA continuera à s’exécuter sur l’ordinateur. Le code source, le jeu de données d’entraînement et le modèle fine-tuné sont disponibles en open source.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Infrared: From Remote Controls to Data Protocols · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="Infrared, often overlooked, provides directional, secure, and energy-efficient communication far beyond simple remote controls.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Infrared: From Remote Controls to Data Protocols">
+<meta property="og:description" content="Infrared, often overlooked, provides directional, secure, and energy-efficient communication far beyond simple remote controls.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/1b3aaa3e8ced-en.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/10/Optical_IR.jpg">
+<meta property="article:published_time" content="2026-10-26T14:00:36.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Infrared: From Remote Controls to Data Protocols">
+<meta name="twitter:description" content="Infrared, often overlooked, provides directional, secure, and energy-efficient communication far beyond simple remote controls.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/10/Optical_IR.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/1b3aaa3e8ced-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/1b3aaa3e8ced.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/1b3aaa3e8ced", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/10/Optical_IR.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 26, 2026 · source : Hackaday</p>
+  <h1>Infrared: From Remote Controls to Data Protocols</h1>
+  <p class="lead">Infrared, often overlooked, provides directional, secure, and energy-efficient communication far beyond simple remote controls.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/1b3aaa3e8ced">Read the article on the TRMNL Leaderboard →</a>
+  <p>Infrared (IR) protocols are among the oldest and most widespread wireless communication technologies, despite their understated role. Their main advantage lies in their <strong>directionality</strong>: the signal does not pass through obstacles, ensuring better privacy than technologies like Bluetooth, which is vulnerable to interference and passive eavesdropping. IR remote controls, which replaced wired and ultrasonic models, rely on protocols such as <strong>NEC</strong>, <strong>Sony SIRC</strong>, or <strong>Philips RC-5</strong>, using a carrier wave around 38 kHz and specific encoding methods (e.g., *pulse distance encoding* for NEC or *Manchester encoding* for RC-5).</p><p>These protocols, simple and easy to implement, are now ubiquitous in consumer devices, from RGB LED strips to industrial systems. Open-source projects, like an implementation on <strong>STM32F0</strong> to control 24-key remotes, or application notes from <strong>Texas Instruments</strong> for the <strong>MSP430</strong>, highlight their accessibility for hobbyists. Some smartphones, particularly from Chinese brands, still include an <strong>IR blaster</strong>, turning the device into a universal remote, though this feature has become rare.</p><h2>Beyond remotes: IrDA and its derivatives</h2><p><strong>IrDA</strong> (*Infrared Data Association*) extends these principles for higher-speed data transfers, up to several megabits per second. Unlike remote controls, IrDA uses advanced modulation and encoding techniques, such as <strong>IrSimple</strong>, optimized to transfer a 500 KB image in under a second between compatible devices. Communications typically operate in <strong>half-duplex</strong> to avoid interference, with a maximum range of two meters, or as low as 20 cm for low-power versions.</p><p>These protocols are widely used in <strong>smart meters</strong> (electricity, gas, heat), where low power consumption and the security provided by line-of-sight are critical. While radio-based alternatives (such as DLMS/COSEM) are gaining traction, IR remains preferred for its simplicity and lack of interference with surrounding networks. Finally, consoles like the <strong>Nintendo 3DS</strong> leveraged IrDA-SIR for peripherals like the <strong>Circle Pad Pro</strong> or <strong>Amiibo reader</strong>, proving that this technology remains relevant even in modern applications.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

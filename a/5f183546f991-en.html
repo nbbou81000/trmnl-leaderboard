@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>nRF54L15: Native Arduino Core Without Zephyr Dependency · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An Arduino core for nRF54L15 microcontrollers removes Zephyr and nRF Connect SDK dependencies, with Bluefruit52Lib compatibility.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="nRF54L15: Native Arduino Core Without Zephyr Dependency">
+<meta property="og:description" content="An Arduino core for nRF54L15 microcontrollers removes Zephyr and nRF Connect SDK dependencies, with Bluefruit52Lib compatibility.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/5f183546f991-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-119.jpg">
+<meta property="article:published_time" content="2026-10-27T18:09:13.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="nRF54L15: Native Arduino Core Without Zephyr Dependency">
+<meta name="twitter:description" content="An Arduino core for nRF54L15 microcontrollers removes Zephyr and nRF Connect SDK dependencies, with Bluefruit52Lib compatibility.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/picture-119.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/5f183546f991-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/5f183546f991.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/5f183546f991", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/picture-119.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · October 27, 2026 · source : Adafruit</p>
+  <h1>nRF54L15: Native Arduino Core Without Zephyr Dependency</h1>
+  <p class="lead">An Arduino core for nRF54L15 microcontrollers removes Zephyr and nRF Connect SDK dependencies, with Bluefruit52Lib compatibility.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/5f183546f991">Read the article on the TRMNL Leaderboard →</a>
+  <p>Lolren has released <strong>nrf54-arduino-core</strong>, an Arduino core for Nordic Semiconductor’s nRF54 family of microcontrollers. Unlike existing solutions, this project interacts directly with hardware at the register level, eliminating the need for Zephyr runtime or the nRF Connect SDK. Supported boards include the <strong>Seeed XIAO nRF54L15</strong>, <strong>XIAO nRF54LM20A</strong>, HOLYIOT modules, generic modules, and Nordic’s <strong>nRF54L15 DK</strong>.</p><p>Standard Arduino functions are available: <strong>pinMode</strong>, <strong>digitalWrite</strong>, <strong>analogRead</strong>, along with <strong>Wire</strong>, <strong>SPI</strong>, and <strong>Serial</strong> interfaces. Native Bluetooth LE connectivity is supported, with a <strong>Bluefruit52Lib</strong> compatibility layer to ease porting of Adafruit-style sketches. Note that <strong>ArduinoBLE</strong> is not used as the native BLE library here.</p><p>The core also exposes the <strong>VPR RISC-V coprocessor</strong> and optimizes power management, including support for the <strong>nPM1300 PMIC</strong> and deep power-down for QSPI flash on the LM20A board. Installation is possible via the Arduino IDE’s Boards Manager or <strong>PlatformIO</strong>, which has supported GDB debugging and Unity tests since release 1.0.21. Experimental protocols like <strong>Thread</strong>, <strong>Matter</strong>, <strong>Zigbee</strong>, and <strong>Channel Sounding</strong> are included but not part of the stable feature set.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

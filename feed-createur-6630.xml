@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/"><channel>
+<title>Palmarès TRMNL : les statistiques de Créateur #6630</title>
+<link>https://nbbou81000.github.io/trmnl-leaderboard/#createur/6630</link>
+<description>Chaque heure où quelque chose bouge : les connexions (installs + forks) de chaque recette de Créateur #6630, le total, les gains et les pertes, et le classement général.</description>
+<language>fr</language>
+<atom:link href="https://nbbou81000.github.io/trmnl-leaderboard/feed-createur-6630.xml" rel="self" type="application/rss+xml"/>
+<item><title>📊 0 connexions (=) · 423e au général (▼ 1 place)</title><link>https://nbbou81000.github.io/trmnl-leaderboard/#createur/6630</link><guid isPermaLink="false">stats-6630-2026-11-07T06:07:26.129Z</guid><pubDate>Sat, 07 Nov 2026 06:07:26 GMT</pubDate><description><![CDATA[Changement de classement uniquement.]]></description><content:encoded><![CDATA[<p><strong>Total : 0 connexions</strong> (0 installs + 0 forks) · <strong>=</strong> depuis le relevé précédent · = sur 24 h</p>
+        <p>Classement : <strong>423e au général</strong> sur 444 créateurs · ▼ 1 place</p>
+        <table><tr><th align="left">Recette</th><th align="right">Connexions (installs + forks)</th><th align="right">Évolution</th></tr><tr><td><a href="https://trmnl.com/recipes/512394">Clerk Active Users</a></td><td align="right"><strong>0</strong> <small>(0 + 0)</small></td><td align="right">=</td></tr></table>
+        <p><small>Évolution depuis le relevé du 7 nov., 06:07.</small></p>]]></content:encoded></item>
+<item><title>📊 0 connexions · 422e au général (point de départ)</title><link>https://nbbou81000.github.io/trmnl-leaderboard/#createur/6630</link><guid isPermaLink="false">stats-6630-2026-11-07T00:07:24.571Z</guid><pubDate>Sat, 07 Nov 2026 00:07:24 GMT</pubDate><description><![CDATA[Premier relevé : les prochains articles indiqueront les gains et les pertes.]]></description><content:encoded><![CDATA[<p><strong>Total : 0 connexions</strong> (0 installs + 0 forks) · = sur 24 h</p>
+        <p>Classement : <strong>422e au général</strong> sur 444 créateurs</p>
+        <table><tr><th align="left">Recette</th><th align="right">Connexions (installs + forks)</th><th align="right">Évolution</th></tr><tr><td><a href="https://trmnl.com/recipes/512394">Clerk Active Users</a></td><td align="right"><strong>0</strong> <small>(0 + 0)</small></td><td align="right">nouvelle</td></tr></table>
+        ]]></content:encoded></item>
+</channel></rss>

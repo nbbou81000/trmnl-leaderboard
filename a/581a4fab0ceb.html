@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Une bougie électronique générée par IA en temps réel · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Une bougie LED animée par un réseau de neurones miniature reproduit un feu réaliste et unique, sans répétition.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Une bougie électronique générée par IA en temps réel">
+<meta property="og:description" content="Une bougie LED animée par un réseau de neurones miniature reproduit un feu réaliste et unique, sans répétition.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/581a4fab0ceb.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-11-01T18:58:55.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Une bougie électronique générée par IA en temps réel">
+<meta name="twitter:description" content="Une bougie LED animée par un réseau de neurones miniature reproduit un feu réaliste et unique, sans répétition.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/581a4fab0ceb.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/581a4fab0ceb-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/581a4fab0ceb", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 1 novembre 2026 · source : Hackster</p>
+  <h1>Une bougie électronique générée par IA en temps réel</h1>
+  <p class="lead">Une bougie LED animée par un réseau de neurones miniature reproduit un feu réaliste et unique, sans répétition.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/581a4fab0ceb">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Les bougies LED classiques souffrent souvent d’un défaut majeur : leur flamme clignote de manière répétitive et peu naturelle. Pour y remédier, le maker <strong>Kevin Bates</strong>, connu pour avoir conçu la console de jeu portable Arduboy, a développé la <strong>Digital Candle</strong>, une bougie électronique dont la flamme est générée en temps réel par une intelligence artificielle.</p><p>Contrairement aux solutions existantes qui reposent sur des animations préenregistrées, ce dispositif utilise un <strong>réseau de neurones convolutif</strong> (un modèle d’IA léger) entraîné à partir de vidéos d’une vraie bougie. Le système analyse en continu les variations de forme et de luminosité de la flamme, puis les traduit en motifs lumineux affichés sur une matrice de 144 LEDs ambre (9×16). Chaque LED peut afficher 256 niveaux de luminosité, pilotés par un <strong>IS31FL3731</strong> et un microcontrôleur <strong>ESP32-S3</strong> d’Espressif. L’ensemble, alimenté en USB-C, est conçu pour tenir verticalement sur un socle dédié.</p><p>Le cœur du système repose sur un modèle d’IA minimaliste : un réseau de 3 545 paramètres, combiné à un modèle stochastique à huit oscillateurs amortis, génère des comportements de flamme uniques pour chaque appareil. Grâce à l’adresse matérielle unique de l’<strong>ESP32-S3</strong>, deux bougies ne produiront jamais la même animation. Le firmware est reprogrammable via USB-C, permettant de transformer la matrice en afficheur polyvalent (horloge, notifications, jeux comme Conway’s Game of Life ou Breakout).</p><p>Disponible en noir ou blanc, la Digital Candle est proposée à <strong>149 $</strong>. Bien que son prix dépasse celui d’une bougie classique, elle séduit par son approche innovante, son absence de répétition et ses possibilités de personnalisation via Wi-Fi et Bluetooth Low Energy.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

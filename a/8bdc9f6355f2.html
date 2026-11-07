@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Un analyseur WiFi DIY repère les congestions et suggère des optimisations · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un outil open source combine un mini-PC Linux, un adaptateur WiFi USB et une IA pour cartographier les réseaux sans fil et proposer des réglages.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Un analyseur WiFi DIY repère les congestions et suggère des optimisations">
+<meta property="og:description" content="Un outil open source combine un mini-PC Linux, un adaptateur WiFi USB et une IA pour cartographier les réseaux sans fil et proposer des réglages.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/8bdc9f6355f2.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/10/JEV-WiFi-Analyzer-2-banner.png">
+<meta property="article:published_time" content="2026-10-31T17:00:53.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Un analyseur WiFi DIY repère les congestions et suggère des optimisations">
+<meta name="twitter:description" content="Un outil open source combine un mini-PC Linux, un adaptateur WiFi USB et une IA pour cartographier les réseaux sans fil et proposer des réglages.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/10/JEV-WiFi-Analyzer-2-banner.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/8bdc9f6355f2.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/8bdc9f6355f2-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/8bdc9f6355f2", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/10/JEV-WiFi-Analyzer-2-banner.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 31 octobre 2026 · source : Hackaday</p>
+  <h1>Un analyseur WiFi DIY repère les congestions et suggère des optimisations</h1>
+  <p class="lead">Un outil open source combine un mini-PC Linux, un adaptateur WiFi USB et une IA pour cartographier les réseaux sans fil et proposer des réglages.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/8bdc9f6355f2">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un projet DIY baptisé <strong>JEV WiFi Analyzer</strong> propose une solution automatisée pour analyser les réseaux WiFi locaux. L’outil repose sur un <strong>mini-ordinateur sous Linux</strong>, un <strong>adaptateur WiFi USB</strong> et un modèle d’<strong>intelligence artificielle dédié</strong> (Jev) qui interprète les données collectées en temps réel.</p> <p>Le système fonctionne en deux étapes : d’abord, un script Python scanne les canaux WiFi disponibles et mesure des paramètres comme la <strong>force du signal</strong>, le <strong>nombre de clients connectés</strong> ou le <strong>taux de trames par seconde</strong>. Ces données brutes sont ensuite transmises à Jev, une IA spécialisée dans la prise de décision, qui classe le niveau de congestion et de couverture du réseau. Selon les résultats, l’outil peut suggérer des actions correctives, comme le changement de canal.</p> <p>Jev se distingue par sa capacité à ne produire que des <strong>sorties numériques bornées</strong>, sans génération de texte ou d’images. Ce modèle, conçu pour être léger et peu coûteux, peut être exécuté localement sur du matériel modeste. Bien que l’analyse reste basique, le projet ouvre la voie à des applications plus poussées, comme un ajustement dynamique des canaux en fonction de l’évolution du trafic.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

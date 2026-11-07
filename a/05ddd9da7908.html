@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>vESP Cloud : un éditeur visuel pour tableaux de bord Home Assistant sur écran ESP32 · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un éditeur web open source simplifie la création d&#39;interfaces pour écrans ESP32 dédiés à Home Assistant, sans coder.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="vESP Cloud : un éditeur visuel pour tableaux de bord Home Assistant sur écran ESP32">
+<meta property="og:description" content="Un éditeur web open source simplifie la création d&#39;interfaces pour écrans ESP32 dédiés à Home Assistant, sans coder.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/05ddd9da7908.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/10/a-guition-esp32-s3-touchscreen-displays-a-vesp-cloud-dashboard-with-light-controls-a-digital-clock-and-climate-settings.jpg">
+<meta property="article:published_time" content="2026-11-02T00:00:15.000Z">
+<meta property="article:section" content="Dashboards &amp; domotique">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="vESP Cloud : un éditeur visuel pour tableaux de bord Home Assistant sur écran ESP32">
+<meta name="twitter:description" content="Un éditeur web open source simplifie la création d&#39;interfaces pour écrans ESP32 dédiés à Home Assistant, sans coder.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/10/a-guition-esp32-s3-touchscreen-displays-a-vesp-cloud-dashboard-with-light-controls-a-digital-clock-and-climate-settings.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/05ddd9da7908.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/05ddd9da7908-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/05ddd9da7908", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/10/a-guition-esp32-s3-touchscreen-displays-a-vesp-cloud-dashboard-with-light-controls-a-digital-clock-and-climate-settings.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; domotique · 2 novembre 2026 · source : How-To Geek</p>
+  <h1>vESP Cloud : un éditeur visuel pour tableaux de bord Home Assistant sur écran ESP32</h1>
+  <p class="lead">Un éditeur web open source simplifie la création d&#39;interfaces pour écrans ESP32 dédiés à Home Assistant, sans coder.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/05ddd9da7908">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Construire un tableau de bord dédié pour contrôler son installation domotique via Home Assistant peut vite devenir coûteux. Les écrans tactiles ESP32 à moins de 25 €, comme le module <strong>Guition ESP32-S3-4848S040</strong> (480 × 480 pixels, écran RGB piloté par un ST7701S et un contrôleur tactile GT911), offrent une alternative économique. Cependant, leur configuration nécessite généralement de manipuler des fichiers de configuration ou du code, ce qui rebute les utilisateurs moins techniques.</p> <p>Le projet <strong>vESP Cloud</strong> propose une solution open source sous forme d’éditeur visuel accessible depuis un navigateur. L’outil permet de concevoir une interface en glissant-déposant des widgets sur une représentation graphique de l’écran, sans avoir à définir manuellement les coordonnées ou les styles. Plusieurs types de widgets sont disponibles : horloges, boutons, icônes, thermostats, prévisions météo, calendriers ou listes de tâches. Les widgets peuvent être redimensionnés, organisés en onglets ou affichés conditionnellement selon l’état des entités Home Assistant, l’heure ou d’autres critères.</p> <p>Pour intégrer les appareils connectés, l’éditeur utilise une extension dédiée, <strong>HA Metadata Exporter</strong>, qui génère un fichier JSON contenant les entités Home Assistant. Ce fichier est importé dans vESP Cloud pour associer les widgets aux dispositifs réels. Une fois la mise en page terminée, l’outil génère automatiquement le firmware ESPHome compatible avec l’écran. Le déploiement s’effectue via un câble USB-C ou en Wi-Fi, avec une configuration réseau simplifiée. Les mises à jour ultérieures peuvent être installées directement depuis Home Assistant, évitant de reconnecter l’écran à un ordinateur.</p> <p>L’éditeur est gratuit, mais la compilation cloud du firmware est payante via un système de crédits. Une alternative consiste à exporter les fichiers de configuration (YAML et C++) pour les compiler localement avec ESPHome. Le projet cible principalement le module Guition ESP32-S3-4848S040, et l’export des entités Home Assistant doit être relancé manuellement en cas de modification des appareils.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Patch pour remapper le clavier du Commodore 64 via le KERNAL ROM · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Une méthode permet de modifier durablement la disposition du clavier du Commodore 64 en patchant le KERNAL ROM.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Patch pour remapper le clavier du Commodore 64 via le KERNAL ROM">
+<meta property="og:description" content="Une méthode permet de modifier durablement la disposition du clavier du Commodore 64 en patchant le KERNAL ROM.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/0d897e59ef05.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/patch-commodore-64-kernal-roms-to-remap-keyboard.jpg">
+<meta property="article:published_time" content="2026-10-30T14:58:52.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Patch pour remapper le clavier du Commodore 64 via le KERNAL ROM">
+<meta name="twitter:description" content="Une méthode permet de modifier durablement la disposition du clavier du Commodore 64 en patchant le KERNAL ROM.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/10/patch-commodore-64-kernal-roms-to-remap-keyboard.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0d897e59ef05.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/0d897e59ef05-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/0d897e59ef05", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/10/patch-commodore-64-kernal-roms-to-remap-keyboard.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 30 octobre 2026 · source : Adafruit</p>
+  <h1>Patch pour remapper le clavier du Commodore 64 via le KERNAL ROM</h1>
+  <p class="lead">Une méthode permet de modifier durablement la disposition du clavier du Commodore 64 en patchant le KERNAL ROM.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/0d897e59ef05">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Dave VW propose une solution pour remapper le clavier du Commodore 64 sans recourir à des pilotes temporaires. Contrairement aux méthodes précédentes qui chargeaient des tables de mappage en RAM BASIC et disparaissaient au redémarrage, cette approche cible directement le <strong>KERNAL ROM</strong>, où résident les quatre tables de mappage : Normal, Shift, Commodore et Control. Le projet <strong>64KEY ROM PATCH</strong>, intégré au dépôt <strong>c-keymaps</strong>, utilise un programme PRG pour localiser ces tables et appliquer des modifications via une liste de données définissant le masque de shift, le code de balayage des touches et le caractère PETSCII correspondant.</p><p>Une fois appliqué, le patch est activé en RAM et peut être sauvegardé sous forme d’image ROM. Cette image peut ensuite être transférée sur un PC et gravée sur une <strong>EEPROM</strong> pour une utilisation sur un Commodore 64 physique. Les utilisateurs disposant d’un <strong>ROM switcher</strong> comme l’Easy Flash 3 ou d’un commutateur matériel entre deux ROM peuvent basculer entre les mappages à la volée. Les émulateurs permettent d’ajouter directement la ROM patchée à leur collection et de la sélectionner.</p><p>Le jeu de modifications inclus dans l’exemple déplace des symboles comme le + vers le -, le @ vers le [, et le shift-: vers un deux-points simple. Les détails techniques et le code source sont disponibles sur <strong>techwithdave.davevw.com</strong> et <strong>GitHub</strong>.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

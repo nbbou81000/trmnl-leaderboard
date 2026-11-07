@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Transformer un Echo Dot 3 en satellite vocal pour Home Assistant · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un Echo Dot 3 de 2018 peut être rooté pour remplacer Alexa par un assistant vocal local, compatible Home Assistant.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Transformer un Echo Dot 3 en satellite vocal pour Home Assistant">
+<meta property="og:description" content="Un Echo Dot 3 de 2018 peut être rooté pour remplacer Alexa par un assistant vocal local, compatible Home Assistant.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/460a6c6eef8b.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/10/echo_dot_home_assistant_mod_andys_tech_lab_youtube.jpg">
+<meta property="article:published_time" content="2026-10-31T23:00:00.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Transformer un Echo Dot 3 en satellite vocal pour Home Assistant">
+<meta name="twitter:description" content="Un Echo Dot 3 de 2018 peut être rooté pour remplacer Alexa par un assistant vocal local, compatible Home Assistant.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/10/echo_dot_home_assistant_mod_andys_tech_lab_youtube.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/460a6c6eef8b.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/460a6c6eef8b-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/460a6c6eef8b", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/10/echo_dot_home_assistant_mod_andys_tech_lab_youtube.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 31 octobre 2026 · source : Hackaday</p>
+  <h1>Transformer un Echo Dot 3 en satellite vocal pour Home Assistant</h1>
+  <p class="lead">Un Echo Dot 3 de 2018 peut être rooté pour remplacer Alexa par un assistant vocal local, compatible Home Assistant.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/460a6c6eef8b">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le <strong>rooting</strong> d’un <strong>Amazon Echo Dot 3</strong> (modèle 2018) permet de le libérer du cloud Amazon et de le transformer en satellite vocal pour <strong>Home Assistant</strong>. Cette opération, documentée par [Andy], repose sur un processus technique exigeant l’accès physique à la carte mère.</p><p>Pour les modèles dépourvus de port USB, comme l’Echo Dot 3, il est nécessaire d’ouvrir l’appareil et de souder un connecteur USB sur les <strong>plots de test</strong> présents sur la carte. Les autres appareils Echo, équipés nativement d’un port USB, simplifient cette étape. Une fois l’accès obtenu, le <strong>bootloader</strong> est déverrouillé et le système Fire OS (basé sur Android) est modifié pour remplacer l’application Alexa par <strong>hassmic</strong>, un projet open source développé par [Julian Imhof].</p><p>Ce logiciel, bien que fonctionnel, n’a pas été audité et son utilisation reste à vos risques. La prise en charge est limitée à certains modèles d’Echo Dot et Echo Show, listés sur la page du projet. Les performances vocales locales sont inférieures à celles du cloud Amazon : [Andy] a dû adapter les paramètres de reconnaissance vocale pour éviter des latences importantes, comme le passage de Whisper à Speech-to-Phrase pour des commandes simples.</p><p>Malgré ces limites, cette méthode offre une alternative pour intégrer un assistant vocal local dans un écosystème domotique, sans dépendre des serveurs Amazon.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

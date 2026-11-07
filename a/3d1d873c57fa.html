@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Projets de cartographie SDR avec ADS-B, APRS et FT8 en CircuitPython · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un guide Adafruit explique comment visualiser en temps réel des signaux ADS-B, APRS et FT8 sur une carte grâce à CircuitPython et une clé SDR USB.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Projets de cartographie SDR avec ADS-B, APRS et FT8 en CircuitPython">
+<meta property="og:description" content="Un guide Adafruit explique comment visualiser en temps réel des signaux ADS-B, APRS et FT8 sur une carte grâce à CircuitPython et une clé SDR USB.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/3d1d873c57fa.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-11-05T20:25:10.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Projets de cartographie SDR avec ADS-B, APRS et FT8 en CircuitPython">
+<meta name="twitter:description" content="Un guide Adafruit explique comment visualiser en temps réel des signaux ADS-B, APRS et FT8 sur une carte grâce à CircuitPython et une clé SDR USB.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3d1d873c57fa.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3d1d873c57fa-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/3d1d873c57fa", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 5 novembre 2026 · source : Adafruit</p>
+  <h1>Projets de cartographie SDR avec ADS-B, APRS et FT8 en CircuitPython</h1>
+  <p class="lead">Un guide Adafruit explique comment visualiser en temps réel des signaux ADS-B, APRS et FT8 sur une carte grâce à CircuitPython et une clé SDR USB.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/3d1d873c57fa">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un nouveau guide d’apprentissage publié par Adafruit explore l’utilisation de la bibliothèque <strong>Adafruit_CircuitPython_MapTiles</strong> pour tracer des signaux radiofréquences sur une carte interactive. Trois protocoles sont détaillés : l’<strong>ADS-B</strong>, l’<strong>APRS</strong> et le <strong>FT8</strong>, chacun exploitant des données de localisation ou de communication.</p> <p>L’<strong>ADS-B</strong> (Automatic Dependent Surveillance-Broadcast) est un système de transmission automatique d’informations de positionnement utilisé par les avions. Les paquets de données, très courts (environ 120 microsecondes), sont émis plusieurs fois par seconde et nécessitent un matériel adapté pour être captés et décodés. Leur fréquence et leur encodage sont strictement réglementés par les autorités aériennes.</p> <p>L’<strong>APRS</strong> (Automatic Packet Reporting System) permet à des objets au sol, comme des stations météo ou des répéteurs radio amateur, d’émettre leur position et d’autres données. Les transmissions sont moins fréquentes qu’en ADS-B, mais peuvent inclure des messages textuels ou des relevés de capteurs. Ce protocole est largement utilisé par les radioamateurs pour partager des informations locales ou établir des contacts.</p> <p>Le <strong>FT8</strong> est un mode de transmission numérique conçu pour fonctionner dans des conditions de signal faible ou bruité. Popularisé par les radioamateurs, il permet d’échanger des données comme la localisation approximative ou la qualité de réception entre deux stations. Des transmissions intercontinentales ont été réalisées avec une simple antenne d’intérieur, démontrant sa robustesse.</p> <p>Le guide détaille la configuration matérielle requise, notamment l’utilisation d’une clé SDR USB compatible avec CircuitPython, et propose des exemples de code pour visualiser les données sur une carte en temps réel.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

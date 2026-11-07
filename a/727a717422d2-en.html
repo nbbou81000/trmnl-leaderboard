@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A Modular ESP32-S3 Flight Controller for DIY RC Projects · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A maker designed a scalable ESP32-S3 flight controller, inspired by Pixhawk designs, to streamline custom RC projects.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="A Modular ESP32-S3 Flight Controller for DIY RC Projects">
+<meta property="og:description" content="A maker designed a scalable ESP32-S3 flight controller, inspired by Pixhawk designs, to streamline custom RC projects.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/727a717422d2-en.html">
+<meta property="og:image" content="https://hackster.imgix.net/uploads/attachments/2017834/_ZnSiu0YaEC.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min">
+<meta property="article:published_time" content="2026-11-05T13:55:32.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A Modular ESP32-S3 Flight Controller for DIY RC Projects">
+<meta name="twitter:description" content="A maker designed a scalable ESP32-S3 flight controller, inspired by Pixhawk designs, to streamline custom RC projects.">
+<meta name="twitter:image" content="https://hackster.imgix.net/uploads/attachments/2017834/_ZnSiu0YaEC.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/727a717422d2-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/727a717422d2.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/727a717422d2", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackster.imgix.net/uploads/attachments/2017834/_ZnSiu0YaEC.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · November 5, 2026 · source : Hackster</p>
+  <h1>A Modular ESP32-S3 Flight Controller for DIY RC Projects</h1>
+  <p class="lead">A maker designed a scalable ESP32-S3 flight controller, inspired by Pixhawk designs, to streamline custom RC projects.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/727a717422d2">Read the article on the TRMNL Leaderboard →</a>
+  <p>A maker going by <strong>The Engineer</strong> has created a modular flight controller based on the ESP32-S3, aimed at custom RC (radio-controlled) projects. Unlike traditional setups that rely on messy wiring and multiple modules, this design consolidates core functions while maintaining expandability.</p><p>The system is built around an <strong>Espressif ESP32-S3</strong> microcontroller, which includes built-in Wi-Fi and Bluetooth, along with numerous GPIO pins. An onboard inertial measurement unit (IMU) featuring an accelerometer and gyroscope communicates over SPI to provide real-time motion data. Two independent 3.3 V voltage regulators power the ESP32-S3 and the IMU separately, reducing electrical noise.</p><p>The controller includes multiple <strong>JST-GH connectors</strong>, compatible with Pixhawk standards, to simplify the addition of sensors or modules via UART, I2C, and SPI interfaces. The board, designed using <strong>KiCad</strong>, is compact thanks to components placed on both sides. Assembly was done manually using a hot plate for reflow soldering, while plastic JST connectors were soldered separately to avoid heat damage.</p><p>After successful electrical tests, the maker programmed the ESP32-S3 with MicroPython and verified the IMU’s functionality. A React application was then developed to display a 3D model of an airplane or drone, whose movements mirror the controller’s orientation in real time via WebSockets. While not yet used to pilot a real aircraft, the prototype is functional and expected to expand with the addition of GPS sensors and LoRa modules.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

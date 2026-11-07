@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESP-FLUTTER : un papillon robotisé qui vole vraiment · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un robot ornithoptère contrôlable à distance, doté d’ailes éclairées et pilotable via Wi-Fi ou télécommande RC.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="ESP-FLUTTER : un papillon robotisé qui vole vraiment">
+<meta property="og:description" content="Un robot ornithoptère contrôlable à distance, doté d’ailes éclairées et pilotable via Wi-Fi ou télécommande RC.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/f9354a94617c.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-11-02T13:13:57.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ESP-FLUTTER : un papillon robotisé qui vole vraiment">
+<meta name="twitter:description" content="Un robot ornithoptère contrôlable à distance, doté d’ailes éclairées et pilotable via Wi-Fi ou télécommande RC.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/f9354a94617c.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/f9354a94617c-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/f9354a94617c", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 2 novembre 2026 · source : Hackster</p>
+  <h1>ESP-FLUTTER : un papillon robotisé qui vole vraiment</h1>
+  <p class="lead">Un robot ornithoptère contrôlable à distance, doté d’ailes éclairées et pilotable via Wi-Fi ou télécommande RC.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/f9354a94617c">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Inspiré par la grâce des papillons naturels, l'<strong>ESP-FLUTTER</strong> est un robot volant qui reproduit le battement d’ailes pour générer sa portance, une approche plus complexe que les drones à hélices classiques. Contrairement aux ornithoptères utilisant un seul moteur et un système mécanique pour les deux ailes, ce projet mise sur deux servos indépendants, offrant un meilleur contrôle des mouvements tout en restant simple à concevoir.</p><p>Le cœur du système repose sur une carte <strong>XIAO ESP32C3</strong> de Seeed Studio, qui gère les signaux des servos, la communication sans fil, la surveillance de la batterie et l’éclairage des ailes. Le pilotage s’effectue via un smartphone en se connectant au réseau Wi-Fi intégré de l’appareil et en utilisant une interface web. Une option permet aussi de le contrôler avec une télécommande RC classique grâce à un récepteur ExpressLRS. L’interface propose des réglages avancés : fréquence de battement, réponse aux commandes, positions des servos et profils de mouvement. Une onde sinusoïdale offre des mouvements plus naturels, tandis qu’une onde triangulaire favorise une portance accrue. Max Imagination, son créateur, a déterminé qu’une fréquence de 4 Hz était optimale en pleine puissance.</p><p>Pour limiter le poids à 70 grammes, la structure est imprimée en 3D en PETG, avec des protections en TPU flexible pour les servos. Des tiges en fibre de carbone assurent la rigidité nécessaire sans alourdir l’ensemble. Les ailes, légères, sont fabriquées à partir de sacs plastiques étirés sur des cadres en carbone, fixés avec un adhésif souple. Une alternative consiste à utiliser un tissu léger pour les ailes. L’alimentation repose sur une batterie LiPo personnalisée à deux cellules, tandis que deux servos numériques coreless haute vitesse assurent la puissance de battement. Les ailes sont parées de 50 LEDs en surface-mount, connectées par des fils de cuivre émaillés ultrafins, ajoutant seulement un gramme par aile.</p><p>Deux versions sont proposées : une conception modulaire avec des composants accessibles, et une version compacte basée sur un PCB quatre couches personnalisé. Les deux partagent les mêmes principes de fonctionnement, offrant un choix entre facilité d’assemblage et intégration poussée.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

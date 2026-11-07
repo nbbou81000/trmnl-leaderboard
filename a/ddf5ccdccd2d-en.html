@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESP32-P4: Run apps from an SD card without rebooting · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A new firmware lets you load and run applications from an SD card on the ESP32-P4 without rebooting or reflashing.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="ESP32-P4: Run apps from an SD card without rebooting">
+<meta property="og:description" content="A new firmware lets you load and run applications from an SD card on the ESP32-P4 without rebooting or reflashing.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/ddf5ccdccd2d-en.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/11/github-giltal-esp32-p4-launcher-esp32-p4-launcher-that-loads.jpg">
+<meta property="article:published_time" content="2026-11-04T17:11:52.000Z">
+<meta property="article:section" content="E-ink hacks">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ESP32-P4: Run apps from an SD card without rebooting">
+<meta name="twitter:description" content="A new firmware lets you load and run applications from an SD card on the ESP32-P4 without rebooting or reflashing.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/11/github-giltal-esp32-p4-launcher-esp32-p4-launcher-that-loads.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/ddf5ccdccd2d-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/ddf5ccdccd2d.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/ddf5ccdccd2d", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/11/github-giltal-esp32-p4-launcher-esp32-p4-launcher-that-loads.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">E-ink hacks · November 4, 2026 · source : Adafruit</p>
+  <h1>ESP32-P4: Run apps from an SD card without rebooting</h1>
+  <p class="lead">A new firmware lets you load and run applications from an SD card on the ESP32-P4 without rebooting or reflashing.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/ddf5ccdccd2d">Read the article on the TRMNL Leaderboard →</a>
+  <p>Gil Tal has released <strong>ESP32_P4_Launcher</strong>, an open-source firmware for the <strong>ESP32-P4</strong> that enables running programs stored on an SD card, similar to how a PC loads software from a disk. Unlike traditional methods, this approach avoids reflashing or rebooting. Applications are distributed as <strong>.papp</strong> files, dynamically loaded into <strong>PSRAM</strong> (external RAM), relocated, and linked to the main firmware’s services before execution. Once an app exits, its resources are automatically reclaimed.</p> <p>The system is based on the <strong>PAPP</strong> (PSRAM App) concept, leveraging the ESP32-P4’s ability to execute code from PSRAM instead of flash. Each .papp file works like a dynamic library (<strong>DLL</strong>) with a <strong>main()</strong> function. For instance, <strong>Quake</strong> loads in about 70 ms. Twenty-one example applications are already available, including console emulators (NES, Neo Geo), games like <strong>Doom</strong>, <strong>Duke Nukem 3D</strong>, and <strong>OpenTyrian</strong>, as well as utilities such as a clock and a file manager. No ROMs or game data are included with the project.</p> <p>Three boards are officially supported: the <strong>Guition ESP32-P4 4.3″</strong>, the <strong>Guition 7″</strong>, and the <strong>M5Stack Tab5</strong>. Applications compiled for one board work without modification on the others, thanks to versioned interfaces ensuring backward compatibility. However, the <strong>ABI</strong> (Application Binary Interface) remains in preview and may change. The project is hosted on <strong>GitHub</strong>.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

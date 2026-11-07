@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LakeShark: An Open-Source Pocket Radio Scanner Based on ESP32-P4 · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source project turns ESP32-P4 boards into portable radio scanners without needing a PC.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="LakeShark: An Open-Source Pocket Radio Scanner Based on ESP32-P4">
+<meta property="og:description" content="An open-source project turns ESP32-P4 boards into portable radio scanners without needing a PC.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/df4dbe773ce3-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-11-04T15:06:37.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LakeShark: An Open-Source Pocket Radio Scanner Based on ESP32-P4">
+<meta name="twitter:description" content="An open-source project turns ESP32-P4 boards into portable radio scanners without needing a PC.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/df4dbe773ce3-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/df4dbe773ce3.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/df4dbe773ce3", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · November 4, 2026 · source : Hackster</p>
+  <h1>LakeShark: An Open-Source Pocket Radio Scanner Based on ESP32-P4</h1>
+  <p class="lead">An open-source project turns ESP32-P4 boards into portable radio scanners without needing a PC.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/df4dbe773ce3">Read the article on the TRMNL Leaderboard →</a>
+  <p>The <strong>LakeShark</strong> open-source project, created by SAMS0N1TE, turns ESP32-P4 development boards into compact radio scanners without requiring a separate computer. Unlike traditional setups that rely on a PC and specialized software, LakeShark leverages the ESP32-P4’s built-in capabilities to receive and decode a wide range of radio signals.</p><p>Multiple compatible boards are supported, including the <strong>LILYGO T-Display P4</strong>, which features a 4.1-inch AMOLED touchscreen (568×1232 pixels), GPS, and motion sensors. Depending on the model, it includes either an SX1262 LoRa transceiver or the more versatile LR2021 radio module. The latter can capture digital P25 signals, analog FM broadcasts, ADS-B aircraft transmissions, and pager messages without an external SDR receiver. Recent firmware updates even allow specialized programs to run on the LR2021’s internal processor, offloading tasks like FFT processing and frequency sweeps from the ESP32-P4.</p><p>For setups without these modules, an RTL-SDR receiver can be connected via USB to access signals such as P25 trunked radio systems, FM broadcasts, or POCSAG pager messages. Experimental support for the <strong>HackRF One</strong> is also in development. LakeShark goes beyond radio scanning, offering applications for MeshCore communication, sub-GHz signal capture and replay, FT8 decoding, GPS utilities, offline maps, and even an audio player. An optional detachable MIX-RF keyboard adds physical controls alongside CC1101, nRF24, and NFC hardware.</p><p>The project is available on GitHub under the GPL-3.0 license, complete with source code, firmware, and installation instructions. Waveshare ESP32-P4 boards can operate in headless mode via a serial terminal or a connected <strong>Flipper Zero</strong>, while the <strong>LakeShark Desktop</strong> environment allows applications to run in windows on a PC while the ESP32-P4 handles the radio processing.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

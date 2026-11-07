@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>P4 Launcher: A PC-like and Retro Gaming Experience for ESP32-P4 Boards · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An open-source launcher turns ESP32-P4 boards into lightweight PC-like platforms for emulators and retro games.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="P4 Launcher: A PC-like and Retro Gaming Experience for ESP32-P4 Boards">
+<meta property="og:description" content="An open-source launcher turns ESP32-P4 boards into lightweight PC-like platforms for emulators and retro games.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/4d9ce96119c0-en.html">
+<meta property="og:image" content="https://www.cnx-software.com/wp-content/uploads/2026/11/P4-Launcher-ESP32-P4-Application-Hub-720x432.jpg">
+<meta property="article:published_time" content="2026-11-05T10:27:01.000Z">
+<meta property="article:section" content="E-ink hacks">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="P4 Launcher: A PC-like and Retro Gaming Experience for ESP32-P4 Boards">
+<meta name="twitter:description" content="An open-source launcher turns ESP32-P4 boards into lightweight PC-like platforms for emulators and retro games.">
+<meta name="twitter:image" content="https://www.cnx-software.com/wp-content/uploads/2026/11/P4-Launcher-ESP32-P4-Application-Hub-720x432.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4d9ce96119c0-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4d9ce96119c0.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/4d9ce96119c0", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://www.cnx-software.com/wp-content/uploads/2026/11/P4-Launcher-ESP32-P4-Application-Hub-720x432.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">E-ink hacks · November 5, 2026 · source : CNX Software</p>
+  <h1>P4 Launcher: A PC-like and Retro Gaming Experience for ESP32-P4 Boards</h1>
+  <p class="lead">An open-source launcher turns ESP32-P4 boards into lightweight PC-like platforms for emulators and retro games.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/4d9ce96119c0">Read the article on the TRMNL Leaderboard →</a>
+  <p>Gil Tal has released <strong>P4 Launcher</strong>, an open-source platform that delivers a PC-like experience on ESP32-P4 boards paired with a touchscreen display. The launcher boots straight into its interface, while applications—packaged as <strong>.papp</strong> files—are stored on a microSD card and loaded into PSRAM when executed. Users can install, remove, or run apps without reflashing firmware or rebooting the device by simply copying files to the microSD card.</p> <p>The project currently offers 21 <strong>PAPP</strong> (PSRAM APP) applications, primarily emulators and retro games, including Neo Geo and Atari 2600 emulators, as well as classics like <em>Doom</em>, <em>Quake</em>, <em>Duke Nukem 3D</em>, and <em>OpenTyrian</em>. Utility apps such as a clock and file manager are also included. The user interface relies on <strong>LVGL</strong>, a lightweight graphics framework, and scales to various screen resolutions. The system supports up to eight simultaneous audio streams at 4 to 192 kHz and handles up to four input devices for multiplayer sessions.</p> <p>P4 Launcher is compatible with several development boards, including the Guition ESP32-P4 4.3" (800×480), Guition JC1060P470C 7" (1024×600), and M5Stack Tab5 (1280×720). It supports input devices like PlayStation 3 or Nintendo controllers. The project provides an SDK for developing new PAPP applications, along with two compatibility layers to run existing code using the <em>odroid_*</em> API or the v1 service table, enabling ports of games like <em>Doom</em> or <em>Quake</em>.</p> <p>Firmware updates can be installed from a microSD card or GitHub, with automatic rollback if a new version fails to start. The source code, based on ESP-IDF v5.5.2, is available on GitHub. Development was assisted by Anthropic’s <strong>Claude</strong> coding assistant.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

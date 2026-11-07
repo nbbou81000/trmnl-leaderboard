@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How to Detect and Remove a Hidden Cryptominer in Your Homelab · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A compromised homelab may host a hidden cryptominer without obvious signs. Here’s how to detect and remove it.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="How to Detect and Remove a Hidden Cryptominer in Your Homelab">
+<meta property="og:description" content="A compromised homelab may host a hidden cryptominer without obvious signs. Here’s how to detect and remove it.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/900f5931b6c6-en.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/07/ugreen-idx6011-pro-nas-with-stacked-hard-drives-and-geekom-mini-pcs.jpg">
+<meta property="article:published_time" content="2026-11-02T19:30:15.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Detect and Remove a Hidden Cryptominer in Your Homelab">
+<meta name="twitter:description" content="A compromised homelab may host a hidden cryptominer without obvious signs. Here’s how to detect and remove it.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/07/ugreen-idx6011-pro-nas-with-stacked-hard-drives-and-geekom-mini-pcs.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/900f5931b6c6-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/900f5931b6c6.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/900f5931b6c6", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/07/ugreen-idx6011-pro-nas-with-stacked-hard-drives-and-geekom-mini-pcs.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · November 2, 2026 · source : How-To Geek</p>
+  <h1>How to Detect and Remove a Hidden Cryptominer in Your Homelab</h1>
+  <p class="lead">A compromised homelab may host a hidden cryptominer without obvious signs. Here’s how to detect and remove it.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/900f5931b6c6">Read the article on the TRMNL Leaderboard →</a>
+  <p>A cryptominer running in a homelab doesn’t always max out the CPU. Some variants operate quietly, throttling their resource usage to avoid detection. In one case, the author only noticed an issue after trying to use a compromised NAS, observing unusual slowdowns. In another, a rack-mount server’s fans spun at 100 % due to the miner’s high load.</p> <p>To catch these intrusions early, monitoring tools like <strong>Grafana</strong> and <strong>Prometheus</strong> are essential. They track system performance over time, making it easier to spot sudden, unexplained spikes in CPU usage—especially during idle periods. A smart plug measuring power consumption can also reveal unexpected energy draws when no activity is expected.</p> <p>Malicious processes often disguise themselves with generic names like <strong>kworker</strong> or random strings, and run from unusual directories such as <strong>/tmp</strong> or <strong>/dev/shm</strong>. In containerized environments, check for unknown Docker containers using <strong>docker ps -a</strong> and analyze their resource usage with <strong>docker stats</strong>. Cryptominers may also hide in systemd services, cron jobs, or by adding SSH keys for persistent access.</p> <p>Network traffic is the cryptominer’s Achilles’ heel, as it must communicate with external mining pools. The <strong>ss -tunp</strong> command helps identify suspicious outbound connections. Tools like <strong>Pi-hole</strong> or <strong>AdGuard Home</strong> can block these communications by filtering mining pool domains. However, a malicious Docker container might bypass these protections by overriding DNS settings.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

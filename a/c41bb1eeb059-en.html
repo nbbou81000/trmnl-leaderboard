@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Control a TV Without Internet Using ESP32 and Home Assistant · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A $10 ESP32 board and a few components let you control a TV via infrared from Home Assistant, without an internet connection.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Control a TV Without Internet Using ESP32 and Home Assistant">
+<meta property="og:description" content="A $10 ESP32 board and a few components let you control a TV via infrared from Home Assistant, without an internet connection.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/c41bb1eeb059-en.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/11/esp32-ir-blaster-under-tcl-tv.jpg">
+<meta property="article:published_time" content="2026-11-04T16:00:15.000Z">
+<meta property="article:section" content="Dashboards &amp; home automation">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Control a TV Without Internet Using ESP32 and Home Assistant">
+<meta name="twitter:description" content="A $10 ESP32 board and a few components let you control a TV via infrared from Home Assistant, without an internet connection.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/11/esp32-ir-blaster-under-tcl-tv.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/c41bb1eeb059-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/c41bb1eeb059.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/c41bb1eeb059", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2026/11/esp32-ir-blaster-under-tcl-tv.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; home automation · November 4, 2026 · source : How-To Geek</p>
+  <h1>Control a TV Without Internet Using ESP32 and Home Assistant</h1>
+  <p class="lead">A $10 ESP32 board and a few components let you control a TV via infrared from Home Assistant, without an internet connection.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/c41bb1eeb059">Read the article on the TRMNL Leaderboard →</a>
+  <p>Home Assistant has recently enhanced its infrared (IR) device support, enabling users to control appliances like TVs or soundbars without requiring an internet connection. This solution relies on an IR transmitter connected to an ESP32 microcontroller, a versatile and affordable board.</p><p>The project uses an ESP32-S3 N16R8, featuring 16MB of flash storage and 8MB of PSRAM, purchased in a 3-pack for around $20. Additional components include an SL838 IR receiver module, an IR emitter LED, a 100-ohm resistor, and a breadboard. The total project cost is estimated at under $25, or less than $10 if considering individual component prices. No internet connection is required for the IR transmitter to function.</p><p>The microcontroller is programmed with ESPHome, an open-source firmware compatible with Home Assistant. After flashing the ESP32 via ESPHome’s web tool, integration into Home Assistant is automatic. Users can then teach Home Assistant the IR commands of their device by pointing their remote at the SL838 receiver. Raw signals are converted into YAML configuration using an AI tool and integrated into the firmware.</p><p>This setup allows control of functions like power, volume, or directional buttons on a TV or soundbar. However, Home Assistant cannot detect the device’s state (on/off), which may lead to unintended commands if the device is already powered on. The IR emitter is placed behind the soundbar, under the TV, for optimal discretion.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

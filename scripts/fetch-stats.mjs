@@ -2,6 +2,7 @@
 // et calcule les classements. Aucune dépendance : Node 20+.
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fingerprint } from './updates-lib.mjs';
 
 const OUT = process.argv[2] || 'public/data';
 const API = 'https://trmnl.com/recipes.json';
@@ -338,4 +339,11 @@ const latest = {
 await fs.writeFile(path.join(OUT, 'latest.json'), JSON.stringify(latest));
 await fs.writeFile(path.join(OUT, 'hourly.json'), JSON.stringify(hourly));
 await fs.writeFile(path.join(OUT, 'daily.json'), JSON.stringify(daily));
+// Empreintes des recettes (nom, description, catégories, texte About, réglages) : comparées au relevé
+// précédent par scripts/updates.mjs pour repérer les recettes mises à jour par leur auteur.
+try {
+  const meta = {};
+  for (const r of all) { const id = String(r.id); if (!meta[id]) meta[id] = { ...fingerprint(r), u: String(r.user_id ?? r.author_id ?? '0') }; }
+  await fs.writeFile(path.join(OUT, 'meta-next.json'), JSON.stringify({ t: now, r: meta }));
+} catch (e) { console.log(`Empreintes des recettes non écrites (${e.message}) : sans gravité.`); }
 console.log(`OK : ${recipes.length} recettes, ${creators.length} créateurs, ${hourly.snaps.length} instantanés horaires, ${daily.snaps.length} quotidiens.`);

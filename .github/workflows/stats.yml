@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir -p public/data
           if git fetch --depth=1 origin gh-pages 2>/dev/null; then
-            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json wanted.json plugins.json; do
+            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json wanted.json plugins.json meta.json updates.json; do
               git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
             done
           else
@@ -73,6 +73,10 @@ jobs:
             node scripts/fetch-stats.mjs public/data
             node scripts/fetch-trmnl.mjs public/data
           fi
+
+      # Compare le relevé au précédent (nom, description, réglages, texte About) → « Recettes mises à jour ». Aucun appel réseau.
+      - name: Recettes mises à jour
+        run: node scripts/updates.mjs public/data
 
       # Installations probablement apportées par les clics du site vers les recettes (estimation, table privée)
       - name: Installations apportées par le site

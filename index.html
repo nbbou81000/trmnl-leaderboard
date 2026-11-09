@@ -509,6 +509,8 @@ html[data-theme=dark] .linkbtn.danger{color:#FF8A80}
 .wk-list{list-style:none;margin:0;padding:0}
 .wk-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--rule)}
 .wk-list li:last-child{border-bottom:0}
+.wk-list li[hidden]{display:none}
+.wk-list .upd-ch{color:var(--ink);margin-top:2px}
 .wk-list .sub{display:block;font-size:.8rem;color:var(--ink2)}
 .mile{font-size:.76rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap;background:var(--accent-soft);color:var(--accent-ink)}
 .mile.cf{background:color-mix(in srgb,var(--sage) 20%,transparent);color:var(--sage)}
@@ -1716,6 +1718,162 @@ function claimHTML(u) {
   return `<a class="btn ghost small" id="claim" href="${url}" target="_blank" rel="noopener" title="${esc(L('Afficher un nom public à la place du numéro. Nécessite un compte GitHub, chaque demande est vérifiée à la main.', 'Show a public name instead of the number. Needs a GitHub account; every request is reviewed by hand.'))}">${L('Revendiquer ce profil', 'Claim this profile')}</a>`;
 }
 
+/* ================= Rétrospective de l'année (bloc du profil + carte à partager) ================= */
+// Calculée dans le navigateur à partir des relevés quotidiens déjà chargés (DAILY) : aucun fichier ni appel en plus.
+// Affichée sur tous les profils en décembre et en janvier (pour l'année qui vient de finir) ;
+// le reste de l'année, on peut la voir en ajoutant ?retro à l'adresse du site (…/?retro#moi).
+const RETRO_STEPS = [50, 100, 250, 500, 1000, 2000, 5000];
+const retroYear = () => { const d = new Date(); return d.getUTCMonth() === 0 ? d.getUTCFullYear() - 1 : d.getUTCFullYear(); };
+const retroOpen = () => { const m = new Date().getUTCMonth(); return m === 11 || m === 0 || new URLSearchParams(location.search).has('retro'); };
+function retroOf(c, Y) {
+  const h = DAILY; if (!h?.snaps?.length || !c) return null;
+  const t0 = Date.UTC(Y, 0, 1), t1 = Date.UTC(Y + 1, 0, 1);
+  const T = h.snaps.map(s => Date.parse(s.t));
+  // Point de départ : dernier relevé de l'année précédente ; à défaut (relevés commencés en cours d'année), premier relevé de l'année
+  let b = -1, e = -1;
+  T.forEach((t, k) => { if (t < t0) b = k; if (t < t1) e = k; });
+  const partial = b < 0;
+  if (partial) b = T.findIndex(t => t >= t0 && t < t1);
+  if (b < 0 || e <= b) return null;
+  const pos = new Map(h.idx.map(([id], k) => [id, k]));
+  const val = (k, j) => { const i = h.snaps[j].i[k]; return i == null ? null : i + (h.snaps[j].f[k] || 0); };
+  // Rang d'un créateur à un relevé (même calcul que la courbe « Rang au classement » du profil)
+  const rankAt = j => {
+    const tot = new Map(), s = h.snaps[j];
+    for (let k = 0; k < h.idx.length; k++) { const i = s.i[k]; if (i == null) continue; const u = h.idx[k][1]; tot.set(u, (tot.get(u) || 0) + i + (s.f[k] || 0)); }
+    const mine = tot.get(c.u); if (mine == null) return null;
+    let r = 1; for (const v of tot.values()) if (v > mine) r++;
+    return r;
+  };
+  const rows = [];
+  for (const r of c.recipes) {
+    const k = pos.get(r.id); if (k == null) continue;
+    const end = val(k, e); if (end == null) continue;                 // publiée après la fin de l'année
+    const born = r.p ? Date.parse(r.p) : null;
+    let start = born != null && born >= t0 ? 0 : val(k, b);          // publiée cette année : toutes ses connexions comptent
+    if (start == null) for (let j = b; j <= e; j++) { const v = val(k, j); if (v != null) { start = v; break; } }   // plus ancienne, absente du relevé de départ
+    rows.push({ r, k, start, end, g: end - start, steps: RETRO_STEPS.filter(S => start < S && S <= end) });
+  }
+  if (!rows.length) return null;
+  // Meilleure journée : plus forte hausse entre deux relevés consécutifs (les trous de plus d'un jour sont écartés)
+  let day = null;
+  for (let j = b + (partial ? 2 : 1); j <= e; j++) {                  // année incomplète : le tout premier intervalle est écarté (saut anormal dans les relevés)
+    if (T[j] - T[j - 1] > 1.6 * DAY) continue;
+    let d = 0;
+    for (const x of rows) { const v = val(x.k, j), pv = val(x.k, j - 1); if (v == null) continue; d += pv == null ? (v <= 5 ? v : 0) : v - pv; }
+    if (!day || d > day.g) day = { t: h.snaps[j].t, g: d };
+  }
+  const best = rows.slice().sort((a, z) => z.g - a.g)[0];
+  const steps = rows.flatMap(x => x.steps.map(S => ({ r: x.r, S }))).sort((a, z) => z.S - a.S);
+  return {
+    Y, partial, live: Date.now() < t1, from: h.snaps[b].t, to: h.snaps[e].t,
+    gained: rows.reduce((n, x) => n + x.g, 0), r0: rankAt(b), r1: rankAt(e),
+    pubs: c.recipes.filter(r => r.p && Date.parse(r.p) >= t0 && Date.parse(r.p) < t1).length,
+    best: best && best.g > 0 ? best : null, day: day && day.g > 0 ? day : null,
+    steps, fund: steps.filter(x => x.S === 50).length,
+  };
+}
+const retroMove = R => R.r0 == null ? { big: '#' + R.r1, lbl: L('nouveau cette année', 'new this year') }
+  : R.r0 === R.r1 ? { big: '#' + R.r1, lbl: L('rang inchangé', 'same rank') }
+  : { big: (R.r0 > R.r1 ? '▲ ' : '▼ ') + Math.abs(R.r0 - R.r1), short: `#${R.r0} → #${R.r1}`, lbl: L(`place${Math.abs(R.r0 - R.r1) > 1 ? 's' : ''} ${R.r0 > R.r1 ? 'gagnée' : 'perdue'}${Math.abs(R.r0 - R.r1) > 1 ? 's' : ''} (#${R.r0} → #${R.r1})`, `spot${Math.abs(R.r0 - R.r1) > 1 ? 's' : ''} ${R.r0 > R.r1 ? 'gained' : 'lost'} (#${R.r0} → #${R.r1})`) };
+const retroDay = iso => new Date(iso).toLocaleDateString(LOC, { day: 'numeric', month: 'long' });
+function renderRetro(c, mine) {
+  const box = $('#retro'); if (!box) return;
+  const R = retroOpen() ? retroOf(c, retroYear()) : null;
+  if (!R) { box.innerHTML = ''; return; }
+  const mv = retroMove(R), who = esc(nameOf(c.u));
+  const facts = [];
+  if (R.best) facts.push(L(`Recette de l'année : <b>${recipeLink(R.best.r)}</b> (${sg(R.best.g)} connexions)`, `Recipe of the year: <b>${recipeLink(R.best.r)}</b> (${sg(R.best.g)} connections)`));
+  if (R.day) facts.push(L(`Meilleure journée : <b>${retroDay(R.day.t)}</b> (${sg(R.day.g)})`, `Best day: <b>${retroDay(R.day.t)}</b> (${sg(R.day.g)})`));
+  if (R.fund) facts.push(L(`<b>${R.fund}</b> recette${R.fund > 1 ? 's ont' : ' a'} passé le seuil du Creator Fund (50)`, `<b>${R.fund}</b> recipe${R.fund > 1 ? 's' : ''} passed the Creator Fund threshold (50)`));
+  if (R.steps[0] && R.steps[0].S > 50) facts.push(L(`Plus haut palier : <b>${nf(R.steps[0].S)}</b> avec ${esc(R.steps[0].r.n)}`, `Highest milestone: <b>${nf(R.steps[0].S)}</b> with ${esc(R.steps[0].r.n)}`));
+  const period = R.partial
+    ? L(`Recettes publiées en ${R.Y} : toutes leurs connexions sont comptées. Recettes plus anciennes et classement : mesurés depuis le ${retroDay(R.from)}, date des premiers relevés du site.`, `Recipes published in ${R.Y}: all their connections count. Older recipes and ranking: measured since ${retroDay(R.from)}, when the site's snapshots began.`)
+    : L(`Du 1er janvier au ${retroDay(R.to)} ${R.Y}.`, `From 1 January to ${retroDay(R.to)} ${R.Y}.`);
+  box.innerHTML = `<div class="sheet pr-card" style="margin-top:22px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <h3 style="margin:0">🎁 ${mine ? L(`Votre année ${R.Y} sur TRMNL`, `Your ${R.Y} on TRMNL`) : L(`L'année ${R.Y} de ${who}`, `${who}'s ${R.Y} on TRMNL`)}</h3>
+      <button class="btn small" type="button" id="retroCard">${mine ? L(`Ma carte ${R.Y} à partager`, `My ${R.Y} card to share`) : L('Carte à partager', 'Card to share')}</button></div>
+    <div class="wk-kpis">
+      <div><b>${sg(R.gained)}</b><span>${L('connexions gagnées', 'connections gained')}</span></div>
+      <div><b>${nf(R.pubs)}</b><span>${L(`recette${R.pubs > 1 ? 's' : ''} publiée${R.pubs > 1 ? 's' : ''} en ${R.Y}`, `recipe${R.pubs === 1 ? '' : 's'} published in ${R.Y}`)}</span></div>
+      <div><b>${mv.big}</b><span>${mv.lbl}</span></div>
+      <div><b>${nf(R.steps.length)}</b><span>${L(`palier${R.steps.length > 1 ? 's' : ''} franchi${R.steps.length > 1 ? 's' : ''}`, `milestone${R.steps.length === 1 ? '' : 's'} reached`)}</span></div>
+    </div>
+    ${facts.length ? `<ul class="facts" style="margin:0">${facts.map(f => `<li>${f}</li>`).join('')}</ul>` : ''}
+    <p class="note">${period} ${L('Connexions = installs + forks.', 'Connections = installs + forks.')}${R.live ? ' ' + L(`Les chiffres bougent encore : ils seront figés le 31 décembre.`, `Figures are still moving: they freeze on 31 December.`) : ''}</p></div>`;
+  $('#retroCard').onclick = () => retroCard(c, R, mine);
+}
+// Carte 1200 × 630 de la rétrospective (même principe que les vignettes de recette)
+async function retroCard(c, R, mine) {
+  track('carte-retro-ouverte', true, 'creator:' + c.u);
+  const W = 1200, H = 630;
+  const url = `${location.origin}${location.pathname}${EN() ? '?lang=en' : ''}${hr('createur', c.u)}`;
+  const wrap = document.createElement('div');
+  wrap.className = 'modal';
+  wrap.innerHTML = `<div class="box"><canvas id="retroCv" width="${W}" height="${H}"></canvas>
+    <div class="row"><button class="btn ghost" type="button" id="rcClose">${L('Fermer', 'Close')}</button>
+      <button class="btn ghost" type="button" id="rcLink">${L('Copier le lien du profil', 'Copy profile link')}</button>
+      <button class="btn" type="button" id="rcDl">${L("Télécharger l'image", 'Download image')}</button></div>
+    <p class="note">${L("L'image fait 1200 × 630 : collez-la sur Discord ou Reddit avec le lien du profil.", 'The image is 1200 × 630: paste it on Discord or Reddit with the profile link.')}</p></div>`;
+  document.body.append(wrap);
+  wrap.addEventListener('click', e => { if (e.target === wrap) wrap.remove(); });
+  $('#rcClose', wrap).onclick = () => wrap.remove();
+  const cv = $('#retroCv', wrap), x = cv.getContext('2d');
+  const F = (w, size) => `${w} ${size}px Archivo, system-ui, sans-serif`;
+  const PAPER = '#f2f0ed', INK = '#1d1d1b', INK2 = '#5d5c58', ACC = '#f8654b', SHEET = '#fbf9f5', RULE = '#dcdbd9';
+  const fit = (t, max) => { let s = String(t); while (x.measureText(s).width > max && s.length > 2) s = s.slice(0, -2) + '…'; return s; };
+  try { await document.fonts.load(F(800, 60)); } catch {}
+  x.fillStyle = PAPER; x.fillRect(0, 0, W, H);
+  x.fillStyle = ACC; x.fillRect(0, 0, W, 10);
+  x.font = F(700, 24); x.fillStyle = ACC; x.fillText(mine ? L(`MON ANNÉE ${R.Y} SUR TRMNL`, `MY ${R.Y} ON TRMNL`) : L(`L'ANNÉE ${R.Y} SUR TRMNL`, `${R.Y} ON TRMNL`), 60, 84);
+  x.font = F(800, 64); x.fillStyle = INK; x.fillText(fit(nameOf(c.u), 560), 60, 158);
+  x.font = F(400, 24); x.fillStyle = INK2;
+  x.fillText(L(`#${c.r} sur ${nf(D.creators.length)} créateurs · ${nf(c.s)} points`, `#${c.r} of ${nf(D.creators.length)} creators · ${nf(c.s)} points`), 60, 198);
+  // quatre chiffres
+  const mv = retroMove(R);
+  const tiles = [
+    [sg(R.gained), L('connexions gagnées', 'connections gained')],
+    [nf(R.pubs), L(`recette${R.pubs > 1 ? 's' : ''} publiée${R.pubs > 1 ? 's' : ''}`, `recipe${R.pubs === 1 ? '' : 's'} published`)],
+    [mv.big, mv.short || mv.lbl],
+    [nf(R.steps.length), L(`palier${R.steps.length > 1 ? 's' : ''} franchi${R.steps.length > 1 ? 's' : ''}`, `milestone${R.steps.length === 1 ? '' : 's'} reached`)],
+  ];
+  tiles.forEach(([big, lbl], k) => {
+    const tx = 60 + (k % 2) * 285, ty = 232 + Math.floor(k / 2) * 142, tw = 270, th = 126;
+    x.fillStyle = SHEET; x.fillRect(tx, ty, tw, th); x.strokeStyle = RULE; x.lineWidth = 2; x.strokeRect(tx, ty, tw, th);
+    x.font = F(800, 52); x.fillStyle = k === 0 ? ACC : INK; x.fillText(fit(big, tw - 36), tx + 18, ty + 64);
+    x.font = F(500, 20); x.fillStyle = INK2; x.fillText(fit(lbl, tw - 36), tx + 18, ty + 100);
+  });
+  // recette de l'année (capture) à droite
+  const bx = 690, by = 96, bw = 450, bh = 270, br = R.best?.r || byR.get(c.best);
+  const img = new Image(); img.crossOrigin = 'anonymous';
+  const drawn = await new Promise(res => { img.onload = () => res(true); img.onerror = () => res(false); if (br?.sc) img.src = br.sc + (br.sc.includes('?') ? '&' : '?') + 'x=card'; else res(false); });
+  x.fillStyle = '#fff'; x.fillRect(bx, by, bw, bh);
+  if (drawn) x.drawImage(img, bx, by, bw, bh);
+  x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(bx, by, bw, bh);
+  if (br) {
+    x.font = F(700, 20); x.fillStyle = ACC; x.fillText(R.best ? L("RECETTE DE L'ANNÉE", 'RECIPE OF THE YEAR') : L('MEILLEURE RECETTE', 'TOP RECIPE'), bx, by + bh + 36);
+    x.font = F(700, 30); x.fillStyle = INK; x.fillText(fit(br.n, bw), bx, by + bh + 74);
+    x.font = F(400, 22); x.fillStyle = INK2;
+    x.fillText(fit(R.best ? `${sg(R.best.g)} ${L('connexions', 'connections')}` : `${nf(br.s)} ${L('connexions', 'connections')}`, bw), bx, by + bh + 106);
+    if (R.day) x.fillText(fit(`${L('Meilleure journée', 'Best day')}${CO()}${retroDay(R.day.t)} (${sg(R.day.g)})`, bw), bx, by + bh + 136);
+  }
+  // pied
+  x.strokeStyle = RULE; x.lineWidth = 2; x.beginPath(); x.moveTo(60, 556); x.lineTo(W - 60, 556); x.stroke();
+  x.font = F(400, 22); x.fillStyle = INK2;
+  x.fillText(location.host + location.pathname.replace(/\/$/, ''), 60, 590);
+  x.textAlign = 'right';
+  x.fillText(R.live ? L(`au ${retroDay(R.to)} ${R.Y}`, `as of ${retroDay(R.to)} ${R.Y}`) : L(`année ${R.Y}`, `year ${R.Y}`), W - 60, 590);
+  x.textAlign = 'left';
+  $('#rcDl', wrap).onclick = () => cv.toBlob(b => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `trmnl-${R.Y}-${String(nameOf(c.u)).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || c.u}.png`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000); track('carte-retro-telechargee', true, 'creator:' + c.u);
+  }, 'image/png');
+  $('#rcLink', wrap).onclick = async () => {
+    try { await navigator.clipboard.writeText(url); toast(L('Lien copié', 'Link copied')); } catch { prompt(L('Copiez ce lien :', 'Copy this link:'), url); }
+  };
+}
+
 function renderProfile(u) {
   const el = $('#tab-moi');
   if (!u) {
@@ -1797,6 +1955,7 @@ function renderProfile(u) {
     </div>
   </div>
 
+  <div id="retro"></div>
   <div id="myInstalls"></div>
   <div id="myPlugins"></div>
 
@@ -1840,6 +1999,7 @@ function renderProfile(u) {
   </table></div>`;
 
   const refresh = () => { resetViews(); renderProfile(c.u); };
+  renderRetro(c, mine);
   loadMyInstalls(c.u);
   loadMyPlugins(c.u);
   $('#setMe')?.addEventListener('click', () => chooseMe(c.u));
@@ -4066,6 +4226,7 @@ function rssBlock() {
     ['📅', L('La semaine en bref', 'The week in brief'), EN() ? 'feed-en.xml' : 'feed.xml', L('Chaque lundi, le résumé de la semaine.', 'Every Monday, the week summed up.')],
     ['🆕', L('Nouvelles recettes', 'New recipes'), f('feed-recettes'), L("Chaque recette publiée, avec le mot de son auteur et l'annonce de TRMNL.", "Every published recipe, with its author's note and TRMNL's announcement.")],
     ['🏁', L('Paliers atteints', 'Milestones'), f('feed-paliers'), L('Chaque recette qui passe 50, 100, 500, 1 000 connexions…', 'Every recipe that passes 50, 100, 500, 1,000 connections…')],
+    ['🔧', L('Recettes mises à jour', 'Updated recipes'), f('feed-maj'), L("Chaque recette dont l'auteur ajoute un réglage, change les options, la description ou la présentation.", "Every recipe whose author adds a setting or changes its options, description or author's note.")],
     ['🗞️', L('Actu e-ink & dashboards', 'E-ink & dashboards news'), f('feed-eink'), L('Les articles complets de la veille e-ink.', 'The full articles from the e-ink news.')],
   ];
   if (me && byU.has(String(me))) feeds.push(['📊', L('Mes statistiques', 'My stats'), f(`feed-createur-${me}`), L('Tes connexions par recette, ton total, tes gains et pertes, ton classement. Chaque profil a aussi son bouton « Suivre ce créateur ».', 'Your connections per recipe, your total, gains and losses, your ranking. Every profile also has a "Follow this creator" button.')]);
@@ -4080,11 +4241,54 @@ document.addEventListener('click', e => {
   navigator.clipboard?.writeText(url).then(() => toast(L('Adresse copiée', 'Link copied')), () => prompt(L("Copie l'adresse :", 'Copy the link:'), url));
 });
 
+/* ================= Recettes mises à jour (journal data/updates.json, tenu par scripts/updates.mjs) ================= */
+// Texte d'un changement (mêmes formulations que dans le flux RSS, scripts/feeds.mjs)
+function updText(c) {
+  const q = t => EN() ? `"${t}"` : `« ${t} »`;
+  const list = (x, more) => x.map(q).join(', ') + (more ? L(` et ${more} de plus`, ` and ${more} more`) : '');
+  const many = Array.isArray(c.x) && (c.x.length > 1 || c.more);
+  switch (c.k) {
+    case 'n': return L(`Renommée : ${q(c.a)} devient ${q(c.b)}`, `Renamed: ${q(c.a)} is now ${q(c.b)}`);
+    case 'd': return c.b ? L(`Nouvelle description : ${q(c.b)}`, `New description: ${q(c.b)}`) : L('Description retirée', 'Description removed');
+    case 'c': return L(`Catégories : ${c.b || 'aucune'} (avant : ${c.a || 'aucune'})`, `Categories: ${c.b || 'none'} (was: ${c.a || 'none'})`);
+    case 'a': return L("Présentation de l'auteur (About) réécrite", "Author's note (About) rewritten");
+    case 'f+': return L(`${many ? 'Nouveaux réglages' : 'Nouveau réglage'} : ${list(c.x, c.more)}`, `New setting${many ? 's' : ''}: ${list(c.x, c.more)}`);
+    case 'f-': return L(`${many ? 'Réglages retirés' : 'Réglage retiré'} : ${list(c.x, c.more)}`, `Setting${many ? 's' : ''} removed: ${list(c.x, c.more)}`);
+    case 'fm': return L(`${many ? 'Réglages modifiés' : 'Réglage modifié'} : ${list(c.x, c.more)}`, `Setting${many ? 's' : ''} changed: ${list(c.x, c.more)}`);
+    case 'fo': {
+      const parts = [];
+      if (c.add?.length) parts.push(L(`${c.add.length > 1 ? 'options ajoutées' : 'option ajoutée'} ${list(c.add)}`, `option${c.add.length > 1 ? 's' : ''} added ${list(c.add)}`));
+      if (c.del?.length) parts.push(L(`${c.del.length > 1 ? 'options retirées' : 'option retirée'} ${list(c.del)}`, `option${c.del.length > 1 ? 's' : ''} removed ${list(c.del)}`));
+      return L(`Réglage ${q(c.x)} : ${parts.join(' ; ')}${c.more ? '…' : ''}`, `Setting ${q(c.x)}: ${parts.join('; ')}${c.more ? '…' : ''}`);
+    }
+    default: return '';
+  }
+}
+const UPD_SHOWN = 6;
+// Bloc « Recettes mises à jour » d'une semaine (vide tant que le suivi n'a pas commencé ou pour les semaines d'avant)
+function updatesSheet(w, upd) {
+  if (!upd?.since) return '';
+  const from = Date.parse(w.from), to = w.live ? Date.now() : from + 7 * DAY, since = Date.parse(upd.since);
+  if (to <= since) return '';
+  const items = (upd.items || []).filter(x => byR.has(x.id) && Date.parse(x.at) >= from && Date.parse(x.at) < to);
+  const day = iso => new Date(iso).toLocaleDateString(LOC, { day: 'numeric', month: 'short' });
+  const row = (x, k) => { const r = byR.get(x.id);
+    return `<li ${k >= UPD_SHOWN ? 'hidden data-updmore' : ''}><span><a href="${rURL(r)}" target="_blank" rel="noopener">${esc(r.n)}</a><a class="sub" href="${hr('createur', r.u)}">${esc(nameOf(r.u))}</a>
+      ${x.ch.map(c => `<span class="sub upd-ch">${esc(updText(c))}</span>`).join('')}</span><span class="muted" style="white-space:nowrap;font-size:.82rem">${day(x.at)}</span></li>`; };
+  return `<div class="sheet"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><h3>🔧 ${L('Recettes mises à jour', 'Updated recipes')}</h3>
+      <a class="rss" href="${EN() ? 'feed-maj-en.xml' : 'feed-maj.xml'}" target="_blank" rel="noopener" style="flex:none">RSS</a></div>
+    ${items.length ? `<ul class="wk-list">${items.map(row).join('')}</ul>
+      ${items.length > UPD_SHOWN ? `<p style="margin:10px 0 0"><button class="btn ghost small" type="button" id="updMore">${L(`Voir les ${items.length} mises à jour`, `Show all ${items.length} updates`)}</button></p>` : ''}`
+      : `<p class="muted">${L('Aucune mise à jour repérée cette semaine.', 'No update spotted this week.')}</p>`}
+    <p class="note">${L("Repéré dans les informations publiques de chaque recette : réglages, description, présentation, nom, catégories. Un changement du seul affichage n'est pas visible.", "Spotted in each recipe's public information: settings, description, author's note, name, categories. A display-only change cannot be seen.")}${since > from ? ' ' + L(`Suivi démarré le ${retroDay(upd.since)}.`, `Tracking started on ${retroDay(upd.since)}.`) : ''}</p></div>`;
+}
+
 /* ================= Cette semaine (La semaine en bref) ================= */
-let weekData = null;
+let weekData = null, updData = null;
 async function renderWeek(sel) {
   const el = $('#tab-semaine');
   if (!weekData) weekData = await getJSON('data/weekly.json').catch(() => ({}));
+  if (!updData) updData = await getJSON('data/updates.json').catch(() => ({}));
   const cur = weekData?.current;
   // Semaines du lundi au dimanche : celle en cours, puis toutes les semaines passées (v2) ; ancienne version : les éditions figées
   const past = (weekData?.weeks || weekData?.issues || []).filter(w => !cur || w.week !== cur.week);
@@ -4111,6 +4315,7 @@ async function renderWeek(sel) {
         <ul class="wk-list">${w.top.map(g => `<li><span>${rec(g)}</span><span class="up">+${nf(g.g)}</span></li>`).join('')}</ul></div>
       ${w.new_list?.length ? `<div class="sheet"><h3>🆕 ${L('Nouveautés les plus adoptées', 'Most adopted newcomers')}</h3>
         <ul class="wk-list">${w.new_list.map(r => `<li><span>${rec(r)}</span><span class="muted">${nf(r.s)} ${L('connexions', 'connections')}</span></li>`).join('')}</ul></div>` : ''}
+      ${updatesSheet(w, updData)}
     </div>`;
   const day = iso => new Date(iso).toLocaleDateString(LOC, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
   const sunday = new Date(Date.parse(w.from) + 6 * DAY).toISOString();
@@ -4126,6 +4331,7 @@ async function renderWeek(sel) {
   const go_ = k => { if (k) location.hash = hr('semaine', k === all[0].week ? undefined : k); };
   el.querySelectorAll('[data-wk]').forEach(b => b.onclick = () => go_(b.dataset.wk));
   $('#wkPick').onchange = e => go_(e.target.value);
+  $('#updMore')?.addEventListener('click', e => { el.querySelectorAll('[data-updmore]').forEach(li => { li.hidden = false; }); e.target.closest('p').remove(); });
 }
 
 /* ================= Pronostics ================= */

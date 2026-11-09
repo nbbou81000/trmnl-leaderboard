@@ -3,6 +3,7 @@
 //  - feed-recettes.xml / feed-recettes-en.xml : chaque nouvelle recette publique, avec le texte « About This Plugin »
 //                                               de son auteur et, quand TRMNL l'a annoncée, sa petite phrase d'annonce ;
 //  - feed-paliers.xml / feed-paliers-en.xml   : chaque fois qu'une recette franchit 50, 100, 250, 500… connexions ;
+//  - feed-maj.xml / feed-maj-en.xml           : chaque recette mise à jour par son auteur (réglages, description, présentation…) ;
 //  - feed-createur-<n°>.xml (+ -en)           : les statistiques d'un créateur, un flux pour chaque créateur du palmarès.
 // Aucune IA ici : un seul appel à l'API publique de TRMNL par passage (les 50 dernières recettes publiées).
 // Usage : SITE_URL=https://…/ node scripts/feeds.mjs public
@@ -17,7 +18,7 @@ const MILESTONES = [50, 100, 250, 500, 1000, 2000, 5000];
 // Ceux-ci ont en plus un article à chaque relevé horaire, même quand rien n'a bougé :
 const STATS_EVERY_HOUR = ['40325'];
 const STATS_KEEP = 24, STATS_KEEP_EVERY_HOUR = 72;   // articles gardés par flux
-const KEEP = { eink: 30, recipes: 40, milestones: 60 };
+const KEEP = { eink: 30, recipes: 40, milestones: 60, updates: 60 };
 const DAY = 864e5;
 const log = (...a) => console.log('[flux RSS]', ...a);
 
@@ -132,6 +133,54 @@ function milestonesFeed(list, names, en) {
   });
 }
 
+// ─── 3 bis. Recettes mises à jour (journal tenu par updates.mjs) ─────────────
+// Texte d'un changement (mêmes formulations que sur le site, onglet « Cette semaine »)
+function changeText(c, en) {
+  const t = (fr, e) => en ? e : fr;
+  const q = s => en ? `"${s}"` : `« ${s} »`;
+  const list = (x, more) => x.map(q).join(', ') + (more ? t(` et ${more} de plus`, ` and ${more} more`) : '');
+  const many = c.x && Array.isArray(c.x) && (c.x.length > 1 || c.more);
+  switch (c.k) {
+    case 'n': return t(`Renommée : ${q(c.a)} devient ${q(c.b)}`, `Renamed: ${q(c.a)} is now ${q(c.b)}`);
+    case 'd': return c.b ? t(`Nouvelle description : ${q(c.b)}`, `New description: ${q(c.b)}`) : t('Description retirée', 'Description removed');
+    case 'c': return t(`Catégories : ${c.b || 'aucune'} (avant : ${c.a || 'aucune'})`, `Categories: ${c.b || 'none'} (was: ${c.a || 'none'})`);
+    case 'a': return t("Présentation de l'auteur (About) réécrite", "Author's note (About) rewritten");
+    case 'f+': return t(`${many ? 'Nouveaux réglages' : 'Nouveau réglage'} : ${list(c.x, c.more)}`, `New setting${many ? 's' : ''}: ${list(c.x, c.more)}`);
+    case 'f-': return t(`${many ? 'Réglages retirés' : 'Réglage retiré'} : ${list(c.x, c.more)}`, `Setting${many ? 's' : ''} removed: ${list(c.x, c.more)}`);
+    case 'fm': return t(`${many ? 'Réglages modifiés' : 'Réglage modifié'} : ${list(c.x, c.more)}`, `Setting${many ? 's' : ''} changed: ${list(c.x, c.more)}`);
+    case 'fo': {
+      const parts = [];
+      if (c.add?.length) parts.push(t(`${c.add.length > 1 ? 'options ajoutées' : 'option ajoutée'} ${list(c.add)}`, `option${c.add.length > 1 ? 's' : ''} added ${list(c.add)}`));
+      if (c.del?.length) parts.push(t(`${c.del.length > 1 ? 'options retirées' : 'option retirée'} ${list(c.del)}`, `option${c.del.length > 1 ? 's' : ''} removed ${list(c.del)}`));
+      return t(`Réglage ${q(c.x)} : ${parts.join(' ; ')}${c.more ? '…' : ''}`, `Setting ${q(c.x)}: ${parts.join('; ')}${c.more ? '…' : ''}`);
+    }
+    default: return '';
+  }
+}
+function updatesFeed(store, latest, names, en) {
+  const t = (fr, e) => en ? e : fr;
+  const live = new Map(latest.recipes.map(r => [r.id, r]));   // recettes retirées du palmarès : absentes du flux aussi
+  const items = (store?.items || []).filter(x => live.has(x.id)).slice(0, KEEP.updates).map(x => {
+    const r = live.get(x.id), who = names[r.u] || t(`Créateur #${r.u}`, `Creator #${r.u}`);
+    const lines = x.ch.map(c => changeText(c, en)).filter(Boolean);
+    return {
+      title: `🔧 ${r.n} · ${lines[0] || t('mise à jour', 'updated')}${lines.length > 1 ? ` (+${lines.length - 1})` : ''}`,
+      date: x.at, guid: `update-${x.id}-${x.t0 || x.at}${en ? '-en' : ''}`, link: recipeURL(x.id), img: r.sc || null, cats: r.c,
+      summary: lines.join(' · '),
+      html: `${r.sc ? `<p><img src="${xml(r.sc)}" alt="${xml(r.n)}"></p>` : ''}
+        <p><strong>${xml(r.n)}</strong> ${t('de', 'by')} <a href="${xml(`${SITE}${en ? '?lang=en' : ''}#${en ? 'creator' : 'createur'}/${r.u}`)}">${xml(who)}</a>${r.d ? `${t(' : ', ': ')}${xml(r.d)}` : ''}</p>
+        <ul>${lines.map(l => `<li>${xml(l)}</li>`).join('')}</ul>
+        <p><a href="${xml(recipeURL(x.id))}">${t('Voir la recette sur trmnl.com', 'See the recipe on trmnl.com')}</a></p>
+        <p><small>${t("Repéré dans les informations publiques de la recette (réglages, description, présentation, nom, catégories). Un changement du seul affichage n'est pas visible.", 'Spotted in the recipe\'s public information (settings, description, author\'s note, name, categories). A display-only change cannot be seen.')}</small></p>`,
+    };
+  });
+  return channel({
+    file: en ? 'feed-maj-en.xml' : 'feed-maj.xml', en, items, link: `${SITE}${en ? '?lang=en' : ''}#${en ? 'this-week' : 'semaine'}`,
+    title: t('Palmarès TRMNL : recettes mises à jour', 'TRMNL Leaderboard: updated recipes'),
+    desc: t("Chaque fois que l'auteur d'une recette TRMNL ajoute un réglage, change ses options, sa description ou sa présentation.", "Every time a TRMNL recipe's author adds a setting or changes its options, description or author's note."),
+  });
+}
+
 // ─── 4. Statistiques horaires d'un créateur ──────────────────────────────────
 // Un article à chaque relevé où quelque chose a bougé (total, classement ou une recette),
 // ou à chaque relevé horaire sans exception pour les créateurs listés dans STATS_EVERY_HOUR.
@@ -193,6 +242,7 @@ async function main() {
   const news = await readJSON(path.join(DATA, 'eink-news.json'), {});
   const trmnl = await readJSON(path.join(DATA, 'trmnl.json'), {});
   const state = await readJSON(path.join(DATA, 'feeds-state.json'), {});
+  const updates = await readJSON(path.join(DATA, 'updates.json'), { items: [] });
   state.recipes ||= []; state.milestones ||= []; state.ann ||= {};
   const now = Date.parse(latest.generated_at) || Date.now();
 
@@ -240,6 +290,7 @@ async function main() {
     ['feed-eink.xml', einkFeed(news, false)], ['feed-eink-en.xml', einkFeed(news, true)],
     ['feed-recettes.xml', recipesFeed(state.recipes, names, false)], ['feed-recettes-en.xml', recipesFeed(state.recipes, names, true)],
     ['feed-paliers.xml', milestonesFeed(state.milestones, names, false)], ['feed-paliers-en.xml', milestonesFeed(state.milestones, names, true)],
+    ['feed-maj.xml', updatesFeed(updates, latest, names, false)], ['feed-maj-en.xml', updatesFeed(updates, latest, names, true)],
   ];
   for (const c of latest.creators) if (state.stats[c.u]?.items?.length) out.push([`feed-createur-${c.u}.xml`, statsFeed(c.u, state.stats[c.u], names, state.rn, false)], [`feed-createur-${c.u}-en.xml`, statsFeed(c.u, state.stats[c.u], names, state.rn, true)]);
   for (const [f, body] of out) await fs.writeFile(path.join(ROOT, f), body);

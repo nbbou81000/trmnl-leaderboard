@@ -13,6 +13,12 @@ let names = {};
 try { names = JSON.parse(await fs.readFile(path.join(OUT, 'names.json'), 'utf8')); } catch {}
 const nameOf = u => (names[u] && String(names[u]).trim()) || `Creator #${u}`;
 const creators = new Map(data.creators.map(c => [c.u, c]));
+// Vignettes 1200 × 630 dessinées par scripts/cards.mjs (même image que le bouton « Vignette » du site), stockées dans Supabase.
+// Sans vignette (pas encore dessinée, ou Supabase absent), l'aperçu garde la capture d'écran de la recette.
+let cards = {};
+try { cards = JSON.parse(await fs.readFile(path.join(OUT, 'data/cards.json'), 'utf8')).items || {}; } catch {}
+const CARD_BASE = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
+const cardOf = r => cards[r.id] && /^https:\/\/[\w-]+\.supabase\.co$/.test(CARD_BASE) ? `${CARD_BASE}/storage/v1/object/public/cards/${encodeURIComponent(r.id)}.png?v=${cards[r.id].v}` : null;
 
 const dir = path.join(OUT, 'r');
 await fs.rm(dir, { recursive: true, force: true });
@@ -24,7 +30,8 @@ const page = r => {
   const stats = `${nf(r.i)} installs · ${nf(r.f)} forks · #${r.r} on the leaderboard`;
   const desc = r.d ? `${r.d} — by ${author}. ${stats}.` : `By ${author}. ${stats}.`;
   const title = `${r.n} — TRMNL ${r.k === 'p' ? 'plugin' : 'recipe'}`;
-  const img = r.sc || `${SITE}og.png`;
+  const card = cardOf(r);
+  const img = card || r.sc || `${SITE}og.png`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +45,7 @@ const page = r => {
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${esc(SITE)}r/${r.id}.html">
 <meta property="og:image" content="${esc(img)}">
-<meta property="og:image:alt" content="${esc(`Preview of the ${r.n} TRMNL recipe`)}">
+${card ? '<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:type" content="image/png">\n' : ''}<meta property="og:image:alt" content="${esc(`Preview of the ${r.n} TRMNL recipe`)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(desc)}">
@@ -92,7 +99,7 @@ footer{color:var(--ink2);font-size:.8rem;margin-top:34px;border-top:1px solid va
 
 let n = 0;
 for (const r of data.recipes) { await fs.writeFile(path.join(dir, `${r.id}.html`), page(r)); n++; }
-console.log(`${n} pages de recette écrites dans r/.`);
+console.log(`${n} pages de recette écrites dans r/ (${data.recipes.filter(cardOf).length} avec leur vignette).`);
 
 // ─── Pages de partage des articles « Actu e-ink » (public/a/<id>.html en français, <id>-en.html en anglais) ───
 // Discord, Reddit, X… lisent ces balises pour afficher la vignette ; un visiteur, lui, est renvoyé aussitôt sur l'article dans le site.

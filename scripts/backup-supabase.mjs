@@ -60,6 +60,7 @@ let bytes = 0;
 try {
   const buckets = await (await get(`${URL0}/storage/v1/bucket`)).json();
   for (const b of buckets) {
+    if (b.id === 'cards') continue;   // vignettes des aperçus de liens : redessinées automatiquement, inutile de les sauvegarder
     const walk = async prefix => {
       for (let offset = 0; ; offset += 1000) {
         const items = await (await get(`${URL0}/storage/v1/object/list/${encodeURIComponent(b.id)}`, {

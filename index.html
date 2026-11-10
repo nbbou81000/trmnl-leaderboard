@@ -4175,26 +4175,34 @@ async function shareCard(r) {
   if (drawn) x.drawImage(img, bx, by, bw, bh);
   x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(bx, by, bw, bh);
   // textes
+  // Même découpage que scripts/cards.mjs (vignettes des aperçus de liens) : les deux images doivent rester identiques
   const wrapText = (t, max, size, weight, color, y0, lh, limit = 3) => {
     x.font = F(weight, size); x.fillStyle = color;
-    const words = String(t).split(' '); let line = '', y = y0, n = 0;
-    for (const w of words) {
-      const test = line ? line + ' ' + w : w;
-      if (x.measureText(test).width > max && line) {
-        x.fillText(line, 60, y); y += lh; line = w; if (++n >= limit - 1) break;
-      } else line = test;
+    const words = String(t).split(/\s+/).filter(Boolean);
+    const lines = []; let line = '';
+    for (let k = 0; k < words.length; k++) {
+      const test = line ? line + ' ' + words[k] : words[k];
+      if (x.measureText(test).width <= max || !line) { line = test; continue; }
+      if (lines.length === limit - 1) { line = words.slice(k - line.split(' ').length, words.length).join(' '); break; }
+      lines.push(line); line = words[k];
     }
-    if (line) { let t2 = line; while (x.measureText(t2).width > max) t2 = t2.slice(0, -2) + '…'; x.fillText(t2, 60, y); y += lh; }
+    if (line) {
+      let last = line;
+      if (x.measureText(last).width > max) { while (last.length > 1 && x.measureText(last + '…').width > max) last = last.slice(0, -1).trimEnd(); last += '…'; }
+      lines.push(last);
+    }
+    let y = y0;
+    for (const l of lines.slice(0, limit)) { x.fillText(l, 60, y); y += lh; }
     return y;
   };
-  x.font = F(700, 24); x.fillStyle = ACC; x.fillText('TRMNL RECIPE', 60, 96);
+  x.font = F(700, 24); x.fillStyle = ACC; x.fillText(isPlugin(r) ? 'TRMNL PLUGIN' : 'TRMNL RECIPE', 60, 96);
   let y = wrapText(r.n, 540, 60, 800, INK, 168, 66, 2);
   y = wrapText(r.d || '', 540, 26, 400, INK2, y + 16, 34, 3);
   const c = byU.get(r.u);
   x.font = F(600, 26); x.fillStyle = INK;
   x.fillText(`${L('par', 'by')} ${nameOf(r.u)}`, 60, Math.min(y + 34, 468));
   x.font = F(700, 30); x.fillStyle = INK;
-  x.fillText(`${nf(r.i)} ${L('installations', 'installs')}   ·   ${nf(r.f)} forks   ·   #${r.r} ${L('au classement', 'overall')}`, 60, 520);
+  x.fillText(`${nf(r.i)} ${r.i === 1 ? L('installation', 'install') : L('installations', 'installs')}   ·   ${nf(r.f)} fork${r.f === 1 ? '' : 's'}   ·   #${r.r} ${L('au classement', 'overall')}`, 60, 520);
   // pied
   x.strokeStyle = '#dcdbd9'; x.lineWidth = 2; x.beginPath(); x.moveTo(60, 556); x.lineTo(W - 60, 556); x.stroke();
   x.font = F(400, 22); x.fillStyle = INK2;

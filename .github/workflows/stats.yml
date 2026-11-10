@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir -p public/data
           if git fetch --depth=1 origin gh-pages 2>/dev/null; then
-            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json wanted.json plugins.json meta.json updates.json; do
+            for f in hourly.json daily.json latest.json trmnl.json spotlight.json spotlight-history.json breakout.json visits-today.json eink-news.json weekly.json feeds-state.json rules.json wanted.json plugins.json meta.json updates.json cards.json; do
               git show "origin/gh-pages:data/$f" > "public/data/$f" 2>/dev/null || rm -f "public/data/$f"
             done
           else
@@ -116,6 +116,20 @@ jobs:
           TRMNL_API_KEY: ${{ secrets.TRMNL_API_KEY }}
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
         run: node scripts/wanted.mjs public/data
+
+      # Vignettes 1200 × 630 des recettes pour les aperçus de liens (Discord, Reddit…), stockées dans Supabase (dossier public « cards »).
+      # Seules les vignettes dont le contenu a changé sont redessinées (300 au plus par passage).
+      - uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-canvas-1.0.12
+      - name: Vignettes des recettes
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @napi-rs/canvas@1.0.12 >/dev/null 2>&1 || echo "Moteur de dessin non installé : vignettes ignorées ce passage."
+          node scripts/cards.mjs public/data
 
       - name: Visites du jour (GoatCounter)
         run: node scripts/goatcounter-today.mjs public/data

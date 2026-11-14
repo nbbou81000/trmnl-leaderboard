@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Impression 3D et électronique : une méthode pour intégrer des composants sans outils · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Une technique open source permet d’assembler des circuits électroniques directement pendant l’impression 3D FDM, sans modifier l’imprimante.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Impression 3D et électronique : une méthode pour intégrer des composants sans outils">
+<meta property="og:description" content="Une technique open source permet d’assembler des circuits électroniques directement pendant l’impression 3D FDM, sans modifier l’imprimante.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/455fe1bcf015.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/11/print_and_place_oliver_child_et_al_uist_2026.jpg">
+<meta property="article:published_time" content="2026-11-11T03:00:32.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Impression 3D et électronique : une méthode pour intégrer des composants sans outils">
+<meta name="twitter:description" content="Une technique open source permet d’assembler des circuits électroniques directement pendant l’impression 3D FDM, sans modifier l’imprimante.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/11/print_and_place_oliver_child_et_al_uist_2026.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/455fe1bcf015.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/455fe1bcf015-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/455fe1bcf015", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/11/print_and_place_oliver_child_et_al_uist_2026.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 11 novembre 2026 · source : Hackaday</p>
+  <h1>Impression 3D et électronique : une méthode pour intégrer des composants sans outils</h1>
+  <p class="lead">Une technique open source permet d’assembler des circuits électroniques directement pendant l’impression 3D FDM, sans modifier l’imprimante.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/455fe1bcf015">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Une équipe de chercheurs dirigée par Oliver Child propose une méthode appelée <strong>Print &amp; Place</strong> pour intégrer des composants électroniques dans des structures imprimées en 3D, sans nécessiter d’assemblage manuel complexe ou de modification de l’imprimante. Contrairement aux approches classiques qui exigent souvent des outils dédiés, cette technique exploite la capacité d’adhésion temporaire de la matière thermoplastique fondue pour manipuler et positionner les pièces.</p> <p>Le processus commence par la création d’un <strong>plateau de pièces</strong> imprimé en même temps que le modèle final. Ce plateau est conçu pour accueillir les composants (petites cartes pré-populées, fils conducteurs, tresses ou rivets) avant leur intégration. Pendant l’impression, le logiciel de l’imprimante, via des commandes G-code ajoutées, déplace la tête d’extrusion au-dessus des pièces nécessaires. Une goutte de plastique fondu est déposée sur le composant, qui est ensuite soulevé et placé à l’emplacement souhaité dans la structure en cours de construction. Une fois positionné, le composant est recouvert par les couches suivantes de filament, l’enfermant définitivement dans la pièce imprimée.</p> <p>Les essais menés par les auteurs ont démontré la faisabilité de cette approche avec divers types de composants, mais soulignent aussi ses limites. Le système fonctionne en boucle ouverte, ce qui expose à des <strong>échecs de prélèvement</strong>, des <strong>désalignements</strong> ou des <strong>contacts électriques inconsistants</strong>. Les chercheurs suggèrent d’intégrer une caméra pour corriger ces problèmes en temps réel, à l’image des machines de placement automatique industrielles. Cette innovation reste pour l’instant un prototype académique, mais ouvre la voie à une automatisation plus poussée de l’assemblage hybride.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

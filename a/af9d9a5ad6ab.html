@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Transformer une clé 4G/WiFi à 10 $ en serveur Debian silencieux · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un dongle 4G/WiFi à 10 $ devient un serveur Debian silencieux grâce à OpenStick et des outils légers.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Transformer une clé 4G/WiFi à 10 $ en serveur Debian silencieux">
+<meta property="og:description" content="Un dongle 4G/WiFi à 10 $ devient un serveur Debian silencieux grâce à OpenStick et des outils légers.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/af9d9a5ad6ab.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/11/banner-73.jpg">
+<meta property="article:published_time" content="2026-11-10T16:59:12.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Transformer une clé 4G/WiFi à 10 $ en serveur Debian silencieux">
+<meta name="twitter:description" content="Un dongle 4G/WiFi à 10 $ devient un serveur Debian silencieux grâce à OpenStick et des outils légers.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/11/banner-73.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/af9d9a5ad6ab.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/af9d9a5ad6ab-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/af9d9a5ad6ab", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/11/banner-73.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 10 novembre 2026 · source : Adafruit</p>
+  <h1>Transformer une clé 4G/WiFi à 10 $ en serveur Debian silencieux</h1>
+  <p class="lead">Un dongle 4G/WiFi à 10 $ devient un serveur Debian silencieux grâce à OpenStick et des outils légers.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/af9d9a5ad6ab">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un dongle 4G/WiFi acheté pour dix dollars, frais de port inclus, a été transformé en serveur domestique silencieux grâce à la plateforme <strong>OpenStick</strong>. L’utilisateur Laurens Bosscher détaille sur son blog les étapes de configuration, mettant en avant un système d’exploitation <strong>Debian</strong> optimisé pour une faible consommation mémoire.</p><p>Le serveur repose sur <strong>systemd</strong> pour la gestion des services et des tâches planifiées, tandis que <strong>Podman</strong> assure l’exécution de conteneurs légers. Plusieurs services sont déployés pour des fonctions spécifiques : <strong>AdGuard Home</strong> filtre les domaines malveillants au niveau DNS, bloquant environ 60 % des requêtes après l’ajout de listes de blocage. <strong>Beszel</strong> surveille les ressources système (CPU, mémoire, disque) via un agent léger et transmet des alertes sur Telegram. <strong>Gatus</strong> vérifie la disponibilité des services, <strong>Dozzle</strong> affiche les logs de Podman, et <strong>Fusion</strong> sert de lecteur RSS avec une empreinte mémoire d’environ 20 Mo. <strong>Shiori</strong> archive les pages web pour éviter les liens morts.</p><p>L’accès aux services est sécurisé via <strong>Cloudflared</strong>, qui évite d’ouvrir des ports sur le routeur. Enfin, <strong>Zeroclaw</strong>, un agent IA minimaliste, permet d’interagir avec le serveur via Telegram pour des tâches comme vérifier l’espace disque ou consulter les logs. Toutes les configurations et le code source sont disponibles sur <strong>GitHub</strong> et le blog de l’auteur.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

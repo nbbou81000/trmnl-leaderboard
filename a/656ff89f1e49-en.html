@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FLEX: Correcting Robots in Natural Language for Safer Tasks · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An experimental system teaches robots hidden priorities through natural language corrections, without complex reprogramming.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="FLEX: Correcting Robots in Natural Language for Safer Tasks">
+<meta property="og:description" content="An experimental system teaches robots hidden priorities through natural language corrections, without complex reprogramming.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/656ff89f1e49-en.html">
+<meta property="og:image" content="https://hackster.imgix.net/uploads/attachments/2018985/_IC9hTVyscq.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min">
+<meta property="article:published_time" content="2026-11-10T15:02:54.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FLEX: Correcting Robots in Natural Language for Safer Tasks">
+<meta name="twitter:description" content="An experimental system teaches robots hidden priorities through natural language corrections, without complex reprogramming.">
+<meta name="twitter:image" content="https://hackster.imgix.net/uploads/attachments/2018985/_IC9hTVyscq.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/656ff89f1e49-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/656ff89f1e49.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/656ff89f1e49", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackster.imgix.net/uploads/attachments/2018985/_IC9hTVyscq.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · November 10, 2026 · source : Hackster</p>
+  <h1>FLEX: Correcting Robots in Natural Language for Safer Tasks</h1>
+  <p class="lead">An experimental system teaches robots hidden priorities through natural language corrections, without complex reprogramming.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/656ff89f1e49">Read the article on the TRMNL Leaderboard →</a>
+  <p>Domestic robots struggle to interpret the intentions behind instructions. For example, asking a robot to bring coffee without specifying to avoid fragile objects can lead to accidents. Researchers from MIT and NYU have developed <strong>FLEX</strong>, a system that analyzes natural language corrections to adjust robot behavior.</p><p>FLEX relies on three operations: <strong>ADD</strong> (add a constraint), <strong>GENERALIZE</strong> (extend a rule to similar cases), and <strong>MASK</strong> (ignore irrelevant details). If a user says, "Don’t spill coffee on my laptop," FLEX can add the laptop as an object to avoid, then generalize this rule to other electronic devices. It can also mask superfluous details, like a bowl on the table.</p><p>Tested in simulation for 2D navigation tasks and manipulation with a seven-degree-of-freedom Franka robotic arm, FLEX outperformed existing methods. In seven navigation scenarios, it achieved the highest normalized rewards. Successive corrections allowed the system to understand intent after one or two instructions, even with unpredictable human feedback. Twelve participants confirmed its superiority in task performance, intent understanding, and ease of use.</p><p>For now, FLEX is limited to static tasks with rigid objects and may fail with highly personal preferences. However, this approach paves the way for more intuitive robot learning, where mistakes become opportunities for correction rather than bugs to anticipate.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

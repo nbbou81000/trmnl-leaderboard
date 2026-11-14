@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Home Assistant : 4 limites et leurs solutions alternatives · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Home Assistant automatise presque tout, mais quatre fonctions restent hors de sa portée sans solutions externes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Home Assistant : 4 limites et leurs solutions alternatives">
+<meta property="og:description" content="Home Assistant automatise presque tout, mais quatre fonctions restent hors de sa portée sans solutions externes.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/aed99137450a.html">
+<meta property="og:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/07/the-box-for-home-assistant-green.JPG">
+<meta property="article:published_time" content="2026-11-12T23:30:44.000Z">
+<meta property="article:section" content="Dashboards &amp; domotique">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Home Assistant : 4 limites et leurs solutions alternatives">
+<meta name="twitter:description" content="Home Assistant automatise presque tout, mais quatre fonctions restent hors de sa portée sans solutions externes.">
+<meta name="twitter:image" content="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/07/the-box-for-home-assistant-green.JPG">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/aed99137450a.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/aed99137450a-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/aed99137450a", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/wm/2025/07/the-box-for-home-assistant-green.JPG" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Dashboards &amp; domotique · 12 novembre 2026 · source : How-To Geek</p>
+  <h1>Home Assistant : 4 limites et leurs solutions alternatives</h1>
+  <p class="lead">Home Assistant automatise presque tout, mais quatre fonctions restent hors de sa portée sans solutions externes.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/aed99137450a">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Home Assistant excelle dans l’automatisation des objets connectés, mais certaines situations échappent encore à son contrôle direct. Par exemple, il ne peut pas détecter une panne de son propre serveur, car il est lui-même inactif. Pour pallier ce problème, des outils comme <strong>Uptime Kuma</strong> surveillent en continu les services hébergés et envoient des alertes (via Telegram, par exemple) dès qu’un dysfonctionnement est détecté. Cette solution peut être déployée sur un appareil distinct, comme un Raspberry Pi, ou dans un conteneur dédié sur la même machine, bien que cette dernière option présente un risque accru en cas de panne globale du système hôte.</p> <p>Autre limite : Home Assistant dépend de l’alimentation électrique. En cas de coupure de courant, le serveur s’éteint, risquant même une corruption des données. Deux solutions existent : utiliser un appareil doté d’une batterie intégrée (comme un ordinateur portable) ou, plus fiable, un <strong>onduleur (UPS)</strong>. Ce dernier maintient le système en fonctionnement pendant les coupures brèves et peut même déclencher une extinction sécurisée des appareils lorsque la batterie est faible.</p> <p>L’accès à distance est aussi compromis sans connexion internet. Les méthodes classiques (Home Assistant Cloud, Tailscale, Cloudflare Tunnel) nécessitent une liaison externe. Une alternative innovante repose sur <strong>LoRa</strong>, une technologie radio longue portée. Un utilisateur a ainsi connecté une radio LoRa à son serveur domestique et une seconde à un appareil portable. Un script Python transmet les commandes entre les deux, permettant de contrôler les lumières ou de vérifier l’état du système, même hors ligne. La portée reste limitée par la distance, mais couvre des zones raisonnables.</p> <p>Enfin, Home Assistant ne peut pas déverrouiller une porte si la batterie du verrou intelligent est épuisée. Une solution de secours (clé physique ou alimentation de secours) est indispensable pour éviter de se retrouver bloqué.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

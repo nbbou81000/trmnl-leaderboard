@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fixing a Dead LGA 1851 Motherboard with a Missing Resistor · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A thorough diagnosis uncovers a missing 5.1 Ω resistor preventing an LGA 1851 motherboard from booting.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Fixing a Dead LGA 1851 Motherboard with a Missing Resistor">
+<meta property="og:description" content="A thorough diagnosis uncovers a missing 5.1 Ω resistor preventing an LGA 1851 motherboard from booting.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/f1c6a5c7499c-en.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-11-13T12:00:12.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fixing a Dead LGA 1851 Motherboard with a Missing Resistor">
+<meta name="twitter:description" content="A thorough diagnosis uncovers a missing 5.1 Ω resistor preventing an LGA 1851 motherboard from booting.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/f1c6a5c7499c-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/f1c6a5c7499c.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/f1c6a5c7499c", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Maker &amp; geek · November 13, 2026 · source : Hackaday</p>
+  <h1>Fixing a Dead LGA 1851 Motherboard with a Missing Resistor</h1>
+  <p class="lead">A thorough diagnosis uncovers a missing 5.1 Ω resistor preventing an LGA 1851 motherboard from booting.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/f1c6a5c7499c">Read the article on the TRMNL Leaderboard →</a>
+  <p>Diagnosing a motherboard at the component level isn’t black magic, but some boards, like the LGA 1851, are particularly complex. [Fix the Pixel] had to source a used CPU from eBay to test the board and trace the boot failure.</p><p>The process starts with checking power rails and boot conditions. Here, the CPU’s VRM controller failed to activate its enable pin, halting progress. After ruling out other causes, attention turned to the chipset (PCH), which couldn’t read the BIOS chip.</p><p>Inspecting the SPI lines near the BIOS chip revealed a missing 5.1 Ω resistor, responsible for stabilizing the SPI clock signal. Replacing it restored normal operation. While access to a <strong>boardview</strong> (detailed PCB schematic) helped, the author notes that a quick check of SPI line resistors near the BIOS can prevent deeper diagnostics or unnecessary expenses.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

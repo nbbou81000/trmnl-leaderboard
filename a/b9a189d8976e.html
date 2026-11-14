@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dal-Arabic : afficher correctement l&#39;arabe sur petits écrans (ESP32/Arduino) · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Une bibliothèque Arduino pour afficher correctement l&#39;arabe sur écrans de petite taille, avec gestion des ligatures et du sens d&#39;écriture.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Dal-Arabic : afficher correctement l&#39;arabe sur petits écrans (ESP32/Arduino)">
+<meta property="og:description" content="Une bibliothèque Arduino pour afficher correctement l&#39;arabe sur écrans de petite taille, avec gestion des ligatures et du sens d&#39;écriture.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/b9a189d8976e.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/11/github-dalal-nsrallah-dal-arabic-arabic-text-for-small-scree.jpg">
+<meta property="article:published_time" content="2026-11-10T17:23:15.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dal-Arabic : afficher correctement l&#39;arabe sur petits écrans (ESP32/Arduino)">
+<meta name="twitter:description" content="Une bibliothèque Arduino pour afficher correctement l&#39;arabe sur écrans de petite taille, avec gestion des ligatures et du sens d&#39;écriture.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/11/github-dalal-nsrallah-dal-arabic-arabic-text-for-small-scree.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/b9a189d8976e.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/b9a189d8976e-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/b9a189d8976e", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/11/github-dalal-nsrallah-dal-arabic-arabic-text-for-small-scree.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 10 novembre 2026 · source : Adafruit</p>
+  <h1>Dal-Arabic : afficher correctement l&#39;arabe sur petits écrans (ESP32/Arduino)</h1>
+  <p class="lead">Une bibliothèque Arduino pour afficher correctement l&#39;arabe sur écrans de petite taille, avec gestion des ligatures et du sens d&#39;écriture.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/b9a189d8976e">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>La bibliothèque <strong>Dal</strong>, développée par دلال نصر الله (Dalal Nsrallah), permet d’afficher du texte arabe sur les écrans de petite taille utilisés avec des cartes ESP32 ou Arduino. Contrairement aux polices classiques qui génèrent des caractères disjoints, Dal prend en charge les quatre formes de connexion des lettres arabes selon leur position dans un mot, ainsi que la ligature lam-alef. Elle gère également les <strong>harakat</strong> (signes diacritiques placés au-dessus ou en dessous des lettres), l’alignement de droite à gauche, le retour à la ligne et la justification par espaces.</p><p>Le défi principal résolu par Dal concerne les textes mixtes : chiffres, mots latins et ponctuation (comme les parenthèses ou le signe %) conservent leur ordre de lecture de gauche à droite à l’intérieur d’un paragraphe arabe. Les nombres avec tirets, comme 2026-0458, restent groupés sans être séparés par le sens d’écriture. La bibliothèque s’appuie sur des vérifications croisées avec <strong>HarfBuzz</strong> pour les formes de connexion et <strong>FriBidi</strong> pour l’ordre visuel, validées par les 517 cas de test Unicode BidiCharacterTest combinant arabe, latin, chiffres et ponctuation ASCII.</p><p>Les polices utilisées proviennent de fontes arabes réelles, avec des bords antialiassés pour un rendu lisible. Disponible sous licence MIT, Dal est accessible via le gestionnaire de bibliothèques de l’IDE Arduino et inclut un exemple <strong>DalDemo</strong>. Le code source est hébergé sur <strong>GitHub</strong>.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

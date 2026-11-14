@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NomadNet : servez des pages et fichiers via Reticulum sans Internet · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un outil Python pour transformer un nœud Reticulum en serveur de pages et fichiers, accessible en local via un réseau chiffré.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="NomadNet : servez des pages et fichiers via Reticulum sans Internet">
+<meta property="og:description" content="Un outil Python pour transformer un nœud Reticulum en serveur de pages et fichiers, accessible en local via un réseau chiffré.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/3225691c7fe1.html">
+<meta property="og:image" content="https://korben.info/reticulum-nomadnet-site-fichiers/reticulum-nomadnet-site-fichiers-1.png">
+<meta property="article:published_time" content="2026-11-09T13:18:03.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NomadNet : servez des pages et fichiers via Reticulum sans Internet">
+<meta name="twitter:description" content="Un outil Python pour transformer un nœud Reticulum en serveur de pages et fichiers, accessible en local via un réseau chiffré.">
+<meta name="twitter:image" content="https://korben.info/reticulum-nomadnet-site-fichiers/reticulum-nomadnet-site-fichiers-1.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3225691c7fe1.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/3225691c7fe1-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/3225691c7fe1", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://korben.info/reticulum-nomadnet-site-fichiers/reticulum-nomadnet-site-fichiers-1.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 9 novembre 2026 · source : Korben</p>
+  <h1>NomadNet : servez des pages et fichiers via Reticulum sans Internet</h1>
+  <p class="lead">Un outil Python pour transformer un nœud Reticulum en serveur de pages et fichiers, accessible en local via un réseau chiffré.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/3225691c7fe1">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>NomadNet, développé par Markqvist, est un programme Python conçu pour fonctionner avec <strong>Reticulum</strong>, une pile réseau chiffrée fonctionnant sans TCP/IP ni accès à Internet. Il permet de transformer un nœud Reticulum en un serveur capable de diffuser des pages web et des fichiers locaux, accessibles uniquement par les autres nœuds du réseau local ou étendu.</p> <h2>Installation et configuration</h2> <p>L’installation de NomadNet s’effectue via pip ou pipx selon la distribution. Sur Debian ou Ubuntu, il est recommandé d’utiliser :</p> <ul> <li>pipx install nomadnet et pipx install rns pour obtenir NomadNet 1.5.0 et Reticulum 1.6.0.</li> </ul> <p>Le premier lancement génère deux fichiers de configuration : ~/.reticulum/config pour Reticulum et ~/.nomadnetwork/config pour NomadNet. Le guide intégré recommande un terminal d’au moins 135 colonnes sur 32 lignes. En cas d’affichage incorrect (carrés à la place des caractères), l’installation des <strong>Nerd Fonts</strong> est nécessaire, ou la modification du paramètre glyphs dans la configuration pour utiliser des caractères Unicode.</p> <p>Par défaut, NomadNet active une seule interface réseau : l’<strong>AutoInterface</strong>, qui découvre les nœuds Reticulum en local via IPv6 et UDP. Si un pare-feu bloque les ports UDP 29716 et 42671, il faut les autoriser pour permettre la communication entre nœuds.</p> <h2>Activation du serveur et gestion des contenus</h2> <p>Pour activer la fonction serveur, il faut modifier le fichier de configuration de NomadNet en activant le nœud dans la section [node] :</p> <ul> <li>enable_node = yes active le serveur.</li> <li>node_name définit le nom affiché par le nœud sur le réseau.</li> <li>disable_propagation = yes empêche le nœud de relayer les messages des autres utilisateurs, le limitant à la diffusion de pages et fichiers.</li> </ul> <p>Une fois activé, un onglet <strong>My Node</strong> apparaît dans l’interface, offrant un explorateur de pages, un éditeur de langage <strong>micron</strong> (un langage de balisage léger) et un aperçu en temps réel. Les pages sont écrites en <strong>micron</strong> et stockées dans ~/.nomadnetwork/storage/pages, tandis que les fichiers à partager sont placés dans ~/.nomadnetwork/storage/files.</p> <p>Les liens vers les fichiers s’écrivent sous la forme :/file/nom_du_fichier dans une page. Pour améliorer leur visibilité, des balises de couleur et de soulignement peuvent être ajoutées. Cependant, NomadNet ne rafraîchit la liste des pages et fichiers qu’au démarrage par défaut. Pour un rafraîchissement automatique, il faut modifier les paramètres page_refresh_interval et file_refresh_interval dans la configuration.</p> <p>L’adresse complète d’une page combine un hash de 32 caractères hexadécimaux (identifiant le nœud) et le chemin de la page, par exemple :/page/index.mu. Dans l’onglet <strong>Network</strong>, la commande Ctrl+U permet de saisir une URL pour se connecter au nœud. Depuis un autre appareil du même réseau, la page s’affiche après avoir sélectionné le nœud dans le flux d’annonces et cliqué sur <strong>Connect</strong>.
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

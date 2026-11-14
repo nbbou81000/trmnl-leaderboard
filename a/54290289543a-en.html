@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>An Electric Car That Moves in Any Direction Without Turning · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An engineer builds an electric vehicle with spherical wheels enabling sideways, diagonal, or in-place movement.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="An Electric Car That Moves in Any Direction Without Turning">
+<meta property="og:description" content="An engineer builds an electric vehicle with spherical wheels enabling sideways, diagonal, or in-place movement.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/54290289543a-en.html">
+<meta property="og:image" content="https://hackster.imgix.net/uploads/attachments/2019057/_tS0XQLrocQ.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min">
+<meta property="article:published_time" content="2026-11-10T23:48:14.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="An Electric Car That Moves in Any Direction Without Turning">
+<meta name="twitter:description" content="An engineer builds an electric vehicle with spherical wheels enabling sideways, diagonal, or in-place movement.">
+<meta name="twitter:image" content="https://hackster.imgix.net/uploads/attachments/2019057/_tS0XQLrocQ.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/54290289543a-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/54290289543a.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/54290289543a", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackster.imgix.net/uploads/attachments/2019057/_tS0XQLrocQ.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · November 10, 2026 · source : Hackster</p>
+  <h1>An Electric Car That Moves in Any Direction Without Turning</h1>
+  <p class="lead">An engineer builds an electric vehicle with spherical wheels enabling sideways, diagonal, or in-place movement.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/54290289543a">Read the article on the TRMNL Leaderboard →</a>
+  <p>Robotics engineer James Bruton has built an autonomous electric vehicle that can move in any direction without turning. Instead of conventional wheels, his system uses four spherical wheels, each made of two hemispheres mounted on a T-shaped axle. The hemispheres are driven in one direction while rolling freely in the perpendicular direction, enabling sideways, diagonal, or in-place rotation.</p><p>Each spherical wheel is crafted from CNC-cut plywood, assembled with 14 vertical ribs and multiple horizontal layers. A rubberized edge provides traction, while small skateboard wheels embedded in the tips allow smooth rolling even under the vehicle’s weight. The chassis and wheel axles are made from aluminum extrusions, with heavy-duty bearings supporting the hemispheres. Four ODrive S1 motors, each rated at 2 kW, drive the wheels through two-stage belt reductions, with magnetic encoders ensuring precise control.</p><p>The central electronics rely on an Arduino VENTUNO Q board, combining an STM32 microcontroller with a Qualcomm-powered Linux computer featuring an octa-core processor, 16 GB of RAM, and a 40 TOPS NPU. The STM32 handles low-level tasks like reading a three-axis joystick, while the Linux side runs ROS 2 for autonomous navigation. Two RPLIDAR S3 sensors, mounted at opposite corners of the chassis, provide 360-degree coverage for mapping and path planning via SLAM. Four 6S LiPo battery packs supply 50 volts to the motors, with a heavy-duty contactor and emergency stop button for safety.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

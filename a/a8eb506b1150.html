@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Installer NetBSD 11 sur un Raspberry Pi 4 : guide pas à pas · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un guide détaillé pour installer NetBSD 11 sur un Raspberry Pi 4, système léger sans IA intégrée.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Installer NetBSD 11 sur un Raspberry Pi 4 : guide pas à pas">
+<meta property="og:description" content="Un guide détaillé pour installer NetBSD 11 sur un Raspberry Pi 4, système léger sans IA intégrée.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/a8eb506b1150.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-11-08T12:07:17Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Installer NetBSD 11 sur un Raspberry Pi 4 : guide pas à pas">
+<meta name="twitter:description" content="Un guide détaillé pour installer NetBSD 11 sur un Raspberry Pi 4, système léger sans IA intégrée.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a8eb506b1150.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/a8eb506b1150-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/a8eb506b1150", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille geek · 8 novembre 2026 · source : Hacker News</p>
+  <h1>Installer NetBSD 11 sur un Raspberry Pi 4 : guide pas à pas</h1>
+  <p class="lead">Un guide détaillé pour installer NetBSD 11 sur un Raspberry Pi 4, système léger sans IA intégrée.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/a8eb506b1150">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>NetBSD, système d’exploitation open source en développement, se distingue par l’absence de composants liés à l’intelligence artificielle, une particularité rare dans le paysage actuel. Un utilisateur a documenté son expérience pour installer NetBSD 11 sur un Raspberry Pi 4, un projet accessible même aux non-experts.</p> <h2>Préparation de la carte SD</h2> <p>L’image NetBSD 11 pour architecture ARM64 (arm64.img.gz) est téléchargeable depuis le dépôt officiel. Après extraction, elle doit être écrite sur une carte microSD avec l’outil <strong>dd</strong> sous Linux ou via une interface graphique comme Balena Etcher. La commande suivante copie l’image sur le périphérique <strong>/dev/sda</strong> (à adapter selon le système) :</p> <p>sudo dd if=arm64.img of=/dev/sda bs=4M status=progress conv=fsync</p> <h2>Configuration du firmware UEFI</h2> <p>Le firmware UEFI spécifique au Raspberry Pi 4 (version 1.53) doit être copié dans la partition de boot de la carte SD. Après avoir monté cette partition (<strong>/dev/sda1</strong>), les fichiers du firmware sont transférés pour permettre le démarrage du système. Le Raspberry Pi est ensuite démarré avec la touche <strong>ESC</strong> pour accéder au menu UEFI, où l’ordre de boot est modifié afin de privilégier la carte SD.</p> <p>Une fois NetBSD démarré, le système redimensionne automatiquement le système de fichiers racine. La connexion initiale s’effectue avec l’utilisateur <strong>root</strong>. Il est recommandé de créer un utilisateur standard via <strong>useradd</strong> et de définir un mot de passe.</p> <p>La gestion du Wi-Fi nécessite une manipulation supplémentaire : un lien symbolique doit être créé dans <strong>/libdata/firmware/if_bwfm</strong> pour associer le firmware adapté au modèle du Raspberry Pi 4. Une configuration réseau via <strong>wpa_supplicant</strong> permet ensuite de se connecter à un point d’accès.</p> <p>NetBSD propose deux gestionnaires de paquets : <strong>pkg_src</strong> pour une installation depuis les sources, et <strong>pkgin</strong> pour des paquets précompilés. L’activation de <strong>pkgin</strong> passe par la modification du fichier <strong>~/.profile</strong>. Des outils comme <strong>nano</strong>, <strong>fastfetch</strong> ou <strong>doas</strong> (alternative à sudo) peuvent être installés pour améliorer l’expérience utilisateur.</p> <p>Pour une interface graphique, l’environnement <strong>NsCDE</strong>, inspiré de l’ancien CDE, est compatible avec NetBSD. Son installation nécessite plusieurs dépendances et une configuration manuelle du PATH et des variables d’environnement. Une fois configuré, l’environnement graphique est lancé via <strong>xdm</strong>.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

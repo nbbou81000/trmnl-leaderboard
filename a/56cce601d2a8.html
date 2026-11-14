@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pourquoi les petits composants se dressent-ils après soudure ? · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Décryptage du phénomène de tombstoning en soudure SMT et conseils pour l&#39;éviter.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Pourquoi les petits composants se dressent-ils après soudure ?">
+<meta property="og:description" content="Décryptage du phénomène de tombstoning en soudure SMT et conseils pour l&#39;éviter.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/56cce601d2a8.html">
+<meta property="og:image" content="https://cdn-blog.adafruit.com/uploads/2026/11/why-do-small-components-stand-up-after-soldering.jpg">
+<meta property="article:published_time" content="2026-11-11T22:25:43.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pourquoi les petits composants se dressent-ils après soudure ?">
+<meta name="twitter:description" content="Décryptage du phénomène de tombstoning en soudure SMT et conseils pour l&#39;éviter.">
+<meta name="twitter:image" content="https://cdn-blog.adafruit.com/uploads/2026/11/why-do-small-components-stand-up-after-soldering.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/56cce601d2a8.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/56cce601d2a8-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/56cce601d2a8", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://cdn-blog.adafruit.com/uploads/2026/11/why-do-small-components-stand-up-after-soldering.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 11 novembre 2026 · source : Adafruit</p>
+  <h1>Pourquoi les petits composants se dressent-ils après soudure ?</h1>
+  <p class="lead">Décryptage du phénomène de tombstoning en soudure SMT et conseils pour l&#39;éviter.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/56cce601d2a8">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Lors d’une soudure par refusion (reflow), certains composants électroniques miniatures comme les résistances ou condensateurs chip peuvent se dresser sur une seule de leurs pattes au lieu de reposer à plat sur les deux plots. Ce défaut, appelé <strong>tombstoning</strong>, est causé par un échauffement et une mouillabilité inégaux entre les deux côtés du composant. Si une patte fond et s’étale sur sa plage de soudure avant l’autre, la tension superficielle du métal liquide tire le composant vers le haut, le décollant de la plage opposée.</p><h2>Comment limiter les risques ?</h2><p>Trois vérifications sur la conception du circuit imprimé réduisent significativement ce risque. La <strong>symétrie des plages</strong> implique d’adapter la forme et la taille des plots à celles recommandées par le fabricant du composant. La <strong>symétrie des pistes</strong> exige d’équilibrer les largeurs, longueurs et surfaces de cuivre connectées aux deux extrémités du composant. Enfin, les <strong>connexions thermiques</strong> doivent être homogènes : des dissipateurs thermiques en forme de rayons (spoke-style thermal reliefs) évitent qu’une connexion directe à un plan de cuivre massif ne ralentisse l’échauffement d’un côté par rapport à l’autre.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DeviceTree : comprendre les fichiers de description matérielle · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Les fichiers DeviceTree révèlent les secrets des cartes comme le futur Raspberry Pi Zero 3W.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="DeviceTree : comprendre les fichiers de description matérielle">
+<meta property="og:description" content="Les fichiers DeviceTree révèlent les secrets des cartes comme le futur Raspberry Pi Zero 3W.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/c4648f9997a0.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2019/10/LinuxMarketing.jpg">
+<meta property="article:published_time" content="2026-11-10T15:00:00.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DeviceTree : comprendre les fichiers de description matérielle">
+<meta name="twitter:description" content="Les fichiers DeviceTree révèlent les secrets des cartes comme le futur Raspberry Pi Zero 3W.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2019/10/LinuxMarketing.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/c4648f9997a0.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/c4648f9997a0-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/c4648f9997a0", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2019/10/LinuxMarketing.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 10 novembre 2026 · source : Hackaday</p>
+  <h1>DeviceTree : comprendre les fichiers de description matérielle</h1>
+  <p class="lead">Les fichiers DeviceTree révèlent les secrets des cartes comme le futur Raspberry Pi Zero 3W.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/c4648f9997a0">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Le projet <strong>Raspberry Pi</strong> a dévoilé des indices sur le futur <strong>Pi Zero 3W</strong> via un fichier DeviceTree, un document technique décrivant le matériel. Ce fichier révèle l’utilisation du processeur <strong>BCM2711</strong> (celui du Pi 4), la présence d’un port <strong>PCIe</strong> potentiellement accessible, un bouton d’alimentation intégré, une LED d’alimentation supplémentaire et une option de stockage <strong>eMMC</strong>. Selon les observateurs, la carte pourrait adopter une conception double face et enfin migrer vers un connecteur <strong>USB-C</strong>.</p> <p><strong>DeviceTree</strong> est un langage de description matérielle utilisé par les noyaux Linux et autres systèmes d’exploitation pour configurer les pilotes et interfaces d’une carte. Ces fichiers, compilés en binaire (.dtb), sont omniprésents : smartphones, routeurs, ordinateurs portables ARM ou cartes monocarte (SBC) en dépendent. Leur structure rappelle celle du HTML, mais sans être Turing-complet. Ils se composent de fichiers sources (.dts, .dtsi) et de fichiers compilés (.dtb, .dtbo).</p> <p>Trois types de fichiers DeviceTree existent : les fichiers d’inclusion (.dtsi) contenant des définitions techniques basiques, les fichiers de base décrivant la carte dans son ensemble, et les <strong>overlays</strong> qui ajoutent ou modifient des fonctionnalités. Ces derniers sont particulièrement utiles pour activer des périphériques ou modifier des paramètres sans altérer le fichier de base. Par exemple, un overlay peut activer une LED connectée à un GPIO, désactiver le Wi-Fi ou configurer un écran tactile I2C. Leur syntaxe est accessible, souvent basée sur des exemples existants à adapter.</p> <p>Pour manipuler ces fichiers, des outils comme <strong>device-tree-compiler</strong> (disponible via apt) permettent de les compiler ou décompiler facilement. Les overlays Raspberry Pi, par exemple, peuvent être chargés dynamiquement via config.txt, tandis que sur d’autres plateformes, ils s’intègrent via uBoot. Les conventions varient selon les architectures : les pointeurs GPIO s’appellent &amp;gpio sur Raspberry Pi, mais &amp;pio ou &amp;gpio1 sur d’autres cartes. Les commentaires suivent la syntaxe C (// ou /* */), tandis que des métadonnées comme #size-cells sont essentielles pour interpréter les propriétés comme &lt;reg&gt;.</p> <p>De nombreux exemples sont disponibles dans les dépôts officiels Linux, Radxa, Armbian ou sur GitHub, où des milliers de fichiers .dts sont partagés. Ces ressources permettent de créer ou modifier des overlays même sans expérience préalable, en s’inspirant de projets existants.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

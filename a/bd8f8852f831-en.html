@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>An FPGA Recreation of the 1985 AT&amp;T UNIX PC for MiSTer · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A hobbyist recreates the 1985 AT&amp;T UNIX PC in FPGA, compatible with MiSTer, to explore this rare and powerful system.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="An FPGA Recreation of the 1985 AT&amp;T UNIX PC for MiSTer">
+<meta property="og:description" content="A hobbyist recreates the 1985 AT&amp;T UNIX PC in FPGA, compatible with MiSTer, to explore this rare and powerful system.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/bd8f8852f831-en.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/11/att_unix_pc_jda_wikimedia_cropped.jpg">
+<meta property="article:published_time" content="2026-11-08T15:00:46.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="An FPGA Recreation of the 1985 AT&amp;T UNIX PC for MiSTer">
+<meta name="twitter:description" content="A hobbyist recreates the 1985 AT&amp;T UNIX PC in FPGA, compatible with MiSTer, to explore this rare and powerful system.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/11/att_unix_pc_jda_wikimedia_cropped.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/bd8f8852f831-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/bd8f8852f831.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/bd8f8852f831", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/11/att_unix_pc_jda_wikimedia_cropped.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · November 8, 2026 · source : Hackaday</p>
+  <h1>An FPGA Recreation of the 1985 AT&amp;T UNIX PC for MiSTer</h1>
+  <p class="lead">A hobbyist recreates the 1985 AT&amp;T UNIX PC in FPGA, compatible with MiSTer, to explore this rare and powerful system.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/bd8f8852f831">Read the article on the TRMNL Leaderboard →</a>
+  <p>The <strong>AT&amp;T UNIX PC</strong>, released in 1985, was a bulky workstation (18 kg) featuring a <strong>Motorola 68010 CPU at 10 MHz</strong>, up to 4 MB of RAM, and several dozen megabytes of storage. Designed for professionals, it offered extensive expansion options but never gained mainstream success, overshadowed by IBM PC and Apple systems.</p> <p>Decades later, <strong>Hrvoje Cavrak</strong> has created an FPGA version of this machine, allowing it to run on <strong>MiSTer-compatible boards</strong>, such as the <strong>DE10 Nano</strong>. The project uses components written in <strong>SystemVerilog, Verilog, and VHDL</strong>, and requires an <strong>SDRAM expansion board</strong> for the DE10 Nano, as its integrated FPGA memory cannot accommodate the required 4 MB.</p> <p>To function, the project needs the <strong>boot ROM</strong> and disk images of AT&amp;T UNIX, which remain under copyright. While these files are available online, their use may raise legal concerns. Once set up, the emulator delivers a complete UNIX PC experience, as demonstrated in a video.</p> <p>Parts of the code were written and validated by AI coding assistants, making this a work-in-progress project (« works on my MiSTer board »). For those unable to obtain the original hardware—now priced at unobtanium levels—this FPGA solution offers a fair alternative.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

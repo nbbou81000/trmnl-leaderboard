@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Glasses with Tactile Feedback for the Visually Impaired · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="An experimental project uses LiDAR sensors and vibrations to help the visually impaired perceive their surroundings.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Smart Glasses with Tactile Feedback for the Visually Impaired">
+<meta property="og:description" content="An experimental project uses LiDAR sensors and vibrations to help the visually impaired perceive their surroundings.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/94195255dc16-en.html">
+<meta property="og:image" content="https://hackster.imgix.net/uploads/attachments/2019970/_o9p457RDUN.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min">
+<meta property="article:published_time" content="2026-11-13T14:38:28.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Smart Glasses with Tactile Feedback for the Visually Impaired">
+<meta name="twitter:description" content="An experimental project uses LiDAR sensors and vibrations to help the visually impaired perceive their surroundings.">
+<meta name="twitter:image" content="https://hackster.imgix.net/uploads/attachments/2019970/_o9p457RDUN.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/94195255dc16-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/94195255dc16.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/94195255dc16", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackster.imgix.net/uploads/attachments/2019970/_o9p457RDUN.blob?auto=compress%2Cformat&amp;w=600&amp;h=450&amp;fit=min" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · November 13, 2026 · source : Hackster</p>
+  <h1>Smart Glasses with Tactile Feedback for the Visually Impaired</h1>
+  <p class="lead">An experimental project uses LiDAR sensors and vibrations to help the visually impaired perceive their surroundings.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/94195255dc16">Read the article on the TRMNL Leaderboard →</a>
+  <p>A DIY enthusiast has built smart glasses for visually impaired or blind individuals, offering tactile perception of their surroundings. Unlike traditional solutions like white canes or guide dogs, this system relies on LiDAR sensors and a vibration-equipped garment.</p><p>The prototype features three high-resolution LiDAR sensors (512 points each), capable of real-time distance measurements. An inertial measurement unit (IMU) tracks head movements. The sensor data is processed by a <strong>Raspberry Pi 4</strong>, which converts it into tactile feedback via a vest with 16 vibration motors spread across the torso. Each motor corresponds to a specific area of the user’s surroundings, and vibration intensity indicates obstacle proximity.</p><p>Real-world tests revealed limitations. In dense urban environments, multiple nearby objects activate several motors at once, making tactile feedback hard to interpret. Additionally, the sensor’s frame rate (about 13 frames per second) proved too slow for dynamic situations, such as catching a ball blindfolded. To address this, the creator developed a trajectory prediction algorithm, estimating an object’s future position based on its initial detections.</p><p>While this prototype isn’t yet ready to replace a white cane or guide dog, it offers promising alternatives for sensory assistance. Future improvements will focus on sensor speed and vibration clarity.
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

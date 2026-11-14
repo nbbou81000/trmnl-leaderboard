@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RV565 : un format vidéo optimisé pour les microcontrôleurs et écrans SPI · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un nouveau format vidéo léger et indépendant des frames pour les écrans SPI, compatible ESP32-S3 et RP2350.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="RV565 : un format vidéo optimisé pour les microcontrôleurs et écrans SPI">
+<meta property="og:description" content="Un nouveau format vidéo léger et indépendant des frames pour les écrans SPI, compatible ESP32-S3 et RP2350.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/4e6854f5e84a.html">
+<meta property="og:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta property="article:published_time" content="2026-11-10T19:16:01.000Z">
+<meta property="article:section" content="Bidouille e-ink">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RV565 : un format vidéo optimisé pour les microcontrôleurs et écrans SPI">
+<meta name="twitter:description" content="Un nouveau format vidéo léger et indépendant des frames pour les écrans SPI, compatible ESP32-S3 et RP2350.">
+<meta name="twitter:image" content="https://nbbou81000.github.io/trmnl-leaderboard/og.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4e6854f5e84a.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4e6854f5e84a-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/4e6854f5e84a", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  
+  <p class="meta">Bidouille e-ink · 10 novembre 2026 · source : Adafruit</p>
+  <h1>RV565 : un format vidéo optimisé pour les microcontrôleurs et écrans SPI</h1>
+  <p class="lead">Un nouveau format vidéo léger et indépendant des frames pour les écrans SPI, compatible ESP32-S3 et RP2350.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/4e6854f5e84a">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>elixpo propose <strong>RV565</strong>, un format vidéo et un lecteur conçus pour les écrans SPI comme le ST7789, optimisés pour les microcontrôleurs à faible puissance. Contrairement aux formats classiques, chaque frame est stockée sous forme de flux zlib indépendant, déjà converti en <strong>RGB565</strong> — le format natif des écrans ciblés. Ainsi, le microcontrôleur n’a pas besoin de traiter les pixels avant affichage, réduisant la charge de calcul.</p><p>La conversion s’effectue via un outil en ligne ou un package Python (<strong>rv565</strong> sur PyPI), utilisant FFmpeg pour extraire les frames. L’outil prédit le temps de décodage de chaque frame grâce à un modèle de coût mesuré sur le microcontrôleur, avec une précision remarquable : sur un Pico 2, il a estimé un temps de 49,00 ms pour une frame mesurée à 49,03 ms.</p><p>Des exemples pour Arduino, un composant ESP-IDF, ainsi que des adaptateurs pour les bibliothèques <strong>TFT_eSPI</strong> et <strong>LovyanGFX</strong> sont disponibles. Ces adaptateurs permettent d’envoyer les données par DMA, optimisant encore les performances. Sur un ESP32-S3 avec des frames de 180×135 affichées sur un écran 320×240, l’utilisation mémoire est de 79,9 KiB en mode monocœur et 152,4 KiB en dual-core.</p><p>Ce projet a été développé pour l’application Gallery de l’<strong>Oreo Badge</strong>, un badge ESP32-S3 certifié OSHWA. Le code source et la documentation sont accessibles sur <strong>GitHub</strong>.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

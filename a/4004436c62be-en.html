@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QWIIC: Why This I2C Standard Simplifies Your Electronics Projects · TRMNL Creator Leaderboard · E-ink news</title>
+<meta name="description" content="A QWIIC I2C connector standard streamlines wiring and debugging in electronics projects. Here’s how it works and why it’s useful.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="TRMNL Creator Leaderboard · E-ink news">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="QWIIC: Why This I2C Standard Simplifies Your Electronics Projects">
+<meta property="og:description" content="A QWIIC I2C connector standard streamlines wiring and debugging in electronics projects. Here’s how it works and why it’s useful.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/4004436c62be-en.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/10/hadimg_use_qwiic_feat.jpg">
+<meta property="article:published_time" content="2026-11-12T18:00:54.000Z">
+<meta property="article:section" content="Maker &amp; geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QWIIC: Why This I2C Standard Simplifies Your Electronics Projects">
+<meta name="twitter:description" content="A QWIIC I2C connector standard streamlines wiring and debugging in electronics projects. Here’s how it works and why it’s useful.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/10/hadimg_use_qwiic_feat.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4004436c62be-en.html">
+<link rel="alternate" hreflang="fr" href="https://nbbou81000.github.io/trmnl-leaderboard/a/4004436c62be.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/4004436c62be", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/10/hadimg_use_qwiic_feat.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Maker &amp; geek · November 12, 2026 · source : Hackaday</p>
+  <h1>QWIIC: Why This I2C Standard Simplifies Your Electronics Projects</h1>
+  <p class="lead">A QWIIC I2C connector standard streamlines wiring and debugging in electronics projects. Here’s how it works and why it’s useful.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=en#eink/4004436c62be">Read the article on the TRMNL Leaderboard →</a>
+  <p>QWIIC is a SparkFun-backed standard for connecting I2C devices using a 4-pin JST-SH connector, powered at 3.3 V. Its simplicity and robustness eliminate wiring errors and allow hot-swapping modules without soldering. Unlike other I2C ecosystems, QWIIC enforces a fixed polarity and compact size, making connections <strong>impossible to reverse</strong> and resistant to damage.</p> <h2>Practical benefits in development</h2> <p>By standardizing QWIIC connectors on his boards, the author highlights several advantages: easy access to I2C buses for debugging with tools like PulseView, immediate compatibility with hundreds of sensors (environmental, GPS, LoRa, etc.), and increased modularity. For instance, a solar-powered Meshtastic node integrated a voltage/current monitoring module via a QWIIC cable, tested beforehand on a Raspberry Pi before installation. The detachable connection also prevented current loops during power-downs and simplified hardware replacements.</p> <p>The author also designed adapters to use QWIIC as a test interface (flashing I2C memory, logic analysis) and even as a repurposed USB port (<strong>QWUSB</strong>), reassigning SDA/SCL pins to D+/D-. A 5 V version is available for demanding USB devices, with a red LED indicating high-voltage risk.</p> <p>JST-SH cables, available in bulk at low cost, and pre-assembled breakouts speed up integration. The standard has one limitation: devices requiring an INT (interrupt) pin are less suitable, though most common modules (OLED screens, GPIO expanders) work without it.</p>
+  <footer>Article written by an AI (Mistral) from the cited source. Check important details at the source.</footer>
+</main>
+</body>
+</html>

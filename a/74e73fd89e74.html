@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Géolocaliser une vidéo grâce aux avions et au Doppler · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Une méthode surprenante exploite les sons d’avions captés dans une vidéo pour en déterminer l’emplacement précis.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Géolocaliser une vidéo grâce aux avions et au Doppler">
+<meta property="og:description" content="Une méthode surprenante exploite les sons d’avions captés dans une vidéo pour en déterminer l’emplacement précis.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/74e73fd89e74.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2026/11/doppler_curve_location.png">
+<meta property="article:published_time" content="2026-11-09T09:00:31.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Géolocaliser une vidéo grâce aux avions et au Doppler">
+<meta name="twitter:description" content="Une méthode surprenante exploite les sons d’avions captés dans une vidéo pour en déterminer l’emplacement précis.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2026/11/doppler_curve_location.png">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/74e73fd89e74.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/74e73fd89e74-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/74e73fd89e74", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2026/11/doppler_curve_location.png" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 9 novembre 2026 · source : Hackaday</p>
+  <h1>Géolocaliser une vidéo grâce aux avions et au Doppler</h1>
+  <p class="lead">Une méthode surprenante exploite les sons d’avions captés dans une vidéo pour en déterminer l’emplacement précis.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/74e73fd89e74">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Les vidéos et photos contiennent souvent des indices involontaires sur leur lieu de tournage, même lorsque ces informations sont masquées. Une technique récente mise au point par <strong>colsto</strong> exploite les variations Doppler générées par les avions passant à proximité pour localiser un enregistrement avec une grande précision.</p><p>Les avions émettent des sons audibles sur de longues distances, même si leur présence n’est pas perceptible à l’oreille humaine. En analysant ces sons dans un <strong>spectrogramme</strong> (représentation visuelle des fréquences), il est possible d’extraire des courbes Doppler caractéristiques. Ces motifs doivent ensuite être corrélés aux trajectoires réelles des avions, accessibles via les données publiques <strong>ADS-B</strong> (Automatic Dependent Surveillance-Broadcast), qui fournissent l’altitude, la vitesse, le cap et la position des appareils à intervalles réguliers.</p><p>La méthode gagne en précision lorsque plusieurs courbes Doppler sont disponibles dans l’enregistrement : il suffit alors de rechercher des points où ces courbes correspondent aux intervalles et aux caractéristiques attendues. Une étape de filtrage élimine les zones où trop de courbes Doppler auraient dû être entendues, réduisant ainsi les candidats potentiels. La forme même de la courbe apporte des indices supplémentaires : sa hauteur reflète la vitesse de l’avion, tandis que sa longueur dépend de sa distance. En reconstruisant les courbes Doppler théoriques à partir des trajectoires des avions, il devient possible de les comparer aux données réelles pour identifier le lieu exact du tournage. Dans un test, une seule courbe Doppler a suffi à localiser une vidéo sans autre indice.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>

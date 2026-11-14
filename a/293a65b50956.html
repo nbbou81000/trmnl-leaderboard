@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le code machine en emojis : une Hello World en UTF-8 · Palmarès des créateurs TRMNL · Actu e-ink</title>
+<meta name="description" content="Un développeur crée un programme exécutable entièrement composé d’emojis, valide sur les processeurs 8086.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Palmarès des créateurs TRMNL · Actu e-ink">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Le code machine en emojis : une Hello World en UTF-8">
+<meta property="og:description" content="Un développeur crée un programme exécutable entièrement composé d’emojis, valide sur les processeurs 8086.">
+<meta property="og:url" content="https://nbbou81000.github.io/trmnl-leaderboard/a/293a65b50956.html">
+<meta property="og:image" content="https://hackaday.com/wp-content/uploads/2016/08/turingtapes.jpg">
+<meta property="article:published_time" content="2026-11-06T12:00:33.000Z">
+<meta property="article:section" content="Bidouille geek">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Le code machine en emojis : une Hello World en UTF-8">
+<meta name="twitter:description" content="Un développeur crée un programme exécutable entièrement composé d’emojis, valide sur les processeurs 8086.">
+<meta name="twitter:image" content="https://hackaday.com/wp-content/uploads/2016/08/turingtapes.jpg">
+<meta name="theme-color" content="#f8654b">
+<link rel="icon" href="https://nbbou81000.github.io/trmnl-leaderboard/icon-192.png">
+<link rel="canonical" href="https://nbbou81000.github.io/trmnl-leaderboard/a/293a65b50956.html">
+<link rel="alternate" hreflang="en" href="https://nbbou81000.github.io/trmnl-leaderboard/a/293a65b50956-en.html">
+<script>
+// Renvoie sur l'article dans le site, en transmettant l'étiquette du lien (?via=reddit…) et le site d'origine
+(function () {
+  var t = "https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/293a65b50956", i = t.indexOf('#'), q = new URLSearchParams(location.search), extra = '';
+  var via = (q.get('via') || q.get('utm_source') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+  if (via) extra += '&via=' + via;
+  try { var h = new URL(document.referrer).hostname; if (h && h !== location.hostname) extra += '&ref=' + encodeURIComponent(h); } catch (e) {}
+  location.replace(t.slice(0, i) + extra + t.slice(i));
+})();
+</script>
+<style>
+:root{--paper:#f2f0ed;--sheet:#fbfaf8;--ink:#1d1d1b;--ink2:#5d5c58;--rule:#dcdbd9;--accent:#f8654b;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--paper:#1a1a1a;--sheet:#242423;--ink:#ecebe8;--ink2:#a9a8a3;--rule:#363634;--accent:#ff7c66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;border-top:4px solid var(--accent)}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+a{color:inherit}
+img.hero{width:100%;max-height:360px;object-fit:cover;border-radius:12px;display:block;margin:0 0 18px;background:var(--rule)}
+.meta{color:var(--ink2);font-size:.85rem;margin:0 0 6px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+.lead{font-size:1.08rem;font-weight:600;margin:0 0 18px}
+.btn{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:11px 18px;text-decoration:none;font-weight:650;margin:8px 0 18px}
+footer{color:var(--ink2);font-size:.8rem;margin-top:30px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="https://hackaday.com/wp-content/uploads/2016/08/turingtapes.jpg" alt="" referrerpolicy="no-referrer">
+  <p class="meta">Bidouille geek · 6 novembre 2026 · source : Hackaday</p>
+  <h1>Le code machine en emojis : une Hello World en UTF-8</h1>
+  <p class="lead">Un développeur crée un programme exécutable entièrement composé d’emojis, valide sur les processeurs 8086.</p>
+  <a class="btn" href="https://nbbou81000.github.io/trmnl-leaderboard/?lang=fr#eink/293a65b50956">Lire l'article sur le Palmarès TRMNL →</a>
+  <p>Un chercheur a découvert que certains emojis, interprétés comme des instructions machine, forment un code exécutable valide sur les processeurs Intel 8086 et 8088. Le symbole de la chèvre (🐐) correspond à la séquence <strong>F0 9F 90 90</strong>, où <strong>90h</strong> est une instruction <em>nop</em> (aucune opération), tandis que <strong>F0 9F</strong> forme l’instruction <em>lock lahf</em>, sans effet pratique sur ces architectures. Cette observation a ouvert la voie à la création de programmes fonctionnels composés uniquement d’emojis.</p><p>Un exemple concret est une application <em>Hello World</em> écrite sous forme de chaîne d’emojis. Enregistrée dans un fichier avec l’extension <strong>.com</strong> et exécutée dans DOSBox avec un processeur configuré en 8086, elle affiche le message <strong>HELLO</strong> à l’écran en écrivant directement dans la mémoire vidéo. D’autres démonstrations, comme un programme graphique VGA utilisant des emojis, sont disponibles dans le billet original. Les détails techniques et des conseils pour concevoir ses propres programmes en emojis y sont également partagés.</p><p>Cette approche rappelle des techniques historiques, comme l’inclusion de code machine dans des programmes BASIC via des <em>REM</em> contenant des caractères ASCII, permettant des actions non prévues par le langage. Les emojis, bien que moins flexibles que les caractères ASCII, offrent une alternative ludique et visuelle pour explorer l’exécution de code bas niveau.</p>
+  <footer>Article rédigé par une IA (Mistral) à partir de la source citée. Vérifiez les détails importants chez la source.</footer>
+</main>
+</body>
+</html>
